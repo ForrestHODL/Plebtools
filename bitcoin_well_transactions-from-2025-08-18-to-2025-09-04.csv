@@ -1,6 +1,0 @@
-Transaction ID,Order Type,Network,Order Status,Order Date,Fiat Amount,Fiat Code,Crypto Amount,Crypto Code,Miner Fee,Rate,Receiving Address,Bitcoin Well Deposit Address,Transaction Hash,Fail reason
-59f28d70,Buy - Interac e-Transfer,Lightning,COMPLETE,2025-09-01 12:51:25,100,CAD,0.00065779,BTC,-,"$152,024.50",bitcoinnotcryptoshow@coinos.io,-,-,-
-48001d6c,Buy - Interac e-Transfer,Lightning,COMPLETE,2025-08-25 08:05:24,100,CAD,0.00063676,BTC,-,"$157,044.69",bitcoinnotcryptoshow@coinos.io,-,-,-
-38e166fb,Buy - Interac e-Transfer,Bitcoin,COMPLETE,2025-08-20 10:47:39,10,CAD,0.00005555,BTC,0.00000681,"$160,370.54",bc1qusydmm2my96nlcyw6as77r7h6h22ny8dd5f0sa,-,434ce97b50784f151e5936d42f0ffe6ffe8781e8fbe678d5179d49ea19401fee,-
-3f7e8de1,Buy - Interac e-Transfer,Bitcoin,COMPLETE,2025-08-20 10:44:04,10,CAD,0.00005332,BTC,0.00000908,"$160,247.23",bc1qqt9jjrpz7xge5pc3gz8kv9r2dxskvvp2t7xfql,-,2af8a8b5f6750c59773cfcd635cd91a22acbe7d237e7e20bb013ba6de8213e5b,-
-dc79bab4,Buy - Interac e-Transfer,Lightning,COMPLETE,2025-08-19 09:37:19,100,CAD,0.00062724,BTC,-,"$159,429.72",bitcoinnotcryptoshow@coinos.io,-,-,-
