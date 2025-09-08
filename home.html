@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plebtools - Bitcoin Treasury & Portfolio Tracking</title>
+  <link rel="icon" type="image/x-icon" href="images/channels4_profile.jpg">
+  <link rel="stylesheet" href="styles.css?v=3">
+  <style>
+    /* Home page specific styles */
+    .hero-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 120px 0 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+      opacity: 0.3;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .hero-subtitle {
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 3rem;
+    }
+
+    .hero-btn {
+      display: inline-block;
+      padding: 1rem 2rem;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      color: white;
+      text-decoration: none;
+    }
+
+    .hero-btn.primary {
+      background: rgba(255, 255, 255, 0.9);
+      color: #667eea;
+      border-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .hero-btn.primary:hover {
+      background: white;
+      color: #667eea;
+    }
+
+    .features-section {
+      padding: 80px 0;
+      background: white;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .feature-card {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.3s ease;
+      border: 1px solid #f0f0f0;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+
+    .feature-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .feature-description {
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .feature-btn {
+      display: inline-block;
+      padding: 0.8rem 1.5rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 25px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .feature-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+      color: white;
+      text-decoration: none;
+    }
+
+    .stats-section {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+      padding: 60px 0;
+      text-align: center;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    .cta-section {
+      background: #f8f9fa;
+      padding: 80px 0;
+      text-align: center;
+    }
+
+    .cta-content {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .cta-title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+
+    .cta-description {
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 2.5rem;
+      line-height: 1.6;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.6);
+      color: white;
+      text-decoration: none;
+    }
+
+    .cta-btn.secondary {
+      background: transparent;
+      color: #667eea;
+      border: 2px solid #667eea;
+      box-shadow: none;
+    }
+
+    .cta-btn.secondary:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.1rem;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .hero-btn {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .feature-card {
+        padding: 2rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .cta-btn {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+
+    /* Dark theme support */
+    .dark-theme .features-section {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .feature-card {
+      background: #3d3d3d;
+      border-color: #555;
+    }
+
+    .dark-theme .feature-title {
+      color: #e0e0e0;
+    }
+
+    .dark-theme .feature-description {
+      color: #ccc;
+    }
+
+    .dark-theme .cta-section {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .cta-title {
+      color: #e0e0e0;
+    }
+
+    .dark-theme .cta-description {
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="nav-container">
+        <div class="logo-container">
+          <img src="images/channels4_profile.jpg" alt="Plebtools" class="nav-logo">
+          <h1 class="logo">Plebtools</h1>
+        </div>
+        <ul class="nav-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#trackers">Trackers</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">Plebtools</h1>
+        <p class="hero-subtitle">
+          Professional Bitcoin treasury and portfolio tracking tools for individuals and organizations. 
+          Track your Bitcoin purchases, monitor portfolio performance, and make data-driven decisions.
+        </p>
+        <div class="hero-buttons">
+          <a href="/treasury" class="hero-btn primary">Treasury Tracker</a>
+          <a href="/plebtools-btc" class="hero-btn">BTC Portfolio Tracker</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+      <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-icon">📊</span>
+          <h3 class="feature-title">Treasury Tracker</h3>
+          <p class="feature-description">
+            Pre-configured Bitcoin treasury tracking with real-time price data, 
+            historical analysis, and comprehensive portfolio visualization.
+          </p>
+          <a href="/treasury" class="feature-btn">View Treasury Tracker</a>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">💼</span>
+          <h3 class="feature-title">Portfolio Tracker</h3>
+          <p class="feature-description">
+            Interactive Bitcoin portfolio management. Add, edit, and delete purchases 
+            with real-time price updates and performance analytics.
+          </p>
+          <a href="/plebtools-btc" class="feature-btn">View Portfolio Tracker</a>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">📈</span>
+          <h3 class="feature-title">Real-time Data</h3>
+          <p class="feature-description">
+            Live Bitcoin price feeds from CoinGecko API with historical price data 
+            for accurate portfolio valuation and trend analysis.
+          </p>
+          <a href="/treasury" class="feature-btn">See Live Data</a>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">🎨</span>
+          <h3 class="feature-title">Modern UI</h3>
+          <p class="feature-description">
+            Beautiful, responsive design with dark/light themes, mobile optimization, 
+            and intuitive user experience across all devices.
+          </p>
+          <a href="/plebtools-btc" class="feature-btn">Try Interface</a>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">🔒</span>
+          <h3 class="feature-title">Privacy First</h3>
+          <p class="feature-description">
+            All data stored locally in your browser. No accounts required, 
+            no data collection, complete privacy and control over your information.
+          </p>
+          <a href="/treasury" class="feature-btn">Learn More</a>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">🚀</span>
+          <h3 class="feature-title">Open Source</h3>
+          <p class="feature-description">
+            Free and open source tools that you can customize, deploy, 
+            and contribute to. Built by the community, for the community.
+          </p>
+          <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" class="feature-btn">View on GitHub</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-number">2</span>
+          <span class="stat-label">Professional Trackers</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">100%</span>
+          <span class="stat-label">Privacy Focused</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">∞</span>
+          <span class="stat-label">Free to Use</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">24/7</span>
+          <span class="stat-label">Real-time Updates</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="trackers">
+      <div class="cta-content">
+        <h2 class="cta-title">Ready to Track Your Bitcoin?</h2>
+        <p class="cta-description">
+          Choose the tracker that fits your needs. Start with our pre-configured treasury tracker 
+          or build your own portfolio from scratch.
+        </p>
+        <div class="cta-buttons">
+          <a href="/treasury" class="cta-btn">Start with Treasury Tracker</a>
+          <a href="/plebtools-btc" class="cta-btn secondary">Build Custom Portfolio</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 Plebtools. Open source Bitcoin tracking tools.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Theme toggle functionality
+    const themeToggle = document.createElement('button');
+    themeToggle.innerHTML = '🌙';
+    themeToggle.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      font-size: 1.5rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    `;
+
+    let isDarkTheme = false;
+
+    themeToggle.addEventListener("click", () => {
+      isDarkTheme = !isDarkTheme;
+      if (isDarkTheme) {
+        document.body.classList.add("dark-theme");
+        themeToggle.textContent = "☀️";
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.body.classList.remove("dark-theme");
+        themeToggle.textContent = "🌙";
+        localStorage.setItem("theme", "light");
+      }
+    });
+
+    // Load saved theme on page load
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      isDarkTheme = true;
+      document.body.classList.add("dark-theme");
+      themeToggle.textContent = "☀️";
+    }
+
+    document.body.appendChild(themeToggle);
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
