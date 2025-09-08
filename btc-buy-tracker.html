@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Plebtools BTC Tracker</title>
-  <link rel="icon" type="image/x-icon" href="images/channels4_profile.jpg">
+  <link rel="icon" type="image/x-icon" href="images/plub tools image.jpeg">
   <link rel="stylesheet" href="styles.css?v=2">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -248,6 +248,168 @@
       }
     }
 
+    /* Proof of Reserves Section */
+    .proof-of-reserves-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: #f8f9fa;
+      border-radius: 15px;
+      border: 1px solid #e9ecef;
+    }
+
+    .proof-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .wallet-addresses {
+      margin-top: 1rem;
+    }
+
+    .add-wallet-form {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .wallet-input {
+      flex: 1;
+      min-width: 300px;
+      padding: 0.75rem;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .wallet-input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .add-wallet-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .add-wallet-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .wallet-list {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .wallet-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      background: white;
+      border: 1px solid #e9ecef;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .wallet-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .wallet-info {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .wallet-address {
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      color: #495057;
+      word-break: break-all;
+    }
+
+    .wallet-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .view-btn, .remove-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .view-btn {
+      background: #28a745;
+      color: white;
+    }
+
+    .view-btn:hover {
+      background: #218838;
+      transform: translateY(-1px);
+    }
+
+    .remove-btn {
+      background: #dc3545;
+      color: white;
+    }
+
+    .remove-btn:hover {
+      background: #c82333;
+      transform: translateY(-1px);
+    }
+
+    /* Mobile responsiveness for Proof of Reserves */
+    @media (max-width: 768px) {
+      .proof-of-reserves-section {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .add-wallet-form {
+        flex-direction: column;
+      }
+
+      .wallet-input {
+        min-width: 100%;
+      }
+
+      .wallet-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .wallet-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      .wallet-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
     /* Affiliate Links Section */
     .affiliate-links {
       display: grid;
@@ -388,6 +550,39 @@
       background: #3d3d3d;
     }
 
+    .dark-theme .proof-of-reserves-section {
+      background: #2d2d2d;
+      border-color: #404040;
+    }
+
+    .dark-theme .proof-description p {
+      color: #b0b0b0;
+    }
+
+    .dark-theme .wallet-input {
+      background: #3d3d3d;
+      border-color: #555;
+      color: #e0e0e0;
+    }
+
+    .dark-theme .wallet-input:focus {
+      border-color: #667eea;
+      background: #3d3d3d;
+    }
+
+    .dark-theme .wallet-input::placeholder {
+      color: #888;
+    }
+
+    .dark-theme .wallet-item {
+      background: #3d3d3d;
+      border-color: #555;
+    }
+
+    .dark-theme .wallet-address {
+      color: #e0e0e0;
+    }
+
     .dark-theme .affiliate-item {
       background: #3d3d3d;
       color: #e0e0e0;
@@ -509,15 +704,12 @@
     <nav>
       <div class="nav-container">
         <div class="logo-container">
-          <img src="images/channels4_profile.jpg" alt="Plebtools" class="nav-logo">
+          <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
           <h1 class="logo">Plebtools</h1>
         </div>
         <ul class="nav-links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/#about">About</a></li>
-          <li><a href="/#services">Services</a></li>
-          <li><a href="/#contact">Contact</a></li>
-          <li><a href="/webinars">Webinars</a></li>
+          <li><a href="home.html">Home</a></li>
+          <li><a href="treasury.html">Treasury</a></li>
         </ul>
       </div>
     </nav>
@@ -624,6 +816,27 @@
       </div>
 
       <div class="totals-section">
+        <!-- Proof of Reserves Section -->
+        <div class="proof-of-reserves-section">
+          <h3 style="text-align: center;">Proof of Reserves</h3>
+          <div class="proof-container">
+            <div class="proof-description">
+              <p style="text-align: center; color: #666; margin-bottom: 1.5rem;">
+                Verify my Bitcoin holdings on-chain. Add wallet addresses to track my reserves.
+              </p>
+            </div>
+            <div class="wallet-addresses">
+              <div class="add-wallet-form">
+                <input type="text" id="walletAddress" placeholder="Enter Bitcoin wallet address (e.g., bc1q...)" class="wallet-input">
+                <button id="addWalletBtn" class="add-wallet-btn">Add Address</button>
+              </div>
+              <div id="walletList" class="wallet-list">
+                <!-- Wallet addresses will be added here dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+
         <h3 style="text-align: center;">Want to buy and secure your Bitcoin?</h3>
         <div class="totals-display">
           <div style="text-align: center;">
@@ -695,8 +908,9 @@
     let priceHistory = [];
     let isCAD = false; // Default to USD
 
-    // Load existing data from localStorage
-    let buys = JSON.parse(localStorage.getItem("btcBuys") || "[]");
+    // Load existing data from localStorage (cleared for fresh start)
+    let buys = [];
+    localStorage.setItem("btcBuys", JSON.stringify(buys));
 
     const table = document.getElementById("buysTable");
     const totalsDiv = document.getElementById("totals");
@@ -827,10 +1041,10 @@
 
     // Generate Bitcoin price chart with purchase markers
     async function generatePriceChart() {
-      if (buys.length === 0) return;
+      // Always generate price chart, even without purchases
 
       const purchaseDates = buys.map(buy => buy.date).sort();
-      const startDate = purchaseDates[0];
+      const startDate = purchaseDates.length > 0 ? purchaseDates[0] : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // Default to 30 days ago if no purchases
       const endDate = new Date().toISOString().split('T')[0];
 
       // Fetch historical Bitcoin prices
@@ -1812,6 +2026,103 @@
       reader.readAsText(file);
     });
 
+    // Proof of Reserves functionality (cleared for fresh start)
+    let walletAddresses = [];
+    localStorage.setItem('walletAddresses', JSON.stringify(walletAddresses));
+
+    function saveWalletAddresses() {
+      localStorage.setItem('walletAddresses', JSON.stringify(walletAddresses));
+    }
+
+    function isValidBitcoinAddress(address) {
+      // Basic validation for Bitcoin addresses (bech32, legacy, and P2SH)
+      const bech32Regex = /^bc1[a-z0-9]{39,59}$/i;
+      const legacyRegex = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/;
+      const p2shRegex = /^3[a-km-zA-HJ-NP-Z1-9]{25,34}$/;
+      
+      return bech32Regex.test(address) || legacyRegex.test(address) || p2shRegex.test(address);
+    }
+
+    function addWalletAddress(address) {
+      const trimmedAddress = address.trim();
+      
+      if (!trimmedAddress) {
+        alert('Please enter a wallet address');
+        return;
+      }
+
+      if (!isValidBitcoinAddress(trimmedAddress)) {
+        alert('Please enter a valid Bitcoin address');
+        return;
+      }
+
+      if (walletAddresses.includes(trimmedAddress)) {
+        alert('This wallet address is already added');
+        return;
+      }
+
+      walletAddresses.push(trimmedAddress);
+      saveWalletAddresses();
+      renderWalletList();
+      
+      // Clear the input
+      document.getElementById('walletAddress').value = '';
+    }
+
+    function removeWalletAddress(address) {
+      if (confirm('Are you sure you want to remove this wallet address?')) {
+        walletAddresses = walletAddresses.filter(addr => addr !== address);
+        saveWalletAddresses();
+        renderWalletList();
+      }
+    }
+
+    function viewOnMempool(address) {
+      const url = `https://mempool.space/address/${address}`;
+      window.open(url, '_blank');
+    }
+
+    function renderWalletList() {
+      const walletList = document.getElementById('walletList');
+      
+      if (walletAddresses.length === 0) {
+        walletList.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">No wallet addresses added yet</p>';
+        return;
+      }
+
+      walletList.innerHTML = walletAddresses.map(address => `
+        <div class="wallet-item">
+          <div class="wallet-info">
+            <div class="wallet-address">${address}</div>
+          </div>
+          <div class="wallet-actions">
+            <button class="view-btn" onclick="viewOnMempool('${address}')">View on Mempool</button>
+            <button class="remove-btn" onclick="removeWalletAddress('${address}')">Remove</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Initialize Proof of Reserves when page loads
+    function initializeProofOfReserves() {
+      const addWalletBtn = document.getElementById('addWalletBtn');
+      const walletAddressInput = document.getElementById('walletAddress');
+
+      addWalletBtn.addEventListener('click', function() {
+        const address = walletAddressInput.value;
+        addWalletAddress(address);
+      });
+
+      walletAddressInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          const address = walletAddressInput.value;
+          addWalletAddress(address);
+        }
+      });
+
+      renderWalletList();
+    }
+
     // Initialize the tracker
     async function initializeTracker() {
       await fetchCurrentBtcPrice();
@@ -1819,7 +2130,11 @@
       await updateDisplay();
     }
     
-    initializeTracker();
+    // Initialize everything when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeTracker();
+      initializeProofOfReserves();
+    });
   </script>
 </body>
 </html>

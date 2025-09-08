@@ -1,5 +1,8 @@
 RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^forresthodl$ forresthodl.html [L]
-RewriteRule ^btc-buy-tracker$ btc-buy-tracker.html [L]
+
+# Redirect /treasury to treasury.html
+RewriteRule ^treasury$ treasury.html [L]
+
+# Optional: Redirect .html extension to clean URLs
+RewriteCond %{THE_REQUEST} /([^.]+)\.html [NC]
+RewriteRule ^ /%1? [NC,L,R=301]
