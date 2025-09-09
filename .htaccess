@@ -5,6 +5,7 @@ RewriteRule ^home$ home.html [L]
 RewriteRule ^btc-buy-tracker$ btc-buy-tracker.html [L]
 RewriteRule ^treasury$ treasury.html [L]
 RewriteRule ^press-release$ press-release.html [L]
+RewriteRule ^covered-call-tracker$ coveredcall-tracker.html [L]
 
 # Redirect root to home
 RewriteRule ^$ home.html [L]
