@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Press Release Tool - Plebtools</title>
+  <link rel="icon" type="image/x-icon" href="images/channels4_profile.jpg">
+  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Seymour+One&family=Press+Start+2P&family=Audiowide&family=Goldman:wght@400;700&family=Zen+Dots&family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Press Release Tool Styles */
+    .press-release-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: white;
+      min-height: 100vh;
+    }
+
+    .tool-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 2rem 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .tool-title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .tool-description {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .tool-interface {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .controls-panel {
+      background: #f8f9fa;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      height: fit-content;
+    }
+
+    .control-group {
+      margin-bottom: 2rem;
+    }
+
+    .control-label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    .control-input {
+      width: 100%;
+      padding: 0.8rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .control-input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .color-picker {
+      width: 100%;
+      height: 50px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .font-select {
+      width: 100%;
+      padding: 0.8rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: white;
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .file-input {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .file-input-button {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform 0.3s ease;
+    }
+
+    .file-input-button:hover {
+      transform: translateY(-2px);
+    }
+
+    .canvas-container {
+      background: #f8f9fa;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      text-align: center;
+      position: sticky;
+      top: 2rem;
+      z-index: 100;
+      height: fit-content;
+      max-height: calc(100vh - 4rem);
+      overflow-y: auto;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      display: inline-block;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+      background: white;
+    }
+
+    #imageCanvas {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .download-section {
+      text-align: center;
+      margin-top: 2rem;
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    .download-btn {
+      display: inline-block;
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+      border: none;
+      cursor: pointer;
+    }
+
+    .download-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(40, 167, 69, 0.6);
+    }
+
+    .download-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .text-preview {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: white;
+      border-radius: 8px;
+      border: 2px solid #e0e0e0;
+      min-height: 100px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+
+    .preview-text {
+      font-size: 1.2rem;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .tool-interface {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .tool-title {
+        font-size: 2rem;
+      }
+
+      .tool-description {
+        font-size: 1rem;
+      }
+
+      .controls-panel,
+      .canvas-container {
+        padding: 1rem;
+      }
+    }
+
+    /* Dark theme support */
+    .dark-theme .press-release-container {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .controls-panel {
+      background: #3d3d3d;
+    }
+
+    .dark-theme .control-label {
+      color: #e0e0e0;
+    }
+
+    .dark-theme .control-input,
+    .dark-theme .font-select {
+      background: #4d4d4d;
+      border-color: #555;
+      color: #e0e0e0;
+    }
+
+    .dark-theme .canvas-container {
+      background: #3d3d3d;
+    }
+
+    .dark-theme .text-preview {
+      background: #4d4d4d;
+      border-color: #555;
+    }
+
+    /* Preview title styling */
+    .preview-title {
+      margin-bottom: 1.5rem;
+      color: #333;
+      font-size: 1.4rem;
+      font-weight: 600;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+
+    .dark-theme .preview-title {
+      color: #e0e0e0;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="nav-container">
+        <div class="logo-container">
+          <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+          <h1 class="logo">Plebtools</h1>
+        </div>
+        <div class="nav-links">
+          <a href="home.html">Home</a>
+          <a href="treasury.html">Treasury</a>
+          <a href="btc-buy-tracker.html">Portfolio</a>
+          <a href="press-release.html" class="active">Press Release</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="press-release-container">
+      <div class="tool-header">
+        <h1 class="tool-title">Press Release Tool</h1>
+        <p class="tool-description">
+          Create professional press release images by adding custom text to your images. 
+          Upload an image, customize the text, and download your finished press release.
+        </p>
+      </div>
+
+      <div class="tool-interface">
+        <div class="controls-panel">
+          <div class="control-group">
+            <label class="control-label" for="defaultImageSelect">Default Background</label>
+            <select id="defaultImageSelect" class="font-select">
+              <option value="images/pleb release 1.jpeg" selected>Pleb Release 1</option>
+              <option value="images/pleb release 2.jpeg">Pleb Release 2</option>
+              <option value="images/pleb release 3.jpeg">Pleb Release 3</option>
+              <option value="images/pleb release 4.jpeg">Pleb Release 4</option>
+              <option value="images/pleb release 5.jpeg">Pleb Release 5</option>
+              <option value="images/pleb release 6.jpeg">Pleb Release 6</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="imageUpload">Upload Custom Image</label>
+            <div class="file-input-wrapper">
+              <input type="file" id="imageUpload" class="file-input" accept="image/*">
+              <label for="imageUpload" class="file-input-button">Choose Image</label>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="textInput">Text Content</label>
+            <textarea id="textInput" class="control-input" rows="4" placeholder="Enter your press release text here...">Acquires and achieves
+BTC Yield of % YTD;
+Now Holds</textarea>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="fontSelect">Font Family</label>
+            <select id="fontSelect" class="font-select">
+              <option value="'Jost', sans-serif" selected>Jost Bold</option>
+              <option value="'Goldman', cursive">Goldman</option>
+              <option value="'Righteous', cursive">Righteous</option>
+              <option value="'Seymour One', cursive">Seymour One</option>
+              <option value="'Press Start 2P', cursive">Press Start 2P</option>
+              <option value="'Audiowide', cursive">Audiowide</option>
+              <option value="'Zen Dots', cursive">Zen Dots</option>
+              <option value="'Montserrat', sans-serif">Montserrat Bold</option>
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
+              <option value="Helvetica, sans-serif">Helvetica</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="Courier New, monospace">Courier New</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="fontSize">Font Size</label>
+            <input type="range" id="fontSize" class="control-input" min="12" max="72" value="21">
+            <span id="fontSizeValue">21px</span>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="textColor">Text Color</label>
+            <input type="color" id="textColor" class="color-picker" value="#f6cd5d">
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="textX">X Position</label>
+            <input type="range" id="textX" class="control-input" min="0" max="500" value="20">
+            <span id="textXValue">20px</span>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label" for="textY">Y Position</label>
+            <input type="range" id="textY" class="control-input" min="0" max="500" value="20">
+            <span id="textYValue">20px</span>
+          </div>
+
+        </div>
+
+        <div class="canvas-container">
+          <h3 class="preview-title">Image Preview</h3>
+          <div class="canvas-wrapper">
+            <canvas id="imageCanvas" width="800" height="450"></canvas>
+          </div>
+          <div class="download-section">
+            <button id="downloadBtn" class="download-btn" disabled>Download Image</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 Plebtools. Open source Bitcoin tracking tools.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Canvas and image handling
+    const canvas = document.getElementById('imageCanvas');
+    const ctx = canvas.getContext('2d');
+    const imageUpload = document.getElementById('imageUpload');
+    const textInput = document.getElementById('textInput');
+    const fontSelect = document.getElementById('fontSelect');
+    const fontSize = document.getElementById('fontSize');
+    const textColor = document.getElementById('textColor');
+    const textX = document.getElementById('textX');
+    const textY = document.getElementById('textY');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const defaultImageSelect = document.getElementById('defaultImageSelect');
+
+    let currentImage = null;
+    let imageLoaded = false;
+
+    // Load default image
+    function loadDefaultImage() {
+      const selectedImage = defaultImageSelect.value;
+      const img = new Image();
+      img.onload = function() {
+        console.log('Default image loaded successfully');
+        currentImage = img;
+        imageLoaded = true;
+        drawImage();
+        updatePreview();
+        downloadBtn.disabled = false;
+        console.log('Download button enabled');
+      };
+      img.onerror = function() {
+        console.error('Failed to load default image');
+        alert('Failed to load the default image. Please upload an image manually.');
+      };
+      img.src = selectedImage;
+    }
+
+    // Draw image on canvas
+    function drawImage() {
+      if (!currentImage) return;
+      
+      // Calculate scale to fit image in canvas while maintaining aspect ratio
+      const scaleX = canvas.width / currentImage.width;
+      const scaleY = canvas.height / currentImage.height;
+      const scale = Math.min(scaleX, scaleY);
+      
+      const drawWidth = currentImage.width * scale;
+      const drawHeight = currentImage.height * scale;
+      const offsetX = (canvas.width - drawWidth) / 2;
+      const offsetY = (canvas.height - drawHeight) / 2;
+      
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw image
+      ctx.drawImage(currentImage, offsetX, offsetY, drawWidth, drawHeight);
+      
+      // Draw text overlay
+      drawText();
+    }
+
+    // Draw text on canvas
+    function drawText() {
+      const text = textInput.value;
+      if (!text || !imageLoaded) return;
+
+      const font = `${fontSize.value}px ${fontSelect.value}`;
+      const color = textColor.value;
+      const x = parseInt(textX.value);
+      const y = parseInt(textY.value);
+
+      // Use bold weight for Jost and Montserrat, but not for Righteous (already bold)
+      const fontFamily = fontSelect.value;
+      const fontWeight = (fontFamily.includes('Jost') || fontFamily.includes('Montserrat')) ? 'bold' : 'normal';
+      ctx.font = `${fontWeight} ${fontSize.value}px ${fontFamily}`;
+      ctx.fillStyle = color;
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      ctx.letterSpacing = '2px';
+
+      // Handle multi-line text
+      const lines = text.split('\n');
+      let currentY = y;
+      
+      lines.forEach(line => {
+        ctx.fillText(line, x, currentY);
+        currentY += parseInt(fontSize.value) * 1.2; // Line height
+      });
+    }
+
+    // Update text preview
+    function updatePreview() {
+      // Preview is now handled by the canvas directly
+      drawImage();
+    }
+
+    // Event listeners
+    imageUpload.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = new Image();
+          img.onload = function() {
+            currentImage = img;
+            imageLoaded = true;
+            drawImage();
+            updatePreview();
+            downloadBtn.disabled = false;
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    textInput.addEventListener('input', function() {
+      drawImage();
+      updatePreview();
+    });
+
+    fontSelect.addEventListener('change', function() {
+      drawImage();
+      updatePreview();
+    });
+
+    fontSize.addEventListener('input', function() {
+      document.getElementById('fontSizeValue').textContent = fontSize.value + 'px';
+      drawImage();
+      updatePreview();
+    });
+
+    textColor.addEventListener('change', function() {
+      drawImage();
+      updatePreview();
+    });
+
+    textX.addEventListener('input', function() {
+      document.getElementById('textXValue').textContent = textX.value + 'px';
+      drawImage();
+    });
+
+    textY.addEventListener('input', function() {
+      document.getElementById('textYValue').textContent = textY.value + 'px';
+      drawImage();
+    });
+
+    defaultImageSelect.addEventListener('change', function() {
+      loadDefaultImage();
+    });
+
+    downloadBtn.addEventListener('click', function() {
+      if (!imageLoaded || !currentImage) {
+        alert('Please wait for the image to load or upload an image first.');
+        return;
+      }
+
+      try {
+        // Create a temporary canvas with the actual image dimensions
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+        
+        // Set canvas size to match the actual image exactly
+        tempCanvas.width = currentImage.width;
+        tempCanvas.height = currentImage.height;
+        
+        // Draw the full image at full size
+        tempCtx.drawImage(currentImage, 0, 0, currentImage.width, currentImage.height);
+        
+        // Calculate text position on the full image based on the preview canvas scale
+        const previewScaleX = canvas.width / currentImage.width;
+        const previewScaleY = canvas.height / currentImage.height;
+        const previewScale = Math.min(previewScaleX, previewScaleY);
+        
+        const scaledX = parseInt(textX.value) / previewScale;
+        const scaledY = parseInt(textY.value) / previewScale;
+        const scaledFontSize = parseInt(fontSize.value) / previewScale;
+        
+        // Draw text on the full image
+        const text = textInput.value;
+        if (text) {
+          const fontFamily = fontSelect.value;
+          const fontWeight = (fontFamily.includes('Jost') || fontFamily.includes('Montserrat')) ? 'bold' : 'normal';
+          const font = `${fontWeight} ${scaledFontSize}px ${fontFamily}`;
+          const color = textColor.value;
+
+          tempCtx.font = font;
+          tempCtx.fillStyle = color;
+          tempCtx.textAlign = 'left';
+          tempCtx.textBaseline = 'top';
+          tempCtx.letterSpacing = '2px';
+
+          // Handle multi-line text
+          const lines = text.split('\n');
+          let currentY = scaledY;
+          
+          lines.forEach(line => {
+            tempCtx.fillText(line, scaledX, currentY);
+            currentY += scaledFontSize * 1.2; // Line height
+          });
+        }
+        
+        // Try to download the image
+        try {
+          const link = document.createElement('a');
+          link.download = 'press-release-image.png';
+          link.href = tempCanvas.toDataURL('image/png');
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          console.log('Download initiated successfully');
+        } catch (downloadError) {
+          // Fallback: show image in current page and provide download options
+          console.log('Download failed, showing image in current page');
+          const imageDataUrl = tempCanvas.toDataURL('image/png');
+          
+          // Create a modal to show the image
+          const modal = document.createElement('div');
+          modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+          `;
+          
+          modal.innerHTML = `
+            <div style="position: relative; display: inline-block;">
+              <img src="${imageDataUrl}" style="max-width: 90vw; max-height: 90vh; display: block;">
+              <div style="position: absolute; top: 10px; left: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 10px; border-radius: 5px;">
+                <p style="margin: 0 0 10px 0; font-size: 14px;">Right-click the image and select "Save image as..." to download</p>
+                <button onclick="navigator.clipboard.writeText('${imageDataUrl}').then(() => alert('Image URL copied to clipboard! You can paste it into a new tab.'))" 
+                        style="padding: 5px 10px; margin-right: 5px; background: #667eea; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 12px;">
+                  Copy URL
+                </button>
+                <button onclick="this.closest('.modal').remove()" 
+                        style="padding: 5px 10px; background: #ccc; color: black; border: none; border-radius: 3px; cursor: pointer; font-size: 12px;">
+                  Close
+                </button>
+              </div>
+            </div>
+          `;
+          
+          modal.className = 'modal';
+          document.body.appendChild(modal);
+          
+          // Close modal when clicking outside
+          modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+              modal.remove();
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Download failed:', error);
+        alert('Download failed. Please try again.');
+      }
+    });
+
+    // Initialize with default image
+    loadDefaultImage();
+
+    // Theme toggle functionality
+    const themeToggle = document.createElement('button');
+    themeToggle.innerHTML = '🌙';
+    themeToggle.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      font-size: 1.5rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    `;
+
+    let isDarkTheme = false;
+
+    themeToggle.addEventListener("click", () => {
+      isDarkTheme = !isDarkTheme;
+      if (isDarkTheme) {
+        document.body.classList.add("dark-theme");
+        themeToggle.textContent = "☀️";
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.body.classList.remove("dark-theme");
+        themeToggle.textContent = "🌙";
+        localStorage.setItem("theme", "light");
+      }
+    });
+
+    // Load saved theme on page load
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      isDarkTheme = true;
+      document.body.classList.add("dark-theme");
+      themeToggle.textContent = "☀️";
+    }
+
+    document.body.appendChild(themeToggle);
+  </script>
+</body>
+</html>

@@ -1,7 +1,13 @@
 RewriteEngine On
 
-# Redirect /treasury to treasury.html
+# Redirect clean URLs to HTML files
+RewriteRule ^home$ home.html [L]
+RewriteRule ^btc-buy-tracker$ btc-buy-tracker.html [L]
 RewriteRule ^treasury$ treasury.html [L]
+RewriteRule ^press-release$ press-release.html [L]
+
+# Redirect root to home
+RewriteRule ^$ home.html [L]
 
 # Optional: Redirect .html extension to clean URLs
 RewriteCond %{THE_REQUEST} /([^.]+)\.html [NC]
