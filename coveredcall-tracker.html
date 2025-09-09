@@ -288,7 +288,7 @@
 
     .dark-theme .controls-panel,
     .dark-theme .visualization-panel {
-      background: #3d3d3d;
+      background: #3d3d3d !important;
     }
 
     .dark-theme .control-label {
@@ -307,6 +307,109 @@
 
     .dark-theme .stat-label {
       color: #ccc;
+    }
+
+    .dark-theme .controls-panel h3,
+    .dark-theme .visualization-panel h3 {
+      color: #e0e0e0 !important;
+    }
+
+    /* Affiliate Links Section */
+    .features-section {
+      background: #f8f9fa;
+      padding: 4rem 0;
+      margin-top: 2rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .affiliate-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .affiliate-item {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .affiliate-item:hover {
+      transform: translateY(-3px);
+    }
+
+    .affiliate-item h4 {
+      color: #667eea;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .affiliate-link {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    }
+
+    .affiliate-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      color: white;
+      text-decoration: none;
+    }
+
+    .discount-code {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Dark theme for affiliate links */
+    .dark-theme .features-section {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .section-title {
+      color: #e0e0e0;
+    }
+
+    .dark-theme .affiliate-item {
+      background: #3d3d3d;
+      color: #e0e0e0;
+    }
+
+    .dark-theme .affiliate-item h4 {
+      color: #667eea;
+    }
+
+    .dark-theme .discount-code {
+      color: #888 !important;
     }
 
     .dark-theme .trades-table {
@@ -336,11 +439,10 @@
           <h1 class="logo">Plebtools</h1>
         </div>
         <div class="nav-links">
-          <a href="home.html">Home</a>
-          <a href="treasury.html">Treasury</a>
-          <a href="btc-buy-tracker.html">Portfolio</a>
-          <a href="press-release.html">Press Release</a>
-          <a href="coveredcall-tracker.html" class="active">Covered Calls</a>
+          <a href="home">Home</a>
+          <a href="treasury">Treasury</a>
+          <a href="btc-buy-tracker">Portfolio</a>
+          <a href="press-release">Press Release</a>
         </div>
       </div>
     </nav>
@@ -371,7 +473,7 @@
 
             <div class="control-group" id="symbolInputGroup">
               <label class="control-label" for="symbol">Stock Symbol</label>
-              <input type="text" id="symbol" class="control-input" placeholder="e.g., AAPL" required>
+              <input type="text" id="symbol" class="control-input" placeholder="e.g. MSTR" required>
             </div>
 
             <div class="control-group" id="symbolSelectGroup" style="display: none;">
@@ -407,6 +509,13 @@
               <div class="control-group">
                 <label class="control-label" for="premium">Premium Received per Share (Optional)</label>
                 <input type="number" id="premium" class="control-input" placeholder="2.50" step="0.01">
+              </div>
+            </div>
+
+            <div class="form-row" id="expiryFields" style="display: none;">
+              <div class="control-group">
+                <label class="control-label" for="expiryDate">Expiry Date (Optional)</label>
+                <input type="date" id="expiryDate" class="control-input">
               </div>
             </div>
 
@@ -454,6 +563,10 @@
               <div class="stat-value" id="avgCostBasis">$0.00</div>
               <div class="stat-label">Avg Adjusted Cost Basis</div>
             </div>
+            <div class="stat-card">
+              <div class="stat-value" id="currentMarketPrice">$0.00</div>
+              <div class="stat-label">Current Market Price</div>
+            </div>
           </div>
 
         <div class="chart-controls">
@@ -473,6 +586,7 @@
                   <th>Shares</th>
                   <th>Strike</th>
                   <th>Premium</th>
+                  <th>Expiry</th>
                   <th>New Cost Basis</th>
                   <th>P&L</th>
                   <th>Actions</th>
@@ -492,6 +606,52 @@
     </div>
   </main>
 
+  <!-- Affiliate Links Section -->
+  <section class="features-section">
+    <div class="container">
+      <h2 class="section-title">Want to buy and secure your Bitcoin?</h2>
+      <div style="text-align: center;">
+        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
+        <div class="affiliate-links">
+          <div class="affiliate-item">
+            <h4>Where to buy</h4>
+            <a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" class="affiliate-link">Bitcoin Well</a>
+          </div>
+          <div class="affiliate-item">
+            <h4>Where to store</h4>
+            <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a>
+          </div>
+          <div class="affiliate-item">
+            <h4>How to protect</h4>
+            <a href="https://www.stampseed.com/" target="_blank" class="affiliate-link">Stamp Seed</a>
+            <p class="discount-code">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
+          </div>
+          <div class="affiliate-item">
+            <h4>How to validate</h4>
+            <a href="https://store.start9.com/" target="_blank" class="affiliate-link">Start9</a>
+            <p class="discount-code">CODE: BNC5 for 5% off</p>
+          </div>
+          <div class="affiliate-item">
+            <h4>1:1 Coaching</h4>
+            <a href="https://www.differentmedia.ca/bitcoin1-1" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+          </div>
+          <div class="affiliate-item">
+            <h4>Where to learn</h4>
+            <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
+          </div>
+          <div class="affiliate-item">
+            <h4>Earn free BTC</h4>
+            <a href="https://satsarcade.app/" target="_blank" class="affiliate-link">Sats Arcade</a>
+          </div>
+          <div class="affiliate-item">
+            <h4>How to support</h4>
+            <a href="https://coinos.io/plebtools" target="_blank" class="affiliate-link">Donate</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <footer>
     <div class="container">
       <p>&copy; 2024 Plebtools. Open source Bitcoin tracking tools.</p>
@@ -502,18 +662,22 @@
     // Global variables
     let trades = JSON.parse(localStorage.getItem('coveredCallTrades')) || [];
     let performanceChart = null;
-    let chartType = 'bar'; // 'bar', 'line', or 'pie'
+    let chartType = 'bar';
+    let isUpdatingChart = false; // 'bar', 'line', or 'pie'
 
     // Initialize the page
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', async function() {
       // Set default date to today
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('tradeDate').value = today;
       
       loadTrades();
       updateStats();
-      updateChart();
+      await updateChart();
       updateTable();
+      
+      // Update market price every 30 seconds
+      setInterval(updateCurrentMarketPrice, 30000);
     });
 
     // Form submission
@@ -523,7 +687,7 @@
     });
 
     // Chart toggle
-    document.getElementById('chartToggle').addEventListener('click', function() {
+    document.getElementById('chartToggle').addEventListener('click', async function() {
       if (chartType === 'bar') {
         chartType = 'line';
         this.textContent = 'Switch to Pie Chart';
@@ -534,7 +698,7 @@
         chartType = 'bar';
         this.textContent = 'Switch to Line Chart';
       }
-      updateChart();
+      await updateChart();
     });
 
     // Toggle optional fields based on trade type
@@ -543,15 +707,18 @@
       const symbolInputGroup = document.getElementById('symbolInputGroup');
       const symbolSelectGroup = document.getElementById('symbolSelectGroup');
       const coveredCallFields = document.getElementById('coveredCallFields');
+      const expiryFields = document.getElementById('expiryFields');
       
       if (tradeType === 'shares') {
         symbolInputGroup.style.display = 'block';
         symbolSelectGroup.style.display = 'none';
         coveredCallFields.style.display = 'none';
+        expiryFields.style.display = 'none';
       } else {
         symbolInputGroup.style.display = 'none';
         symbolSelectGroup.style.display = 'block';
         coveredCallFields.style.display = 'block';
+        expiryFields.style.display = 'block';
         updateSymbolSelect();
       }
     }
@@ -625,7 +792,7 @@
       const strikePrice = parseFloat(document.getElementById('strikePrice').value) || 0;
       const premiumPerShare = parseFloat(document.getElementById('premium').value) || 0;
       const tradeDate = document.getElementById('tradeDate').value;
-      const expirationDate = '';
+      const expirationDate = document.getElementById('expiryDate').value || '';
       const currentPrice = 0;
       const notes = document.getElementById('notes').value;
 
@@ -707,6 +874,144 @@
     }
 
     // Update statistics
+    // Function to fetch current market price from Yahoo Finance
+    async function fetchCurrentMarketPrice(symbol) {
+      try {
+        // Using a CORS proxy to access Yahoo Finance
+        const proxyUrl = 'https://api.allorigins.win/raw?url=';
+        const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}`;
+        const response = await fetch(proxyUrl + encodeURIComponent(yahooUrl));
+        const data = await response.json();
+        
+        if (data.chart && data.chart.result && data.chart.result[0]) {
+          const result = data.chart.result[0];
+          if (result.meta && result.meta.regularMarketPrice) {
+            return result.meta.regularMarketPrice;
+          }
+        }
+        return null;
+      } catch (error) {
+        console.error('Error fetching market price:', error);
+        return null;
+      }
+    }
+
+    // Function to fetch historical market price for a specific date
+    async function fetchHistoricalPrice(symbol, date) {
+      try {
+        // Convert date to timestamp (ensure we're getting the right day)
+        const tradeDate = new Date(date);
+        const timestamp = Math.floor(tradeDate.getTime() / 1000);
+        const endTimestamp = timestamp + 86400; // Add 1 day to get the closing price
+        
+        console.log(`Fetching historical price for ${symbol} on ${date}:`);
+        console.log(`Trade date: ${tradeDate.toISOString()}`);
+        console.log(`Timestamp range: ${timestamp} to ${endTimestamp}`);
+        
+        // Try multiple approaches to get accurate closing price
+        let data = null;
+        
+        // Method 1: Yahoo Finance v8 API
+        try {
+          const proxyUrl = 'https://api.allorigins.win/raw?url=';
+          const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?period1=${timestamp}&period2=${endTimestamp}&interval=1d`;
+          const response = await fetch(proxyUrl + encodeURIComponent(yahooUrl));
+          data = await response.json();
+          console.log(`Yahoo v8 API response for ${symbol}:`, data);
+        } catch (error) {
+          console.log(`Yahoo v8 API failed for ${symbol}:`, error);
+        }
+        
+        // Method 2: Alternative Yahoo Finance endpoint if first fails
+        if (!data || !data.chart || !data.chart.result || !data.chart.result[0]) {
+          try {
+            const proxyUrl = 'https://api.allorigins.win/raw?url=';
+            const yahooUrl2 = `https://query2.finance.yahoo.com/v8/finance/chart/${symbol}?period1=${timestamp}&period2=${endTimestamp}&interval=1d`;
+            const response2 = await fetch(proxyUrl + encodeURIComponent(yahooUrl2));
+            data = await response2.json();
+            console.log(`Yahoo v8 API (alt) response for ${symbol}:`, data);
+          } catch (error) {
+            console.log(`Yahoo v8 API (alt) failed for ${symbol}:`, error);
+          }
+        }
+        
+        console.log(`Yahoo Finance response for ${symbol}:`, data);
+        
+        if (data.chart && data.chart.result && data.chart.result[0]) {
+          const result = data.chart.result[0];
+          console.log(`Chart result for ${symbol}:`, result);
+          
+          if (result.indicators && result.indicators.quote && result.indicators.quote[0]) {
+            const quote = result.indicators.quote[0];
+            console.log(`Quote data for ${symbol}:`, quote);
+            
+            // Get the closing price for that day
+            if (quote.close && quote.close.length > 0) {
+              const closingPrice = quote.close[quote.close.length - 1];
+              console.log(`Closing price for ${symbol} on ${date}: ${closingPrice}`);
+              return closingPrice;
+            }
+          }
+          
+          // Alternative: try to get from meta data
+          if (result.meta && result.meta.previousClose) {
+            console.log(`Previous close from meta for ${symbol}: ${result.meta.previousClose}`);
+            return result.meta.previousClose;
+          }
+        }
+        
+        console.log(`No closing price found for ${symbol} on ${date}`);
+        return null;
+      } catch (error) {
+        console.error('Error fetching historical price:', error);
+        return null;
+      }
+    }
+
+    // Function to update current market price for all positions
+    async function updateCurrentMarketPrice() {
+      const positions = getSharePositions();
+      if (positions.length === 0) {
+        document.getElementById('currentMarketPrice').textContent = '$0.00';
+        return;
+      }
+
+      // Get unique symbols
+      const symbols = [...new Set(positions.map(pos => pos.symbol))];
+      
+      // Fetch prices for all symbols
+      const pricePromises = symbols.map(async (symbol) => {
+        const price = await fetchCurrentMarketPrice(symbol);
+        return { symbol, price };
+      });
+      
+      const priceResults = await Promise.all(pricePromises);
+      const priceMap = {};
+      priceResults.forEach(({ symbol, price }) => {
+        priceMap[symbol] = price;
+      });
+
+      // Calculate weighted average market price
+      let totalMarketValue = 0;
+      let totalShares = 0;
+      
+      positions.forEach(position => {
+        const currentPrice = priceMap[position.symbol];
+        if (currentPrice && currentPrice > 0) {
+          totalMarketValue += currentPrice * position.totalShares;
+          totalShares += position.totalShares;
+        }
+      });
+
+      const avgMarketPrice = totalShares > 0 ? totalMarketValue / totalShares : 0;
+      document.getElementById('currentMarketPrice').textContent = `$${avgMarketPrice.toFixed(2)}`;
+      
+      // Update chart if it's a bar chart
+      if (chartType === 'bar') {
+        await updateChart();
+      }
+    }
+
     function updateStats() {
       const totalPremium = trades.reduce((sum, trade) => sum + (trade.premium || 0), 0);
       
@@ -762,15 +1067,30 @@
       document.getElementById('totalValue').textContent = `$${totalValue.toFixed(2)}`;
       document.getElementById('totalAdjustedCostBasis').textContent = `$${totalAdjustedCostBasis.toFixed(2)}`;
       document.getElementById('originalShareCost').textContent = `$${originalShareCost.toFixed(2)}`;
+      
+      // Update current market price
+      updateCurrentMarketPrice();
     }
 
     // Update chart
-    function updateChart() {
-      const ctx = document.getElementById('performanceChart').getContext('2d');
-      
-      if (performanceChart) {
-        performanceChart.destroy();
+    async function updateChart() {
+      // Prevent multiple simultaneous chart updates
+      if (isUpdatingChart) {
+        console.log('Chart update already in progress, skipping...');
+        return;
       }
+      
+      isUpdatingChart = true;
+      
+      try {
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        
+        if (performanceChart) {
+          performanceChart.destroy();
+          performanceChart = null;
+          // Small delay to ensure chart is fully destroyed
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
 
       // Sort trades by date and use dates as labels
       const sortedTrades = [...trades].sort((a, b) => new Date(a.dateAdded) - new Date(b.dateAdded));
@@ -785,6 +1105,29 @@
         const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         return `${trade.symbol} - ${dateStr}`;
       });
+
+      // Fetch historical prices for each trade date (for both bar and line charts)
+      let historicalPrices = [];
+      if (sortedTrades.length > 0) {
+        console.log('Fetching historical prices for', sortedTrades.length, 'trades, chart type:', chartType);
+        
+        // Get unique symbols and dates
+        const uniqueSymbols = [...new Set(sortedTrades.map(trade => trade.symbol))];
+        
+        // Fetch historical prices for each symbol and date combination
+        for (const trade of sortedTrades) {
+          try {
+            const historicalPrice = await fetchHistoricalPrice(trade.symbol, trade.dateAdded);
+            historicalPrices.push(historicalPrice || 0);
+            console.log(`Historical price for ${trade.symbol} on ${trade.dateAdded}:`, historicalPrice);
+          } catch (error) {
+            console.error(`Error fetching historical price for ${trade.symbol}:`, error);
+            historicalPrices.push(0);
+          }
+        }
+        
+        console.log('All historical prices fetched:', historicalPrices);
+      }
       const premiumData = sortedTrades.map(trade => {
         // Only show premium per share for covered call trades
         return trade.tradeType === 'covered-call' ? (trade.premium || 0) / (trade.shares || 1) : 0;
@@ -830,13 +1173,55 @@
       
       console.log('Chart costBasisData:', costBasisData);
       
-      const currentPriceData = sortedTrades.map(trade => {
-        // For share purchases, use cost basis as current price if no current price
-        if (trade.tradeType === 'share-purchase') {
-          return trade.currentPrice || trade.newCostBasis;
+      // Use historical prices for both bar and line charts when available
+      const currentPriceData = (chartType === 'bar' || chartType === 'line') && historicalPrices.length > 0 ? 
+        historicalPrices : sortedTrades.map(trade => {
+          // For share purchases, use cost basis as current price if no current price
+          if (trade.tradeType === 'share-purchase') {
+            return trade.currentPrice || trade.newCostBasis;
+          }
+          return trade.currentPrice || 0;
+        });
+      
+      console.log('Current price data for', chartType, 'chart:', currentPriceData);
+      console.log('Historical prices available:', historicalPrices);
+
+      // Add current day with live market price for both bar and line charts
+      let currentDayData = [...currentPriceData];
+      let currentDayLabels = [...labels];
+      let currentDayTooltipLabels = [...tooltipLabels];
+      
+      if (chartType === 'bar' || chartType === 'line') {
+        // Get the current market price from the widget
+        const currentMarketPriceElement = document.getElementById('currentMarketPrice');
+        let currentMarketPrice = 0;
+        
+        if (currentMarketPriceElement) {
+          const priceText = currentMarketPriceElement.textContent.replace('$', '').replace(',', '');
+          currentMarketPrice = parseFloat(priceText) || 0;
         }
-        return trade.currentPrice || 0;
-      });
+        
+        console.log('Current market price element:', currentMarketPriceElement);
+        console.log('Current market price value:', currentMarketPrice);
+        console.log('Chart type:', chartType, 'Sorted trades length:', sortedTrades.length);
+        console.log('Historical prices:', historicalPrices);
+        
+        // Always add current day data, even if price is 0 (will show as 0)
+        const today = new Date();
+        const todayLabel = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        currentDayLabels.push(todayLabel);
+        currentDayTooltipLabels.push(`Current Market Price - ${todayLabel}`);
+        
+        // Add current market price data (0 for premium and cost basis, current price for current price)
+        currentDayData.push(currentMarketPrice);
+        
+        console.log('Added current day data:', {
+          todayLabel,
+          currentMarketPrice,
+          currentDayLabels,
+          currentDayData
+        });
+      }
 
       // Calculate total cost basis, total adjusted cost basis, and total premium for line chart
       const totalCostBasisData = sortedTrades.map((trade, index) => {
@@ -862,6 +1247,29 @@
           .reduce((sum, t) => sum + (t.premium || 0), 0);
       });
 
+      // For line chart, create proper market price data that matches the trade dates
+      let lineMarketPriceData = [];
+      if (chartType === 'line') {
+        // Use historical prices for trade dates, then add current market price
+        lineMarketPriceData = [...currentPriceData];
+        
+        // Add current market price if we have current day data
+        if (currentDayData.length > currentPriceData.length) {
+          lineMarketPriceData.push(currentDayData[currentDayData.length - 1]);
+        }
+      } else {
+        lineMarketPriceData = currentDayData;
+      }
+      console.log('Line chart market price data:', lineMarketPriceData);
+      console.log('Current day data:', currentDayData);
+      console.log('Chart type:', chartType);
+      console.log('Historical prices length:', historicalPrices.length);
+      console.log('Current price data length:', currentPriceData.length);
+      console.log('Historical prices values:', historicalPrices);
+      console.log('Current price data values:', currentPriceData);
+      console.log('Line chart market price data values:', lineMarketPriceData);
+      console.log('Current day data values:', currentDayData);
+
       // Calculate pie chart data - portfolio breakdown by value
       const totalPortfolioValue = totalCostBasisData[totalCostBasisData.length - 1] || 0;
       const totalPremiumEarned = totalPremiumData[totalPremiumData.length - 1] || 0;
@@ -886,10 +1294,20 @@
         }
       ];
 
+      // Prepare data for current day bar chart
+      let barPremiumData = [...premiumData];
+      let barCostBasisData = [...costBasisData];
+      
+      if (chartType === 'bar' && currentDayData.length > premiumData.length) {
+        // Add 0 values for premium and cost basis on current day
+        barPremiumData.push(0);
+        barCostBasisData.push(0);
+      }
+
       const datasets = chartType === 'bar' ? [
         {
           label: 'Premium Received',
-          data: premiumData,
+          data: barPremiumData,
           backgroundColor: 'rgba(102, 126, 234, 0.8)',
           borderColor: 'rgba(102, 126, 234, 1)',
           borderWidth: 1,
@@ -898,7 +1316,7 @@
         },
         {
           label: 'Adjusted Cost Basis',
-          data: costBasisData,
+          data: barCostBasisData,
           backgroundColor: 'rgba(40, 167, 69, 0.8)',
           borderColor: 'rgba(40, 167, 69, 1)',
           borderWidth: 1,
@@ -906,8 +1324,8 @@
           tension: 0
         },
         {
-          label: 'Current Price',
-          data: currentPriceData,
+          label: 'Market Price',
+          data: currentDayData,
           backgroundColor: 'rgba(255, 193, 7, 0.8)',
           borderColor: 'rgba(255, 193, 7, 1)',
           borderWidth: 1,
@@ -953,7 +1371,7 @@
           pointBorderColor: 'rgba(255, 99, 132, 1)',
           pointRadius: 6,
           pointHoverRadius: 8
-        }
+        },
       ] : [
         {
           label: pieData[0].label,
@@ -986,7 +1404,7 @@
           borderWidth: 2
         }]
       } : {
-        labels: labels,
+        labels: (chartType === 'bar' || chartType === 'line') ? currentDayLabels : labels,
         datasets: datasets
       };
 
@@ -1004,7 +1422,7 @@
                     return context[0].label;
                   }
                   const index = context[0].dataIndex;
-                  return tooltipLabels[index];
+                  return (chartType === 'bar' || chartType === 'line') ? currentDayTooltipLabels[index] : tooltipLabels[index];
                 },
                 label: function(context) {
                   if (chartType === 'pie') {
@@ -1051,6 +1469,11 @@
           }
         }
       });
+      } catch (error) {
+        console.error('Error updating chart:', error);
+      } finally {
+        isUpdatingChart = false;
+      }
     }
 
     // Update pie chart percentages when slices are hidden/shown
@@ -1094,7 +1517,7 @@
       if (trades.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="8" style="text-align: center; color: #666; padding: 2rem;">
+            <td colspan="9" style="text-align: center; color: #666; padding: 2rem;">
               No trades yet. Add your first trade above!
             </td>
           </tr>
@@ -1115,6 +1538,7 @@
           <td>${trade.shares}</td>
           <td>${trade.strikePrice ? '$' + trade.strikePrice.toFixed(2) : '-'}</td>
           <td>${trade.premium ? '$' + (trade.premium / trade.shares).toFixed(2) : '-'}</td>
+          <td>${trade.expirationDate ? new Date(trade.expirationDate).toLocaleDateString() : '-'}</td>
           <td>$${trade.newCostBasis.toFixed(2)}</td>
           <td class="${trade.pnl >= 0 ? 'profit' : 'loss'}">
             ${trade.pnl >= 0 ? '+' : ''}$${trade.pnl.toFixed(2)}
