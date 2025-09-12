@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Compound Interest Calculator - Plebtools</title>
+    <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
+    <link rel="stylesheet" href="styles.css?v=4">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* Modern dropdown styles */
+        #toolsDropdown { position: relative; display: inline-block; }
+        #toolsBtn { background: none; border: none; color: #333; font-weight: 500; font-size: 1rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; }
+        .dark-theme #toolsBtn { color: #e0e0e0 !important; }
+        #toolsBtn:hover { background: rgba(102, 126, 234, 0.1); color: #667eea; }
+        .dropdown-arrow { font-size: 0.8rem; transition: transform 0.3s ease; }
+        #toolsContent { position: absolute; top: 100%; right: 0; background: white; min-width: 220px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); border-radius: 12px; z-index: 1001; padding: 0.75rem 0; border: 1px solid rgba(0, 0, 0, 0.08); backdrop-filter: blur(10px); margin-top: 8px; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; }
+        #toolsContent.show { opacity: 1; transform: translateY(0); }
+        #toolsContent a { display: block; padding: 0.875rem 1.5rem; color: #333; text-decoration: none; transition: all 0.3s ease; font-weight: 500; border-radius: 0; position: relative; }
+        .dark-theme #toolsContent a { color: #e0e0e0 !important; }
+        #toolsContent a:hover { background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); color: #667eea; transform: translateX(8px); }
+        #toolsContent a:first-child { border-radius: 12px 12px 0 0; }
+        #toolsContent a:last-child { border-radius: 0 0 12px 12px; }
+        .dark-theme #toolsContent { background: #2d2d2d !important; border-color: #555 !important; }
+        .dark-theme #toolsContent a:hover { background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%) !important; color: #667eea !important; }
+    </style>
+    
+    <style>
+        /* Calculator specific styles */
+        .calculator-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, #f7931a 0%, #ff6b35 100%);
+            color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .calculator-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .calculator-description {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .calculator-interface {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .controls-panel {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .control-group {
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            height: 4.5rem;
+        }
+
+        .control-label {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+            height: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .control-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            height: 2.5rem;
+            box-sizing: border-box;
+        }
+
+        .control-input:focus {
+            outline: none;
+            border-color: #f7931a;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f7931a 0%, #ff6b35 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(247, 147, 26, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .visualization-panel {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #f7931a;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .results-table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 0.9rem;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+            position: sticky;
+            top: 0;
+        }
+
+        .table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .profit {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .loss {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .chart-controls {
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .chart-toggle-btn {
+            background: #f7931a;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+            margin: 0 0.5rem;
+        }
+        
+        .chart-toggle-btn:hover {
+            background: #e8830a;
+        }
+
+        .chart-toggle-btn.active {
+            background: #e8830a;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .calculator-interface {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .calculator-title {
+                font-size: 2rem;
+            }
+
+            .calculator-description {
+                font-size: 1rem;
+            }
+
+            .controls-panel,
+            .visualization-panel {
+                padding: 1rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Dark theme support */
+        .dark-theme .calculator-container {
+            background: #2d2d2d;
+        }
+
+        /* Force affiliate styling to work */
+        .features-section .affiliate-links {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+            gap: 1.5rem !important;
+            margin-top: 1rem !important;
+        }
+
+        .features-section .affiliate-item {
+            background: white !important;
+            padding: 1.5rem !important;
+            border-radius: 10px !important;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1) !important;
+            text-align: center !important;
+            transition: transform 0.3s ease !important;
+        }
+
+        .features-section .affiliate-item:hover {
+            transform: translateY(-3px) !important;
+        }
+
+        .features-section .affiliate-item h4 {
+            color: #333 !important;
+            margin-bottom: 0.5rem !important;
+            font-size: 1rem !important;
+            font-weight: bold !important;
+        }
+
+        .features-section .affiliate-link {
+            display: inline-block !important;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 5px !important;
+            text-decoration: none !important;
+            font-weight: 500 !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .features-section .affiliate-link:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4) !important;
+        }
+
+        .features-section .discount-code {
+            font-size: 0.8rem !important;
+            color: #4CAF50 !important;
+            margin-top: 0.5rem !important;
+            font-weight: 500 !important;
+        }
+
+        /* Dark theme for affiliate links */
+        .dark-theme .features-section .affiliate-item {
+            background: #2d2d2d !important;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3) !important;
+        }
+
+        .dark-theme .features-section .affiliate-item h4 {
+            color: #e0e0e0 !important;
+        }
+
+        .dark-theme .features-section .discount-code {
+            color: #4CAF50 !important;
+        }
+
+        .dark-theme .controls-panel,
+        .dark-theme .visualization-panel {
+            background: #3d3d3d !important;
+        }
+
+        .dark-theme .control-label {
+            color: #e0e0e0;
+        }
+
+        .dark-theme .control-input {
+            background: #4d4d4d;
+            border-color: #555;
+            color: #e0e0e0;
+        }
+
+        .dark-theme .stat-card {
+            background: #4d4d4d;
+        }
+
+        .dark-theme .stat-label {
+            color: #ccc;
+        }
+
+        .dark-theme .controls-panel h3,
+        .dark-theme .visualization-panel h3 {
+            color: #e0e0e0 !important;
+        }
+
+        .dark-theme .controls-panel h4 {
+            color: #e0e0e0 !important;
+        }
+
+        .dark-theme .results-table {
+            background: #4d4d4d;
+        }
+
+        .dark-theme .table th {
+            background: #3d3d3d;
+            color: #e0e0e0;
+        }
+
+        .dark-theme .table td {
+            color: #e0e0e0;
+        }
+
+        .dark-theme .table tr:hover {
+            background: #3d3d3d;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <div class="logo-container">
+                    <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+                    <h1 class="logo">Plebtools</h1>
+                </div>
+                <div class="nav-links">
+                <div class="dropdown" id="toolsDropdown">
+                    <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+                    <div class="dropdown-content" id="toolsContent" style="display: none;">
+                        <a href="home.html">🏠 Home</a>
+                        <a href="treasury.html">📊 Treasury</a>
+                        <a href="btc-buy-tracker.html">💼 Portfolio</a>
+                        <a href="coveredcall-tracker.html">📈 Covered Calls</a>
+                        <a href="btc-loan-ltv.html">🔒 BTC Loans</a>
+                        <a href="pleb-release.html">📰 Pleb Release</a>
+                    </div>
+                </div>
+                    <a href="account.html" class="account-link">👤 Account</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="calculator-container">
+            <div class="calculator-header">
+                <h1 class="calculator-title">Bitcoin Compound Interest Calculator</h1>
+                <p class="calculator-description">
+                    Calculate your Bitcoin wealth over time with compound interest, house appreciation, 
+                    and various loan scenarios. See how your Bitcoin stack grows against traditional assets.
+                </p>
+            </div>
+
+            <div class="calculator-interface">
+                <div class="controls-panel">
+                    <h3 style="margin-bottom: 2rem; color: #333;">Calculator Settings</h3>
+                    
+                    <form id="calculatorForm">
+                        <!-- Bitcoin Settings -->
+                        <h4 style="margin-bottom: 1rem; color: #333; border-bottom: 2px solid #f7931a; padding-bottom: 0.5rem;">Bitcoin Settings</h4>
+                        <div class="form-row">
+                            <div class="control-group">
+                                <label class="control-label" for="initialInvestment">Initial BTC Investment ($)</label>
+                                <input type="number" id="initialInvestment" class="control-input" placeholder="24000" value="24000" step="100" title="Starting amount you invest in Bitcoin">
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="monthlyContribution">Monthly BTC Contribution ($)</label>
+                                <input type="number" id="monthlyContribution" class="control-input" placeholder="2000" value="2000" step="100" title="Amount you invest in Bitcoin each month">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="control-group">
+                                <label class="control-label" for="bitcoinPrice">Current Bitcoin Price ($)</label>
+                                <input type="number" id="bitcoinPrice" class="control-input" placeholder="114268.74" value="114268.74" step="0.01" title="Current Bitcoin price to start calculations">
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="bitcoinGrowthRate">Bitcoin Annual Growth Rate (%)</label>
+                                <input type="number" id="bitcoinGrowthRate" class="control-input" placeholder="25" value="25" step="0.1" title="Expected annual Bitcoin price increase">
+                            </div>
+                        </div>
+
+                        <!-- House Settings -->
+                        <h4 style="margin-bottom: 1rem; color: #333; border-bottom: 2px solid #28a745; padding-bottom: 0.5rem; margin-top: 2rem;">House Settings</h4>
+                        <div class="form-row">
+                            <div class="control-group">
+                                <label class="control-label" for="housePrice">House Price ($)</label>
+                                <input type="number" id="housePrice" class="control-input" placeholder="450000" value="450000" step="1000" title="Current value of your house for comparison">
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="houseAppreciation">House Appreciation Rate (%)</label>
+                                <input type="number" id="houseAppreciation" class="control-input" placeholder="5" value="5" step="0.1" title="Expected annual house value increase">
+                            </div>
+                        </div>
+
+                        <!-- Stock Settings -->
+                        <h4 style="margin-bottom: 1rem; color: #333; border-bottom: 2px solid #007bff; padding-bottom: 0.5rem; margin-top: 2rem;">Stock Settings</h4>
+                        <div class="form-row">
+                            <div class="control-group">
+                                <label class="control-label" for="initialStockInvestment">Initial Stock Investment ($)</label>
+                                <input type="number" id="initialStockInvestment" class="control-input" placeholder="10000" value="10000" step="100" title="Starting amount you invest in stocks">
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="monthlyStockContribution">Monthly Stock Contribution ($)</label>
+                                <input type="number" id="monthlyStockContribution" class="control-input" placeholder="1000" value="1000" step="100" title="Amount you invest in stocks each month">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="control-group">
+                                <label class="control-label" for="currentStockPortfolio">Current Stock Portfolio ($)</label>
+                                <input type="number" id="currentStockPortfolio" class="control-input" placeholder="50000" value="50000" step="100" title="Current value of your stock portfolio">
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="stockGrowthRate">Stock Annual Growth Rate (%)</label>
+                                <input type="number" id="stockGrowthRate" class="control-input" placeholder="10" value="10" step="0.1" title="Expected annual stock portfolio growth">
+                            </div>
+                        </div>
+
+                        <!-- Calculation Settings -->
+                        <h4 style="margin-bottom: 1rem; color: #333; border-bottom: 2px solid #6c757d; padding-bottom: 0.5rem; margin-top: 2rem;">Calculation Settings</h4>
+                        <div class="form-row">
+                            <div class="control-group">
+                                <label class="control-label" for="years">Years to Calculate</label>
+                                <input type="number" id="years" class="control-input" placeholder="15" value="15" step="1" min="1" max="50" title="Number of years to project into the future">
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Calculate</button>
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+                            <button type="button" class="btn btn-danger" onclick="clearAll()">Clear All</button>
+                        </div>
+                    </form>
+
+                    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e0e0e0;">
+                        <h4 style="margin-bottom: 1rem; color: #333;">Export Data</h4>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <button class="btn btn-success" onclick="exportData()">Export CSV</button>
+                            <button class="btn btn-success" onclick="exportChart()">Export Chart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="visualization-panel">
+                    <h3 style="margin-bottom: 2rem; color: #333;">Results Overview</h3>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card" title="Total Bitcoin accumulated through DCA over the projection period">
+                            <div class="stat-value" id="totalBitcoin">0.00</div>
+                            <div class="stat-label">Total Bitcoin</div>
+                            <div class="stat-value" id="totalBitcoinValue" style="font-size: 1.2rem; margin-top: 0.5rem;">$0.00</div>
+                        </div>
+                        <div class="stat-card" title="Current value of your stock portfolio including growth and contributions">
+                            <div class="stat-value" id="totalStockValue">$0.00</div>
+                            <div class="stat-label">Stock Portfolio</div>
+                        </div>
+                        <div class="stat-card" title="Combined value of Bitcoin, stocks, and fiat holdings">
+                            <div class="stat-value" id="totalValue">$0.00</div>
+                            <div class="stat-label">Total Portfolio Value</div>
+                        </div>
+                        <div class="stat-card" title="Projected house value based on appreciation rate">
+                            <div class="stat-value" id="houseValue">$0.00</div>
+                            <div class="stat-label">House Value</div>
+                        </div>
+                        <div class="stat-card" title="Bitcoin portfolio value as percentage of house value">
+                            <div class="stat-value" id="stackToHouse">0.00%</div>
+                            <div class="stat-label">BTC/House Ratio</div>
+                        </div>
+                        <div class="stat-card" title="Stock portfolio value as percentage of house value">
+                            <div class="stat-value" id="stockToHouse">0.00%</div>
+                            <div class="stat-label">Stock/House Ratio</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-controls">
+                        <button id="valueChartBtn" class="chart-toggle-btn active" onclick="showChart('value')" title="Bitcoin vs Stock vs House Value Comparison">Value Chart</button>
+                        <button id="ratioChartBtn" class="chart-toggle-btn" onclick="showChart('ratio')" title="Investment vs House Value Ratios">Ratio Chart</button>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="resultsChart"></canvas>
+                    </div>
+
+                    <h4 style="margin-bottom: 1rem; color: #333;">Yearly Projections</h4>
+                    <div class="results-table">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Year</th>
+                                    <th>BTC Price</th>
+                                    <th>BTC Balance</th>
+                                    <th>Stock Value</th>
+                                    <th>Fiat Balance</th>
+                                    <th>House Value</th>
+                                    <th>BTC/House</th>
+                                    <th>Stock/House</th>
+                                    <th>Portfolio Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultsTableBody">
+                                <tr>
+                                    <td colspan="9" style="text-align: center; color: #666; padding: 2rem;">
+                                        Enter your parameters and click Calculate to see projections
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Affiliate Links Section -->
+    <section class="features-section">
+        <div class="container">
+            <h2 class="section-title">Want to buy and secure your Bitcoin?</h2>
+            <div style="text-align: center;">
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
+                <div class="affiliate-links">
+                        <div class="affiliate-item">
+                            <h4>Where to buy</h4>
+                            <a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" class="affiliate-link">Bitcoin Well</a>
+                        </div>
+                        <div class="affiliate-item">
+                            <h4>Where to store</h4>
+                            <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a>
+                        </div>
+                        <div class="affiliate-item">
+                            <h4>How to protect</h4>
+                            <a href="https://www.stampseed.com/" target="_blank" class="affiliate-link">Stamp Seed</a>
+                            <p class="discount-code">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
+                        </div>
+                        <div class="affiliate-item">
+                            <h4>How to validate</h4>
+                            <a href="https://store.start9.com/" target="_blank" class="affiliate-link">Start9</a>
+                            <p class="discount-code">CODE: BNC5 for 5% off</p>
+                        </div>
+                        <div class="affiliate-item">
+                            <h4>1:1 Coaching</h4>
+                            <a href="https://www.differentmedia.ca/bitcoin1-1" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+                        </div>
+                        <div class="affiliate-item">
+                            <h4>Where to learn</h4>
+                            <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
+                        </div>
+                        <div class="affiliate-item">
+                            <h4>Earn free BTC</h4>
+                            <a href="https://satsarcade.app/" target="_blank" class="affiliate-link">Sats Arcade</a>
+                        </div>
+                        <div class="affiliate-item">
+                            <h4>How to support</h4>
+                            <a href="https://coinos.io/plebtools" target="_blank" class="affiliate-link">Donate</a>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Plebtools. Open source Bitcoin tracking tools.</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                <strong>Open Source Contributors:</strong> ForrestHODL & Rajat Soni
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Global variables
+        let calculationResults = [];
+        let currentChart = null;
+        let currentChartType = 'value';
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up form submission
+            document.getElementById('calculatorForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                calculateResults();
+            });
+
+            // Load default calculation
+            calculateResults();
+        });
+
+
+        // Calculate compound interest results
+        function calculateResults() {
+            const initialInvestment = parseFloat(document.getElementById('initialInvestment').value) || 0;
+            const monthlyContribution = parseFloat(document.getElementById('monthlyContribution').value) || 0;
+            const initialStockInvestment = parseFloat(document.getElementById('initialStockInvestment').value) || 0;
+            const monthlyStockContribution = parseFloat(document.getElementById('monthlyStockContribution').value) || 0;
+            const bitcoinPrice = parseFloat(document.getElementById('bitcoinPrice').value) || 114268.74;
+            const bitcoinGrowthRate = parseFloat(document.getElementById('bitcoinGrowthRate').value) || 25;
+            const currentStockPortfolio = parseFloat(document.getElementById('currentStockPortfolio').value) || 0;
+            const stockGrowthRate = parseFloat(document.getElementById('stockGrowthRate').value) || 10;
+            const housePrice = parseFloat(document.getElementById('housePrice').value) || 450000;
+            const houseAppreciation = parseFloat(document.getElementById('houseAppreciation').value) || 5;
+            const years = parseInt(document.getElementById('years').value) || 15;
+
+            // Calculate monthly rates
+            const monthlyHouseGrowth = Math.pow(1 + houseAppreciation / 100, 1/12) - 1;
+
+            // Initialize variables
+            let bitcoinBalance = 0;
+            let fiatBalance = initialInvestment;
+            let stockBalance = currentStockPortfolio + initialStockInvestment;
+            let currentHousePrice = housePrice;
+            let totalBitcoinAdded = 0;
+            let totalStockAdded = 0;
+
+            calculationResults = [];
+
+            // Calculate for each year
+            for (let year = 0; year <= years; year++) {
+                const currentYear = 2025 + year;
+                const currentBitcoinPrice = bitcoinPrice * Math.pow(1 + bitcoinGrowthRate / 100, year);
+                
+                // Calculate monthly contributions for this year
+                let yearlyBitcoinAdded = 0;
+                let yearlyStockAdded = 0;
+                for (let month = 0; month < 12; month++) {
+                    // Add monthly contribution to fiat balance
+                    fiatBalance += monthlyContribution;
+                    
+                    // Calculate how much Bitcoin to buy with monthly contribution
+                    const bitcoinToAdd = monthlyContribution / currentBitcoinPrice;
+                    bitcoinBalance += bitcoinToAdd;
+                    yearlyBitcoinAdded += bitcoinToAdd;
+                    totalBitcoinAdded += bitcoinToAdd;
+                    
+                    // Add monthly stock contribution
+                    stockBalance += monthlyStockContribution;
+                    yearlyStockAdded += monthlyStockContribution;
+                    totalStockAdded += monthlyStockContribution;
+                    
+                    // Apply monthly growth to house only
+                    // Bitcoin balance grows only from new purchases, not price appreciation
+                    currentHousePrice *= (1 + monthlyHouseGrowth);
+                }
+
+                // Apply annual stock growth
+                stockBalance *= (1 + stockGrowthRate / 100);
+                
+                // Calculate values
+                const fiatValue = fiatBalance;
+                const bitcoinValue = bitcoinBalance * currentBitcoinPrice;
+                const totalPortfolioValue = fiatValue + bitcoinValue + stockBalance;
+                const stackToHouseRatio = (bitcoinValue / currentHousePrice) * 100;
+                const stockToHouseRatio = (stockBalance / currentHousePrice) * 100;
+
+                calculationResults.push({
+                    year: currentYear,
+                    bitcoinPrice: currentBitcoinPrice,
+                    bitcoinBalance: bitcoinBalance,
+                    fiatBalance: fiatBalance,
+                    stockBalance: stockBalance,
+                    houseValue: currentHousePrice,
+                    stackToHouseRatio: stackToHouseRatio,
+                    stockToHouseRatio: stockToHouseRatio,
+                    portfolioValue: totalPortfolioValue,
+                    bitcoinAdded: yearlyBitcoinAdded,
+                    stockAdded: yearlyStockAdded
+                });
+            }
+
+            // Update display
+            updateStats();
+            updateChart();
+            updateTable();
+        }
+
+        // Update statistics display
+        function updateStats() {
+            if (calculationResults.length === 0) return;
+
+            const lastResult = calculationResults[calculationResults.length - 1];
+            const bitcoinValue = lastResult.bitcoinBalance * lastResult.bitcoinPrice;
+            
+            document.getElementById('totalBitcoin').textContent = lastResult.bitcoinBalance.toFixed(8);
+            document.getElementById('totalBitcoinValue').textContent = `$${bitcoinValue.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+            document.getElementById('totalStockValue').textContent = `$${lastResult.stockBalance.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+            document.getElementById('totalValue').textContent = `$${lastResult.portfolioValue.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+            document.getElementById('houseValue').textContent = `$${lastResult.houseValue.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+            document.getElementById('stackToHouse').textContent = `${lastResult.stackToHouseRatio.toFixed(2)}%`;
+            document.getElementById('stockToHouse').textContent = `${lastResult.stockToHouseRatio.toFixed(2)}%`;
+        }
+
+        // Update chart
+        function updateChart() {
+            if (calculationResults.length === 0) return;
+
+            const ctx = document.getElementById('resultsChart').getContext('2d');
+            
+            if (currentChart) {
+                currentChart.destroy();
+            }
+
+            const labels = calculationResults.map(r => r.year.toString());
+            let datasets = [];
+
+            if (currentChartType === 'value') {
+                datasets = [
+                    {
+                        label: 'Bitcoin Value ($)',
+                        data: calculationResults.map(r => r.bitcoinBalance * r.bitcoinPrice),
+                        borderColor: '#f7931a',
+                        backgroundColor: 'rgba(247, 147, 26, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Stock Portfolio ($)',
+                        data: calculationResults.map(r => r.stockBalance),
+                        borderColor: '#007bff',
+                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'House Value ($)',
+                        data: calculationResults.map(r => r.houseValue),
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }
+                ];
+            } else if (currentChartType === 'ratio') {
+                datasets = [
+                    {
+                        label: 'BTC/House Ratio (%)',
+                        data: calculationResults.map(r => r.stackToHouseRatio),
+                        borderColor: '#f7931a',
+                        backgroundColor: 'rgba(247, 147, 26, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Stock/House Ratio (%)',
+                        data: calculationResults.map(r => r.stockToHouseRatio),
+                        borderColor: '#007bff',
+                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }
+                ];
+            }
+
+            currentChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: getChartTitle()
+                        },
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    if (currentChartType === 'price' || currentChartType === 'value') {
+                                        return '$' + value.toLocaleString();
+                                    } else {
+                                        return value.toFixed(1) + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Get chart title based on current type
+        function getChartTitle() {
+            switch(currentChartType) {
+                case 'value': return 'Portfolio Value Comparison (BTC vs Stocks vs House)';
+                case 'ratio': return 'Investment vs House Value Ratios';
+                default: return 'Bitcoin & Stock Compound Interest Analysis';
+            }
+        }
+
+        // Show specific chart type
+        function showChart(type) {
+            // Update button states
+            document.querySelectorAll('.chart-toggle-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(type + 'ChartBtn').classList.add('active');
+            
+            currentChartType = type;
+            updateChart();
+        }
+
+        // Update results table
+        function updateTable() {
+            const tbody = document.getElementById('resultsTableBody');
+            
+            if (calculationResults.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" style="text-align: center; color: #666; padding: 2rem;">
+                            Enter your parameters and click Calculate to see projections
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = calculationResults.map(result => `
+                <tr>
+                    <td>${result.year}</td>
+                    <td>$${result.bitcoinPrice.toLocaleString(undefined, {maximumFractionDigits: 2})}</td>
+                    <td>${result.bitcoinBalance.toFixed(8)}</td>
+                    <td>$${result.stockBalance.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                    <td>$${result.fiatBalance.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                    <td>$${result.houseValue.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                    <td>${result.stackToHouseRatio.toFixed(2)}%</td>
+                    <td>${result.stockToHouseRatio.toFixed(2)}%</td>
+                    <td>$${result.portfolioValue.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Reset form to default values
+        function resetForm() {
+            document.getElementById('initialInvestment').value = 24000;
+            document.getElementById('monthlyContribution').value = 2000;
+            document.getElementById('initialStockInvestment').value = 10000;
+            document.getElementById('monthlyStockContribution').value = 1000;
+            document.getElementById('bitcoinPrice').value = 114268.74;
+            document.getElementById('bitcoinGrowthRate').value = 25;
+            document.getElementById('currentStockPortfolio').value = 50000;
+            document.getElementById('stockGrowthRate').value = 10;
+            document.getElementById('housePrice').value = 450000;
+            document.getElementById('houseAppreciation').value = 5;
+            document.getElementById('years').value = 15;
+            
+            calculateResults();
+        }
+
+        // Clear all form values to zero
+        function clearAll() {
+            document.getElementById('initialInvestment').value = 0;
+            document.getElementById('monthlyContribution').value = 0;
+            document.getElementById('initialStockInvestment').value = 0;
+            document.getElementById('monthlyStockContribution').value = 0;
+            document.getElementById('bitcoinPrice').value = 0;
+            document.getElementById('bitcoinGrowthRate').value = 0;
+            document.getElementById('currentStockPortfolio').value = 0;
+            document.getElementById('stockGrowthRate').value = 0;
+            document.getElementById('housePrice').value = 0;
+            document.getElementById('houseAppreciation').value = 0;
+            document.getElementById('years').value = 0;
+            
+            // Clear the results
+            calculationResults = [];
+            updateStats();
+            updateChart();
+            updateTable();
+        }
+
+        // Export data as CSV
+        function exportData() {
+            if (calculationResults.length === 0) {
+                alert('No data to export!');
+                return;
+            }
+
+            const csvContent = [
+                ['Year', 'Bitcoin Price', 'Bitcoin Balance', 'Fiat Balance', 'House Value', 'Stack/House Ratio (%)', 'Portfolio Value'],
+                ...calculationResults.map(result => [
+                    result.year,
+                    result.bitcoinPrice.toFixed(2),
+                    result.bitcoinBalance.toFixed(8),
+                    result.fiatBalance.toFixed(2),
+                    result.houseValue.toFixed(2),
+                    result.stackToHouseRatio.toFixed(2),
+                    result.portfolioValue.toFixed(2)
+                ])
+            ].map(row => row.join(',')).join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'bitcoin-compound-interest-calculator.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Export chart as image
+        function exportChart() {
+            if (!currentChart) {
+                alert('No chart to export!');
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.download = 'bitcoin-calculator-chart.png';
+            link.href = currentChart.toBase64Image();
+            link.click();
+        }
+
+        // Theme toggle functionality
+        const themeToggle = document.createElement('button');
+        themeToggle.innerHTML = '🌙';
+        themeToggle.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 1.5rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        `;
+
+        let isDarkTheme = false;
+
+        themeToggle.addEventListener("click", () => {
+            isDarkTheme = !isDarkTheme;
+            if (isDarkTheme) {
+                document.body.classList.add("dark-theme");
+                themeToggle.textContent = "☀️";
+                localStorage.setItem("theme", "dark");
+            } else {
+                document.body.classList.remove("dark-theme");
+                themeToggle.textContent = "🌙";
+                localStorage.setItem("theme", "light");
+            }
+        });
+
+        // Load saved theme on page load
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "dark") {
+            isDarkTheme = true;
+            document.body.classList.add("dark-theme");
+            themeToggle.textContent = "☀️";
+        }
+
+        document.body.appendChild(themeToggle);
+
+            // Simple dropdown functionality
+            const toolsBtn = document.getElementById('toolsBtn');
+            const toolsContent = document.getElementById('toolsContent');
+            let isOpen = false;
+
+            toolsBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (isOpen) {
+                    toolsContent.classList.remove('show');
+                    setTimeout(() => {
+                        toolsContent.style.display = 'none';
+                    }, 300);
+                    isOpen = false;
+                } else {
+                    toolsContent.style.display = 'block';
+                    setTimeout(() => {
+                        toolsContent.classList.add('show');
+                    }, 10);
+                    isOpen = true;
+                }
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!document.getElementById('toolsDropdown').contains(e.target)) {
+                    toolsContent.classList.remove('show');
+                    setTimeout(() => {
+                        toolsContent.style.display = 'none';
+                    }, 300);
+                    isOpen = false;
+                }
+            });
+    </script>
+</body>
+</html>

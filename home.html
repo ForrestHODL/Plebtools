@@ -4,8 +4,123 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Plebtools - Bitcoin Treasury & Portfolio Tracking</title>
-  <link rel="icon" type="image/x-icon" href="images/channels4_profile.jpg">
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
   <link rel="stylesheet" href="styles.css?v=3">
+  
+  <style>
+    /* Inline dropdown styles to ensure they work */
+    #toolsDropdown {
+      position: relative;
+      display: inline-block;
+    }
+    
+    #toolsBtn {
+      background: none;
+      border: none;
+      color: #333;
+      font-weight: 500;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    /* Ensure button text color changes with theme */
+    .dark-theme #toolsBtn {
+      color: #e0e0e0 !important;
+    }
+    
+    #toolsBtn:hover {
+      background: rgba(102, 126, 234, 0.1);
+      color: #667eea;
+    }
+    
+    .dropdown-arrow {
+      font-size: 0.8rem;
+      transition: transform 0.3s ease;
+    }
+    
+    #toolsContent {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      min-width: 220px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      z-index: 1001;
+      padding: 0.75rem 0;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(10px);
+      margin-top: 8px;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+    }
+    
+    #toolsContent.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    #toolsContent a {
+      display: block;
+      padding: 0.875rem 1.5rem;
+      color: #333;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      border-radius: 0;
+      position: relative;
+    }
+    
+    /* Force text color in dark theme */
+    .dark-theme #toolsContent a {
+      color: #e0e0e0 !important;
+    }
+    
+    #toolsContent a:hover {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      color: #667eea;
+      transform: translateX(8px);
+    }
+    
+    #toolsContent a:first-child {
+      border-radius: 12px 12px 0 0;
+    }
+    
+    #toolsContent a:last-child {
+      border-radius: 0 0 12px 12px;
+    }
+    
+    /* Dark theme support */
+    .dark-theme #toolsBtn {
+      color: #e0e0e0;
+    }
+    
+    .dark-theme #toolsBtn:hover {
+      background: rgba(102, 126, 234, 0.2);
+      color: #667eea;
+    }
+    
+    .dark-theme #toolsContent {
+      background: #2d2d2d !important;
+      border-color: #555 !important;
+    }
+    
+    .dark-theme #toolsContent a {
+      color: #e0e0e0 !important;
+    }
+    
+    .dark-theme #toolsContent a:hover {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%) !important;
+      color: #667eea !important;
+    }
+  </style>
   
   <style>
     /* Home page specific styles */
@@ -535,10 +650,18 @@
           <h1 class="logo">Plebtools</h1>
         </div>
         <div class="nav-links">
-          <a href="treasury">Treasury</a>
-          <a href="btc-buy-tracker">Portfolio</a>
-          <a href="covered-call-tracker">Covered Calls</a>
-          <a href="press-release">Press Release</a>
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="treasury.html">📊 Treasury</a>
+              <a href="btc-buy-tracker.html">💼 Portfolio</a>
+              <a href="coveredcall-tracker.html">📈 Covered Calls</a>
+              <a href="compound-interest-calculator.html">💰 Calculator</a>
+              <a href="btc-loan-ltv.html">🔒 BTC Loans</a>
+              <a href="pleb-release.html">📰 Pleb Release</a>
+            </div>
+          </div>
+          <a href="account.html" class="account-link">👤 Account</a>
         </div>
       </div>
     </nav>
@@ -553,12 +676,6 @@
           Professional Bitcoin treasury and portfolio tracking tools for individuals and organizations. 
           Track your Bitcoin purchases, monitor portfolio performance, and make data-driven decisions.
         </p>
-        <div class="hero-buttons">
-          <a href="treasury.html" class="hero-btn primary">Treasury Tracker</a>
-          <a href="btc-buy-tracker.html" class="hero-btn">BTC Portfolio Tracker</a>
-          <a href="covered-call-tracker" class="hero-btn">Covered Call Tracker</a>
-          <a href="press-release" class="hero-btn">Press Release Tool</a>
-        </div>
       </div>
     </section>
 
@@ -592,18 +709,28 @@
             Track covered call trades and analyze portfolio performance. Monitor cost basis 
             adjustments, premium income, and visualize your options strategy results.
           </p>
-          <a href="covered-call-tracker" class="feature-btn">View Covered Call Tracker</a>
+          <a href="coveredcall-tracker.html" class="feature-btn">View Covered Call Tracker</a>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">💰</span>
+          <h3 class="feature-title">Compound Interest Calculator</h3>
+          <p class="feature-description">
+            Calculate your Bitcoin wealth over time with compound interest projections. 
+            Compare Bitcoin growth against house appreciation and traditional investments.
+          </p>
+          <a href="compound-interest-calculator.html" class="feature-btn">View Calculator</a>
         </div>
 
         <div class="feature-card">
           <span class="feature-icon">📰</span>
-          <h3 class="feature-title">Press Release Tool</h3>
+          <h3 class="feature-title">Pleb Release Tool</h3>
           <p class="feature-description">
             Create professional press release images with custom text overlays. 
             Choose from multiple fonts, colors, and backgrounds. Perfect for 
             Bitcoin announcements and corporate communications.
           </p>
-          <a href="press-release" class="feature-btn">Create Press Release</a>
+          <a href="pleb-release.html" class="feature-btn">Create Pleb Release</a>
         </div>
 
         <div class="feature-card">
@@ -701,6 +828,7 @@
 
   </main>
 
+
   <footer>
     <div class="container">
       <p>&copy; 2024 Plebtools. Open source Bitcoin tracking tools.</p>
@@ -754,6 +882,41 @@
     }
 
     document.body.appendChild(themeToggle);
+
+    // Simple dropdown functionality
+    const toolsBtn = document.getElementById('toolsBtn');
+    const toolsContent = document.getElementById('toolsContent');
+    let isOpen = false;
+
+    toolsBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (isOpen) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      } else {
+        toolsContent.style.display = 'block';
+        setTimeout(() => {
+          toolsContent.classList.add('show');
+        }, 10);
+        isOpen = true;
+      }
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('toolsDropdown').contains(e.target)) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      }
+    });
 
     // Smooth scrolling for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {

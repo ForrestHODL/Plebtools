@@ -3,15 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Press Release Tool - Plebtools</title>
-  <link rel="icon" type="image/x-icon" href="images/channels4_profile.jpg">
+  <title>Pleb Release Tool - Plebtools</title>
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
   <link rel="stylesheet" href="styles.css?v=3">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Seymour+One&family=Press+Start+2P&family=Audiowide&family=Goldman:wght@400;700&family=Zen+Dots&family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <style>
-    /* Press Release Tool Styles */
+    /* Modern dropdown styles */
+    #toolsDropdown { position: relative; display: inline-block; }
+    #toolsBtn { background: none; border: none; color: #333; font-weight: 500; font-size: 1rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; }
+    .dark-theme #toolsBtn { color: #e0e0e0 !important; }
+    #toolsBtn:hover { background: rgba(102, 126, 234, 0.1); color: #667eea; }
+    .dropdown-arrow { font-size: 0.8rem; transition: transform 0.3s ease; }
+    #toolsContent { position: absolute; top: 100%; right: 0; background: white; min-width: 220px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); border-radius: 12px; z-index: 1001; padding: 0.75rem 0; border: 1px solid rgba(0, 0, 0, 0.08); backdrop-filter: blur(10px); margin-top: 8px; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; }
+    #toolsContent.show { opacity: 1; transform: translateY(0); }
+    #toolsContent a { display: block; padding: 0.875rem 1.5rem; color: #333; text-decoration: none; transition: all 0.3s ease; font-weight: 500; border-radius: 0; position: relative; }
+    .dark-theme #toolsContent a { color: #e0e0e0 !important; }
+    #toolsContent a:hover { background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); color: #667eea; transform: translateX(8px); }
+    #toolsContent a:first-child { border-radius: 12px 12px 0 0; }
+    #toolsContent a:last-child { border-radius: 0 0 12px 12px; }
+    .dark-theme #toolsContent { background: #2d2d2d !important; border-color: #555 !important; }
+    .dark-theme #toolsContent a:hover { background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%) !important; color: #667eea !important; }
+  </style>
+  
+  <style>
+    /* Pleb Release Tool Styles */
     .press-release-container {
       max-width: 1200px;
       margin: 0 auto;
@@ -28,6 +46,7 @@
       color: white;
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      position: relative;
     }
 
     .tool-title {
@@ -239,6 +258,71 @@
       background: #2d2d2d;
     }
 
+    /* Force affiliate styling to work */
+    .features-section .affiliate-links {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+      gap: 1.5rem !important;
+      margin-top: 1rem !important;
+    }
+
+    .features-section .affiliate-item {
+      background: white !important;
+      padding: 1.5rem !important;
+      border-radius: 10px !important;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1) !important;
+      text-align: center !important;
+      transition: transform 0.3s ease !important;
+    }
+
+    .features-section .affiliate-item:hover {
+      transform: translateY(-3px) !important;
+    }
+
+    .features-section .affiliate-item h4 {
+      color: #333 !important;
+      margin-bottom: 0.5rem !important;
+      font-size: 1rem !important;
+      font-weight: bold !important;
+    }
+
+    .features-section .affiliate-link {
+      display: inline-block !important;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+      color: white !important;
+      padding: 0.5rem 1rem !important;
+      border-radius: 5px !important;
+      text-decoration: none !important;
+      font-weight: 500 !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .features-section .affiliate-link:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4) !important;
+    }
+
+    .features-section .discount-code {
+      font-size: 0.8rem !important;
+      color: #4CAF50 !important;
+      margin-top: 0.5rem !important;
+      font-weight: 500 !important;
+    }
+
+    /* Dark theme for affiliate links */
+    .dark-theme .features-section .affiliate-item {
+      background: #2d2d2d !important;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.3) !important;
+    }
+
+    .dark-theme .features-section .affiliate-item h4 {
+      color: #e0e0e0 !important;
+    }
+
+    .dark-theme .features-section .discount-code {
+      color: #4CAF50 !important;
+    }
+
     .dark-theme .controls-panel {
       background: #3d3d3d;
     }
@@ -277,6 +361,10 @@
       color: #e0e0e0;
     }
 
+    .dark-theme .controls-panel h3 {
+      color: #e0e0e0;
+    }
+
   </style>
 </head>
 <body>
@@ -288,10 +376,18 @@
           <h1 class="logo">Plebtools</h1>
         </div>
         <div class="nav-links">
-          <a href="home">Home</a>
-          <a href="treasury">Treasury</a>
-          <a href="btc-buy-tracker">Portfolio</a>
-          <a href="covered-call-tracker">Covered Calls</a>
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="home.html">🏠 Home</a>
+              <a href="treasury.html">📊 Treasury</a>
+              <a href="btc-buy-tracker.html">💼 Portfolio</a>
+              <a href="coveredcall-tracker.html">📈 Covered Calls</a>
+              <a href="compound-interest-calculator.html">🧮 Calculator</a>
+              <a href="btc-loan-ltv.html">💰 BTC Loans</a>
+            </div>
+          </div>
+          <a href="account.html" class="account-link">👤 Account</a>
         </div>
       </div>
     </nav>
@@ -300,11 +396,12 @@
   <main>
     <div class="press-release-container">
       <div class="tool-header">
-        <h1 class="tool-title">Press Release Tool</h1>
+        <h1 class="tool-title">Pleb Release Tool</h1>
         <p class="tool-description">
           Create professional press release images by adding custom text to your images. 
           Upload an image, customize the text, and download your finished press release.
         </p>
+        <div id="theme-toggle-container" style="position: absolute; top: 20px; right: 20px;"></div>
       </div>
 
       <div class="tool-interface">
@@ -394,6 +491,52 @@ Now Holds</textarea>
       </div>
     </div>
   </main>
+
+  <!-- Affiliate Links Section -->
+  <section class="features-section">
+    <div class="container">
+      <h2 class="section-title">Want to buy and secure your Bitcoin?</h2>
+      <div style="text-align: center;">
+        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
+        <div class="affiliate-links">
+            <div class="affiliate-item">
+              <h4>Where to buy</h4>
+              <a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" class="affiliate-link">Bitcoin Well</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>Where to store</h4>
+              <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>How to protect</h4>
+              <a href="https://www.stampseed.com/" target="_blank" class="affiliate-link">Stamp Seed</a>
+              <p class="discount-code">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
+            </div>
+            <div class="affiliate-item">
+              <h4>How to validate</h4>
+              <a href="https://store.start9.com/" target="_blank" class="affiliate-link">Start9</a>
+              <p class="discount-code">CODE: BNC5 for 5% off</p>
+            </div>
+            <div class="affiliate-item">
+              <h4>1:1 Coaching</h4>
+              <a href="https://www.differentmedia.ca/bitcoin1-1" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>Where to learn</h4>
+              <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>Earn free BTC</h4>
+              <a href="https://satsarcade.app/" target="_blank" class="affiliate-link">Sats Arcade</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>How to support</h4>
+              <a href="https://coinos.io/plebtools" target="_blank" class="affiliate-link">Donate</a>
+            </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <footer>
     <div class="container">
@@ -606,7 +749,7 @@ Now Holds</textarea>
         // Try to download the image
         try {
           const link = document.createElement('a');
-          link.download = 'press-release-image.png';
+          link.download = 'pleb-release-image.png';
           link.href = tempCanvas.toDataURL('image/png');
           document.body.appendChild(link);
           link.click();
@@ -673,23 +816,28 @@ Now Holds</textarea>
     const themeToggle = document.createElement('button');
     themeToggle.innerHTML = '🌙';
     themeToggle.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: rgba(255, 255, 255, 0.2);
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
       color: white;
-      font-size: 1.5rem;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
+      font-size: 1.2rem;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
+      font-weight: bold;
+      margin-left: 1rem;
     `;
+    
+    // Add hover effect
+    themeToggle.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-2px)';
+      this.style.boxShadow = '0 5px 15px rgba(102, 126, 234, 0.4)';
+    });
+    
+    themeToggle.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0)';
+      this.style.boxShadow = '0 3px 10px rgba(102, 126, 234, 0.3)';
+    });
 
     let isDarkTheme = false;
 
@@ -714,7 +862,42 @@ Now Holds</textarea>
       themeToggle.textContent = "☀️";
     }
 
-    document.body.appendChild(themeToggle);
+    document.getElementById('theme-toggle-container').appendChild(themeToggle);
+
+    // Simple dropdown functionality
+    const toolsBtn = document.getElementById('toolsBtn');
+    const toolsContent = document.getElementById('toolsContent');
+    let isOpen = false;
+
+    toolsBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (isOpen) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      } else {
+        toolsContent.style.display = 'block';
+        setTimeout(() => {
+          toolsContent.classList.add('show');
+        }, 10);
+        isOpen = true;
+      }
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('toolsDropdown').contains(e.target)) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      }
+    });
   </script>
 </body>
 </html>
