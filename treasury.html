@@ -4,9 +4,108 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Plebtools Treasury</title>
-  <link rel="icon" type="image/x-icon" href="images/plub tools image.jpeg">
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
   <link rel="stylesheet" href="styles.css?v=2">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    /* Modern dropdown styles */
+    #toolsDropdown {
+      position: relative;
+      display: inline-block;
+    }
+    
+    #toolsBtn {
+      background: none;
+      border: none;
+      color: #333;
+      font-weight: 500;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .dark-theme #toolsBtn {
+      color: #e0e0e0 !important;
+    }
+    
+    #toolsBtn:hover {
+      background: rgba(102, 126, 234, 0.1);
+      color: #667eea;
+    }
+    
+    .dropdown-arrow {
+      font-size: 0.8rem;
+      transition: transform 0.3s ease;
+    }
+    
+    #toolsContent {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      min-width: 220px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      z-index: 1001;
+      padding: 0.75rem 0;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(10px);
+      margin-top: 8px;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+    }
+    
+    #toolsContent.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    #toolsContent a {
+      display: block;
+      padding: 0.875rem 1.5rem;
+      color: #333;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      border-radius: 0;
+      position: relative;
+    }
+    
+    .dark-theme #toolsContent a {
+      color: #e0e0e0 !important;
+    }
+    
+    #toolsContent a:hover {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      color: #667eea;
+      transform: translateX(8px);
+    }
+    
+    #toolsContent a:first-child {
+      border-radius: 12px 12px 0 0;
+    }
+    
+    #toolsContent a:last-child {
+      border-radius: 0 0 12px 12px;
+    }
+    
+    .dark-theme #toolsContent {
+      background: #2d2d2d !important;
+      border-color: #555 !important;
+    }
+    
+    .dark-theme #toolsContent a:hover {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%) !important;
+      color: #667eea !important;
+    }
+  </style>
   
   <style>
     /* Tracker-specific styles */
@@ -499,6 +598,10 @@
       color: #667eea;
     }
 
+    .dark-theme .discount-code {
+      color: #4CAF50;
+    }
+
     .dark-theme .empty-state h3 {
       color: #e0e0e0;
     }
@@ -515,6 +618,11 @@
     .dark-theme h5,
     .dark-theme h6 {
       color: #e0e0e0 !important;
+    }
+
+    /* Override logo color in dark theme to maintain brand color */
+    .dark-theme .logo {
+      color: #667eea !important;
     }
 
     .dark-theme p,
@@ -564,10 +672,18 @@
           <h1 class="logo">Plebtools</h1>
         </div>
         <div class="nav-links">
-          <a href="home">Home</a>
-          <a href="btc-buy-tracker">Portfolio</a>
-          <a href="covered-call-tracker">Covered Calls</a>
-          <a href="press-release">Press Release</a>
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="home.html">🏠 Home</a>
+              <a href="btc-buy-tracker.html">💼 Portfolio</a>
+              <a href="coveredcall-tracker.html">📈 Covered Calls</a>
+              <a href="compound-interest-calculator.html">💰 Calculator</a>
+              <a href="btc-loan-ltv.html">🔒 BTC Loans</a>
+              <a href="pleb-release.html">📰 Pleb Release</a>
+            </div>
+          </div>
+          <a href="account.html" class="account-link">👤 Account</a>
         </div>
       </div>
     </nav>
@@ -958,10 +1074,13 @@
       
       const avgPrice = totalBtc ? (totalUsd / totalBtc) : 0;
       const totalSats = Math.round(totalBtc * 100000000); // Convert BTC to sats
+      const currentCadValue = currentBtcPrice ? totalBtc * currentBtcPrice : null;
+      const currentCadValueDisplay = currentCadValue ? `$${currentCadValue.toFixed(2)}` : 'N/A';
       totalsDiv.innerHTML = `
         <div class="totals-display">
           <div><span class="totals-highlight">Total BTC:</span> ${totalBtc.toFixed(8)} (${totalSats.toLocaleString()} sats)</div>
           <div><span class="totals-highlight">Total CAD Invested:</span> $${totalUsd.toFixed(2)}</div>
+          <div><span class="totals-highlight">Current CAD Value:</span> ${currentCadValueDisplay}</div>
           <div><span class="totals-highlight">Average Buy Price:</span> $${avgPrice.toFixed(2)}</div>
         </div>
       `;
@@ -1250,6 +1369,41 @@
       document.body.classList.add("dark-theme");
       themeToggle.textContent = "☀️";
     }
+
+    // Simple dropdown functionality
+    const toolsBtn = document.getElementById('toolsBtn');
+    const toolsContent = document.getElementById('toolsContent');
+    let isOpen = false;
+
+    toolsBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (isOpen) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      } else {
+        toolsContent.style.display = 'block';
+        setTimeout(() => {
+          toolsContent.classList.add('show');
+        }, 10);
+        isOpen = true;
+      }
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('toolsDropdown').contains(e.target)) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      }
+    });
 
     // Proof of Reserves - Hardcoded Treasury Wallet Addresses
     const treasuryWallets = [

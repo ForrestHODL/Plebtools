@@ -4,9 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Covered Call Tracker - Plebtools</title>
-  <link rel="icon" type="image/x-icon" href="images/channels4_profile.jpg">
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
   <link rel="stylesheet" href="styles.css?v=3">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    /* Modern dropdown styles */
+    #toolsDropdown { position: relative; display: inline-block; }
+    #toolsBtn { background: none; border: none; color: #333; font-weight: 500; font-size: 1rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; }
+    .dark-theme #toolsBtn { color: #e0e0e0 !important; }
+    #toolsBtn:hover { background: rgba(102, 126, 234, 0.1); color: #667eea; }
+    .dropdown-arrow { font-size: 0.8rem; transition: transform 0.3s ease; }
+    #toolsContent { position: absolute; top: 100%; right: 0; background: white; min-width: 220px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); border-radius: 12px; z-index: 1001; padding: 0.75rem 0; border: 1px solid rgba(0, 0, 0, 0.08); backdrop-filter: blur(10px); margin-top: 8px; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; }
+    #toolsContent.show { opacity: 1; transform: translateY(0); }
+    #toolsContent a { display: block; padding: 0.875rem 1.5rem; color: #333; text-decoration: none; transition: all 0.3s ease; font-weight: 500; border-radius: 0; position: relative; }
+    .dark-theme #toolsContent a { color: #e0e0e0 !important; }
+    #toolsContent a:hover { background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); color: #667eea; transform: translateX(8px); }
+    #toolsContent a:first-child { border-radius: 12px 12px 0 0; }
+    #toolsContent a:last-child { border-radius: 0 0 12px 12px; }
+    .dark-theme #toolsContent { background: #2d2d2d !important; border-color: #555 !important; }
+    .dark-theme #toolsContent a:hover { background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%) !important; color: #667eea !important; }
+  </style>
   
   <style>
     /* Covered Call Tracker Styles */
@@ -409,7 +427,7 @@
     }
 
     .dark-theme .discount-code {
-      color: #888 !important;
+      color: #4CAF50;
     }
 
     .dark-theme .trades-table {
@@ -428,6 +446,177 @@
     .dark-theme .table tr:hover {
       background: #3d3d3d;
     }
+
+    /* Account Modal Styles */
+    .modal {
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .dark-theme .modal-content {
+      background: #2d2d2d;
+      color: #e0e0e0;
+    }
+
+    .close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #aaa;
+    }
+
+    .close:hover {
+      color: #000;
+    }
+
+    .dark-theme .close {
+      color: #ccc;
+    }
+
+    .dark-theme .close:hover {
+      color: #fff;
+    }
+
+    .account-form h2 {
+      color: #667eea;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .dark-theme .account-form h2 {
+      color: #e0e0e0;
+    }
+
+    .user-info {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .dark-theme .user-info {
+      background: #3d3d3d;
+    }
+
+    .user-info p {
+      margin: 0.5rem 0;
+    }
+
+    .user-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .user-actions button {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .account-form small {
+      color: #666;
+      font-size: 0.8rem;
+    }
+
+    .dark-theme .account-form small {
+      color: #999;
+    }
+
+    .account-form a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .account-form a:hover {
+      text-decoration: underline;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .dark-theme .form-group label {
+      color: #e0e0e0;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    .dark-theme .form-group input {
+      background: #3d3d3d;
+      color: #e0e0e0;
+      border-color: #555;
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Mobile responsiveness for modal */
+    @media (max-width: 768px) {
+      .modal-content {
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+
+      .user-actions {
+        flex-direction: column;
+      }
+
+      .user-actions button {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -439,10 +628,18 @@
           <h1 class="logo">Plebtools</h1>
         </div>
         <div class="nav-links">
-          <a href="home">Home</a>
-          <a href="treasury">Treasury</a>
-          <a href="btc-buy-tracker">Portfolio</a>
-          <a href="press-release">Press Release</a>
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="home.html">🏠 Home</a>
+              <a href="treasury.html">📊 Treasury</a>
+              <a href="btc-buy-tracker.html">💼 Portfolio</a>
+              <a href="compound-interest-calculator.html">💰 Calculator</a>
+              <a href="btc-loan-ltv.html">🔒 BTC Loans</a>
+              <a href="pleb-release.html">📰 Pleb Release</a>
+            </div>
+          </div>
+          <a href="account.html" class="account-link">👤 Account</a>
         </div>
       </div>
     </nav>
@@ -457,6 +654,7 @@
           Perfect for managing your options strategy and maximizing returns.
         </p>
       </div>
+
 
       <div class="tracker-interface">
         <div class="controls-panel">
@@ -563,10 +761,14 @@
               <div class="stat-value" id="avgCostBasis">$0.00</div>
               <div class="stat-label">Avg Adjusted Cost Basis</div>
             </div>
-            <div class="stat-card">
-              <div class="stat-value" id="currentMarketPrice">$0.00</div>
-              <div class="stat-label">Current Market Price</div>
-            </div>
+        <div class="stat-card">
+          <div class="stat-value" id="currentMarketPrice">$0.00</div>
+          <div class="stat-label">Current Market Price</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="profitLoss">$0.00</div>
+          <div class="stat-label" id="profitLossLabel">P&L</div>
+        </div>
           </div>
 
         <div class="chart-controls">
@@ -664,6 +866,12 @@
     let performanceChart = null;
     let chartType = 'bar';
     let isUpdatingChart = false; // 'bar', 'line', or 'pie'
+    
+    // Account System Variables
+    let currentUser = null;
+    const API_BASE_URL = '/api'; // Production URL for cPanel deployment
+    let backendAvailable = false;
+    let isLoggedIn = false;
 
     // Initialize the page
     document.addEventListener('DOMContentLoaded', async function() {
@@ -858,8 +1066,14 @@
         dateAdded: tradeDate ? new Date(tradeDate).toISOString() : new Date().toISOString()
       };
 
+      // Always store locally first
       trades.push(trade);
       localStorage.setItem('coveredCallTrades', JSON.stringify(trades));
+      
+      // Also sync to server if user is logged in and backend is available
+      if (isLoggedIn && backendAvailable) {
+        syncTradeToServer(trade);
+      }
       
       loadTrades();
       updateStats();
@@ -1070,6 +1284,89 @@
       
       // Update current market price
       updateCurrentMarketPrice();
+      
+      // Calculate and update profit/loss
+      updateProfitLoss();
+    }
+
+    // Update profit/loss calculation
+    function updateProfitLoss() {
+      if (trades.length === 0) {
+        document.getElementById('profitLoss').textContent = '$0.00';
+        document.getElementById('profitLossLabel').textContent = 'P&L';
+        return;
+      }
+
+      // Get current market price
+      const currentMarketPriceElement = document.getElementById('currentMarketPrice');
+      let currentMarketPrice = 0;
+      
+      if (currentMarketPriceElement) {
+        const priceText = currentMarketPriceElement.textContent.replace('$', '').replace(',', '');
+        currentMarketPrice = parseFloat(priceText) || 0;
+      }
+
+      // Calculate total shares and total adjusted cost basis
+      let totalShares = 0;
+      let totalAdjustedCostBasis = 0;
+      
+      // Group trades by symbol
+      const symbolGroups = {};
+      trades.forEach(trade => {
+        if (!symbolGroups[trade.symbol]) {
+          symbolGroups[trade.symbol] = [];
+        }
+        symbolGroups[trade.symbol].push(trade);
+      });
+
+      // Calculate for each symbol
+      Object.keys(symbolGroups).forEach(symbol => {
+        const symbolTrades = symbolGroups[symbol].sort((a, b) => new Date(a.dateAdded) - new Date(b.dateAdded));
+        
+        // Get share purchases
+        const sharePurchases = symbolTrades.filter(t => t.tradeType === 'shares');
+        const symbolShares = sharePurchases.reduce((sum, t) => sum + t.shares, 0);
+        
+        // Get covered call trades
+        const coveredCalls = symbolTrades.filter(t => t.tradeType === 'covered-call');
+        const totalPremium = coveredCalls.reduce((sum, t) => sum + (t.premium || 0), 0);
+        
+        // Calculate original cost basis
+        const originalCostBasis = sharePurchases.reduce((sum, t) => sum + (t.originalCostBasis * t.shares), 0);
+        
+        // Calculate adjusted cost basis
+        const adjustedCostBasis = originalCostBasis - totalPremium;
+        
+        totalShares += symbolShares;
+        totalAdjustedCostBasis += adjustedCostBasis;
+      });
+
+      if (totalShares === 0 || currentMarketPrice === 0) {
+        document.getElementById('profitLoss').textContent = '$0.00';
+        document.getElementById('profitLossLabel').textContent = 'P&L';
+        return;
+      }
+
+      // Calculate current portfolio value
+      const currentPortfolioValue = totalShares * currentMarketPrice;
+      
+      // Calculate profit/loss
+      const profitLoss = currentPortfolioValue - totalAdjustedCostBasis;
+      const profitLossPercent = (profitLoss / totalAdjustedCostBasis) * 100;
+
+      // Update display
+      const profitLossElement = document.getElementById('profitLoss');
+      const profitLossLabelElement = document.getElementById('profitLossLabel');
+      
+      if (profitLoss >= 0) {
+        profitLossElement.textContent = `+$${profitLoss.toFixed(2)}`;
+        profitLossElement.style.color = '#28a745'; // Green for profit
+        profitLossLabelElement.textContent = `P&L (+${profitLossPercent.toFixed(1)}%)`;
+      } else {
+        profitLossElement.textContent = `-$${Math.abs(profitLoss).toFixed(2)}`;
+        profitLossElement.style.color = '#dc3545'; // Red for loss
+        profitLossLabelElement.textContent = `P&L (${profitLossPercent.toFixed(1)}%)`;
+      }
     }
 
     // Update chart
@@ -1553,10 +1850,17 @@
     }
 
     // Delete trade
-    function deleteTrade(id) {
+    async function deleteTrade(id) {
       if (confirm('Are you sure you want to delete this trade?')) {
+        const trade = trades.find(t => t.id === id);
         trades = trades.filter(trade => trade.id !== id);
         localStorage.setItem('coveredCallTrades', JSON.stringify(trades));
+        
+        // Also delete from server if user is logged in, backend is available, and we have a server ID
+        if (isLoggedIn && backendAvailable && trade && trade.serverId) {
+          await deleteTradeFromServer(trade);
+        }
+        
         loadTrades();
         updateStats();
         updateChart();
@@ -1717,6 +2021,354 @@
     }
 
     document.body.appendChild(themeToggle);
+
+    // Simple dropdown functionality
+    const toolsBtn = document.getElementById('toolsBtn');
+    const toolsContent = document.getElementById('toolsContent');
+    let isOpen = false;
+
+    toolsBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (isOpen) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      } else {
+        toolsContent.style.display = 'block';
+        setTimeout(() => {
+          toolsContent.classList.add('show');
+        }, 10);
+        isOpen = true;
+      }
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('toolsDropdown').contains(e.target)) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      }
+    });
+
+    // Account System Functions
+    async function apiCall(endpoint, method = 'GET', data = null) {
+      if (!backendAvailable) {
+        throw new Error('Backend not available');
+      }
+      
+      const options = {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include' // Important for session cookies
+      };
+      
+      if (data) {
+        options.body = JSON.stringify(data);
+      }
+      
+      try {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+        const result = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(result.error || 'API call failed');
+        }
+        
+        return result;
+      } catch (error) {
+        console.error('API Error:', error);
+        throw error;
+      }
+    }
+
+    async function checkAuthStatus() {
+      // First check if backend is available
+      try {
+        const response = await fetch(`${API_BASE_URL}/user`, { 
+          method: 'GET',
+          credentials: 'include'
+        });
+        if (response.ok) {
+          backendAvailable = true;
+          const user = await response.json();
+          currentUser = user;
+          isLoggedIn = true;
+          return true;
+        } else {
+          backendAvailable = true;
+          currentUser = null;
+          isLoggedIn = false;
+          return false;
+        }
+      } catch (e) {
+        backendAvailable = false;
+        currentUser = null;
+        isLoggedIn = false;
+        return false;
+      }
+    }
+
+    async function syncTradeToServer(trade) {
+      if (!isLoggedIn || !backendAvailable) return;
+      
+      try {
+        const result = await apiCall('/covered-call-trades', 'POST', {
+          trade_type: trade.tradeType,
+          symbol: trade.symbol,
+          shares: trade.shares,
+          original_cost_basis: trade.originalCostBasis,
+          new_cost_basis: trade.newCostBasis,
+          strike_price: trade.strikePrice,
+          premium: trade.premium,
+          expiration_date: trade.expirationDate,
+          current_price: trade.currentPrice,
+          notes: trade.notes,
+          pnl: trade.pnl,
+          date_added: trade.dateAdded
+        });
+        // Store server ID for future reference
+        trade.serverId = result.id;
+      } catch (error) {
+        console.error('Failed to sync trade to server:', error);
+        // Data is still saved locally, so user can continue working
+      }
+    }
+
+    async function deleteTradeFromServer(trade) {
+      if (!isLoggedIn || !backendAvailable || !trade.serverId) return;
+      
+      try {
+        await apiCall(`/covered-call-trades/${trade.serverId}`, 'DELETE');
+      } catch (error) {
+        console.error('Failed to delete trade from server:', error);
+        // Data is still deleted locally, so user can continue working
+      }
+    }
+
+    async function loadTradesFromServer() {
+      if (!isLoggedIn || !backendAvailable) return;
+      
+      try {
+        const serverTrades = await apiCall('/covered-call-trades');
+        const serverTradesFormatted = serverTrades.map(t => ({
+          id: t.id,
+          tradeType: t.trade_type,
+          symbol: t.symbol,
+          shares: t.shares,
+          originalCostBasis: t.original_cost_basis,
+          newCostBasis: t.new_cost_basis,
+          strikePrice: t.strike_price,
+          premium: t.premium,
+          expirationDate: t.expiration_date,
+          currentPrice: t.current_price,
+          notes: t.notes,
+          pnl: t.pnl,
+          dateAdded: t.date_added,
+          serverId: t.id
+        }));
+        
+        // Merge server data with local data (server data takes precedence)
+        trades = serverTradesFormatted;
+        
+        // Update localStorage with merged data
+        localStorage.setItem('coveredCallTrades', JSON.stringify(trades));
+        
+        // Update display
+        loadTrades();
+        updateStats();
+        updateChart();
+        updateTable();
+        
+      } catch (error) {
+        console.error('Error loading trades from server:', error);
+        // Continue with local data if server fails
+      }
+    }
+
+    // Account System UI Functions
+    function showLoginForm() {
+      document.getElementById('loginForm').style.display = 'block';
+      document.getElementById('registerForm').style.display = 'none';
+      document.getElementById('userDashboard').style.display = 'none';
+    }
+
+    function showRegisterForm() {
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('registerForm').style.display = 'block';
+      document.getElementById('userDashboard').style.display = 'none';
+    }
+
+    function showUserDashboard() {
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('registerForm').style.display = 'none';
+      document.getElementById('userDashboard').style.display = 'block';
+      
+      if (currentUser) {
+        document.getElementById('userDisplayName').textContent = currentUser.username;
+        document.getElementById('userEmail').textContent = currentUser.email || 'Not provided';
+        document.getElementById('userVerified').textContent = currentUser.is_verified ? 'Yes' : 'No';
+        document.getElementById('userNewsletter').textContent = currentUser.newsletter_subscribed ? 'Yes' : 'No';
+      }
+    }
+
+    async function login(username, password) {
+      try {
+        const result = await apiCall('/login', 'POST', { username, password });
+        currentUser = result.user;
+        isLoggedIn = true;
+        showUserDashboard();
+        await loadTradesFromServer();
+        return true;
+      } catch (error) {
+        alert('Login failed: ' + error.message);
+        return false;
+      }
+    }
+
+    async function register(username, email, password, newsletter) {
+      try {
+        const result = await apiCall('/register', 'POST', {
+          username,
+          email: email || null,
+          password,
+          newsletter_subscribed: newsletter
+        });
+        
+        alert('Account created successfully! ' + 
+              (result.email_verification_sent ? 'Please check your email to verify your account.' : ''));
+        
+        showLoginForm();
+        return true;
+      } catch (error) {
+        alert('Registration failed: ' + error.message);
+        return false;
+      }
+    }
+
+    async function logout() {
+      try {
+        if (backendAvailable && isLoggedIn) {
+          await apiCall('/logout', 'POST');
+        }
+        currentUser = null;
+        isLoggedIn = false;
+        showLoginForm();
+        // Don't clear local data - keep it for offline use
+        loadTrades();
+        updateStats();
+        updateChart();
+        updateTable();
+      } catch (error) {
+        console.error('Logout error:', error);
+      }
+    }
+
+    async function syncDataToServer() {
+      if (!isLoggedIn || !backendAvailable) {
+        alert('Backend not available or not logged in. Data is stored locally only.');
+        return;
+      }
+      
+      try {
+        // Sync all trades to server
+        for (const trade of trades) {
+          if (!trade.serverId) {
+            await syncTradeToServer(trade);
+          }
+        }
+        
+        alert('Data synced successfully!');
+      } catch (error) {
+        alert('Sync failed: ' + error.message);
+      }
+    }
+
+    // Account Event Listeners
+    document.getElementById('accountToggle').addEventListener('click', function() {
+      document.getElementById('accountModal').style.display = 'flex';
+      if (!currentUser) {
+        showLoginForm();
+      } else {
+        showUserDashboard();
+      }
+    });
+
+    document.querySelector('.close').addEventListener('click', function() {
+      document.getElementById('accountModal').style.display = 'none';
+    });
+
+    document.getElementById('showRegister').addEventListener('click', function(e) {
+      e.preventDefault();
+      showRegisterForm();
+    });
+
+    document.getElementById('showLogin').addEventListener('click', function(e) {
+      e.preventDefault();
+      showLoginForm();
+    });
+
+    document.getElementById('loginFormElement').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const username = document.getElementById('loginUsername').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      if (await login(username, password)) {
+        document.getElementById('accountModal').style.display = 'none';
+      }
+    });
+
+    document.getElementById('registerFormElement').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const username = document.getElementById('registerUsername').value;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+      const confirmPassword = document.getElementById('registerPasswordConfirm').value;
+      const newsletter = document.getElementById('newsletterSubscribe').checked;
+      
+      if (password !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+      }
+      
+      if (await register(username, email, password, newsletter)) {
+        // Form will be reset by the register function
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      logout();
+      document.getElementById('accountModal').style.display = 'none';
+    });
+
+    document.getElementById('syncDataBtn').addEventListener('click', function() {
+      syncDataToServer();
+    });
+
+    // Close modal when clicking outside
+    document.getElementById('accountModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        this.style.display = 'none';
+      }
+    });
+
+    // Initialize account system
+    checkAuthStatus().then(() => {
+      if (isLoggedIn) {
+        showUserDashboard();
+        loadTradesFromServer();
+      } else {
+        showLoginForm();
+      }
+    });
   </script>
 </body>
 </html>

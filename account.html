@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account - Plebtools</title>
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
+  <link rel="stylesheet" href="styles.css?v=4">
+  
+  <style>
+    /* Modern dropdown styles */
+    #toolsDropdown { position: relative; display: inline-block; }
+    #toolsBtn { background: none; border: none; color: #333; font-weight: 500; font-size: 1rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; }
+    .dark-theme #toolsBtn { color: #e0e0e0 !important; }
+    #toolsBtn:hover { background: rgba(102, 126, 234, 0.1); color: #667eea; }
+    .dropdown-arrow { font-size: 0.8rem; transition: transform 0.3s ease; }
+    #toolsContent { position: absolute; top: 100%; right: 0; background: white; min-width: 220px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); border-radius: 12px; z-index: 1001; padding: 0.75rem 0; border: 1px solid rgba(0, 0, 0, 0.08); backdrop-filter: blur(10px); margin-top: 8px; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; }
+    #toolsContent.show { opacity: 1; transform: translateY(0); }
+    #toolsContent a { display: block; padding: 0.875rem 1.5rem; color: #333; text-decoration: none; transition: all 0.3s ease; font-weight: 500; border-radius: 0; position: relative; }
+    .dark-theme #toolsContent a { color: #e0e0e0 !important; }
+    #toolsContent a:hover { background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); color: #667eea; transform: translateX(8px); }
+    #toolsContent a:first-child { border-radius: 12px 12px 0 0; }
+    #toolsContent a:last-child { border-radius: 0 0 12px 12px; }
+    .dark-theme #toolsContent { background: #2d2d2d !important; border-color: #555 !important; }
+    .dark-theme #toolsContent a:hover { background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%) !important; color: #667eea !important; }
+  </style>
+  
+  <style>
+    /* Coming Soon Banner */
+    .coming-soon-banner {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+      margin: 0;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+      animation: pulse 2s infinite;
+    }
+
+    .coming-soon-content h2 {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .coming-soon-content p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin: 0;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
+    /* Account Page Styles */
+    .account-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: white;
+      min-height: 100vh;
+    }
+
+    .account-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 2rem 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .account-title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .account-description {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .account-content {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .account-section {
+      background: #f8f9fa;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .account-section h3 {
+      color: #667eea;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+
+    .account-form {
+      display: none;
+    }
+
+    .account-form.active {
+      display: block;
+    }
+
+    .user-dashboard {
+      display: none;
+    }
+
+    .user-dashboard.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-group small {
+      color: #666;
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+      display: block;
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .form-links {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    .form-links a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .form-links a:hover {
+      text-decoration: underline;
+    }
+
+    .user-info {
+      background: #e8f4fd;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+    }
+
+    .user-info h4 {
+      color: #667eea;
+      margin-bottom: 1rem;
+    }
+
+    .user-info p {
+      margin: 0.5rem 0;
+      color: #333;
+    }
+
+    .user-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .user-actions button {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .sync-status {
+      background: #d4edda;
+      color: #155724;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .sync-status.error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .data-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #667eea;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    /* Dark theme styles */
+    .dark-theme .coming-soon-banner {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+      /* Keep the same bright colors for visibility */
+    }
+
+    .dark-theme .account-container {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .account-section {
+      background: #3d3d3d;
+    }
+
+    .dark-theme .account-section h3 {
+      color: #e0e0e0;
+    }
+
+    .dark-theme .form-group label {
+      color: #e0e0e0;
+    }
+
+    .dark-theme .form-group input {
+      background: #4d4d4d;
+      color: #e0e0e0;
+      border-color: #555;
+    }
+
+    .dark-theme .user-info {
+      background: #4d4d4d;
+    }
+
+    .dark-theme .user-info h4 {
+      color: #e0e0e0;
+    }
+
+    .dark-theme .user-info p {
+      color: #e0e0e0;
+    }
+
+    .dark-theme .stat-card {
+      background: #3d3d3d;
+    }
+
+    .dark-theme .stat-label {
+      color: #ccc;
+    }
+
+    .dark-theme .form-group small {
+      color: #ccc;
+    }
+
+    .dark-theme .form-links a {
+      color: #8bb3ff;
+    }
+
+    .dark-theme .sync-status {
+      background: #2d4a2d;
+      color: #90ee90;
+    }
+
+    .dark-theme .sync-status.error {
+      background: #4a2d2d;
+      color: #ff6b6b;
+    }
+
+    .dark-theme .stat-number {
+      color: #8bb3ff;
+    }
+
+    .dark-theme h4 {
+      color: #e0e0e0;
+    }
+
+    .dark-theme p {
+      color: #e0e0e0;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .user-actions {
+        flex-direction: column;
+      }
+      
+      .user-actions button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="nav-container">
+        <div class="logo-container">
+          <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+          <h1 class="logo">Plebtools</h1>
+        </div>
+        <div class="nav-links">
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="home.html">🏠 Home</a>
+              <a href="treasury.html">📊 Treasury</a>
+              <a href="btc-buy-tracker.html">💼 Portfolio</a>
+              <a href="coveredcall-tracker.html">📈 Covered Calls</a>
+              <a href="compound-interest-calculator.html">💰 Calculator</a>
+              <a href="btc-loan-ltv.html">🔒 BTC Loans</a>
+              <a href="pleb-release.html">📰 Pleb Release</a>
+            </div>
+          </div>
+          <a href="account.html" class="account-link active">👤 Account</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Coming Soon Banner -->
+    <div class="coming-soon-banner">
+      <div class="coming-soon-content">
+        <h2>🚧 COMING SOON 🚧</h2>
+        <p>We're working hard to bring you the best account management experience. Stay tuned!</p>
+      </div>
+    </div>
+
+    <div class="account-container">
+      <div class="account-header">
+        <h1 class="account-title">Account & Profile</h1>
+        <p class="account-description">
+          Manage your account, sync your data, and access your information across all devices.
+        </p>
+        <div id="theme-toggle-container" style="position: absolute; top: 20px; right: 20px;"></div>
+      </div>
+
+      <div class="account-content">
+        <!-- Login Form -->
+        <div class="account-section">
+          <h3>Login to Your Account</h3>
+          <div id="loginForm" class="account-form active">
+            <form id="loginFormElement">
+              <div class="form-group">
+                <label for="loginUsername">Username</label>
+                <input type="text" id="loginUsername" required>
+              </div>
+              <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" required>
+              </div>
+              <button type="submit" class="submit-btn">Login</button>
+            </form>
+            <div class="form-links">
+              <p>Don't have an account? <a href="#" id="showRegister">Register here</a></p>
+            </div>
+          </div>
+
+          <!-- Register Form -->
+          <div id="registerForm" class="account-form">
+            <form id="registerFormElement">
+              <div class="form-group">
+                <label for="registerUsername">Username</label>
+                <input type="text" id="registerUsername" required minlength="3">
+                <small>Minimum 3 characters</small>
+              </div>
+              <div class="form-group">
+                <label for="registerEmail">Email (Optional)</label>
+                <input type="email" id="registerEmail">
+                <small>For account recovery and newsletter</small>
+              </div>
+              <div class="form-group">
+                <label for="registerPassword">Password</label>
+                <input type="password" id="registerPassword" required minlength="6">
+                <small>Minimum 6 characters</small>
+              </div>
+              <div class="form-group">
+                <label for="registerPasswordConfirm">Confirm Password</label>
+                <input type="password" id="registerPasswordConfirm" required>
+              </div>
+              <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                  <input type="checkbox" id="newsletterSubscribe">
+                  Subscribe to newsletter
+                </label>
+              </div>
+              <button type="submit" class="submit-btn">Create Account</button>
+            </form>
+            <div class="form-links">
+              <p>Already have an account? <a href="#" id="showLogin">Login here</a></p>
+            </div>
+          </div>
+
+          <!-- User Dashboard -->
+          <div id="userDashboard" class="user-dashboard">
+            <div id="syncStatus" class="sync-status" style="display: none;"></div>
+            
+            <div class="user-info">
+              <h4>Welcome, <span id="userDisplayName"></span>!</h4>
+              <p><strong>Email:</strong> <span id="userEmail">Not provided</span></p>
+              <p><strong>Verified:</strong> <span id="userVerified">No</span></p>
+              <p><strong>Newsletter:</strong> <span id="userNewsletter">No</span></p>
+              <p><strong>Member Since:</strong> <span id="userCreatedAt">-</span></p>
+            </div>
+            
+            <div class="user-actions">
+              <button id="syncDataBtn" class="submit-btn" style="background: #17a2b8;">🔄 Sync Data</button>
+              <button id="logoutBtn" class="submit-btn" style="background: #dc3545;">Logout</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Affiliate Section -->
+  <section class="affiliate-section">
+    <div class="container">
+      <h3 style="text-align: center;">Want to buy and secure your Bitcoin?</h3>
+      <div class="totals-display">
+        <div style="text-align: center;">
+          <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
+          <div class="affiliate-links">
+            <div class="affiliate-item">
+              <h4>Where to buy</h4>
+              <a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" class="affiliate-link">Bitcoin Well</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>Where to store</h4>
+              <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>How to protect</h4>
+              <a href="https://www.stampseed.com/" target="_blank" class="affiliate-link">Stamp Seed</a>
+              <p class="discount-code">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
+            </div>
+            <div class="affiliate-item">
+              <h4>How to validate</h4>
+              <a href="https://store.start9.com/" target="_blank" class="affiliate-link">Start9</a>
+              <p class="discount-code">CODE: BNC5 for 5% off</p>
+            </div>
+            <div class="affiliate-item">
+              <h4>1:1 Coaching</h4>
+              <a href="https://www.differentmedia.ca/bitcoin1-1" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>Where to learn</h4>
+              <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>Earn free BTC</h4>
+              <a href="https://satsarcade.app/" target="_blank" class="affiliate-link">Sats Arcade</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>How to support</h4>
+              <a href="https://coinos.io/plebtools" target="_blank" class="affiliate-link">Donate</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 Plebtools. Open source Bitcoin tracking tools.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Account System Variables
+    let currentUser = null;
+    const API_BASE_URL = '/api'; // Production URL for cPanel deployment
+    let backendAvailable = false;
+    let isLoggedIn = false;
+    
+    // Local testing mode - set to true when testing without backend
+    const LOCAL_TESTING_MODE = true;
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      checkAuthStatus();
+      setupEventListeners();
+    });
+
+    // Account System Functions
+    async function apiCall(endpoint, method = 'GET', data = null) {
+      console.log(`API Call: ${method} ${API_BASE_URL}${endpoint}`, data);
+      
+      if (!backendAvailable) {
+        console.log('Backend not available, throwing error');
+        throw new Error('Backend not available');
+      }
+      
+      const options = {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      };
+      
+      if (data) {
+        options.body = JSON.stringify(data);
+      }
+      
+      try {
+        console.log('Making fetch request...');
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+        console.log('Response status:', response.status);
+        
+        const result = await response.json();
+        console.log('Response data:', result);
+        
+        if (!response.ok) {
+          throw new Error(result.error || 'API call failed');
+        }
+        
+        return result;
+      } catch (error) {
+        console.error('API Error:', error);
+        throw error;
+      }
+    }
+
+    async function checkAuthStatus() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/user`, { 
+          method: 'GET',
+          credentials: 'include'
+        });
+        if (response.ok) {
+          backendAvailable = true;
+          const user = await response.json();
+          currentUser = user;
+          isLoggedIn = true;
+          showUserDashboard();
+          await loadUserStats();
+          return true;
+        } else {
+          backendAvailable = true;
+          currentUser = null;
+          isLoggedIn = false;
+          showLoginForm();
+          return false;
+        }
+      } catch (e) {
+        backendAvailable = false;
+        currentUser = null;
+        isLoggedIn = false;
+        showLoginForm();
+        return false;
+      }
+    }
+
+    function showLoginForm() {
+      document.getElementById('loginForm').classList.add('active');
+      document.getElementById('registerForm').classList.remove('active');
+      document.getElementById('userDashboard').classList.remove('active');
+    }
+
+    function showRegisterForm() {
+      document.getElementById('loginForm').classList.remove('active');
+      document.getElementById('registerForm').classList.add('active');
+      document.getElementById('userDashboard').classList.remove('active');
+    }
+
+    function showUserDashboard() {
+      document.getElementById('loginForm').classList.remove('active');
+      document.getElementById('registerForm').classList.remove('active');
+      document.getElementById('userDashboard').classList.add('active');
+      
+      if (currentUser) {
+        document.getElementById('userDisplayName').textContent = currentUser.username;
+        document.getElementById('userEmail').textContent = currentUser.email || 'Not provided';
+        document.getElementById('userVerified').textContent = currentUser.is_verified ? 'Yes' : 'No';
+        document.getElementById('userNewsletter').textContent = currentUser.newsletter_subscribed ? 'Yes' : 'No';
+        document.getElementById('userCreatedAt').textContent = currentUser.created_at ? 
+          new Date(currentUser.created_at).toLocaleDateString() : '-';
+      }
+    }
+
+    async function login(username, password) {
+      try {
+        const result = await apiCall('/login', 'POST', { username, password });
+        currentUser = result.user;
+        isLoggedIn = true;
+        showUserDashboard();
+        await loadUserStats();
+        showSyncStatus('Login successful!', 'success');
+        return true;
+      } catch (error) {
+        showSyncStatus('Login failed: ' + error.message, 'error');
+        return false;
+      }
+    }
+
+    async function register(username, email, password, newsletter) {
+      console.log('Register function called with:', { username, email, newsletter });
+      
+      if (LOCAL_TESTING_MODE) {
+        console.log('LOCAL TESTING MODE: Simulating account creation...');
+        
+        // Simulate account creation
+        currentUser = {
+          username: username,
+          email: email || null,
+          is_verified: false,
+          newsletter_subscribed: newsletter,
+          created_at: new Date().toISOString()
+        };
+        isLoggedIn = true;
+        backendAvailable = false; // Keep false for local testing
+        
+        showSyncStatus('Account created successfully! (Local Testing Mode)', 'success');
+        
+        // Simulate data sync
+        console.log('LOCAL TESTING MODE: Simulating data sync...');
+        await simulateDataSync();
+        
+        showUserDashboard();
+        await loadUserStats();
+        
+        return true;
+      }
+      
+      try {
+        console.log('Making API call to /register...');
+        const result = await apiCall('/register', 'POST', {
+          username,
+          email: email || null,
+          password,
+          newsletter_subscribed: newsletter
+        });
+        console.log('Register API response:', result);
+        
+        // Auto-login after successful registration
+        console.log('Making API call to /login...');
+        const loginResult = await apiCall('/login', 'POST', { username, password });
+        console.log('Login API response:', loginResult);
+        
+        currentUser = loginResult.user;
+        isLoggedIn = true;
+        
+        showSyncStatus('Account created successfully! Syncing your existing data...', 'success');
+        
+        // Automatically sync existing local data
+        console.log('Starting data sync...');
+        await syncExistingDataToServer();
+        
+        showUserDashboard();
+        await loadUserStats();
+        
+        return true;
+      } catch (error) {
+        console.error('Registration error:', error);
+        showSyncStatus('Registration failed: ' + error.message, 'error');
+        return false;
+      }
+    }
+
+    async function logout() {
+      try {
+        if (backendAvailable && isLoggedIn) {
+          await apiCall('/logout', 'POST');
+        }
+        currentUser = null;
+        isLoggedIn = false;
+        showLoginForm();
+        showSyncStatus('Logged out successfully', 'success');
+        // Clear stats
+        document.getElementById('btcPurchasesCount').textContent = '0';
+        document.getElementById('walletAddressesCount').textContent = '0';
+        document.getElementById('coveredCallTradesCount').textContent = '0';
+      } catch (error) {
+        console.error('Logout error:', error);
+      }
+    }
+
+    async function loadUserStats() {
+      if (!isLoggedIn || !backendAvailable) return;
+      
+      try {
+        // Load BTC purchases count
+        const btcPurchases = await apiCall('/btc-purchases');
+        document.getElementById('btcPurchasesCount').textContent = btcPurchases.length;
+        
+        // Load wallet addresses count
+        const walletAddresses = await apiCall('/wallet-addresses');
+        document.getElementById('walletAddressesCount').textContent = walletAddresses.length;
+        
+        // Load covered call trades count
+        const coveredCallTrades = await apiCall('/covered-call-trades');
+        document.getElementById('coveredCallTradesCount').textContent = coveredCallTrades.length;
+        
+      } catch (error) {
+        console.error('Error loading user stats:', error);
+      }
+    }
+
+    async function syncExistingDataToServer() {
+      if (!isLoggedIn || !backendAvailable) {
+        return;
+      }
+      
+      try {
+        let syncedCount = 0;
+        let totalItems = 0;
+        
+        // Get local data from localStorage
+        const btcBuys = JSON.parse(localStorage.getItem('btcBuys') || '[]');
+        const walletAddresses = JSON.parse(localStorage.getItem('walletAddresses') || '[]');
+        const coveredCallTrades = JSON.parse(localStorage.getItem('coveredCallTrades') || '[]');
+        const treasuryData = JSON.parse(localStorage.getItem('treasuryData') || '[]');
+        
+        totalItems = btcBuys.length + walletAddresses.length + coveredCallTrades.length + treasuryData.length;
+        
+        if (totalItems === 0) {
+          showSyncStatus('No local data found to sync.', 'success');
+          return;
+        }
+        
+        showSyncStatus(`Found ${totalItems} items to sync. Syncing...`, 'success');
+        
+        // Sync BTC purchases
+        for (const purchase of btcBuys) {
+          if (!purchase.serverId) {
+            try {
+              const result = await apiCall('/btc-purchases', 'POST', {
+                date: purchase.date,
+                btc_amount: purchase.btcAmount,
+                price_usd: purchase.priceUsd,
+                original_price: purchase.originalPrice,
+                original_currency: purchase.originalCurrency,
+                transaction_type: purchase.type || 'buy'
+              });
+              purchase.serverId = result.id;
+              syncedCount++;
+            } catch (error) {
+              console.error('Failed to sync BTC purchase:', error);
+            }
+          }
+        }
+        
+        // Sync wallet addresses
+        for (const address of walletAddresses) {
+          try {
+            await apiCall('/wallet-addresses', 'POST', { address });
+            syncedCount++;
+          } catch (error) {
+            console.error('Failed to sync wallet address:', error);
+          }
+        }
+        
+        // Sync covered call trades
+        for (const trade of coveredCallTrades) {
+          if (!trade.serverId) {
+            try {
+              const result = await apiCall('/covered-call-trades', 'POST', {
+                trade_type: trade.tradeType,
+                symbol: trade.symbol,
+                shares: trade.shares,
+                original_cost_basis: trade.originalCostBasis,
+                new_cost_basis: trade.newCostBasis,
+                strike_price: trade.strikePrice,
+                premium: trade.premium,
+                expiration_date: trade.expirationDate,
+                current_price: trade.currentPrice,
+                notes: trade.notes,
+                pnl: trade.pnl,
+                date_added: trade.dateAdded
+              });
+              trade.serverId = result.id;
+              syncedCount++;
+            } catch (error) {
+              console.error('Failed to sync covered call trade:', error);
+            }
+          }
+        }
+        
+        // Sync treasury data
+        for (const treasury of treasuryData) {
+          if (!treasury.serverId) {
+            try {
+              const result = await apiCall('/treasury-data', 'POST', {
+                date: treasury.date,
+                btc_amount: treasury.btcAmount,
+                price_usd: treasury.priceUsd,
+                original_price: treasury.originalPrice,
+                original_currency: treasury.originalCurrency,
+                transaction_type: treasury.type || 'buy'
+              });
+              treasury.serverId = result.id;
+              syncedCount++;
+            } catch (error) {
+              console.error('Failed to sync treasury data:', error);
+            }
+          }
+        }
+        
+        // Update localStorage with server IDs
+        localStorage.setItem('btcBuys', JSON.stringify(btcBuys));
+        localStorage.setItem('walletAddresses', JSON.stringify(walletAddresses));
+        localStorage.setItem('coveredCallTrades', JSON.stringify(coveredCallTrades));
+        localStorage.setItem('treasuryData', JSON.stringify(treasuryData));
+        
+        showSyncStatus(`Successfully synced ${syncedCount} of ${totalItems} items to your account!`, 'success');
+        
+      } catch (error) {
+        showSyncStatus('Sync failed: ' + error.message, 'error');
+      }
+    }
+
+    async function syncDataToServer() {
+      if (!isLoggedIn || !backendAvailable) {
+        showSyncStatus('Backend not available or not logged in. Data is stored locally only.', 'error');
+        return;
+      }
+      
+      try {
+        showSyncStatus('Syncing data...', 'success');
+        
+        // Get local data from localStorage
+        const btcBuys = JSON.parse(localStorage.getItem('btcBuys') || '[]');
+        const walletAddresses = JSON.parse(localStorage.getItem('walletAddresses') || '[]');
+        const coveredCallTrades = JSON.parse(localStorage.getItem('coveredCallTrades') || '[]');
+        const treasuryData = JSON.parse(localStorage.getItem('treasuryData') || '[]');
+        
+        // Sync BTC purchases
+        for (const purchase of btcBuys) {
+          if (!purchase.serverId) {
+            try {
+              const result = await apiCall('/btc-purchases', 'POST', {
+                date: purchase.date,
+                btc_amount: purchase.btcAmount,
+                price_usd: purchase.priceUsd,
+                original_price: purchase.originalPrice,
+                original_currency: purchase.originalCurrency,
+                transaction_type: purchase.type || 'buy'
+              });
+              purchase.serverId = result.id;
+            } catch (error) {
+              console.error('Failed to sync BTC purchase:', error);
+            }
+          }
+        }
+        
+        // Sync wallet addresses
+        for (const address of walletAddresses) {
+          try {
+            await apiCall('/wallet-addresses', 'POST', { address });
+          } catch (error) {
+            console.error('Failed to sync wallet address:', error);
+          }
+        }
+        
+        // Sync covered call trades
+        for (const trade of coveredCallTrades) {
+          if (!trade.serverId) {
+            try {
+              const result = await apiCall('/covered-call-trades', 'POST', {
+                trade_type: trade.tradeType,
+                symbol: trade.symbol,
+                shares: trade.shares,
+                original_cost_basis: trade.originalCostBasis,
+                new_cost_basis: trade.newCostBasis,
+                strike_price: trade.strikePrice,
+                premium: trade.premium,
+                expiration_date: trade.expirationDate,
+                current_price: trade.currentPrice,
+                notes: trade.notes,
+                pnl: trade.pnl,
+                date_added: trade.dateAdded
+              });
+              trade.serverId = result.id;
+            } catch (error) {
+              console.error('Failed to sync covered call trade:', error);
+            }
+          }
+        }
+        
+        // Sync treasury data
+        for (const treasury of treasuryData) {
+          if (!treasury.serverId) {
+            try {
+              const result = await apiCall('/treasury-data', 'POST', {
+                date: treasury.date,
+                btc_amount: treasury.btcAmount,
+                price_usd: treasury.priceUsd,
+                original_price: treasury.originalPrice,
+                original_currency: treasury.originalCurrency,
+                transaction_type: treasury.type || 'buy'
+              });
+              treasury.serverId = result.id;
+            } catch (error) {
+              console.error('Failed to sync treasury data:', error);
+            }
+          }
+        }
+        
+        // Update localStorage with server IDs
+        localStorage.setItem('btcBuys', JSON.stringify(btcBuys));
+        localStorage.setItem('walletAddresses', JSON.stringify(walletAddresses));
+        localStorage.setItem('coveredCallTrades', JSON.stringify(coveredCallTrades));
+        localStorage.setItem('treasuryData', JSON.stringify(treasuryData));
+        
+        showSyncStatus('Data synced successfully!', 'success');
+        await loadUserStats();
+        
+      } catch (error) {
+        showSyncStatus('Sync failed: ' + error.message, 'error');
+      }
+    }
+
+    function showSyncStatus(message, type) {
+      const statusDiv = document.getElementById('syncStatus');
+      statusDiv.textContent = message;
+      statusDiv.className = `sync-status ${type}`;
+      statusDiv.style.display = 'block';
+      
+      setTimeout(() => {
+        statusDiv.style.display = 'none';
+      }, 5000);
+    }
+
+    function setupEventListeners() {
+      // Form switching
+      document.getElementById('showRegister').addEventListener('click', function(e) {
+        e.preventDefault();
+        showRegisterForm();
+      });
+
+      document.getElementById('showLogin').addEventListener('click', function(e) {
+        e.preventDefault();
+        showLoginForm();
+      });
+
+      // Login form
+      document.getElementById('loginFormElement').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+        
+        await login(username, password);
+      });
+
+      // Register form
+      document.getElementById('registerFormElement').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        console.log('Register form submitted!');
+        
+        const username = document.getElementById('registerUsername').value;
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+        const confirmPassword = document.getElementById('registerPasswordConfirm').value;
+        const newsletter = document.getElementById('newsletterSubscribe').checked;
+        
+        console.log('Form data:', { username, email, password: '***', confirmPassword: '***', newsletter });
+        
+        if (password !== confirmPassword) {
+          console.log('Passwords do not match');
+          showSyncStatus('Passwords do not match', 'error');
+          return;
+        }
+        
+        console.log('Calling register function...');
+        await register(username, email, password, newsletter);
+      });
+
+      // User actions
+      document.getElementById('logoutBtn').addEventListener('click', function() {
+        logout();
+      });
+
+      document.getElementById('syncDataBtn').addEventListener('click', function() {
+        syncDataToServer();
+      });
+    }
+
+    // Theme toggle functionality
+    const themeToggle = document.createElement('button');
+    themeToggle.innerHTML = '🌙';
+    themeToggle.style.cssText = `
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+    `;
+    
+    // Add hover effect
+    themeToggle.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-2px)';
+      this.style.boxShadow = '0 5px 15px rgba(102, 126, 234, 0.4)';
+    });
+    
+    themeToggle.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0)';
+      this.style.boxShadow = '0 3px 10px rgba(102, 126, 234, 0.3)';
+    });
+
+    let isDarkTheme = false;
+
+    themeToggle.addEventListener("click", () => {
+      isDarkTheme = !isDarkTheme;
+      if (isDarkTheme) {
+        document.body.classList.add("dark-theme");
+        themeToggle.textContent = "☀️";
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.body.classList.remove("dark-theme");
+        themeToggle.textContent = "🌙";
+        localStorage.setItem("theme", "light");
+      }
+    });
+
+    // Load saved theme on page load
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      isDarkTheme = true;
+      document.body.classList.add("dark-theme");
+      themeToggle.textContent = "☀️";
+    }
+
+    document.getElementById('theme-toggle-container').appendChild(themeToggle);
+
+    // Simple dropdown functionality
+    const toolsBtn = document.getElementById('toolsBtn');
+    const toolsContent = document.getElementById('toolsContent');
+    let isOpen = false;
+
+    toolsBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (isOpen) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      } else {
+        toolsContent.style.display = 'block';
+        setTimeout(() => {
+          toolsContent.classList.add('show');
+        }, 10);
+        isOpen = true;
+      }
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('toolsDropdown').contains(e.target)) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -4,9 +4,108 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Plebtools BTC Tracker</title>
-  <link rel="icon" type="image/x-icon" href="images/plub tools image.jpeg">
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
   <link rel="stylesheet" href="styles.css?v=2">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    /* Modern dropdown styles */
+    #toolsDropdown {
+      position: relative;
+      display: inline-block;
+    }
+    
+    #toolsBtn {
+      background: none;
+      border: none;
+      color: #333;
+      font-weight: 500;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .dark-theme #toolsBtn {
+      color: #e0e0e0 !important;
+    }
+    
+    #toolsBtn:hover {
+      background: rgba(102, 126, 234, 0.1);
+      color: #667eea;
+    }
+    
+    .dropdown-arrow {
+      font-size: 0.8rem;
+      transition: transform 0.3s ease;
+    }
+    
+    #toolsContent {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      min-width: 220px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      z-index: 1001;
+      padding: 0.75rem 0;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(10px);
+      margin-top: 8px;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+    }
+    
+    #toolsContent.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    #toolsContent a {
+      display: block;
+      padding: 0.875rem 1.5rem;
+      color: #333;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      border-radius: 0;
+      position: relative;
+    }
+    
+    .dark-theme #toolsContent a {
+      color: #e0e0e0 !important;
+    }
+    
+    #toolsContent a:hover {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      color: #667eea;
+      transform: translateX(8px);
+    }
+    
+    #toolsContent a:first-child {
+      border-radius: 12px 12px 0 0;
+    }
+    
+    #toolsContent a:last-child {
+      border-radius: 0 0 12px 12px;
+    }
+    
+    .dark-theme #toolsContent {
+      background: #2d2d2d !important;
+      border-color: #555 !important;
+    }
+    
+    .dark-theme #toolsContent a:hover {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%) !important;
+      color: #667eea !important;
+    }
+  </style>
   
   <style>
     /* Tracker-specific styles */
@@ -593,6 +692,10 @@
       color: #667eea;
     }
 
+    .dark-theme .discount-code {
+      color: #4CAF50;
+    }
+
     .dark-theme .empty-state h3 {
       color: #e0e0e0;
     }
@@ -609,6 +712,11 @@
     .dark-theme h5,
     .dark-theme h6 {
       color: #e0e0e0 !important;
+    }
+
+    /* Override logo color in dark theme to maintain brand color */
+    .dark-theme .logo {
+      color: #667eea !important;
     }
 
     .dark-theme p,
@@ -698,6 +806,130 @@
       }
     }
 
+    /* Account Modal Styles */
+    .modal {
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .dark-theme .modal-content {
+      background: #2d2d2d;
+      color: #e0e0e0;
+    }
+
+    .close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #aaa;
+    }
+
+    .close:hover {
+      color: #000;
+    }
+
+    .dark-theme .close {
+      color: #ccc;
+    }
+
+    .dark-theme .close:hover {
+      color: #fff;
+    }
+
+    .account-form h2 {
+      color: #667eea;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .dark-theme .account-form h2 {
+      color: #e0e0e0;
+    }
+
+    .user-info {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .dark-theme .user-info {
+      background: #3d3d3d;
+    }
+
+    .user-info p {
+      margin: 0.5rem 0;
+    }
+
+    .user-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .user-actions button {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .account-form small {
+      color: #666;
+      font-size: 0.8rem;
+    }
+
+    .dark-theme .account-form small {
+      color: #999;
+    }
+
+    .account-form a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .account-form a:hover {
+      text-decoration: underline;
+    }
+
+    /* Mobile responsiveness for modal */
+    @media (max-width: 768px) {
+      .modal-content {
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+
+      .user-actions {
+        flex-direction: column;
+      }
+
+      .user-actions button {
+        width: 100%;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -709,10 +941,18 @@
           <h1 class="logo">Plebtools</h1>
         </div>
         <div class="nav-links">
-          <a href="home">Home</a>
-          <a href="treasury">Treasury</a>
-          <a href="covered-call-tracker">Covered Calls</a>
-          <a href="press-release">Press Release</a>
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="home.html">🏠 Home</a>
+              <a href="treasury.html">📊 Treasury</a>
+              <a href="coveredcall-tracker.html">📈 Covered Calls</a>
+              <a href="compound-interest-calculator.html">💰 Calculator</a>
+              <a href="btc-loan-ltv.html">🔒 BTC Loans</a>
+              <a href="pleb-release.html">📰 Pleb Release</a>
+            </div>
+          </div>
+          <a href="account.html" class="account-link">👤 Account</a>
         </div>
       </div>
     </nav>
@@ -730,6 +970,7 @@
           <button id="themeToggle" class="theme-toggle-btn">🌙</button>
         </div>
       </div>
+
 
       <div class="tracker-form">
         <h3 style="color: #667eea; margin-bottom: 1.5rem; text-align: center;">Add New Purchase/Sale</h3>
@@ -755,10 +996,18 @@
       </div>
 
       <div class="tracker-form">
-        <h3 style="color: #667eea; margin-bottom: 1.5rem; text-align: center;">Import CSV File</h3>
-        <div class="form-group">
-          <label for="csvFile">Select CSV File</label>
-          <input type="file" id="csvFile" accept=".csv">
+        <h3 style="color: #667eea; margin-bottom: 1.5rem; text-align: center;">Import/Export CSV File</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="csvFile">Select CSV File to Import</label>
+            <input type="file" id="csvFile" accept=".csv">
+          </div>
+          <div class="form-group">
+            <label>Export Data</label>
+            <button id="exportBtn" class="submit-btn" style="background: #28a745; width: 100%; margin-top: 0;">
+              📊 Export to CSV
+            </button>
+          </div>
         </div>
         <div id="csvStatus" style="text-align: center; margin-top: 1rem; font-weight: bold;"></div>
       </div>
@@ -898,6 +1147,7 @@
     </div>
   </main>
 
+
   <footer>
     <div class="container">
       <p>&copy; 2024 Plebtools. All rights reserved.</p>
@@ -911,9 +1161,8 @@
     let priceHistory = [];
     let isCAD = false; // Default to USD
 
-    // Load existing data from localStorage (cleared for fresh start)
-    let buys = [];
-    localStorage.setItem("btcBuys", JSON.stringify(buys));
+    // Load existing data from localStorage
+    let buys = JSON.parse(localStorage.getItem("btcBuys") || "[]");
 
     const table = document.getElementById("buysTable");
     const totalsDiv = document.getElementById("totals");
@@ -1508,7 +1757,7 @@
     }
 
     // Add purchase form handler
-    purchaseForm.addEventListener("submit", function(e) {
+    purchaseForm.addEventListener("submit", async function(e) {
       e.preventDefault();
       
       const date = document.getElementById("purchaseDate").value;
@@ -1537,26 +1786,58 @@
         type: isSell ? 'sell' : 'buy'
       };
       
+      // Always store locally first
       buys.push(newPurchase);
       localStorage.setItem("btcBuys", JSON.stringify(buys));
+      
+      // Also sync to server if user is logged in and backend is available
+      if (isLoggedIn && backendAvailable) {
+        try {
+          const result = await apiCall('/btc-purchases', 'POST', {
+            date: newPurchase.date,
+            btc_amount: newPurchase.btcAmount,
+            price_usd: newPurchase.priceUsd,
+            original_price: newPurchase.originalPrice,
+            original_currency: newPurchase.originalCurrency,
+            transaction_type: newPurchase.type
+          });
+          // Store server ID for future reference
+          newPurchase.serverId = result.id;
+        } catch (error) {
+          console.error('Failed to sync purchase to server:', error);
+          // Data is still saved locally, so user can continue working
+        }
+      }
       
       // Clear form
       purchaseForm.reset();
       
-    // Update display
-    updateDisplay();
-    
-    // Force chart refresh even if API fails
-    setTimeout(() => {
+      // Update display
       updateDisplay();
-    }, 1000);
+      
+      // Force chart refresh even if API fails
+      setTimeout(() => {
+        updateDisplay();
+      }, 1000);
     });
 
     // Delete purchase function
-    function deletePurchase(index) {
+    async function deletePurchase(index) {
       if (confirm("Are you sure you want to delete this purchase?")) {
+        const purchase = buys[index];
         buys.splice(index, 1);
         localStorage.setItem("btcBuys", JSON.stringify(buys));
+        
+        // Also delete from server if user is logged in, backend is available, and we have a server ID
+        if (isLoggedIn && backendAvailable && purchase.serverId) {
+          try {
+            await apiCall(`/btc-purchases/${purchase.serverId}`, 'DELETE');
+          } catch (error) {
+            console.error('Failed to delete purchase from server:', error);
+            // Data is still deleted locally, so user can continue working
+          }
+        }
+        
         updateDisplay();
       }
     }
@@ -1640,6 +1921,41 @@
       document.body.classList.add("dark-theme");
       themeToggle.textContent = "☀️";
     }
+
+    // Simple dropdown functionality
+    const toolsBtn = document.getElementById('toolsBtn');
+    const toolsContent = document.getElementById('toolsContent');
+    let isOpen = false;
+
+    toolsBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (isOpen) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      } else {
+        toolsContent.style.display = 'block';
+        setTimeout(() => {
+          toolsContent.classList.add('show');
+        }, 10);
+        isOpen = true;
+      }
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('toolsDropdown').contains(e.target)) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      }
+    });
 
     const savedCurrency = localStorage.getItem("currency");
     if (savedCurrency === "cad") {
@@ -1957,9 +2273,90 @@
       window.URL.revokeObjectURL(url);
     }
     
-    // CSV import event listeners
+    function exportToCSV() {
+      if (buys.length === 0) {
+        alert('No data to export. Please add some purchases first.');
+        return;
+      }
+      
+      // Create CSV header
+      const currency = isCAD ? 'CAD' : 'USD';
+      const headers = ['Date', 'BTC Amount', `Price (${currency})`, `${currency} Spent`, 'Type'];
+      
+      // Create CSV rows
+      const csvRows = [headers.join(',')];
+      
+      buys.forEach(buy => {
+        // Get the correct price for display
+        let displayPrice = buy.priceUsd;
+        
+        // If we have original currency info, use it
+        if (buy.originalCurrency && buy.originalPrice) {
+          if (isCAD && buy.originalCurrency === 'CAD') {
+            displayPrice = buy.originalPrice;
+          } else if (!isCAD && buy.originalCurrency === 'USD') {
+            displayPrice = buy.originalPrice;
+          } else if (currentBtcPriceCAD && currentBtcPrice) {
+            // Convert between currencies
+            if (isCAD && buy.originalCurrency === 'USD') {
+              const usdToCadRate = currentBtcPriceCAD / currentBtcPrice;
+              displayPrice = buy.originalPrice * usdToCadRate;
+            } else if (!isCAD && buy.originalCurrency === 'CAD') {
+              const cadToUsdRate = currentBtcPrice / currentBtcPriceCAD;
+              displayPrice = buy.originalPrice * cadToUsdRate;
+            }
+          }
+        } else if (currentBtcPriceCAD && currentBtcPrice) {
+          // Fallback to old conversion logic
+          if (isCAD) {
+            const usdToCadRate = currentBtcPriceCAD / currentBtcPrice;
+            displayPrice = buy.priceUsd * usdToCadRate;
+          } else {
+            const cadToUsdRate = currentBtcPrice / currentBtcPriceCAD;
+            displayPrice = buy.priceUsd * cadToUsdRate;
+          }
+        }
+        
+        const spentAmount = buy.btcAmount * displayPrice;
+        const type = buy.type || 'buy';
+        
+        const row = [
+          buy.date,
+          buy.btcAmount.toFixed(8),
+          displayPrice.toFixed(2),
+          spentAmount.toFixed(2),
+          type.toUpperCase()
+        ];
+        
+        csvRows.push(row.join(','));
+      });
+      
+      // Create and download the CSV file
+      const csvContent = csvRows.join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `bitcoin_tracker_export_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      
+      // Show success message
+      const csvStatus = document.getElementById('csvStatus');
+      csvStatus.innerHTML = `<span style="color: #28a745;">Successfully exported ${buys.length} purchase(s) to CSV</span>`;
+      setTimeout(() => {
+        csvStatus.innerHTML = '';
+      }, 3000);
+    }
+    
+    // CSV import/export event listeners
     const csvFileInput = document.getElementById('csvFile');
     const csvStatus = document.getElementById('csvStatus');
+    const exportBtn = document.getElementById('exportBtn');
+    
+    exportBtn.addEventListener('click', exportToCSV);
     
     csvFileInput.addEventListener('change', function() {
       const file = csvFileInput.files[0];
@@ -2029,9 +2426,8 @@
       reader.readAsText(file);
     });
 
-    // Proof of Reserves functionality (cleared for fresh start)
-    let walletAddresses = [];
-    localStorage.setItem('walletAddresses', JSON.stringify(walletAddresses));
+    // Proof of Reserves functionality
+    let walletAddresses = JSON.parse(localStorage.getItem('walletAddresses') || '[]');
 
     function saveWalletAddresses() {
       localStorage.setItem('walletAddresses', JSON.stringify(walletAddresses));
@@ -2046,7 +2442,7 @@
       return bech32Regex.test(address) || legacyRegex.test(address) || p2shRegex.test(address);
     }
 
-    function addWalletAddress(address) {
+    async function addWalletAddress(address) {
       const trimmedAddress = address.trim();
       
       if (!trimmedAddress) {
@@ -2064,19 +2460,45 @@
         return;
       }
 
+      // Always store locally first
       walletAddresses.push(trimmedAddress);
       saveWalletAddresses();
       renderWalletList();
+      
+      // Also sync to server if user is logged in and backend is available
+      if (isLoggedIn && backendAvailable) {
+        try {
+          await apiCall('/wallet-addresses', 'POST', { address: trimmedAddress });
+        } catch (error) {
+          console.error('Failed to sync wallet address to server:', error);
+          // Data is still saved locally, so user can continue working
+        }
+      }
       
       // Clear the input
       document.getElementById('walletAddress').value = '';
     }
 
-    function removeWalletAddress(address) {
+    async function removeWalletAddress(address) {
       if (confirm('Are you sure you want to remove this wallet address?')) {
         walletAddresses = walletAddresses.filter(addr => addr !== address);
         saveWalletAddresses();
         renderWalletList();
+        
+        // Also delete from server if user is logged in and backend is available
+        if (isLoggedIn && backendAvailable) {
+          try {
+            // Find the wallet ID from the server data
+            const addresses = await apiCall('/wallet-addresses');
+            const wallet = addresses.find(w => w.address === address);
+            if (wallet) {
+              await apiCall(`/wallet-addresses/${wallet.id}`, 'DELETE');
+            }
+          } catch (error) {
+            console.error('Failed to remove wallet address from server:', error);
+            // Data is still deleted locally, so user can continue working
+          }
+        }
       }
     }
 
@@ -2133,10 +2555,151 @@
       await updateDisplay();
     }
     
+    // Account System Variables (simplified for redirect to account page)
+    let currentUser = null;
+    const API_BASE_URL = '/api'; // Production URL for cPanel deployment
+    let backendAvailable = false;
+    let isLoggedIn = false;
+
+    // Account System Functions
+    async function apiCall(endpoint, method = 'GET', data = null) {
+      if (!backendAvailable) {
+        throw new Error('Backend not available');
+      }
+      
+      const options = {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include' // Important for session cookies
+      };
+      
+      if (data) {
+        options.body = JSON.stringify(data);
+      }
+      
+      try {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+        const result = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(result.error || 'API call failed');
+        }
+        
+        return result;
+      } catch (error) {
+        console.error('API Error:', error);
+        throw error;
+      }
+    }
+
+    async function checkAuthStatus() {
+      // First check if backend is available
+      try {
+        const response = await fetch(`${API_BASE_URL}/user`, { 
+          method: 'GET',
+          credentials: 'include'
+        });
+        if (response.ok) {
+          backendAvailable = true;
+          const user = await response.json();
+          currentUser = user;
+          isLoggedIn = true;
+          showUserDashboard();
+          return true;
+        } else {
+          backendAvailable = true;
+          currentUser = null;
+          isLoggedIn = false;
+          showLoginForm();
+          return false;
+        }
+      } catch (e) {
+        backendAvailable = false;
+        currentUser = null;
+        isLoggedIn = false;
+        showLoginForm();
+        return false;
+      }
+    }
+
+    // UI functions removed - handled on account.html page
+
+    async function loadUserData() {
+      if (!isLoggedIn || !backendAvailable) return;
+      
+      try {
+        // Load BTC purchases from server
+        const purchases = await apiCall('/btc-purchases');
+        const serverPurchases = purchases.map(p => ({
+          date: p.date,
+          btcAmount: p.btc_amount,
+          priceUsd: p.price_usd,
+          originalPrice: p.original_price,
+          originalCurrency: p.original_currency,
+          type: p.transaction_type,
+          serverId: p.id
+        }));
+        
+        // Load wallet addresses from server
+        const addresses = await apiCall('/wallet-addresses');
+        const serverAddresses = addresses.map(a => a.address);
+        
+        // Merge server data with local data (server data takes precedence)
+        buys = serverPurchases;
+        walletAddresses = serverAddresses;
+        
+        // Update localStorage with merged data
+        localStorage.setItem("btcBuys", JSON.stringify(buys));
+        localStorage.setItem('walletAddresses', JSON.stringify(walletAddresses));
+        
+        // Update display
+        updateDisplay();
+        renderWalletList();
+        
+      } catch (error) {
+        console.error('Error loading user data:', error);
+        // Continue with local data if server fails
+      }
+    }
+
+    async function syncDataToServer() {
+      if (!isLoggedIn || !backendAvailable) {
+        alert('Backend not available or not logged in. Data is stored locally only.');
+        return;
+      }
+      
+      try {
+        const purchases = buys.map(buy => ({
+          date: buy.date,
+          btc_amount: buy.btcAmount,
+          price_usd: buy.priceUsd,
+          original_price: buy.originalPrice,
+          original_currency: buy.originalCurrency,
+          transaction_type: buy.type || 'buy'
+        }));
+        
+        const addresses = walletAddresses.map(addr => ({ address: addr }));
+        
+        await apiCall('/sync-data', 'POST', {
+          purchases,
+          wallet_addresses: addresses
+        });
+        
+        alert('Data synced successfully!');
+      } catch (error) {
+        alert('Sync failed: ' + error.message);
+      }
+    }
+
+    // Account event listeners removed - handled on account.html page
+
     // Initialize everything when page loads
     document.addEventListener('DOMContentLoaded', function() {
       initializeTracker();
       initializeProofOfReserves();
+      checkAuthStatus(); // Check if user is already logged in
     });
   </script>
 </body>
