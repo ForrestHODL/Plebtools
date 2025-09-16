@@ -16,13 +16,14 @@ RewriteRule ^api/(.*)$ app.py [QSA,L]
 RewriteCond %{THE_REQUEST} \s/+([^?\s]*?)\.html[\s?] [NC]
 RewriteRule ^ /%1? [R=301,L]
 
-# Specific page redirects - these must come first
+# Clean URL routing - map clean URLs to HTML files
 RewriteRule ^home/?$ home.html [L]
 RewriteRule ^treasury/?$ treasury.html [L]
 RewriteRule ^btc-buy-tracker/?$ btc-buy-tracker.html [L]
 RewriteRule ^coveredcall-tracker/?$ coveredcall-tracker.html [L]
 RewriteRule ^compound-interest-calculator/?$ compound-interest-calculator.html [L]
 RewriteRule ^btc-loan-ltv/?$ btc-loan-ltv.html [L]
+RewriteRule ^financial-planner/?$ financial-planner.html [L]
 RewriteRule ^pleb-release/?$ pleb-release.html [L]
 RewriteRule ^account/?$ account.html [L]
 
