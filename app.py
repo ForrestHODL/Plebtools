@@ -646,6 +646,16 @@ def account_html():
 def compound_interest_calculator():
     return send_from_directory('.', 'compound-interest-calculator.html')
 
+
+@app.route('/retirement-calculator')
+def retirement_calculator():
+    return send_from_directory('.', 'retirement-calculator.html')
+
+@app.route('/retirement-calculator.html')
+def retirement_calculator_html():
+    return send_from_directory('.', 'retirement-calculator.html')
+
+
 # Initialize database
 with app.app_context():
     db.create_all()
