@@ -675,15 +675,17 @@
           <div class="dropdown" id="toolsDropdown">
             <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
             <div class="dropdown-content" id="toolsContent" style="display: none;">
-              <a href="home.html">🏠 Home</a>
-              <a href="btc-buy-tracker.html">💼 Portfolio</a>
-              <a href="coveredcall-tracker.html">📈 Covered Calls</a>
-              <a href="compound-interest-calculator.html">💰 Calculator</a>
-              <a href="btc-loan-ltv.html">🔒 BTC Loans</a>
-              <a href="pleb-release.html">📰 Pleb Release</a>
+              <a href="home">🏠 Home</a>
+              <a href="btc-buy-tracker">💼 Portfolio</a>
+              <a href="coveredcall-tracker">📈 Covered Calls</a>
+              <a href="compound-interest-calculator">💰 Calculator</a>
+              <a href="btc-loan-ltv">🔒 BTC Loans</a>
+              <a href="financial-planner">📋 Financial Planner</a>
+              <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+              <a href="pleb-release">📰 Pleb Release</a>
             </div>
           </div>
-          <a href="account.html" class="account-link">👤 Account</a>
+          <a href="account" class="account-link">👤 Account</a>
         </div>
       </div>
     </nav>
@@ -703,6 +705,16 @@
           <div class="empty-state">
             <h3>No purchases yet</h3>
             <p>Add your first Bitcoin purchase to start tracking your portfolio!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="totals-section">
+        <h3>Adjusted Portfolio Summary (Including Donations)</h3>
+        <div id="adjustedTotals" class="totals-display">
+          <div class="empty-state">
+            <h3>No Bitcoin holdings yet</h3>
+            <p>Add purchases or donations to see your adjusted portfolio!</p>
           </div>
         </div>
       </div>
@@ -766,6 +778,16 @@
                 <!-- Wallet addresses will be loaded from backend -->
               </div>
             </div>
+          </div>
+        </div>
+
+        <div class="chart-section">
+          <h3>Donations Timeline</h3>
+          <div class="chart-container">
+            <canvas id="donationsChart"></canvas>
+          </div>
+          <div style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">
+            Track donations received over time
           </div>
         </div>
 
@@ -837,6 +859,13 @@
     // Bitcoin Well transaction data (pre-loaded)
     const bitcoinWellData = [
       {
+        date: "2025-09-15",
+        btcAmount: 0.00062286,
+        priceUsd: 160549.44,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
+      {
         date: "2025-09-08",
         btcAmount: 0.00063497,
         priceUsd: 157487.22,
@@ -870,6 +899,35 @@
     let currentBtcPrice = null;
     let priceHistory = [];
 
+    // Donations data from CSV
+    const donationsData = [
+      {
+        date: "2025-09-15",
+        amount: 0.00000031, // 31 sats converted to BTC
+        description: "Lightning donation - 31 sats"
+      },
+      {
+        date: "2025-09-14",
+        amount: 0.00000042, // 42 sats converted to BTC
+        description: "Lightning donation - 42 sats"
+      },
+      {
+        date: "2025-09-13", 
+        amount: 0.00000010, // 10 sats converted to BTC
+        description: "Lightning donation - 10 sats"
+      },
+      {
+        date: "2025-09-14",
+        amount: 0.00000001, // 1 sat converted to BTC
+        description: "Lightning donation - 1 sat"
+      },
+      {
+        date: "2025-09-14",
+        amount: 0.00000007, // 7 sats converted to BTC
+        description: "Lightning donation - 7 sats"
+      }
+    ];
+
     // Clear any existing data and force reload with latest Bitcoin Well data
     localStorage.removeItem("buys");
     
@@ -883,11 +941,14 @@
 
     const table = document.getElementById("buysTable");
     const totalsDiv = document.getElementById("totals");
+    const adjustedTotalsDiv = document.getElementById("adjustedTotals");
     const ctx = document.getElementById("btcChart");
     const priceCtx = document.getElementById("priceChart");
+    const donationsCtx = document.getElementById("donationsChart");
 
     let chart;
     let priceChart;
+    let donationsChart;
 
     // Fetch current Bitcoin price in CAD
     async function fetchCurrentBtcPrice() {
@@ -1005,9 +1066,9 @@
         } else if (historicalPrices[dateStr]) {
           priceForThisDate = historicalPrices[dateStr];
         } else {
-          // Skip dates without price data
-          currentDate.setDate(currentDate.getDate() + 1);
-          continue;
+          // Fallback to nearest purchase price if no historical data
+          const nearestPurchase = buys.find(buy => buy.date <= dateStr);
+          priceForThisDate = nearestPurchase ? nearestPurchase.priceUsd : (buys.length > 0 ? buys[0].priceUsd : currentBtcPrice || 150000);
         }
 
         priceData.push({
@@ -1040,6 +1101,32 @@
       });
 
       return { priceData, purchaseMarkers };
+    }
+
+    // Generate donations chart
+    function generateDonationsChart() {
+      if (donationsData.length === 0) {
+        return null;
+      }
+
+      // Sort donations by date
+      const sortedDonations = [...donationsData].sort((a, b) => new Date(a.date) - new Date(b.date));
+      
+      // Calculate cumulative donations
+      const cumulativeData = [];
+      let cumulativeAmount = 0;
+      
+      sortedDonations.forEach(donation => {
+        cumulativeAmount += donation.amount;
+        cumulativeData.push({
+          date: donation.date,
+          amount: donation.amount,
+          cumulative: cumulativeAmount,
+          description: donation.description
+        });
+      });
+
+      return cumulativeData;
     }
 
     async function updateDisplay() {
@@ -1084,6 +1171,42 @@
           <div><span class="totals-highlight">Average Buy Price:</span> $${avgPrice.toFixed(2)}</div>
         </div>
       `;
+
+      // Calculate adjusted portfolio including donations
+      const totalDonations = donationsData.reduce((sum, donation) => sum + donation.amount, 0);
+      const totalBtcWithDonations = totalBtc + totalDonations;
+      const totalSatsWithDonations = Math.round(totalBtcWithDonations * 100000000);
+      const currentCadValueWithDonations = currentBtcPrice ? totalBtcWithDonations * currentBtcPrice : null;
+      const currentCadValueWithDonationsDisplay = currentCadValueWithDonations ? `$${currentCadValueWithDonations.toFixed(2)}` : 'N/A';
+      
+      // Calculate profit/loss (donations count as $0 cost)
+      const profitLoss = currentCadValueWithDonations ? currentCadValueWithDonations - totalUsd : null;
+      const profitLossDisplay = profitLoss !== null ? (profitLoss >= 0 ? `+$${profitLoss.toFixed(2)}` : `-$${Math.abs(profitLoss).toFixed(2)}`) : 'N/A';
+      const profitLossColor = profitLoss !== null ? (profitLoss >= 0 ? '#28a745' : '#dc3545') : '#666';
+      
+      // Calculate average cost including donations at $0
+      const avgPriceWithDonations = totalBtcWithDonations ? (totalUsd / totalBtcWithDonations) : 0;
+
+      if (totalBtcWithDonations === 0) {
+        adjustedTotalsDiv.innerHTML = `
+          <div class="empty-state">
+            <h3>No Bitcoin holdings yet</h3>
+            <p>Add purchases or donations to see your adjusted portfolio!</p>
+          </div>
+        `;
+      } else {
+        adjustedTotalsDiv.innerHTML = `
+          <div class="totals-display">
+            <div><span class="totals-highlight">Total BTC (Purchased + Donated):</span> ${totalBtcWithDonations.toFixed(8)} (${totalSatsWithDonations.toLocaleString()} sats)</div>
+            <div><span class="totals-highlight">Purchased BTC:</span> ${totalBtc.toFixed(8)} BTC</div>
+            <div><span class="totals-highlight">Donated BTC:</span> ${totalDonations.toFixed(8)} BTC</div>
+            <div><span class="totals-highlight">Total CAD Invested:</span> $${totalUsd.toFixed(2)} (purchases only)</div>
+            <div><span class="totals-highlight">Current CAD Value:</span> ${currentCadValueWithDonationsDisplay}</div>
+            <div><span class="totals-highlight">Profit/Loss:</span> <span style="color: ${profitLossColor}; font-weight: bold;">${profitLossDisplay}</span></div>
+            <div><span class="totals-highlight">Average Cost (including donations at $0):</span> $${avgPriceWithDonations.toFixed(2)}</div>
+          </div>
+        `;
+      }
 
       // Update chart
       const portfolioHistory = await generatePortfolioValueHistory();
@@ -1316,6 +1439,125 @@
             }
           }
         });
+      }
+
+      // Update donations chart
+      const donationsChartData = generateDonationsChart();
+      if (donationsChartData) {
+        const donationLabels = donationsChartData.map(d => d.date);
+        const donationAmounts = donationsChartData.map(d => d.amount);
+        const cumulativeAmounts = donationsChartData.map(d => d.cumulative);
+
+        if (donationsChart) donationsChart.destroy();
+        donationsChart = new Chart(donationsCtx, {
+          type: "line",
+          data: {
+            labels: donationLabels,
+            datasets: [
+              {
+                label: "Individual Donations (BTC)",
+                data: donationAmounts,
+                borderColor: "#28a745",
+                backgroundColor: "rgba(40, 167, 69, 0.1)",
+                fill: false,
+                tension: 0.4,
+                pointRadius: 6,
+                pointHoverRadius: 10,
+                pointHoverBackgroundColor: "#28a745",
+                pointHoverBorderColor: "#28a745",
+                pointHoverBorderWidth: 2,
+                yAxisID: "y"
+              },
+              {
+                label: "Cumulative Donations (BTC)",
+                data: cumulativeAmounts,
+                borderColor: "#17a2b8",
+                backgroundColor: "rgba(23, 162, 184, 0.1)",
+                fill: true,
+                tension: 0.4,
+                pointRadius: 6,
+                pointHoverRadius: 10,
+                pointHoverBackgroundColor: "#17a2b8",
+                pointHoverBorderColor: "#17a2b8",
+                pointHoverBorderWidth: 2,
+                yAxisID: "y"
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+              intersect: false,
+              mode: 'index'
+            },
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Donations Received Over Time'
+              },
+              tooltip: {
+                enabled: true,
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                borderColor: '#28a745',
+                borderWidth: 1,
+                cornerRadius: 8,
+                displayColors: true,
+                callbacks: {
+                  title: function(context) {
+                    const dataIndex = context[0].dataIndex;
+                    const date = donationLabels[dataIndex];
+                    return new Date(date).toLocaleDateString('en-CA', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    });
+                  },
+                  label: function(context) {
+                    if (context.datasetIndex === 0) {
+                      const donation = donationsChartData[context.dataIndex];
+                      return [
+                        `Donation: ${donation.amount.toFixed(8)} BTC`,
+                        `Description: ${donation.description}`
+                      ];
+                    } else {
+                      const cumulative = context.parsed.y;
+                      const sats = Math.round(cumulative * 100000000);
+                      return `Total Donations: ${cumulative.toFixed(8)} BTC (${sats.toLocaleString()} sats)`;
+                    }
+                  }
+                }
+              }
+            },
+            scales: {
+              y: {
+                type: "linear",
+                title: {
+                  display: true,
+                  text: "Donations (BTC)"
+                },
+                ticks: {
+                  callback: function(value) {
+                    return value.toFixed(8) + ' BTC';
+                  }
+                },
+                grid: { color: 'rgba(0,0,0,0.1)' }
+              },
+              x: {
+                grid: { color: 'rgba(0,0,0,0.1)' }
+              }
+            }
+          }
+        });
+      } else {
+        // Show empty state for donations chart
+        if (donationsChart) donationsChart.destroy();
+        donationsChart = null;
       }
     }
 

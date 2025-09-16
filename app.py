@@ -20,7 +20,7 @@ except ImportError:
 # Ensure data directory exists for cPanel storage
 os.makedirs('data', exist_ok=True)
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='.', static_url_path='')
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', secrets.token_hex(32))
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data/plebtools.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -596,7 +596,7 @@ def delete_covered_call_trade(trade_id):
 # Static file routes
 @app.route('/')
 def index():
-    return send_from_directory('.', 'index.html')
+    return send_from_directory('.', 'home.html')
 
 @app.route('/home')
 def home():
@@ -642,10 +642,45 @@ def account():
 def account_html():
     return send_from_directory('.', 'account.html')
 
-@app.route('/compound-interest-calculator.html')
+@app.route('/compound-interest-calculator')
 def compound_interest_calculator():
     return send_from_directory('.', 'compound-interest-calculator.html')
 
+@app.route('/compound-interest-calculator.html')
+def compound_interest_calculator_html():
+    return send_from_directory('.', 'compound-interest-calculator.html')
+
+@app.route('/coveredcall-tracker')
+def covered_call_tracker_clean():
+    return send_from_directory('.', 'coveredcall-tracker.html')
+
+@app.route('/btc-loan-ltv')
+def btc_loan_ltv():
+    return send_from_directory('.', 'btc-loan-ltv.html')
+
+@app.route('/btc-loan-ltv.html')
+def btc_loan_ltv_html():
+    return send_from_directory('.', 'btc-loan-ltv.html')
+
+@app.route('/financial-planner')
+def financial_planner():
+    return send_from_directory('.', 'financial-planner.html')
+
+@app.route('/financial-planner.html')
+def financial_planner_html():
+    return send_from_directory('.', 'financial-planner.html')
+
+@app.route('/pleb-release')
+def pleb_release():
+    return send_from_directory('.', 'pleb-release.html')
+
+@app.route('/bitcoin-security')
+def bitcoin_security():
+    return send_from_directory('.', 'bitcoin-security.html')
+
+@app.route('/bitcoin-security.html')
+def bitcoin_security_html():
+    return send_from_directory('.', 'bitcoin-security.html')
 
 @app.route('/retirement-calculator')
 def retirement_calculator():
@@ -654,7 +689,6 @@ def retirement_calculator():
 @app.route('/retirement-calculator.html')
 def retirement_calculator_html():
     return send_from_directory('.', 'retirement-calculator.html')
-
 
 # Initialize database
 with app.app_context():
