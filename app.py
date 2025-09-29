@@ -690,6 +690,17 @@ def retirement_calculator():
 def retirement_calculator_html():
     return send_from_directory('.', 'retirement-calculator.html')
 
+
+@app.route('/privacy-analyzer')
+def privacy_analyzer():
+    return send_from_directory('.', 'privacy-analyzer.html')
+
+@app.route('/privacy-analyzer.html')
+def privacy_analyzer_html():
+    return send_from_directory('.', 'privacy-analyzer.html')
+
+
+
 # Initialize database
 with app.app_context():
     db.create_all()
