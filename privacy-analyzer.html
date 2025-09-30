@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Privacy Analyzer - Plebtools</title>
+    <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
+    <link rel="stylesheet" href="styles.css?v=3">
+    
+    <!-- Vis.js for network visualization -->
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <style type="text/css">
+        #mynetwork {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            background: white;
+        }
+    </style>
+    
+    <style>
+        /* Privacy Analyzer Specific Styles */
+        .privacy-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .input-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .tx-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .tx-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .analyze-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .analyze-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .results-section {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .risk-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .risk-low {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+        }
+        
+        .risk-medium {
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            color: white;
+        }
+        
+        .risk-high {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            color: white;
+        }
+        
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .analysis-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .analysis-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .flag-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .flag-item:last-child {
+            border-bottom: none;
+        }
+        
+        .flag-name {
+            font-weight: 500;
+        }
+        
+        .flag-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .flag-true {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .flag-false {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+        
+        .tx-details {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .tx-details h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e9ecef;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .detail-value {
+            color: #333;
+            word-break: break-all;
+        }
+        
+        .address-list {
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 0.5rem;
+        }
+        
+        .address-item {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .address-item:last-child {
+            border-bottom: none;
+        }
+        
+        .tips-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .tips-section h3 {
+            color: #856404;
+            margin-bottom: 1rem;
+        }
+        
+        .tip-item {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .tip-item::before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            display: none;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .analysis-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .privacy-container {
+                padding: 1rem;
+            }
+            
+            .input-section,
+            .results-section {
+                padding: 1.5rem;
+            }
+            
+            #mynetwork {
+                height: 400px;
+            }
+            
+            .visualization-legend {
+                gap: 1rem;
+                justify-content: center;
+            }
+            
+            .legend-item {
+                font-size: 0.8rem;
+            }
+            
+            .legend-node {
+                width: 12px;
+                height: 12px;
+            }
+        }
+        
+        /* Dark theme support */
+        .dark-theme .input-section,
+        .dark-theme .results-section {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+        
+        .dark-theme .tx-input {
+            background: #3d3d3d;
+            border-color: #555;
+            color: #e0e0e0;
+        }
+        
+        .dark-theme .tx-input:focus {
+            border-color: #667eea;
+        }
+        
+        .dark-theme .analysis-card {
+            background: #3d3d3d;
+            color: #e0e0e0;
+        }
+        
+        .dark-theme .analysis-card h3 {
+            color: #667eea;
+        }
+        
+        .dark-theme .tx-details {
+            background: #3d3d3d;
+            color: #e0e0e0;
+        }
+        
+        .dark-theme .tx-details h3 {
+            color: #667eea;
+        }
+        
+        .dark-theme .detail-label {
+            color: #ccc;
+        }
+        
+        .dark-theme .detail-value {
+            color: #e0e0e0;
+        }
+        
+        .dark-theme .address-list {
+            background: #3d3d3d;
+            border-color: #555;
+            color: #e0e0e0;
+        }
+        
+        .dark-theme .address-item {
+            border-color: #555;
+        }
+        
+        .dark-theme .tips-section {
+            background: #3d2d00;
+            border-color: #ffb74d;
+            color: #fff8e1;
+        }
+        
+        .dark-theme .tips-section h3 {
+            color: #ffb74d;
+        }
+        
+        .dark-theme .error-message {
+            background: #3d1a1a;
+            border-color: #d32f2f;
+            color: #ffcdd2;
+        }
+        
+        /* Visualization Styles */
+        .visualization-section {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .visualization-section h3 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+        
+        .visualization-legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .legend-node {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #333;
+        }
+        
+        .input-node {
+            background: #ff6b6b;
+        }
+        
+        .output-node {
+            background: #4ecdc4;
+        }
+        
+        .change-node {
+            background: #ffd93d;
+        }
+        
+        .legend-edge {
+            width: 20px;
+            height: 2px;
+            background: #667eea;
+            border-radius: 1px;
+        }
+        
+        /* Dark theme for visualization */
+        .dark-theme .visualization-section {
+            background: #3d3d3d;
+            color: #e0e0e0;
+        }
+        
+        .dark-theme .visualization-section h3 {
+            color: #667eea;
+        }
+        
+        .dark-theme .legend-item {
+            color: #ccc;
+        }
+        
+        .dark-theme .legend-node {
+            border-color: #e0e0e0;
+        }
+        
+        .dark-theme #mynetwork {
+            background: #2d2d2d;
+            border-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <div class="logo-container">
+                    <a href="home.html" class="logo-link">
+                        <img src="images/bitcoin retro symbol.jpeg" alt="Plebtools Logo" class="nav-logo">
+                        <h1 class="logo">Plebtools</h1>
+                    </a>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="btc-buy-tracker.html">BTC Tracker</a></li>
+                    <li><a href="coveredcall-tracker.html">Covered Calls</a></li>
+                    <li><a href="compound-interest-calculator.html">Compound Interest</a></li>
+                    <li><a href="retirement-calculator.html">Retirement</a></li>
+                    <li><a href="btc-loan-ltv.html">BTC Loan LTV</a></li>
+                    <li><a href="treasury.html">Treasury</a></li>
+                    <li><a href="account.html">Account</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="privacy-container">
+            <div class="hero">
+                <h1>Transaction Privacy Analyzer</h1>
+                <p>Analyze Bitcoin transaction privacy using advanced heuristics and blockchain analysis techniques</p>
+            </div>
+
+            <div class="input-section">
+                <h2>Enter Transaction ID</h2>
+                <p>Paste a Bitcoin transaction ID (txid) to analyze its privacy characteristics:</p>
+                <input type="text" id="txInput" class="tx-input" placeholder="e.g., a1b2c3d4e5f6..." />
+                <button id="analyzeBtn" class="analyze-btn">Analyze Transaction</button>
+                <div class="error-message" id="errorMessage"></div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing transaction...</p>
+            </div>
+
+            <div class="results-section" id="resultsSection">
+                <div class="risk-indicator" id="riskIndicator">
+                    <span id="riskLevel">Risk Level: Low</span>
+                    <span id="riskScore">Score: 0/100</span>
+                </div>
+
+                <div class="visualization-section">
+                    <h3>Transaction Flow Visualization</h3>
+                    <div id="mynetwork"></div>
+                    <div class="visualization-legend">
+                        <div class="legend-item">
+                            <div class="legend-node input-node"></div>
+                            <span>Input Address</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-node output-node"></div>
+                            <span>Output Address</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-node change-node"></div>
+                            <span>Change Output</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-edge"></div>
+                            <span>Transaction Flow</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analysis-grid">
+                    <div class="analysis-card">
+                        <h3>Privacy Flags</h3>
+                        <div id="privacyFlags">
+                            <!-- Privacy flags will be populated here -->
+                        </div>
+                    </div>
+
+                    <div class="analysis-card">
+                        <h3>Transaction Analysis</h3>
+                        <div id="transactionAnalysis">
+                            <!-- Transaction analysis will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tx-details">
+                    <h3>Transaction Details</h3>
+                    <div id="txDetails">
+                        <!-- Transaction details will be populated here -->
+                    </div>
+                </div>
+
+                <div class="tips-section">
+                    <h3>Privacy Improvement Tips</h3>
+                    <div id="privacyTips">
+                        <!-- Privacy tips will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Bitcoin address parsing utilities
+        class BitcoinAddressParser {
+            static parseScriptPubKey(scriptPubKey) {
+                if (!scriptPubKey || scriptPubKey.length < 4) {
+                    return null;
+                }
+
+                // P2PKH (Legacy) - starts with 76a914
+                if (scriptPubKey.startsWith('76a914') && scriptPubKey.endsWith('88ac')) {
+                    const pubKeyHash = scriptPubKey.slice(6, -4);
+                    return this.pubKeyHashToAddress(pubKeyHash, 'legacy');
+                }
+
+                // P2WPKH (Native SegWit) - starts with 0014
+                if (scriptPubKey.startsWith('0014') && scriptPubKey.length === 44) {
+                    const pubKeyHash = scriptPubKey.slice(4);
+                    return this.pubKeyHashToAddress(pubKeyHash, 'bech32');
+                }
+
+                // P2SH (Script Hash) - starts with a914
+                if (scriptPubKey.startsWith('a914') && scriptPubKey.endsWith('87')) {
+                    const scriptHash = scriptPubKey.slice(4, -2);
+                    return this.scriptHashToAddress(scriptHash);
+                }
+
+                return null;
+            }
+
+            static pubKeyHashToAddress(pubKeyHash, type = 'legacy') {
+                // Simplified address generation - in production, use a proper Bitcoin library
+                if (type === 'legacy') {
+                    return '1' + this.base58Encode(pubKeyHash);
+                } else if (type === 'bech32') {
+                    return 'bc1' + this.base32Encode(pubKeyHash);
+                }
+                return null;
+            }
+
+            static scriptHashToAddress(scriptHash) {
+                return '3' + this.base58Encode(scriptHash);
+            }
+
+            static base58Encode(hex) {
+                // Simplified base58 encoding - for demo purposes
+                const alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+                let result = '';
+                for (let i = 0; i < hex.length; i += 2) {
+                    const byte = parseInt(hex.substr(i, 2), 16);
+                    result += alphabet[byte % alphabet.length];
+                }
+                return result;
+            }
+
+            static base32Encode(hex) {
+                // Simplified base32 encoding for bech32 addresses
+                const alphabet = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
+                let result = '';
+                for (let i = 0; i < hex.length; i += 2) {
+                    const byte = parseInt(hex.substr(i, 2), 16);
+                    result += alphabet[byte % alphabet.length];
+                }
+                return result;
+            }
+        }
+
+        // Transaction Privacy Analyzer
+        class TransactionPrivacyAnalyzer {
+            constructor() {
+                this.apiBase = 'https://blockstream.info/api';
+                this.network = null;
+                this.initializeEventListeners();
+            }
+
+            initializeEventListeners() {
+                document.getElementById('analyzeBtn').addEventListener('click', () => this.analyzeTransaction());
+                document.getElementById('txInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.analyzeTransaction();
+                    }
+                });
+            }
+
+            async analyzeTransaction() {
+                const txId = document.getElementById('txInput').value.trim();
+                
+                if (!txId) {
+                    this.showError('Please enter a transaction ID');
+                    return;
+                }
+
+                if (!this.isValidTxId(txId)) {
+                    this.showError('Invalid transaction ID format');
+                    return;
+                }
+
+                this.showLoading(true);
+                this.hideError();
+
+                try {
+                    const txData = await this.fetchTransactionData(txId);
+                    const analysis = this.analyzeTransactionPrivacy(txData);
+                    this.displayResults(analysis, txData);
+                } catch (error) {
+                    this.showError(`Failed to analyze transaction: ${error.message}`);
+                } finally {
+                    this.showLoading(false);
+                }
+            }
+
+            isValidTxId(txId) {
+                // Basic validation for Bitcoin transaction ID
+                return /^[a-fA-F0-9]{64}$/.test(txId);
+            }
+
+            async fetchTransactionData(txId) {
+                const response = await fetch(`${this.apiBase}/tx/${txId}`);
+                
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error('Transaction not found');
+                    } else if (response.status === 400) {
+                        throw new Error('Invalid transaction ID');
+                    } else {
+                        throw new Error(`API error: ${response.status}`);
+                    }
+                }
+
+                const data = await response.json();
+                
+                if (!data.txid) {
+                    throw new Error('Invalid transaction data received');
+                }
+
+                return data;
+            }
+
+            analyzeTransactionPrivacy(txData) {
+                const analysis = {
+                    flags: {},
+                    riskScore: 0,
+                    riskLevel: 'low',
+                    insights: [],
+                    tips: []
+                };
+
+                // Extract addresses from inputs and outputs
+                const inputAddresses = this.extractAddresses(txData.vin);
+                const outputAddresses = this.extractAddresses(txData.vout);
+                const allAddresses = [...inputAddresses, ...outputAddresses];
+
+                // Calculate total input value
+                const totalInputValue = txData.vin.reduce((sum, input) => {
+                    return sum + (input.prevout?.value || 0);
+                }, 0);
+
+                // Calculate total output value
+                const totalOutputValue = txData.vout.reduce((sum, output) => {
+                    return sum + output.value;
+                }, 0);
+
+                // Calculate fee
+                const fee = totalInputValue - totalOutputValue;
+
+                // Privacy heuristics
+                this.checkInputClustering(txData, analysis);
+                this.checkAddressReuse(inputAddresses, outputAddresses, analysis);
+                this.checkChangeDetection(txData, totalInputValue, fee, analysis);
+                this.checkRoundAmounts(txData, analysis);
+                this.checkTransactionSize(txData, analysis);
+                this.checkConfirmationStatus(txData, analysis);
+
+                // Calculate risk score
+                analysis.riskScore = this.calculateRiskScore(analysis.flags);
+                analysis.riskLevel = this.getRiskLevel(analysis.riskScore);
+
+                // Generate insights and tips
+                this.generateInsights(analysis, txData);
+                this.generatePrivacyTips(analysis);
+
+                return analysis;
+            }
+
+            extractAddresses(items) {
+                const addresses = [];
+                
+                for (const item of items) {
+                    if (item.prevout?.scriptpubkey) {
+                        const address = BitcoinAddressParser.parseScriptPubKey(item.prevout.scriptpubkey);
+                        if (address) addresses.push(address);
+                    }
+                    if (item.scriptpubkey) {
+                        const address = BitcoinAddressParser.parseScriptPubKey(item.scriptpubkey);
+                        if (address) addresses.push(address);
+                    }
+                }
+
+                return addresses;
+            }
+
+            checkInputClustering(txData, analysis) {
+                const inputCount = txData.vin.length;
+                analysis.flags.multipleInputs = inputCount > 1;
+                
+                if (inputCount > 1) {
+                    analysis.riskScore += 20;
+                    analysis.insights.push(`${inputCount} inputs detected - possible wallet clustering`);
+                }
+            }
+
+            checkAddressReuse(inputAddresses, outputAddresses, analysis) {
+                const inputSet = new Set(inputAddresses);
+                const outputSet = new Set(outputAddresses);
+                const reuseAddresses = [...inputSet].filter(addr => outputSet.has(addr));
+                
+                analysis.flags.addressReuse = reuseAddresses.length > 0;
+                analysis.flags.reuseCount = reuseAddresses.length;
+                
+                if (reuseAddresses.length > 0) {
+                    analysis.riskScore += 50;
+                    analysis.insights.push(`${reuseAddresses.length} address(es) reused between inputs and outputs`);
+                }
+            }
+
+            checkChangeDetection(txData, totalInputValue, fee, analysis) {
+                if (txData.vout.length >= 2) {
+                    // Sort outputs by value (descending)
+                    const sortedOutputs = [...txData.vout].sort((a, b) => b.value - a.value);
+                    const largestOutput = sortedOutputs[0].value;
+                    const secondLargestOutput = sortedOutputs[1].value;
+                    
+                    // Check if second largest output is likely change
+                    const expectedChange = totalInputValue - fee - largestOutput;
+                    const changeTolerance = 1000; // 1000 satoshis tolerance
+                    
+                    if (Math.abs(secondLargestOutput - expectedChange) <= changeTolerance) {
+                        analysis.flags.changeDetected = true;
+                        analysis.riskScore += 30;
+                        analysis.insights.push('Change output likely detected');
+                    }
+                }
+            }
+
+            checkRoundAmounts(txData, analysis) {
+                let roundOutputs = 0;
+                
+                for (const output of txData.vout) {
+                    // Check for round amounts (multiples of common values)
+                    const value = output.value;
+                    if (value % 100000000 === 0 || // 1 BTC
+                        value % 10000000 === 0 ||  // 0.1 BTC
+                        value % 1000000 === 0 ||   // 0.01 BTC
+                        value % 100000 === 0) {    // 0.001 BTC
+                        roundOutputs++;
+                    }
+                }
+                
+                analysis.flags.roundAmounts = roundOutputs > 0;
+                analysis.flags.roundOutputCount = roundOutputs;
+                
+                if (roundOutputs > 0) {
+                    analysis.riskScore += 15;
+                    analysis.insights.push(`${roundOutputs} round amount(s) detected`);
+                }
+            }
+
+            checkTransactionSize(txData, analysis) {
+                const size = txData.size || 0;
+                analysis.flags.largeTransaction = size > 1000; // > 1KB
+                
+                if (size > 1000) {
+                    analysis.riskScore += 10;
+                    analysis.insights.push(`Large transaction size: ${size} bytes`);
+                }
+            }
+
+            checkConfirmationStatus(txData, analysis) {
+                const confirmations = txData.status?.block_height ? 
+                    (txData.status.block_height > 0 ? 1 : 0) : 0;
+                
+                analysis.flags.unconfirmed = confirmations === 0;
+                
+                if (confirmations === 0) {
+                    analysis.riskScore += 25;
+                    analysis.insights.push('Transaction is unconfirmed');
+                }
+            }
+
+            calculateRiskScore(flags) {
+                let score = 0;
+                
+                // Additional scoring based on combinations
+                if (flags.multipleInputs && flags.changeDetected) {
+                    score += 10; // Higher risk for clustered inputs with change
+                }
+                
+                if (flags.addressReuse && flags.unconfirmed) {
+                    score += 15; // Higher risk for address reuse in unconfirmed tx
+                }
+                
+                return Math.min(score, 100); // Cap at 100
+            }
+
+            getRiskLevel(score) {
+                if (score <= 30) return 'low';
+                if (score <= 70) return 'medium';
+                return 'high';
+            }
+
+            generateInsights(analysis, txData) {
+                const inputCount = txData.vin.length;
+                const outputCount = txData.vout.length;
+                
+                analysis.insights.push(`Transaction has ${inputCount} input(s) and ${outputCount} output(s)`);
+                
+                if (txData.locktime > 0) {
+                    analysis.insights.push('Transaction has locktime set');
+                }
+            }
+
+            generatePrivacyTips(analysis) {
+                const tips = [];
+                
+                if (analysis.flags.multipleInputs) {
+                    tips.push('Consider using single-input transactions to avoid wallet clustering');
+                }
+                
+                if (analysis.flags.addressReuse) {
+                    tips.push('Avoid reusing addresses between inputs and outputs');
+                    tips.push('Use fresh addresses for each transaction');
+                }
+                
+                if (analysis.flags.changeDetected) {
+                    tips.push('Consider using CoinJoin or mixing services to obscure change');
+                    tips.push('Use multiple change outputs to make change detection harder');
+                }
+                
+                if (analysis.flags.roundAmounts) {
+                    tips.push('Avoid round amounts as they can be easily tracked');
+                    tips.push('Add small random amounts to make transactions less identifiable');
+                }
+                
+                if (analysis.flags.unconfirmed) {
+                    tips.push('Wait for transaction confirmation before considering it final');
+                }
+                
+                if (analysis.riskScore < 20) {
+                    tips.push('Good privacy practices detected! Keep up the good work');
+                }
+                
+                analysis.tips = tips;
+            }
+
+            displayResults(analysis, txData) {
+                this.displayRiskIndicator(analysis);
+                this.createTransactionVisualization(txData, analysis);
+                this.displayPrivacyFlags(analysis);
+                this.displayTransactionAnalysis(analysis);
+                this.displayTransactionDetails(txData);
+                this.displayPrivacyTips(analysis);
+                
+                document.getElementById('resultsSection').style.display = 'block';
+            }
+
+            createTransactionVisualization(txData, analysis) {
+                const container = document.getElementById('mynetwork');
+                const nodes = new vis.DataSet();
+                const edges = new vis.DataSet();
+                
+                let nodeId = 0;
+                const addressToNodeId = new Map();
+                
+                // Add input nodes
+                txData.vin.forEach((input, index) => {
+                    if (input.prevout?.scriptpubkey) {
+                        const address = BitcoinAddressParser.parseScriptPubKey(input.prevout.scriptpubkey);
+                        if (address && !addressToNodeId.has(address)) {
+                            const value = (input.prevout.value / 100000000).toFixed(8); // Convert to BTC
+                            nodes.add({
+                                id: nodeId,
+                                label: `${address.substring(0, 8)}...\n${value} BTC`,
+                                title: `Input ${index + 1}\nAddress: ${address}\nValue: ${value} BTC`,
+                                color: {
+                                    background: '#ff6b6b',
+                                    border: '#d63031',
+                                    highlight: { background: '#ff7675', border: '#d63031' }
+                                },
+                                shape: 'circle',
+                                size: Math.max(20, Math.min(40, (input.prevout.value / 100000000) * 10)),
+                                font: { color: 'white', size: 12 }
+                            });
+                            addressToNodeId.set(address, nodeId++);
+                        }
+                    }
+                });
+                
+                // Add output nodes
+                txData.vout.forEach((output, index) => {
+                    if (output.scriptpubkey) {
+                        const address = BitcoinAddressParser.parseScriptPubKey(output.scriptpubkey);
+                        if (address) {
+                            const value = (output.value / 100000000).toFixed(8); // Convert to BTC
+                            const isChange = this.isLikelyChangeOutput(output, txData, analysis);
+                            
+                            let nodeColor;
+                            if (isChange) {
+                                nodeColor = {
+                                    background: '#ffd93d',
+                                    border: '#f39c12',
+                                    highlight: { background: '#f1c40f', border: '#f39c12' }
+                                };
+                            } else {
+                                nodeColor = {
+                                    background: '#4ecdc4',
+                                    border: '#00b894',
+                                    highlight: { background: '#00cec9', border: '#00b894' }
+                                };
+                            }
+                            
+                            const nodeIdForAddress = addressToNodeId.get(address) || nodeId++;
+                            if (!addressToNodeId.has(address)) {
+                                addressToNodeId.set(address, nodeIdForAddress);
+                                nodes.add({
+                                    id: nodeIdForAddress,
+                                    label: `${address.substring(0, 8)}...\n${value} BTC`,
+                                    title: `Output ${index + 1}\nAddress: ${address}\nValue: ${value} BTC${isChange ? '\n(Likely Change)' : ''}`,
+                                    color: nodeColor,
+                                    shape: 'circle',
+                                    size: Math.max(20, Math.min(40, (output.value / 100000000) * 10)),
+                                    font: { color: 'white', size: 12 }
+                                });
+                            }
+                        }
+                    }
+                });
+                
+                // Create edges from inputs to outputs
+                txData.vin.forEach((input, inputIndex) => {
+                    if (input.prevout?.scriptpubkey) {
+                        const inputAddress = BitcoinAddressParser.parseScriptPubKey(input.prevout.scriptpubkey);
+                        if (inputAddress) {
+                            const inputNodeId = addressToNodeId.get(inputAddress);
+                            
+                            txData.vout.forEach((output, outputIndex) => {
+                                if (output.scriptpubkey) {
+                                    const outputAddress = BitcoinAddressParser.parseScriptPubKey(output.scriptpubkey);
+                                    if (outputAddress) {
+                                        const outputNodeId = addressToNodeId.get(outputAddress);
+                                        
+                                        // Create edge if different nodes
+                                        if (inputNodeId !== outputNodeId && inputNodeId !== undefined && outputNodeId !== undefined) {
+                                            const value = (output.value / 100000000).toFixed(8);
+                                            edges.add({
+                                                from: inputNodeId,
+                                                to: outputNodeId,
+                                                label: `${value} BTC`,
+                                                title: `Flow: ${value} BTC`,
+                                                color: { color: '#667eea', highlight: '#5a67d8' },
+                                                width: Math.max(2, Math.min(8, (output.value / 100000000) * 5)),
+                                                font: { color: '#333', size: 10 }
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+                
+                // Network configuration
+                const options = {
+                    nodes: {
+                        borderWidth: 2,
+                        shadow: true,
+                        font: {
+                            size: 12,
+                            color: '#333'
+                        }
+                    },
+                    edges: {
+                        width: 2,
+                        shadow: true,
+                        font: {
+                            size: 10,
+                            color: '#333',
+                            background: 'rgba(255, 255, 255, 0.8)',
+                            strokeWidth: 2,
+                            strokeColor: '#333'
+                        },
+                        smooth: {
+                            type: 'continuous',
+                            forceDirection: 'horizontal',
+                            roundness: 0.4
+                        }
+                    },
+                    physics: {
+                        enabled: true,
+                        stabilization: { iterations: 100 },
+                        barnesHut: {
+                            gravitationalConstant: -2000,
+                            centralGravity: 0.1,
+                            springLength: 95,
+                            springConstant: 0.04,
+                            damping: 0.09
+                        }
+                    },
+                    layout: {
+                        improvedLayout: true,
+                        hierarchical: {
+                            enabled: false
+                        }
+                    },
+                    interaction: {
+                        hover: true,
+                        selectConnectedEdges: false
+                    }
+                };
+                
+                // Create the network
+                const data = { nodes: nodes, edges: edges };
+                this.network = new vis.Network(container, data, options);
+                
+                // Add click event listener
+                this.network.on("click", (params) => {
+                    if (params.nodes.length > 0) {
+                        const nodeId = params.nodes[0];
+                        const node = nodes.get(nodeId);
+                        if (node) {
+                            // Highlight the clicked node and its connections
+                            this.highlightNodeConnections(nodeId, nodes, edges);
+                        }
+                    }
+                });
+                
+                // Add hover event listener
+                this.network.on("hoverNode", (params) => {
+                    const node = nodes.get(params.node);
+                    if (node) {
+                        container.style.cursor = 'pointer';
+                    }
+                });
+                
+                this.network.on("blurNode", () => {
+                    container.style.cursor = 'default';
+                });
+            }
+            
+            isLikelyChangeOutput(output, txData, analysis) {
+                // Use the same logic as in the analysis to determine if this is likely a change output
+                if (txData.vout.length >= 2) {
+                    const sortedOutputs = [...txData.vout].sort((a, b) => b.value - a.value);
+                    const largestOutput = sortedOutputs[0].value;
+                    const totalInputValue = txData.vin.reduce((sum, input) => sum + (input.prevout?.value || 0), 0);
+                    const totalOutputValue = txData.vout.reduce((sum, out) => sum + out.value, 0);
+                    const fee = totalInputValue - totalOutputValue;
+                    const expectedChange = totalInputValue - fee - largestOutput;
+                    
+                    if (output.value === sortedOutputs[1]?.value && 
+                        Math.abs(output.value - expectedChange) <= 1000) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            
+            highlightNodeConnections(selectedNodeId, nodes, edges) {
+                // Get all connected edges
+                const connectedEdges = edges.get().filter(edge => 
+                    edge.from === selectedNodeId || edge.to === selectedNodeId
+                );
+                
+                // Highlight connected nodes
+                const connectedNodeIds = new Set();
+                connectedEdges.forEach(edge => {
+                    connectedNodeIds.add(edge.from);
+                    connectedNodeIds.add(edge.to);
+                });
+                
+                // Update node colors
+                nodes.forEach(node => {
+                    if (connectedNodeIds.has(node.id)) {
+                        nodes.update({
+                            id: node.id,
+                            color: {
+                                ...node.color,
+                                highlight: { background: '#667eea', border: '#5a67d8' }
+                            }
+                        });
+                    } else {
+                        nodes.update({
+                            id: node.id,
+                            color: {
+                                ...node.color,
+                                highlight: { background: node.color.background, border: node.color.border }
+                            }
+                        });
+                    }
+                });
+            }
+
+            displayRiskIndicator(analysis) {
+                const riskIndicator = document.getElementById('riskIndicator');
+                const riskLevel = document.getElementById('riskLevel');
+                const riskScore = document.getElementById('riskScore');
+                
+                riskIndicator.className = `risk-indicator risk-${analysis.riskLevel}`;
+                riskLevel.textContent = `Risk Level: ${analysis.riskLevel.toUpperCase()}`;
+                riskScore.textContent = `Score: ${analysis.riskScore}/100`;
+            }
+
+            displayPrivacyFlags(analysis) {
+                const container = document.getElementById('privacyFlags');
+                container.innerHTML = '';
+                
+                const flags = [
+                    { key: 'multipleInputs', name: 'Multiple Inputs', description: 'Wallet clustering risk' },
+                    { key: 'addressReuse', name: 'Address Reuse', description: 'Input/output address overlap' },
+                    { key: 'changeDetected', name: 'Change Detected', description: 'Likely change output identified' },
+                    { key: 'roundAmounts', name: 'Round Amounts', description: 'Exact round number amounts' },
+                    { key: 'largeTransaction', name: 'Large Transaction', description: 'Transaction size > 1KB' },
+                    { key: 'unconfirmed', name: 'Unconfirmed', description: 'Transaction not yet confirmed' }
+                ];
+                
+                flags.forEach(flag => {
+                    const flagElement = document.createElement('div');
+                    flagElement.className = 'flag-item';
+                    
+                    const isActive = analysis.flags[flag.key];
+                    const statusClass = isActive ? 'flag-true' : 'flag-false';
+                    const statusText = isActive ? 'DETECTED' : 'CLEAR';
+                    
+                    flagElement.innerHTML = `
+                        <span class="flag-name">${flag.name}</span>
+                        <span class="flag-status ${statusClass}">${statusText}</span>
+                    `;
+                    
+                    container.appendChild(flagElement);
+                });
+            }
+
+            displayTransactionAnalysis(analysis) {
+                const container = document.getElementById('transactionAnalysis');
+                container.innerHTML = '';
+                
+                if (analysis.insights.length > 0) {
+                    analysis.insights.forEach(insight => {
+                        const insightElement = document.createElement('div');
+                        insightElement.style.cssText = 'padding: 0.5rem 0; border-bottom: 1px solid #e9ecef;';
+                        insightElement.textContent = insight;
+                        container.appendChild(insightElement);
+                    });
+                } else {
+                    container.innerHTML = '<p>No specific privacy concerns detected.</p>';
+                }
+            }
+
+            displayTransactionDetails(txData) {
+                const container = document.getElementById('txDetails');
+                container.innerHTML = '';
+                
+                const details = [
+                    { label: 'Transaction ID', value: txData.txid },
+                    { label: 'Size', value: `${txData.size || 0} bytes` },
+                    { label: 'Weight', value: `${txData.weight || 0} WU` },
+                    { label: 'Fee Rate', value: `${txData.fee || 0} sat/vB` },
+                    { label: 'Locktime', value: txData.locktime || 0 },
+                    { label: 'Version', value: txData.version || 1 }
+                ];
+                
+                details.forEach(detail => {
+                    const detailElement = document.createElement('div');
+                    detailElement.className = 'detail-row';
+                    detailElement.innerHTML = `
+                        <span class="detail-label">${detail.label}:</span>
+                        <span class="detail-value">${detail.value}</span>
+                    `;
+                    container.appendChild(detailElement);
+                });
+            }
+
+            displayPrivacyTips(analysis) {
+                const container = document.getElementById('privacyTips');
+                container.innerHTML = '';
+                
+                if (analysis.tips.length > 0) {
+                    analysis.tips.forEach(tip => {
+                        const tipElement = document.createElement('div');
+                        tipElement.className = 'tip-item';
+                        tipElement.textContent = tip;
+                        container.appendChild(tipElement);
+                    });
+                } else {
+                    container.innerHTML = '<p>No specific recommendations at this time.</p>';
+                }
+            }
+
+            showLoading(show) {
+                document.getElementById('loading').style.display = show ? 'block' : 'none';
+                document.getElementById('analyzeBtn').disabled = show;
+            }
+
+            showError(message) {
+                const errorElement = document.getElementById('errorMessage');
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+            }
+
+            hideError() {
+                document.getElementById('errorMessage').style.display = 'none';
+            }
+        }
+
+        // Initialize the analyzer when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new TransactionPrivacyAnalyzer();
+        });
+    </script>
+</body>
+</html>
