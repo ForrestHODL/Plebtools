@@ -5,8 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Plebtools BTC Tracker</title>
   <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="stylesheet" href="styles.css?v=3">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   
   <style>
     /* Modern dropdown styles */
@@ -1095,6 +1098,17 @@
         <div class="totals-display">
           <div style="text-align: center;">
             <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
+            <div id="brave-warning" class="brave-warning">
+                <strong>⚠️ Brave Browser Detected:</strong> Some affiliate links may be blocked. 
+                <button onclick="showBraveInstructions()">Show Instructions</button>
+            </div>
+            <div id="brave-instructions" class="brave-instructions">
+                <strong>How to enable affiliate links in Brave:</strong><br>
+                1. Click the Brave shield icon (🛡️) in your address bar<br>
+                2. Toggle "Shields" to "Down" for this site<br>
+                3. Refresh the page<br>
+                <em>Or right-click any link and select "Open in new tab"</em>
+            </div>
             <div class="affiliate-links">
               <div class="affiliate-item">
                 <h4>Where to buy</h4>
@@ -1157,6 +1171,9 @@
   </footer>
 
   <script>
+    // Version: 2025-01-27 - Updated with new purchase and improved price fetching
+    console.log('BTC Tracker loaded - Version 2025-01-27');
+    
     // Current Bitcoin price data
     let currentBtcPrice = null;
     let currentBtcPriceCAD = null;
@@ -1178,14 +1195,73 @@
     // Fetch current Bitcoin price in USD and CAD
     async function fetchCurrentBtcPrice() {
       try {
-        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,cad&include_24hr_change=true');
-        const data = await response.json();
-        currentBtcPrice = data.bitcoin.usd;
-        currentBtcPriceCAD = data.bitcoin.cad;
-        return isCAD ? currentBtcPriceCAD : currentBtcPrice;
+        // Try multiple APIs for better reliability
+        const apis = [
+          'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,cad&include_24hr_change=true',
+          'https://api.coinbase.com/v2/exchange-rates?currency=BTC',
+          'https://blockchain.info/ticker',
+          'https://cors-anywhere.herokuapp.com/https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,cad&include_24hr_change=true'
+        ];
+        
+        for (let i = 0; i < apis.length; i++) {
+          try {
+            const response = await fetch(apis[i]);
+            if (!response.ok) continue;
+            
+            const data = await response.json();
+            
+            if (i === 0 || i === 3) {
+              // CoinGecko format (including CORS proxy)
+              currentBtcPrice = data.bitcoin.usd;
+              currentBtcPriceCAD = data.bitcoin.cad;
+              break;
+            } else if (i === 1) {
+              // Coinbase format
+              const rates = data.data.rates;
+              currentBtcPrice = parseFloat(rates.USD);
+              currentBtcPriceCAD = parseFloat(rates.CAD);
+              break;
+            } else if (i === 2) {
+              // Blockchain.info format
+              currentBtcPrice = data.USD.last;
+              currentBtcPriceCAD = data.CAD.last;
+              break;
+            }
+          } catch (apiError) {
+            console.log(`API ${i + 1} failed, trying next...`);
+            continue;
+          }
+        }
+        
+        if (currentBtcPrice && currentBtcPriceCAD) {
+          console.log('Bitcoin price fetched successfully:', { USD: currentBtcPrice, CAD: currentBtcPriceCAD });
+          return isCAD ? currentBtcPriceCAD : currentBtcPrice;
+        } else {
+          throw new Error('All price APIs failed');
+        }
       } catch (error) {
         console.error('Error fetching Bitcoin price:', error);
-        return null;
+        
+        // Try one more approach using a different method
+        try {
+          const fallbackResponse = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
+          if (fallbackResponse.ok) {
+            const fallbackData = await fallbackResponse.json();
+            currentBtcPrice = parseFloat(fallbackData.price);
+            // Estimate CAD price (rough conversion)
+            currentBtcPriceCAD = currentBtcPrice * 1.35;
+            console.log('Using Binance fallback price:', { USD: currentBtcPrice, CAD: currentBtcPriceCAD });
+            return isCAD ? currentBtcPriceCAD : currentBtcPrice;
+          }
+        } catch (fallbackError) {
+          console.log('Fallback API also failed');
+        }
+        
+        // Set static fallback prices if all APIs fail
+        currentBtcPrice = 50000; // Fallback USD price
+        currentBtcPriceCAD = 67500; // Fallback CAD price
+        console.log('Using static fallback prices:', { USD: currentBtcPrice, CAD: currentBtcPriceCAD });
+        return isCAD ? currentBtcPriceCAD : currentBtcPrice;
       }
     }
 
@@ -1196,7 +1272,13 @@
         const endTimestamp = Math.floor(new Date(endDate).getTime() / 1000);
         const currency = isCAD ? 'cad' : 'usd';
         
+        // Try CoinGecko first, then fallback to current price
         const response = await fetch(`https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range?vs_currency=${currency}&from=${startTimestamp}&to=${endTimestamp}`);
+        
+        if (!response.ok) {
+          throw new Error('CoinGecko API failed');
+        }
+        
         const data = await response.json();
         
         // Convert the data to a more usable format
@@ -1209,6 +1291,7 @@
         return priceHistory;
       } catch (error) {
         console.error('Error fetching historical Bitcoin prices:', error);
+        // Return empty object - the calling code will handle fallback
         return {};
       }
     }
@@ -1850,12 +1933,29 @@
       const currentPrice = isCAD ? currentBtcPriceCAD : currentBtcPrice;
       const currency = isCAD ? 'CAD' : 'USD';
       
-      if (currentPrice) {
+      if (currentPrice && currentPrice > 0) {
         const lastUpdate = new Date().toLocaleTimeString();
         priceInfo.innerHTML = `Current Bitcoin Price: $${currentPrice.toFixed(2)} ${currency} (Updated: ${lastUpdate})`;
       } else {
-        priceInfo.innerHTML = "Unable to fetch current price";
+        priceInfo.innerHTML = `
+          <div style="color: #dc3545;">
+            ⚠️ Unable to fetch current price. 
+            <button onclick="retryPriceFetch()" style="background: #667eea; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; margin-left: 8px;">
+              Retry
+            </button>
+          </div>
+        `;
       }
+    }
+    
+    // Retry price fetch function
+    async function retryPriceFetch() {
+      const priceInfo = document.getElementById("priceInfo");
+      priceInfo.innerHTML = "🔄 Fetching price...";
+      
+      await fetchCurrentBtcPrice();
+      updatePriceInfo();
+      await updateDisplay();
     }
 
     // Update currency display
@@ -2702,6 +2802,36 @@
       initializeTracker();
       initializeProofOfReserves();
       checkAuthStatus(); // Check if user is already logged in
+    });
+
+    // Brave browser detection and affiliate link handling
+    function isBraveBrowser() {
+        return (navigator.brave && typeof navigator.brave.isBrave === 'function') ||
+               (window.chrome && window.chrome.runtime && window.chrome.runtime.onConnect);
+    }
+
+    function showBraveInstructions() {
+        const instructions = document.getElementById('brave-instructions');
+        instructions.style.display = instructions.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Show Brave warning if detected
+    if (isBraveBrowser()) {
+        document.getElementById('brave-warning').style.display = 'block';
+    }
+
+    // Add click handlers to affiliate links for better UX
+    document.addEventListener('DOMContentLoaded', function() {
+        const affiliateLinks = document.querySelectorAll('.affiliate-link');
+        affiliateLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Add a small delay to show the user what's happening
+                this.style.opacity = '0.7';
+                setTimeout(() => {
+                    this.style.opacity = '1';
+                }, 200);
+            });
+        });
     });
   </script>
 </body>

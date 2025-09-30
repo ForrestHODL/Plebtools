@@ -10,6 +10,7 @@
         /* Bitcoin Security specific styles */
         .gradient-text {
             background: -webkit-linear-gradient(45deg, #f59e0b, #fbbf24, #fde68a);
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -131,10 +132,10 @@
 </head>
 <body>
     <!-- Header -->
-    <header class="header">
-        <nav class="nav">
+    <header>
+        <nav>
             <div class="nav-container">
-                <div class="nav-brand">
+                <div class="logo-container">
                     <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
                     <h1 class="logo">Plebtools</h1>
                 </div>
@@ -147,6 +148,7 @@
                             <a href="btc-buy-tracker">💼 Portfolio</a>
                             <a href="coveredcall-tracker">📈 Covered Calls</a>
                             <a href="compound-interest-calculator">💰 Calculator</a>
+                            <a href="retirement-calculator">🏖️ Retirement</a>
                             <a href="btc-loan-ltv">🔒 BTC Loans</a>
                             <a href="financial-planner">📋 Financial Planner</a>
                             <a href="bitcoin-security">🛡️ Bitcoin Security</a>
@@ -230,6 +232,17 @@
                 <div class="totals-display">
                     <div style="text-align: center;">
                         <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
+                        <div id="brave-warning" class="brave-warning">
+                            <strong>⚠️ Brave Browser Detected:</strong> Some affiliate links may be blocked. 
+                            <button onclick="showBraveInstructions()">Show Instructions</button>
+                        </div>
+                        <div id="brave-instructions" class="brave-instructions">
+                            <strong>How to enable affiliate links in Brave:</strong><br>
+                            1. Click the Brave shield icon (🛡️) in your address bar<br>
+                            2. Toggle "Shields" to "Down" for this site<br>
+                            3. Refresh the page<br>
+                            <em>Or right-click any link and select "Open in new tab"</em>
+                        </div>
                         <div class="affiliate-links">
                             <div class="affiliate-item"><h4>Where to buy</h4><a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" class="affiliate-link">Bitcoin Well</a></div>
                             <div class="affiliate-item"><h4>Where to store</h4><a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a></div>
@@ -401,6 +414,36 @@
                 timeElapsedEl.textContent = `${timeElapsed}s`;
 
             }, 100);
+        });
+
+        // Brave browser detection and affiliate link handling
+        function isBraveBrowser() {
+            return (navigator.brave && typeof navigator.brave.isBrave === 'function') ||
+                   (window.chrome && window.chrome.runtime && window.chrome.runtime.onConnect);
+        }
+
+        function showBraveInstructions() {
+            const instructions = document.getElementById('brave-instructions');
+            instructions.style.display = instructions.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Show Brave warning if detected
+        if (isBraveBrowser()) {
+            document.getElementById('brave-warning').style.display = 'block';
+        }
+
+        // Add click handlers to affiliate links for better UX
+        document.addEventListener('DOMContentLoaded', function() {
+            const affiliateLinks = document.querySelectorAll('.affiliate-link');
+            affiliateLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Add a small delay to show the user what's happening
+                    this.style.opacity = '0.7';
+                    setTimeout(() => {
+                        this.style.opacity = '1';
+                    }, 200);
+                });
+            });
         });
     </script>
 </body>

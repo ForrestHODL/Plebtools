@@ -1,0 +1,7 @@
+"type","ref","id","created","rate","currency","amount","tip","total","fee","platform_fee","amount_fiat","tip_fiat","total_fiat","fee_fiat","platform_fee_fiat"
+"lightning","","","Mon Sep 28 2025 15:10:00 GMT-0700 (Pacific Daylight Time)","161245.1672426","CAD","8","","8","","","CA$0.01","","CA$0.01","",""
+"lightning","","","Fri Sep 26 2025 19:14:00 GMT-0700 (Pacific Daylight Time)","161245.1672426","CAD","8","","8","","","CA$0.01","","CA$0.01","",""
+"lightning","","","Thu Sep 25 2025 22:16:00 GMT-0700 (Pacific Daylight Time)","161245.1672426","CAD","1","","1","","","CA$0.00","","CA$0.00","",""
+"lightning","","","Thu Sep 25 2025 10:27:00 GMT-0700 (Pacific Daylight Time)","161245.1672426","CAD","42","","42","","","CA$0.06","","CA$0.06","",""
+"lightning","","","Tue Sep 23 2025 10:10:00 GMT-0700 (Pacific Daylight Time)","161245.1672426","CAD","21","","21","","","CA$0.03","","CA$0.03","",""
+"lightning","","","Tue Sep 23 2025 09:21:00 GMT-0700 (Pacific Daylight Time)","161245.1672426","CAD","21","","21","","","CA$0.03","","CA$0.03","",""
