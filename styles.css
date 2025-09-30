@@ -674,6 +674,54 @@ footer p {
   margin: 0.5rem 0 0 0;
 }
 
+/* Brave browser warning styles */
+.brave-warning {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    display: none;
+}
+
+.brave-instructions {
+    background: #e7f3ff;
+    border: 1px solid #b3d9ff;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    display: none;
+}
+
+.brave-instructions button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+.brave-instructions button:hover {
+    background: #0056b3;
+}
+
+/* Dark theme for Brave warnings */
+.dark-theme .brave-warning {
+    background: #2d2d2d;
+    border-color: #4a4a4a;
+    color: #e0e0e0;
+}
+
+.dark-theme .brave-instructions {
+    background: #1a2332;
+    border-color: #2c5aa0;
+    color: #e0e0e0;
+}
+
 /* Dark theme for guidelines section affiliate links */
 .dark-theme .guidelines-section .affiliate-item,
 .dark-theme .totals-display .affiliate-item {
