@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Storage - Plebtools</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Bitcoin Security specific styles */
+        .gradient-text {
+            background: -webkit-linear-gradient(45deg, #f59e0b, #fbbf24, #fde68a);
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .number-animation {
+            font-weight: 900;
+            font-size: 2.25rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+
+        .storage-section {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid #333;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .comparison-card {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a2e 100%);
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .comparison-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .simulation-container {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .key-display {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            word-break: break-all;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #f59e0b;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 1.1rem;
+        }
+
+        /* Dark theme adjustments */
+        .dark-theme .card {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a2e 100%);
+            border-color: #555;
+        }
+
+        .dark-theme .comparison-card {
+            background: linear-gradient(135deg, #3d3d3d 0%, #2a2a2e 100%);
+            border-color: #666;
+        }
+
+        .dark-theme .storage-section {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a2e 100%);
+            border-color: #555;
+        }
+
+        .dark-theme .simulation-container {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f23 100%);
+        }
+
+        .dark-theme .key-display {
+            background: rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+                    <h1 class="logo">Plebtools</h1>
+                </div>
+                <div class="nav-links">
+                    <div class="dropdown" id="toolsDropdown">
+                        <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+                        <div class="dropdown-content" id="toolsContent" style="display: none;">
+                            <a href="home">🏠 Home</a>
+                            <a href="treasury">📊 Treasury</a>
+                            <a href="btc-buy-tracker">💼 Portfolio</a>
+                            <a href="coveredcall-tracker">📈 Covered Calls</a>
+                            <a href="compound-interest-calculator">💰 Calculator</a>
+                            <a href="btc-loan-ltv">🔒 BTC Loans</a>
+                            <a href="financial-planner">📋 Financial Planner</a>
+                            <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+                            <a href="bitcoin-storage">🏛️ Bitcoin Storage</a>
+                            <a href="pleb-release">📰 Pleb Release</a>
+                        </div>
+                    </div>
+                    <a href="account" class="account-link">👤 Account</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Header Section -->
+            <section class="storage-section">
+                <h1 class="gradient-text" style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">Where should
+                    you keep your Bitcoin?</h1>
+                <p style="text-align: center; font-size: 1.2rem; color: #ccc; max-width: 800px; margin: 0 auto;">
+                    Become your own bank with a definitive guide to safe storage of your bitcoin.
+
+            </section>
+
+            <!-- Bitcoin Storage Sections -->
+            <section class="storage-section">
+                <h1 class="gradient-text" style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">Exchanges
+                </h1>
+                <p style="text-align: center; font-size: 1.2rem; color: #ccc; max-width: 800px; margin: 0 auto;">
+                    Exchanges are a place where you can purchase bitcoin. When you purchase bitcoin on an exchange, they
+                    will hold the bitcoin for you.
+                    This is not advised due to risks with insolvency, loss of access, and paper bitcoin. When buying
+                    from an exchange, you should always withdraw to your own wallet.
+                </p>
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h3 style="color: #fbbf24;">Centralized Exchanges</h3>
+                        <p style="color: #ccc">
+                            Platforms like Coinbase, Shakepay and Kraken. Easy to use, but you don't really own your
+                            bitcoin until you withdraw to your own wallet.
+                        </p>
+                        <img src="images/coinbase-logo.png" style="margin-top: 25px;" width="200" height="200"
+                            alt="Coinbase Logo">
+                    </div>
+                    <div class="comparison-card">
+                        <h3 style="color: #fbbf24">Decentralized Exchanges</h3>
+                        <p style="color: #ccc">
+                            P2P (Peer-to-peer) platforms where you trade directly with others, like RoboSats. You
+                            control your funds, but may require more technical knowledge.
+                        </p>
+                        <img src="images/robosats.png" style="margin-top: 25px;" width="200" height="200"
+                            alt="RoboSats Logo">
+                    </div>
+                    <div class="comparison-card">
+                        <h3 style="color: #fbbf24">Non-custodial exchanges</h3>
+                        <p style="color: #ccc">
+                            Non-custodial exchanges take payment and send bitcoin directly to your wallet address.
+                            Bitcoin Well is an example of a non-custodial exchange.
+                        </p>
+                        <img src="images/bitcoinwell.png" style="margin-top: 25px;" width="200" height="200"
+                            alt="Bitcoin Well Logo">
+                    </div>
+                </div>
+            </section>
+            <section class="storage-section">
+                <h1 class="gradient-text" style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">Hot vs Cold
+                    Storage</h1>
+                <p style="text-align: center; font-size: 1.2rem; color: #ccc; max-width: 800px; margin: 0 auto;">
+                    Now that you've decided to take your bitcoin off of the exchange, what wallet should you pick?
+                    People talk about cold storage vs hot wallets, what are the actual differences?
+                </p>
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h3 style="color: #fbbf24">Hot Wallets</h3> <br>
+                        <p style="color: #ccc">Hot Wallets are bitcoin wallets where the keys are kept on a device
+                            connected to the internet. For example, if you create a new wallet with Sparrow, the keys
+                            will be stored on the device you create it on. Hot wallets are useful for everyday spending,
+                            like carrying cash in a physical wallet.</p>
+                    </div>
+                    <div class="comparison-card">
+                        <h3 style="color: #fbbf24">Cold Wallets</h3> <br>
+                        <p style="color: #ccc">
+                            Cold wallets are wallets where the keys are kept offline. You can use a designated hardware
+                            wallet
+                            for this, or even an air gapped computer with no internet connection. Cold wallets are like
+                            a vault for your savings.
+                        </p>
+                    </div>
+                </div>
+            </section>
+            <section class="storage-section">
+                <h1 class="gradient-text" style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">Hardware
+                    Wallets</h1>
+                <p style="text-align: center; font-size: 1.2rem; color: #ccc; max-width: 800px; margin: 0 auto;">
+                    Hardware wallets are dedicated devices that keep your private keys offline for strong protection
+                    against hacks and malware. <br>
+                    A key consideration when choosing a hardware wallet is making sure the firmware is bitcoin-only.
+                    This can reduce the points of attack if someone attempts to steal your keys. <br> <br>
+                    Popular brands include the Blockstream Jade (affiliate link below), the Trezor Safe 3/5
+                    (bitcoin-only edition), and the Coldcard Q/Mk4.
+                </p>
+            </section>
+
+            <!-- Affiliate Links Section -->
+            <div class="planner-section">
+                <h3 style="text-align: center; color: #ccc">Want to buy and secure your Bitcoin?</h3>
+                <div class="totals-display">
+                    <div style="text-align: center;">
+                        <p style="font-size: 0.9rem; color: #ccc; margin-bottom: 1.5rem;">These are affiliate/discount
+                            links</p>
+                        <div class="affiliate-links">
+                            <div class="affiliate-item">
+                                <h4>Where to buy</h4><a href="https://bitcoinwell.com/referral/bitcoinnotcrypto"
+                                    target="_blank" class="affiliate-link">Bitcoin Well</a>
+                                <a href="https://shakepay.me/r/FNQHGTN" target="_blank"
+                                    class="affiliate-link">Shakepay</a>
+                            </div>
+                            <div class="affiliate-item">
+                                <h4>Where to store</h4><a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz"
+                                    target="_blank" class="affiliate-link">Blockstream Jade</a>
+                            </div>
+                            <div class="affiliate-item">
+                                <h4>How to protect</h4><a href="https://www.stampseed.com/" target="_blank"
+                                    class="affiliate-link">Stamp Seed</a>
+                                <p class="discount-code">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
+                            </div>
+                            <div class="affiliate-item">
+                                <h4>How to validate</h4><a href="https://store.start9.com/" target="_blank"
+                                    class="affiliate-link">Start9</a>
+                                <p class="discount-code">CODE: BNC5 for 5% off</p>
+                                <a href="https://www.solosatoshi.com/aff/2279/" target="_blank"
+                                    class="affiliate-link">Buy a BitAxe</a>
+                            </div>
+                            <div class="affiliate-item">
+                                <h4>1:1 Coaching</h4><a href="https://www.differentmedia.ca/bitcoin1-1" target="_blank"
+                                    class="affiliate-link">Bitcoin 1:1</a>
+                            </div>
+                            <div class="affiliate-item">
+                                <h4>Where to learn</h4><a href="https://www.youtube.com/@bitcoinnotcrypto"
+                                    target="_blank" class="affiliate-link">YouTube</a>
+                            </div>
+                            <div class="affiliate-item">
+                                <h4>Earn free BTC</h4><a href="https://satsarcade.app/" target="_blank"
+                                    class="affiliate-link">Sats Arcade</a>
+                            </div>
+                            <div class="affiliate-item">
+                                <h4>How to support</h4><a href="https://coinos.io/plebtools" target="_blank"
+                                    class="affiliate-link">Donate</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Open Source Section -->
+            <div class="feature-card">
+                <span class="feature-icon">🚀</span>
+                <h3 class="feature-title">Open Source</h3>
+                <p class="feature-description">
+                    Free and open source tools that you can customize, deploy,
+                    and contribute to. Built by the community, for the community.
+                </p>
+                <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" class="feature-btn">View on
+                    GitHub</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 Plebtools. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+        }
+
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
+
+        // Add theme toggle button
+        document.addEventListener('DOMContentLoaded', function () {
+            const nav = document.querySelector('.nav-container');
+            const themeToggle = document.createElement('button');
+            themeToggle.innerHTML = '🌙';
+            themeToggle.className = 'theme-toggle';
+            themeToggle.style.cssText = `
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                margin-left: 1rem;
+                padding: 0.5rem;
+                border-radius: 50%;
+                transition: all 0.3s ease;
+            `;
+            themeToggle.onclick = toggleTheme;
+            nav.appendChild(themeToggle);
+        });
+    </script>
+    <!-- Dropdown -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Dropdown Functionality ---
+            const toolsBtn = document.getElementById('toolsBtn');
+            const toolsContent = document.getElementById('toolsContent');
+            let isOpen = false;
+
+            toolsBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (isOpen) {
+                    toolsContent.classList.remove('show');
+                    setTimeout(() => {
+                        toolsContent.style.display = 'none';
+                    }, 300);
+                    isOpen = false;
+                } else {
+                    toolsContent.style.display = 'block';
+                    setTimeout(() => {
+                        toolsContent.classList.add('show');
+                    }, 10);
+                    isOpen = true;
+                }
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!document.getElementById('toolsDropdown').contains(e.target)) {
+                    toolsContent.classList.remove('show');
+                    setTimeout(() => {
+                        toolsContent.style.display = 'none';
+                    }, 300);
+                    isOpen = false;
+                }
+            });
+
+
+            const comparisonSection = document.querySelector('.comparison-grid');
+            if (comparisonSection) {
+                observer.observe(comparisonSection);
+            }
+        });
+    </script>
+</body>
+
+</html>
