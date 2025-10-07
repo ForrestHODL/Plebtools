@@ -502,6 +502,17 @@ Now Holds</textarea>
       <h2 class="section-title">Want to buy and secure your Bitcoin?</h2>
       <div style="text-align: center;">
         <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
+        <div id="brave-warning" class="brave-warning">
+            <strong>⚠️ Brave Browser Detected:</strong> Some affiliate links may be blocked. 
+            <button onclick="showBraveInstructions()">Show Instructions</button>
+        </div>
+        <div id="brave-instructions" class="brave-instructions">
+            <strong>How to enable affiliate links in Brave:</strong><br>
+            1. Click the Brave shield icon (🛡️) in your address bar<br>
+            2. Toggle "Shields" to "Down" for this site<br>
+            3. Refresh the page<br>
+            <em>Or right-click any link and select "Open in new tab"</em>
+        </div>
         <div class="affiliate-links">
             <div class="affiliate-item">
               <h4>Where to buy</h4>
@@ -901,6 +912,36 @@ Now Holds</textarea>
         }, 300);
         isOpen = false;
       }
+    });
+
+    // Brave browser detection and affiliate link handling
+    function isBraveBrowser() {
+        return (navigator.brave && typeof navigator.brave.isBrave === 'function') ||
+               (window.chrome && window.chrome.runtime && window.chrome.runtime.onConnect);
+    }
+
+    function showBraveInstructions() {
+        const instructions = document.getElementById('brave-instructions');
+        instructions.style.display = instructions.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Show Brave warning if detected
+    if (isBraveBrowser()) {
+        document.getElementById('brave-warning').style.display = 'block';
+    }
+
+    // Add click handlers to affiliate links for better UX
+    document.addEventListener('DOMContentLoaded', function() {
+        const affiliateLinks = document.querySelectorAll('.affiliate-link');
+        affiliateLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Add a small delay to show the user what's happening
+                this.style.opacity = '0.7';
+                setTimeout(() => {
+                    this.style.opacity = '1';
+                }, 200);
+            });
+        });
     });
   </script>
 </body>

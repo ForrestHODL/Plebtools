@@ -24,6 +24,8 @@ RewriteRule ^coveredcall-tracker/?$ coveredcall-tracker.html [L]
 RewriteRule ^compound-interest-calculator/?$ compound-interest-calculator.html [L]
 RewriteRule ^btc-loan-ltv/?$ btc-loan-ltv.html [L]
 RewriteRule ^financial-planner/?$ financial-planner.html [L]
+RewriteRule ^bitcoin-security/?$ bitcoin-security.html [L]
+RewriteRule ^retirement-calculator/?$ retirement-calculator.html [L]
 RewriteRule ^pleb-release/?$ pleb-release.html [L]
 RewriteRule ^account/?$ account.html [L]
 

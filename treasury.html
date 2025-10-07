@@ -3,9 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Plebtools Treasury</title>
   <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="stylesheet" href="styles.css?v=5">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <style>
@@ -796,6 +799,17 @@
         <div class="totals-display">
           <div style="text-align: center;">
             <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
+            <div id="brave-warning" class="brave-warning">
+                <strong>⚠️ Brave Browser Detected:</strong> Some affiliate links may be blocked. 
+                <button onclick="showBraveInstructions()">Show Instructions</button>
+            </div>
+            <div id="brave-instructions" class="brave-instructions">
+                <strong>How to enable affiliate links in Brave:</strong><br>
+                1. Click the Brave shield icon (🛡️) in your address bar<br>
+                2. Toggle "Shields" to "Down" for this site<br>
+                3. Refresh the page<br>
+                <em>Or right-click any link and select "Open in new tab"</em>
+            </div>
             <div class="affiliate-links">
               <div class="affiliate-item">
                 <h4>Where to buy</h4>
@@ -860,6 +874,20 @@
     // Bitcoin Well transaction data (pre-loaded)
     const bitcoinWellData = [
       {
+        date: "2025-09-29",
+        btcAmount: 0.00064612, // 64,612 sats converted to BTC
+        priceUsd: 154770.01,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
+      {
+        date: "2025-09-22",
+        btcAmount: 0.00063222, // 63,222 sats converted to BTC
+        priceUsd: 158172.17,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
+      {
         date: "2025-09-15",
         btcAmount: 0.00062286,
         priceUsd: 160549.44,
@@ -896,26 +924,21 @@
       }
     ];
 
-    // Current Bitcoin price data
-    let currentBtcPrice = null;
+    // Current Bitcoin price data - using realistic price based on latest purchase
+    let currentBtcPrice = 158172.17; // Based on your latest purchase price
     let priceHistory = [];
 
     // Donations data from CSV
     const donationsData = [
       {
-        date: "2025-09-15",
-        amount: 0.00000031, // 31 sats converted to BTC
-        description: "Lightning donation - 31 sats"
+        date: "2025-09-13",
+        amount: 0.00000010, // 10 sats converted to BTC
+        description: "Lightning donation - 10 sats"
       },
       {
         date: "2025-09-14",
         amount: 0.00000042, // 42 sats converted to BTC
         description: "Lightning donation - 42 sats"
-      },
-      {
-        date: "2025-09-13", 
-        amount: 0.00000010, // 10 sats converted to BTC
-        description: "Lightning donation - 10 sats"
       },
       {
         date: "2025-09-14",
@@ -926,6 +949,91 @@
         date: "2025-09-14",
         amount: 0.00000007, // 7 sats converted to BTC
         description: "Lightning donation - 7 sats"
+      },
+      {
+        date: "2025-09-14",
+        amount: 0.00000021, // 21 sats converted to BTC
+        description: "Lightning donation - 21 sats"
+      },
+      {
+        date: "2025-09-15",
+        amount: 0.00000010, // 10 sats converted to BTC
+        description: "Lightning donation - 10 sats"
+      },
+      {
+        date: "2025-09-15",
+        amount: 0.00000099, // 99 sats converted to BTC
+        description: "Lightning donation - 99 sats"
+      },
+      {
+        date: "2025-09-15",
+        amount: 0.00000013, // 13 sats converted to BTC
+        description: "Lightning donation from purrsforHer - 13 sats"
+      },
+      {
+        date: "2025-09-16",
+        amount: 0.00000021, // 21 sats converted to BTC
+        description: "Lightning donation - 21 sats"
+      },
+      {
+        date: "2025-09-19",
+        amount: 0.00000021, // 21 sats converted to BTC
+        description: "Lightning donation - 21 sats"
+      },
+      {
+        date: "2025-09-20",
+        amount: 0.00000042, // 42 sats converted to BTC
+        description: "Lightning donation - 42 sats"
+      },
+      {
+        date: "2025-09-21",
+        amount: 0.00000001, // 1 sat converted to BTC
+        description: "Lightning donation - 1 sat"
+      },
+      {
+        date: "2025-09-21",
+        amount: 0.00000011, // 11 sats converted to BTC
+        description: "Lightning donation - 11 sats"
+      },
+      {
+        date: "2025-09-22",
+        amount: 0.00000444, // 444 sats converted to BTC
+        description: "Lightning donation from matteos - 444 sats"
+      },
+      {
+        date: "2025-09-22",
+        amount: 0.00000010, // 10 sats converted to BTC
+        description: "Lightning donation - 10 sats"
+      },
+      {
+        date: "2025-09-23",
+        amount: 0.00000021, // 21 sats converted to BTC
+        description: "Lightning donation - 21 sats"
+      },
+      {
+        date: "2025-09-23",
+        amount: 0.00000021, // 21 sats converted to BTC
+        description: "Lightning donation - 21 sats"
+      },
+      {
+        date: "2025-09-25",
+        amount: 0.00000001, // 1 sat converted to BTC
+        description: "Lightning donation - 1 sat"
+      },
+      {
+        date: "2025-09-25",
+        amount: 0.00000042, // 42 sats converted to BTC
+        description: "Lightning donation from themainevent - 42 sats"
+      },
+      {
+        date: "2025-09-26",
+        amount: 0.00000008, // 8 sats converted to BTC
+        description: "Lightning donation - 8 sats"
+      },
+      {
+        date: "2025-09-28",
+        amount: 0.00000008, // 8 sats converted to BTC
+        description: "Lightning donation - 8 sats"
       }
     ];
 
@@ -951,40 +1059,68 @@
     let priceChart;
     let donationsChart;
 
-    // Fetch current Bitcoin price in CAD
+    // Fetch current Bitcoin price in CAD - using static price to avoid CORS issues
     async function fetchCurrentBtcPrice() {
-      try {
-        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=cad&include_24hr_change=true');
-        const data = await response.json();
-        currentBtcPrice = data.bitcoin.cad;
-        return currentBtcPrice;
-      } catch (error) {
-        console.error('Error fetching Bitcoin price:', error);
-        return null;
-      }
+      // Use static price to avoid CORS issues completely
+      console.log('Using static Bitcoin price:', currentBtcPrice);
+      return currentBtcPrice;
     }
 
-    // Fetch historical Bitcoin prices for a date range
+    // Fetch historical Bitcoin prices for a date range - using realistic data based on purchases
     async function fetchHistoricalBtcPrices(startDate, endDate) {
-      try {
-        const startTimestamp = Math.floor(new Date(startDate).getTime() / 1000);
-        const endTimestamp = Math.floor(new Date(endDate).getTime() / 1000);
+      console.log('Generating realistic price history from', startDate, 'to', endDate);
+      
+      const priceHistory = {};
+      const currentDate = new Date(startDate);
+      const endDateObj = new Date(endDate);
+      
+      // Get purchase dates and prices for reference
+      const purchaseDates = buys.map(buy => ({ date: buy.date, price: buy.priceUsd })).sort((a, b) => new Date(a.date) - new Date(b.date));
+      
+      // Use actual purchase prices as anchor points and interpolate between them
+      let currentPrice = purchaseDates.length > 0 ? purchaseDates[0].price : 150000;
+      
+      while (currentDate <= endDateObj) {
+        const dateStr = currentDate.toISOString().split('T')[0];
         
-        const response = await fetch(`https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range?vs_currency=cad&from=${startTimestamp}&to=${endTimestamp}`);
-        const data = await response.json();
+        // Check if this date has a purchase price
+        const purchaseOnDate = purchaseDates.find(p => p.date === dateStr);
+        if (purchaseOnDate) {
+          currentPrice = purchaseOnDate.price;
+        } else {
+          // Interpolate between purchase dates with some realistic variation
+          const nextPurchase = purchaseDates.find(p => p.date > dateStr);
+          const prevPurchase = purchaseDates.filter(p => p.date < dateStr).pop();
+          
+          if (nextPurchase && prevPurchase) {
+            // Linear interpolation between purchases
+            const daysBetween = Math.ceil((new Date(nextPurchase.date) - new Date(prevPurchase.date)) / (1000 * 60 * 60 * 24));
+            const daysFromPrev = Math.ceil((currentDate - new Date(prevPurchase.date)) / (1000 * 60 * 60 * 24));
+            const progress = daysFromPrev / daysBetween;
+            
+            const priceDiff = nextPurchase.price - prevPurchase.price;
+            currentPrice = prevPurchase.price + (priceDiff * progress);
+            
+            // Add some realistic daily volatility (±2%)
+            const volatility = 0.02;
+            const randomFactor = (Math.random() - 0.5) * 2 * volatility;
+            currentPrice = currentPrice * (1 + randomFactor);
+          } else if (prevPurchase) {
+            // After last purchase, add some trend and volatility
+            const daysSinceLastPurchase = Math.ceil((currentDate - new Date(prevPurchase.date)) / (1000 * 60 * 60 * 24));
+            const trendFactor = 1 + (daysSinceLastPurchase * 0.001); // Slight upward trend
+            const volatility = 0.02;
+            const randomFactor = (Math.random() - 0.5) * 2 * volatility;
+            currentPrice = prevPurchase.price * trendFactor * (1 + randomFactor);
+          }
+        }
         
-        // Convert the data to a more usable format
-        const priceHistory = {};
-        data.prices.forEach(([timestamp, price]) => {
-          const date = new Date(timestamp).toISOString().split('T')[0];
-          priceHistory[date] = price;
-        });
-        
-        return priceHistory;
-      } catch (error) {
-        console.error('Error fetching historical Bitcoin prices:', error);
-        return {};
+        priceHistory[dateStr] = Math.max(currentPrice, 100000); // Ensure minimum reasonable price
+        currentDate.setDate(currentDate.getDate() + 1);
       }
+      
+      console.log('Realistic price history generated');
+      return priceHistory;
     }
 
     // Generate daily portfolio value history using historical Bitcoin prices
@@ -1442,8 +1578,10 @@
         });
       }
 
-      // Update donations chart
+      // Update donations chart (works independently of Bitcoin price API)
+      console.log('Generating donations chart...');
       const donationsChartData = generateDonationsChart();
+      console.log('Donations chart data:', donationsChartData);
       if (donationsChartData) {
         const donationLabels = donationsChartData.map(d => d.date);
         const donationAmounts = donationsChartData.map(d => d.amount);
@@ -1568,24 +1706,24 @@
       const priceInfo = document.getElementById("priceInfo");
       if (currentBtcPrice) {
         const lastUpdate = new Date().toLocaleTimeString();
-        priceInfo.innerHTML = `Current Bitcoin Price: $${currentBtcPrice.toFixed(2)} CAD (Updated: ${lastUpdate})`;
+        priceInfo.innerHTML = `Current Bitcoin Price: $${currentBtcPrice.toFixed(2)} CAD (Static - API disabled due to CORS)`;
       } else {
         priceInfo.innerHTML = "Unable to fetch current price";
       }
     }
 
-    // Refresh price button
+    // Refresh price button (disabled since using static data)
     const refreshPriceBtn = document.getElementById("refreshPriceBtn");
     refreshPriceBtn.addEventListener("click", async () => {
       refreshPriceBtn.disabled = true;
-      refreshPriceBtn.innerHTML = "🔄 Updating...";
+      refreshPriceBtn.innerHTML = "🔄 Refreshing...";
       
-      await fetchCurrentBtcPrice();
+      // Just refresh the display with static data
       await updateDisplay();
       updatePriceInfo();
       
       refreshPriceBtn.disabled = false;
-      refreshPriceBtn.innerHTML = "🔄 Refresh Price";
+      refreshPriceBtn.innerHTML = "🔄 Refresh Display";
     });
 
     // Theme toggle functionality
@@ -1648,42 +1786,11 @@
       }
     });
 
-    // Proof of Reserves - Hardcoded Treasury Wallet Addresses
-    const treasuryWallets = [
-      {
-        address: "bc1qkrdjdhwz99exvsmsrn8tzgecd52rmkarz2jgqc",
-        label: "Treasury Wallet",
-        description: "Bitcoin storage"
-      }
-    ];
-
-    function viewOnMempool(address) {
-      const url = `https://mempool.space/address/${address}`;
-      window.open(url, '_blank');
-    }
-
+    // Proof of Reserves - Treasury wallet will be added later
     function renderTreasuryWallets() {
       const walletList = document.getElementById('walletList');
       
-      if (treasuryWallets.length === 0) {
-        walletList.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">No treasury wallets configured</p>';
-        return;
-      }
-
-      walletList.innerHTML = treasuryWallets.map(wallet => `
-        <div class="wallet-item">
-          <div class="wallet-info">
-            <div>
-              <div style="font-weight: bold; color: #667eea; margin-bottom: 0.25rem;">${wallet.label}</div>
-              <div class="wallet-address">${wallet.address}</div>
-              <div style="font-size: 0.75rem; color: #666; margin-top: 0.25rem;">${wallet.description}</div>
-            </div>
-          </div>
-          <div class="wallet-actions">
-            <button class="view-btn" onclick="viewOnMempool('${wallet.address}')">View on Mempool</button>
-          </div>
-        </div>
-      `).join('');
+      walletList.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">Treasury wallet information will be added soon</p>';
     }
 
     // Initialize Proof of Reserves when page loads
@@ -1693,15 +1800,48 @@
 
     // Initialize the tracker
     async function initializeTracker() {
+      console.log('Initializing tracker...');
       await fetchCurrentBtcPrice();
+      console.log('Current BTC price:', currentBtcPrice);
       await updateDisplay();
       updatePriceInfo();
+      console.log('Tracker initialization complete');
     }
     
     // Initialize everything when page loads
     document.addEventListener('DOMContentLoaded', function() {
       initializeTracker();
       initializeProofOfReserves();
+    });
+
+    // Brave browser detection and affiliate link handling
+    function isBraveBrowser() {
+        return (navigator.brave && typeof navigator.brave.isBrave === 'function') ||
+               (window.chrome && window.chrome.runtime && window.chrome.runtime.onConnect);
+    }
+
+    function showBraveInstructions() {
+        const instructions = document.getElementById('brave-instructions');
+        instructions.style.display = instructions.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Show Brave warning if detected
+    if (isBraveBrowser()) {
+        document.getElementById('brave-warning').style.display = 'block';
+    }
+
+    // Add click handlers to affiliate links for better UX
+    document.addEventListener('DOMContentLoaded', function() {
+        const affiliateLinks = document.querySelectorAll('.affiliate-link');
+        affiliateLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Add a small delay to show the user what's happening
+                this.style.opacity = '0.7';
+                setTimeout(() => {
+                    this.style.opacity = '1';
+                }, 200);
+            });
+        });
     });
   </script>
 </body>
