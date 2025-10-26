@@ -60,6 +60,75 @@
       margin: 0 auto;
     }
 
+    /* Public Portfolio Section */
+    .public-portfolio-section {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .public-portfolio-link {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 15px;
+      padding: 1.5rem 2rem;
+      text-decoration: none;
+      color: white;
+      transition: all 0.3s ease;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .public-portfolio-link:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+      color: white;
+      text-decoration: none;
+    }
+
+    .portfolio-icon {
+      font-size: 2rem;
+      margin-right: 1rem;
+      opacity: 0.9;
+    }
+
+    .portfolio-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .portfolio-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 0.3rem;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .portfolio-subtitle {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      font-weight: 400;
+    }
+
+    .portfolio-arrow {
+      font-size: 1.5rem;
+      margin-left: 1rem;
+      opacity: 0.8;
+      transition: transform 0.3s ease;
+    }
+
+    .public-portfolio-link:hover .portfolio-arrow {
+      transform: translateX(5px);
+    }
+
     .tracker-interface {
       display: grid;
       grid-template-columns: 1fr 2fr;
@@ -297,6 +366,27 @@
       .stats-grid {
         grid-template-columns: repeat(2, 1fr);
       }
+
+      .public-portfolio-link {
+        padding: 1rem 1.5rem;
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+      }
+
+      .portfolio-icon {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+      }
+
+      .portfolio-text {
+        align-items: center;
+      }
+
+      .portfolio-arrow {
+        margin-left: 0;
+        margin-top: 0.5rem;
+      }
     }
 
     /* Dark theme support */
@@ -498,6 +588,17 @@
 
     .dark-theme .close:hover {
       color: #fff;
+    }
+
+    /* Dark theme for public portfolio section */
+    .dark-theme .public-portfolio-link {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .dark-theme .public-portfolio-link:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
     }
 
     .account-form h2 {

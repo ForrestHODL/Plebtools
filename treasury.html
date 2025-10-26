@@ -874,6 +874,20 @@
     // Bitcoin Well transaction data (pre-loaded)
     const bitcoinWellData = [
       {
+        date: "2025-10-13",
+        btcAmount: 0.00061321, // 61,321 sats converted to BTC
+        priceUsd: 163074.00,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
+      {
+        date: "2025-10-06",
+        btcAmount: 0.00056672, // 56,672 sats converted to BTC
+        priceUsd: 176451.00,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
+      {
         date: "2025-09-29",
         btcAmount: 0.00064612, // 64,612 sats converted to BTC
         priceUsd: 154770.01,
@@ -924,8 +938,9 @@
       }
     ];
 
-    // Current Bitcoin price data - using realistic price based on latest purchase
-    let currentBtcPrice = 158172.17; // Based on your latest purchase price
+    // Current Bitcoin price data
+    let currentBtcPrice = null;
+    let currentBtcPriceCAD = null;
     let priceHistory = [];
 
     // Donations data from CSV
@@ -1034,6 +1049,156 @@
         date: "2025-09-28",
         amount: 0.00000008, // 8 sats converted to BTC
         description: "Lightning donation - 8 sats"
+      },
+      {
+        date: "2025-10-04",
+        amount: 0.00000021, // 21 sats converted to BTC
+        description: "Lightning donation - 21 sats"
+      },
+      {
+        date: "2025-10-03",
+        amount: 0.00000001, // 1 sat converted to BTC
+        description: "Lightning donation - 1 sat"
+      },
+      {
+        date: "2025-10-03",
+        amount: 0.00000100, // 100 sats converted to BTC
+        description: "Lightning donation - 100 sats"
+      },
+      {
+        date: "2025-10-03",
+        amount: 0.00000100, // 100 sats converted to BTC
+        description: "Lightning donation - 100 sats"
+      },
+      {
+        date: "2025-10-03",
+        amount: 0.00000021, // 21 sats converted to BTC
+        description: "Lightning donation - 21 sats"
+      },
+      {
+        date: "2025-10-02",
+        amount: 0.00000042, // 42 sats converted to BTC
+        description: "Lightning donation - 42 sats"
+      },
+      {
+        date: "2025-10-02",
+        amount: 0.00000010, // 10 sats converted to BTC
+        description: "Lightning donation - 10 sats"
+      },
+      {
+        date: "2025-10-02",
+        amount: 0.00000010, // 10 sats converted to BTC
+        description: "Lightning donation - 10 sats"
+      },
+      {
+        date: "2025-10-02",
+        amount: 0.00000500, // 500 sats converted to BTC
+        description: "Lightning donation - 500 sats"
+      },
+      {
+        date: "2025-10-01",
+        amount: 0.00000021, // 21 sats converted to BTC
+        description: "Lightning donation - 21 sats"
+      },
+      {
+        date: "2025-10-04",
+        amount: 0.00000021, // 21 sats converted to BTC
+        description: "Lightning donation - 21 sats"
+      },
+      {
+        date: "2025-10-05",
+        amount: 0.00001000, // 1,000 sats converted to BTC
+        description: "Lightning donation - 1,000 sats"
+      },
+      {
+        date: "2025-10-06",
+        amount: 0.00000001, // 1 sat converted to BTC
+        description: "Lightning donation - 1 sat"
+      },
+      {
+        date: "2025-10-10",
+        amount: 0.00014686, // 14,686 sats converted to BTC
+        description: "Lightning donation - 14,686 sats"
+      },
+      {
+        date: "2025-10-10",
+        amount: 0.00000042, // 42 sats converted to BTC
+        description: "Lightning donation - 42 sats"
+      },
+      {
+        date: "2025-10-11",
+        amount: 0.00000010, // 10 sats converted to BTC
+        description: "Lightning donation - 10 sats"
+      },
+      {
+        date: "2025-10-11",
+        amount: 0.00000021, // 21 sats converted to BTC
+        description: "Lightning donation - 21 sats"
+      },
+      {
+        date: "2025-10-12",
+        amount: 0.00000021, // 21 sats converted to BTC
+        description: "Lightning donation - 21 sats"
+      },
+      {
+        date: "2025-10-12",
+        amount: 0.00000008, // 8 sats converted to BTC
+        description: "Lightning donation - 8 sats"
+      },
+      {
+        date: "2025-10-12",
+        amount: 0.00000010, // 10 sats converted to BTC
+        description: "Lightning donation - 10 sats"
+      },
+      {
+        date: "2025-10-12",
+        amount: 0.00000010, // 10 sats converted to BTC
+        description: "Lightning donation - 10 sats"
+      },
+      {
+        date: "2025-10-13",
+        amount: 0.00000010, // 10 sats converted to BTC
+        description: "Lightning donation - 10 sats"
+      },
+      {
+        date: "2025-10-07",
+        amount: 0.00000001, // 1 sat converted to BTC
+        description: "Lightning donation - 1 sat"
+      },
+      {
+        date: "2025-10-07",
+        amount: 0.00000010, // 10 sats converted to BTC
+        description: "Lightning donation - 10 sats"
+      },
+      {
+        date: "2025-10-06",
+        amount: 0.00500000, // 500,000 sats converted to BTC
+        description: "Lightning donation - 500,000 sats"
+      },
+      {
+        date: "2025-10-09",
+        amount: 0.00005555, // 5,555 sats converted to BTC
+        description: "Lightning donation from Headvoice - 5,555 sats"
+      },
+      {
+        date: "2025-10-09",
+        amount: 0.00000016, // 16 sats converted to BTC
+        description: "Lightning donation - 16 sats"
+      },
+      {
+        date: "2025-10-09",
+        amount: 0.00000001, // 1 sat converted to BTC
+        description: "Lightning donation - 1 sat"
+      },
+      {
+        date: "2025-10-09",
+        amount: 0.00000021, // 21 sats converted to BTC
+        description: "Lightning donation - 21 sats"
+      },
+      {
+        date: "2025-10-09",
+        amount: 0.00000021, // 21 sats converted to BTC
+        description: "Lightning donation - 21 sats"
       }
     ];
 
@@ -1059,68 +1224,180 @@
     let priceChart;
     let donationsChart;
 
-    // Fetch current Bitcoin price in CAD - using static price to avoid CORS issues
+    // Fetch current Bitcoin price in USD and CAD
     async function fetchCurrentBtcPrice() {
-      // Use static price to avoid CORS issues completely
-      console.log('Using static Bitcoin price:', currentBtcPrice);
-      return currentBtcPrice;
-    }
-
-    // Fetch historical Bitcoin prices for a date range - using realistic data based on purchases
-    async function fetchHistoricalBtcPrices(startDate, endDate) {
-      console.log('Generating realistic price history from', startDate, 'to', endDate);
-      
-      const priceHistory = {};
-      const currentDate = new Date(startDate);
-      const endDateObj = new Date(endDate);
-      
-      // Get purchase dates and prices for reference
-      const purchaseDates = buys.map(buy => ({ date: buy.date, price: buy.priceUsd })).sort((a, b) => new Date(a.date) - new Date(b.date));
-      
-      // Use actual purchase prices as anchor points and interpolate between them
-      let currentPrice = purchaseDates.length > 0 ? purchaseDates[0].price : 150000;
-      
-      while (currentDate <= endDateObj) {
-        const dateStr = currentDate.toISOString().split('T')[0];
+      try {
+        // Try multiple APIs for better reliability
+        const apis = [
+          'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,cad&include_24hr_change=true',
+          'https://api.coinbase.com/v2/exchange-rates?currency=BTC',
+          'https://blockchain.info/ticker',
+          'https://cors-anywhere.herokuapp.com/https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,cad&include_24hr_change=true'
+        ];
         
-        // Check if this date has a purchase price
-        const purchaseOnDate = purchaseDates.find(p => p.date === dateStr);
-        if (purchaseOnDate) {
-          currentPrice = purchaseOnDate.price;
-        } else {
-          // Interpolate between purchase dates with some realistic variation
-          const nextPurchase = purchaseDates.find(p => p.date > dateStr);
-          const prevPurchase = purchaseDates.filter(p => p.date < dateStr).pop();
-          
-          if (nextPurchase && prevPurchase) {
-            // Linear interpolation between purchases
-            const daysBetween = Math.ceil((new Date(nextPurchase.date) - new Date(prevPurchase.date)) / (1000 * 60 * 60 * 24));
-            const daysFromPrev = Math.ceil((currentDate - new Date(prevPurchase.date)) / (1000 * 60 * 60 * 24));
-            const progress = daysFromPrev / daysBetween;
+        for (let i = 0; i < apis.length; i++) {
+          try {
+            const response = await fetch(apis[i]);
+            if (!response.ok) continue;
             
-            const priceDiff = nextPurchase.price - prevPurchase.price;
-            currentPrice = prevPurchase.price + (priceDiff * progress);
+            const data = await response.json();
             
-            // Add some realistic daily volatility (±2%)
-            const volatility = 0.02;
-            const randomFactor = (Math.random() - 0.5) * 2 * volatility;
-            currentPrice = currentPrice * (1 + randomFactor);
-          } else if (prevPurchase) {
-            // After last purchase, add some trend and volatility
-            const daysSinceLastPurchase = Math.ceil((currentDate - new Date(prevPurchase.date)) / (1000 * 60 * 60 * 24));
-            const trendFactor = 1 + (daysSinceLastPurchase * 0.001); // Slight upward trend
-            const volatility = 0.02;
-            const randomFactor = (Math.random() - 0.5) * 2 * volatility;
-            currentPrice = prevPurchase.price * trendFactor * (1 + randomFactor);
+            if (i === 0 || i === 3) {
+              // CoinGecko format (including CORS proxy)
+              currentBtcPrice = data.bitcoin.usd;
+              currentBtcPriceCAD = data.bitcoin.cad;
+              break;
+            } else if (i === 1) {
+              // Coinbase format
+              const rates = data.data.rates;
+              currentBtcPrice = parseFloat(rates.USD);
+              currentBtcPriceCAD = parseFloat(rates.CAD);
+              break;
+            } else if (i === 2) {
+              // Blockchain.info format
+              currentBtcPrice = data.USD.last;
+              currentBtcPriceCAD = data.CAD.last;
+              break;
+            }
+          } catch (apiError) {
+            console.log(`API ${i + 1} failed, trying next...`);
+            continue;
           }
         }
         
-        priceHistory[dateStr] = Math.max(currentPrice, 100000); // Ensure minimum reasonable price
-        currentDate.setDate(currentDate.getDate() + 1);
+        if (currentBtcPrice && currentBtcPriceCAD) {
+          console.log('Bitcoin price fetched successfully:', { USD: currentBtcPrice, CAD: currentBtcPriceCAD });
+          return currentBtcPriceCAD; // Return CAD price for treasury
+        } else {
+          throw new Error('All price APIs failed');
+        }
+      } catch (error) {
+        console.error('Error fetching Bitcoin price:', error);
+        
+        // Try one more approach using a different method
+        try {
+          const fallbackResponse = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
+          if (fallbackResponse.ok) {
+            const fallbackData = await fallbackResponse.json();
+            currentBtcPrice = parseFloat(fallbackData.price);
+            // Get real CAD conversion rate
+            const cadResponse = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+            if (cadResponse.ok) {
+              const cadData = await cadResponse.json();
+              const usdToCadRate = cadData.rates.CAD;
+              currentBtcPriceCAD = currentBtcPrice * usdToCadRate;
+              console.log('Using Binance + real CAD rate:', { USD: currentBtcPrice, CAD: currentBtcPriceCAD });
+              return currentBtcPriceCAD;
+            }
+          }
+        } catch (fallbackError) {
+          console.log('Fallback API also failed');
+        }
+        
+        // No fallback pricing - return null if all APIs fail
+        console.log('All price APIs failed');
+        return null;
       }
-      
-      console.log('Realistic price history generated');
-      return priceHistory;
+    }
+
+    // Fetch historical Bitcoin prices for a date range
+    async function fetchHistoricalBtcPrices(startDate, endDate) {
+      try {
+        const startTimestamp = Math.floor(new Date(startDate).getTime() / 1000);
+        const endTimestamp = Math.floor(new Date(endDate).getTime() / 1000);
+        
+        // Try multiple APIs for better reliability
+        const apis = [
+          {
+            name: 'CoinGecko',
+            url: `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range?vs_currency=cad&from=${startTimestamp}&to=${endTimestamp}`,
+            parser: (data) => {
+              const priceHistory = {};
+              if (data.prices && data.prices.length > 0) {
+                data.prices.forEach(([timestamp, price]) => {
+                  const date = new Date(timestamp).toISOString().split('T')[0];
+                  priceHistory[date] = price;
+                });
+              }
+              return priceHistory;
+            }
+          },
+          {
+            name: 'CoinGecko CORS Proxy',
+            url: `https://cors-anywhere.herokuapp.com/https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range?vs_currency=cad&from=${startTimestamp}&to=${endTimestamp}`,
+            parser: (data) => {
+              const priceHistory = {};
+              if (data.prices && data.prices.length > 0) {
+                data.prices.forEach(([timestamp, price]) => {
+                  const date = new Date(timestamp).toISOString().split('T')[0];
+                  priceHistory[date] = price;
+                });
+              }
+              return priceHistory;
+            }
+          },
+          {
+            name: 'CoinCap',
+            url: `https://api.coincap.io/v2/assets/bitcoin/history?interval=d1&start=${startTimestamp * 1000}&end=${endTimestamp * 1000}`,
+            parser: (data) => {
+              const priceHistory = {};
+              if (data.data && data.data.length > 0) {
+                data.data.forEach(item => {
+                  const date = new Date(item.time).toISOString().split('T')[0];
+                  // Convert USD to CAD using current rate or approximate 1.35
+                  const cadRate = currentBtcPriceCAD && currentBtcPrice ? (currentBtcPriceCAD / currentBtcPrice) : 1.35;
+                  priceHistory[date] = parseFloat(item.priceUsd) * cadRate;
+                });
+              }
+              return priceHistory;
+            }
+          },
+          {
+            name: 'CryptoCompare',
+            url: `https://min-api.cryptocompare.com/data/v2/histoday?fsym=BTC&tsym=CAD&limit=365&toTs=${endTimestamp}`,
+            parser: (data) => {
+              const priceHistory = {};
+              if (data.Data && data.Data.Data && data.Data.Data.length > 0) {
+                data.Data.Data.forEach(item => {
+                  const date = new Date(item.time * 1000).toISOString().split('T')[0];
+                  priceHistory[date] = item.close;
+                });
+              }
+              return priceHistory;
+            }
+          }
+        ];
+        
+        for (let i = 0; i < apis.length; i++) {
+          try {
+            console.log(`Trying ${apis[i].name} API...`);
+            const response = await fetch(apis[i].url);
+            if (!response.ok) {
+              console.log(`${apis[i].name} API returned ${response.status}`);
+              continue;
+            }
+            
+            const data = await response.json();
+            const priceHistory = apis[i].parser(data);
+            
+            if (Object.keys(priceHistory).length > 0) {
+              console.log(`Historical prices loaded from ${apis[i].name}:`, Object.keys(priceHistory).length, 'days');
+              return priceHistory;
+            } else {
+              console.log(`${apis[i].name} returned empty data`);
+            }
+          } catch (apiError) {
+            console.log(`${apis[i].name} API failed:`, apiError.message);
+            continue;
+          }
+        }
+        
+        throw new Error('All historical price APIs failed');
+      } catch (error) {
+        console.error('Error fetching historical Bitcoin prices:', error);
+        // Return empty object - the calling code will handle fallback
+        return {};
+      }
     }
 
     // Generate daily portfolio value history using historical Bitcoin prices
@@ -1135,7 +1412,13 @@
       const endDate = new Date().toISOString().split('T')[0];
       
       // Fetch historical Bitcoin prices
-      const historicalPrices = await fetchHistoricalBtcPrices(startDate, endDate);
+      let historicalPrices = {};
+      try {
+        historicalPrices = await fetchHistoricalBtcPrices(startDate, endDate);
+      } catch (error) {
+        console.log('Historical price API failed');
+        historicalPrices = {};
+      }
       
       // Generate daily data points
       const currentDate = new Date(startDate);
@@ -1155,14 +1438,14 @@
         if (btcAtThisDate > 0) {
           // Get the Bitcoin price for this specific date
           let priceForThisDate;
-          if (dateStr === endDate && currentBtcPrice) {
-            priceForThisDate = currentBtcPrice;
+          if (dateStr === endDate && currentBtcPriceCAD) {
+            priceForThisDate = currentBtcPriceCAD;
           } else if (historicalPrices[dateStr]) {
             priceForThisDate = historicalPrices[dateStr];
           } else {
-            // Fallback to nearest purchase price if no historical data
-            const nearestPurchase = buys.find(buy => buy.date <= dateStr);
-            priceForThisDate = nearestPurchase ? nearestPurchase.priceUsd : buys[0].priceUsd;
+            // Skip dates without price data
+            currentDate.setDate(currentDate.getDate() + 1);
+            continue;
           }
           
           // Calculate portfolio value: BTC amount × historical price for this date
@@ -1187,25 +1470,35 @@
       const endDate = new Date().toISOString().split('T')[0];
 
       // Fetch historical Bitcoin prices
-      const historicalPrices = await fetchHistoricalBtcPrices(startDate, endDate);
+      let historicalPrices = {};
+      try {
+        historicalPrices = await fetchHistoricalBtcPrices(startDate, endDate);
+        console.log('Historical prices fetched:', Object.keys(historicalPrices).length, 'days');
+      } catch (error) {
+        console.log('Historical price API failed for price chart');
+        historicalPrices = {};
+      }
 
       // Generate daily price data
       const priceData = [];
       const currentDate = new Date(startDate);
       const endDateObj = new Date(endDate);
+      let hasAnyPriceData = false;
 
       while (currentDate <= endDateObj) {
         const dateStr = currentDate.toISOString().split('T')[0];
         
         let priceForThisDate;
-        if (dateStr === endDate && currentBtcPrice) {
-          priceForThisDate = currentBtcPrice;
+        if (dateStr === endDate && currentBtcPriceCAD) {
+          priceForThisDate = currentBtcPriceCAD;
+          hasAnyPriceData = true;
         } else if (historicalPrices[dateStr]) {
           priceForThisDate = historicalPrices[dateStr];
+          hasAnyPriceData = true;
         } else {
-          // Fallback to nearest purchase price if no historical data
-          const nearestPurchase = buys.find(buy => buy.date <= dateStr);
-          priceForThisDate = nearestPurchase ? nearestPurchase.priceUsd : (buys.length > 0 ? buys[0].priceUsd : currentBtcPrice || 150000);
+          // Skip dates without price data
+          currentDate.setDate(currentDate.getDate() + 1);
+          continue;
         }
 
         priceData.push({
@@ -1216,13 +1509,14 @@
         currentDate.setDate(currentDate.getDate() + 1);
       }
 
+
       // Create purchase markers - position them on the actual Bitcoin price line for that date
       const purchaseMarkers = [];
       buys.forEach(buy => {
         // Find the actual Bitcoin price on the purchase date
         let actualPriceOnPurchaseDate;
-        if (buy.date === endDate && currentBtcPrice) {
-          actualPriceOnPurchaseDate = currentBtcPrice;
+        if (buy.date === endDate && currentBtcPriceCAD) {
+          actualPriceOnPurchaseDate = currentBtcPriceCAD;
         } else if (historicalPrices[buy.date]) {
           actualPriceOnPurchaseDate = historicalPrices[buy.date];
         } else {
@@ -1237,6 +1531,7 @@
         });
       });
 
+      console.log('Generated price data:', priceData.length, 'points');
       return { priceData, purchaseMarkers };
     }
 
@@ -1298,7 +1593,7 @@
       
       const avgPrice = totalBtc ? (totalUsd / totalBtc) : 0;
       const totalSats = Math.round(totalBtc * 100000000); // Convert BTC to sats
-      const currentCadValue = currentBtcPrice ? totalBtc * currentBtcPrice : null;
+      const currentCadValue = currentBtcPriceCAD ? totalBtc * currentBtcPriceCAD : null;
       const currentCadValueDisplay = currentCadValue ? `$${currentCadValue.toFixed(2)}` : 'N/A';
       totalsDiv.innerHTML = `
         <div class="totals-display">
@@ -1313,7 +1608,7 @@
       const totalDonations = donationsData.reduce((sum, donation) => sum + donation.amount, 0);
       const totalBtcWithDonations = totalBtc + totalDonations;
       const totalSatsWithDonations = Math.round(totalBtcWithDonations * 100000000);
-      const currentCadValueWithDonations = currentBtcPrice ? totalBtcWithDonations * currentBtcPrice : null;
+      const currentCadValueWithDonations = currentBtcPriceCAD ? totalBtcWithDonations * currentBtcPriceCAD : null;
       const currentCadValueWithDonationsDisplay = currentCadValueWithDonations ? `$${currentCadValueWithDonations.toFixed(2)}` : 'N/A';
       
       // Calculate profit/loss (donations count as $0 cost)
@@ -1468,12 +1763,18 @@
       });
 
       // Update price chart
+      console.log('Generating price chart...');
       const priceChartData = await generatePriceChart();
-      if (priceChartData) {
+      console.log('Price chart data:', priceChartData);
+      
+      if (priceChartData && priceChartData.priceData && priceChartData.priceData.length > 0) {
         const priceLabels = priceChartData.priceData.map(p => p.date);
         const prices = priceChartData.priceData.map(p => p.price);
         const purchaseDates = priceChartData.purchaseMarkers.map(p => p.date);
         const purchasePrices = priceChartData.purchaseMarkers.map(p => p.price);
+        
+        console.log('Price labels:', priceLabels.length, 'Price values:', prices.length);
+        console.log('Sample prices:', prices.slice(0, 5));
 
         if (priceChart) priceChart.destroy();
         priceChart = new Chart(priceCtx, {
@@ -1576,6 +1877,21 @@
             }
           }
         });
+      } else {
+        console.log('No price data available for chart');
+        // Show a message in the chart container
+        const chartContainer = document.querySelector('#priceChart').parentElement;
+        chartContainer.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: center; height: 400px; color: #666; text-align: center;">
+            <div>
+              <h3>Unable to load Bitcoin price data</h3>
+              <p>Please check your internet connection and try refreshing the page.</p>
+              <button onclick="location.reload()" style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px;">
+                Refresh Page
+              </button>
+            </div>
+          </div>
+        `;
       }
 
       // Update donations chart (works independently of Bitcoin price API)
@@ -1704,26 +2020,43 @@
     // Update price info display
     function updatePriceInfo() {
       const priceInfo = document.getElementById("priceInfo");
-      if (currentBtcPrice) {
+      if (currentBtcPriceCAD && currentBtcPriceCAD > 0) {
         const lastUpdate = new Date().toLocaleTimeString();
-        priceInfo.innerHTML = `Current Bitcoin Price: $${currentBtcPrice.toFixed(2)} CAD (Static - API disabled due to CORS)`;
+        priceInfo.innerHTML = `Current Bitcoin Price: $${currentBtcPriceCAD.toFixed(2)} CAD (Updated: ${lastUpdate})`;
       } else {
-        priceInfo.innerHTML = "Unable to fetch current price";
+        priceInfo.innerHTML = `
+          <div style="color: #dc3545;">
+            ⚠️ Unable to fetch current price. 
+            <button onclick="retryPriceFetch()" style="background: #667eea; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; margin-left: 8px;">
+              Retry
+            </button>
+          </div>
+        `;
       }
     }
 
-    // Refresh price button (disabled since using static data)
+    // Retry price fetch function
+    async function retryPriceFetch() {
+      const priceInfo = document.getElementById("priceInfo");
+      priceInfo.innerHTML = "🔄 Fetching price...";
+      
+      await fetchCurrentBtcPrice();
+      updatePriceInfo();
+      await updateDisplay();
+    }
+
+    // Refresh price button
     const refreshPriceBtn = document.getElementById("refreshPriceBtn");
     refreshPriceBtn.addEventListener("click", async () => {
       refreshPriceBtn.disabled = true;
-      refreshPriceBtn.innerHTML = "🔄 Refreshing...";
+      refreshPriceBtn.innerHTML = "🔄 Updating...";
       
-      // Just refresh the display with static data
+      await fetchCurrentBtcPrice();
       await updateDisplay();
       updatePriceInfo();
       
       refreshPriceBtn.disabled = false;
-      refreshPriceBtn.innerHTML = "🔄 Refresh Display";
+      refreshPriceBtn.innerHTML = "🔄 Refresh Price";
     });
 
     // Theme toggle functionality
@@ -1802,7 +2135,7 @@
     async function initializeTracker() {
       console.log('Initializing tracker...');
       await fetchCurrentBtcPrice();
-      console.log('Current BTC price:', currentBtcPrice);
+      console.log('Current BTC price:', currentBtcPriceCAD);
       await updateDisplay();
       updatePriceInfo();
       console.log('Tracker initialization complete');
@@ -1846,3 +2179,4 @@
   </script>
 </body>
 </html>
+
