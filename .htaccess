@@ -1,71 +1,29 @@
-# Plebtools .htaccess Configuration
-# This file handles routing for static HTML pages and API calls
-
 RewriteEngine On
 
-# Handle CORS preflight requests
-RewriteCond %{REQUEST_METHOD} OPTIONS
-RewriteRule ^(.*)$ $1 [R=200,L]
+# Handle forrest-portfolio URL
+RewriteRule ^forrest-portfolio/?$ forrest-portfolio.html [L]
 
-# Route API requests to Flask app (if Python is available)
-RewriteCond %{REQUEST_FILENAME} !-f
+# Handle other portfolio URLs
+RewriteRule ^forrest-portfolio\.html$ forrest-portfolio.html [L]
+
+# Optional: Remove .html extension from all files
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^api/(.*)$ app.py [QSA,L]
-
-# Redirect .html URLs to clean URLs (301 permanent redirect)
-RewriteCond %{THE_REQUEST} \s/+([^?\s]*?)\.html[\s?] [NC]
-RewriteRule ^ /%1? [R=301,L]
-
-# Clean URL routing - map clean URLs to HTML files
-RewriteRule ^home/?$ home.html [L]
-RewriteRule ^treasury/?$ treasury.html [L]
-RewriteRule ^btc-buy-tracker/?$ btc-buy-tracker.html [L]
-RewriteRule ^coveredcall-tracker/?$ coveredcall-tracker.html [L]
-RewriteRule ^compound-interest-calculator/?$ compound-interest-calculator.html [L]
-RewriteRule ^btc-loan-ltv/?$ btc-loan-ltv.html [L]
-RewriteRule ^financial-planner/?$ financial-planner.html [L]
-RewriteRule ^bitcoin-security/?$ bitcoin-security.html [L]
-RewriteRule ^retirement-calculator/?$ retirement-calculator.html [L]
-RewriteRule ^pleb-release/?$ pleb-release.html [L]
-RewriteRule ^account/?$ account.html [L]
-
-# Redirect root to home
-RewriteRule ^$ home.html [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.html [NC,L]
 
 # Security headers
-<IfModule mod_headers.c>
-    Header always set X-Content-Type-Options nosniff
-    Header always set X-Frame-Options DENY
-    Header always set X-XSS-Protection "1; mode=block"
-</IfModule>
+Header always set X-Content-Type-Options nosniff
+Header always set X-Frame-Options DENY
+Header always set X-XSS-Protection "1; mode=block"
 
 # Cache static files
-<IfModule mod_expires.c>
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg)$">
     ExpiresActive On
-    ExpiresByType text/css "access plus 1 month"
-    ExpiresByType application/javascript "access plus 1 month"
-    ExpiresByType image/png "access plus 1 month"
-    ExpiresByType image/jpg "access plus 1 month"
-    ExpiresByType image/jpeg "access plus 1 month"
-    ExpiresByType image/gif "access plus 1 month"
-    ExpiresByType image/ico "access plus 1 month"
-    ExpiresByType image/svg+xml "access plus 1 month"
-</IfModule>
-
-# Protect sensitive files
-<FilesMatch "\.(env|db|sqlite|py)$">
-    Order allow,deny
-    Deny from all
+    ExpiresDefault "access plus 1 month"
 </FilesMatch>
 
-# Protect data directory
-<Directory "data">
-    Order allow,deny
-    Deny from all
-</Directory>
-
-# Default index file
-DirectoryIndex home.html
-
-# Error pages
-ErrorDocument 404 /home.html
+# Cache HTML files for shorter period
+<FilesMatch "\.html$">
+    ExpiresActive On
+    ExpiresDefault "access plus 1 hour"
+</FilesMatch>
