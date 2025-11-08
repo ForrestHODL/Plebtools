@@ -636,16 +636,72 @@
 
     .affiliate-link:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
-      color: white;
-      text-decoration: none;
+      box-shadow: 0 18px 50px -24px rgba(59, 130, 246, 0.65);
     }
 
     .discount-code {
-      font-size: 0.8rem;
-      color: #28a745;
-      font-weight: bold;
-      margin: 0.5rem 0 0 0;
+      margin-top: 0.7rem;
+      font-size: 0.82rem;
+      color: #94a3b8;
+      letter-spacing: 0.05em;
+    }
+
+    .support-section {
+      padding: 4rem 0;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(30, 41, 59, 0.98) 100%);
+    }
+
+    .support-grid {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .support-card {
+      background: rgba(30, 41, 59, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 18px;
+      padding: 2.25rem;
+      text-align: center;
+      box-shadow: 0 28px 60px -30px rgba(15, 23, 42, 0.6);
+      color: #e2e8f0;
+    }
+
+    .support-icon {
+      font-size: 2.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .support-title {
+      font-size: 1.6rem;
+      color: #f8fafc;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+
+    .support-text {
+      color: #cbd5f5;
+      font-size: 1rem;
+      margin: 1rem 0 2rem;
+      line-height: 1.6;
+    }
+
+    .support-btn {
+      display: inline-block;
+      padding: 0.9rem 2.2rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+      color: #f8fafc;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 18px 35px -18px rgba(249, 115, 22, 0.55);
+    }
+
+    .support-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 45px -20px rgba(249, 115, 22, 0.65);
+      color: #f8fafc;
     }
 
     /* Mobile responsiveness for affiliate links */
@@ -703,6 +759,7 @@
               <a href="financial-planner">📋 Financial Planner</a>
               <a href="bitcoin-security">🛡️ Bitcoin Security</a>
               <a href="bitcoin-storage">🏛️ Bitcoin Storage</a>
+              <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
               <a href="invoice-builder">🧾 Invoice Builder</a>
               <a href="pleb-release">📰 Pleb Release</a>
             </div>
@@ -857,33 +914,39 @@
                 <h4>Where to learn</h4>
                 <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
               </div>
-              <div class="affiliate-item">
-                <h4>Earn free BTC</h4>
-                <a href="https://satsarcade.app/" target="_blank" class="affiliate-link">Sats Arcade</a>
-              </div>
-              <div class="affiliate-item">
-                <h4>How to support</h4>
-                <a href="https://coinos.io/plebtools" target="_blank" class="affiliate-link">Donate</a>
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Open Source Section -->
-      <div class="planner-section">
-        <h3>Open Source</h3>
-        <div class="totals-display">
-          <div style="text-align: center;">
-            <p>This financial planner is free and open source and can be replicated for anyone to plan their financial future.</p>
-            <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" class="add-btn" style="background: #667eea; display: inline-block; margin-top: 1rem;">
-              View on GitHub
-            </a>
           </div>
         </div>
       </div>
     </div>
   </main>
+
+  <section class="support-section">
+    <div class="container support-grid">
+      <div class="support-card">
+        <div class="support-icon">⚡</div>
+        <h2 class="support-title">Support Plebtools</h2>
+        <p class="support-text">
+          Enjoying these tools? You can help keep them free and open source by donating sats.
+          Every contribution fuels more Bitcoin-first development.
+        </p>
+        <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Open Source Section -->
+  <section class="planner-section" style="padding: 4rem 0;">
+    <div class="container" style="text-align: center;">
+      <h3>Open Source</h3>
+      <p style="max-width: 640px; margin: 1.5rem auto; color: #334155;">
+        This financial planner is free and open source and can be replicated for anyone to plan their financial future.
+      </p>
+      <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" class="add-btn" style="background: #667eea; display: inline-block; margin-top: 0;">
+        View on GitHub
+      </a>
+    </div>
+  </section>
 
   <footer>
     <div class="container">
