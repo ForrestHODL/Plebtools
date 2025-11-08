@@ -246,6 +246,62 @@
             color: #ccc !important;
         }
 
+        .support-section {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(30, 41, 59, 0.98) 100%);
+        }
+
+        .support-grid {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .support-card {
+            background: rgba(30, 41, 59, 0.92);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 18px;
+            padding: 2.25rem;
+            text-align: center;
+            box-shadow: 0 28px 60px -30px rgba(15, 23, 42, 0.6);
+            color: #e2e8f0;
+        }
+
+        .support-icon {
+            font-size: 2.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .support-title {
+            font-size: 1.6rem;
+            color: #f8fafc;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .support-text {
+            color: #cbd5f5;
+            font-size: 1rem;
+            margin: 1rem 0 2rem;
+            line-height: 1.6;
+        }
+
+        .support-btn {
+            display: inline-block;
+            padding: 0.75rem 2.4rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 18px 48px -24px rgba(34, 197, 94, 0.65);
+        }
+
+        .support-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 28px 60px -30px rgba(34, 197, 94, 0.65);
+        }
+
         .dark-theme .input-label {
             color: #e0e0e0;
         }
@@ -387,6 +443,7 @@
                             <a href="btc-loan-ltv">🔒 BTC Loans</a>
                             <a href="financial-planner">📋 Financial Planner</a>
                             <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+                            <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
                             <a href="invoice-builder">🧾 Invoice Builder</a>
                             <a href="pleb-release">📰 Pleb Release</a>
                         </div>
@@ -505,17 +562,23 @@
                         <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">Where to learn</h4>
                         <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">YouTube</a>
                     </div>
-                    <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
-                        <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">Earn free BTC</h4>
-                        <a href="https://satsarcade.app/" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Sats Arcade</a>
-                    </div>
-                    <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
-                        <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">How to support</h4>
-                        <a href="https://coinos.io/plebtools" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Donate</a>
-                    </div>
                 </div>
             </div>
         </div>
+
+        <section class="support-section">
+            <div class="container support-grid">
+                <div class="support-card">
+                    <div class="support-icon">⚡</div>
+                    <h2 class="support-title">Support Plebtools</h2>
+                    <p class="support-text">
+                        Enjoying these tools? You can help keep them free and open source by donating sats.
+                        Every contribution fuels more Bitcoin-first development.
+                    </p>
+                    <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+                </div>
+            </div>
+        </section>
 
         <!-- Open Source Section -->
         <div style="margin: 3rem 0; padding: 2rem; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid #e0e0e0;">

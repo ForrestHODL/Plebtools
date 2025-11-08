@@ -194,6 +194,80 @@
         body:not(.dark-theme) p[style*="color: #ccc"] {
             color: #000 !important;
         }
+
+        .affiliate-link {
+  display: inline-block;
+  padding: 0.6rem 1.4rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.affiliate-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(59, 130, 246, 0.3);
+}
+
+.support-section {
+  padding: 4rem 0;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(30, 41, 59, 0.98) 100%);
+}
+
+.support-grid {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.support-card {
+  background: rgba(30, 41, 59, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 18px;
+  padding: 2.25rem;
+  text-align: center;
+  box-shadow: 0 28px 60px -30px rgba(15, 23, 42, 0.6);
+  color: #e2e8f0;
+}
+
+.support-icon {
+  font-size: 2.4rem;
+  margin-bottom: 1rem;
+}
+
+.support-title {
+  font-size: 1.6rem;
+  color: #f8fafc;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.support-text {
+  color: #cbd5f5;
+  font-size: 1rem;
+  margin: 1rem 0 2rem;
+  line-height: 1.6;
+}
+
+.support-btn {
+  display: inline-block;
+  padding: 0.9rem 2.2rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+  color: #f8fafc;
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 18px 35px -18px rgba(249, 115, 22, 0.55);
+}
+
+.support-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 45px -20px rgba(249, 115, 22, 0.65);
+  color: #f8fafc;
+}
     </style>
 </head>
 <body>
@@ -220,6 +294,7 @@
                             <a href="btc-loan-ltv">🔒 BTC Loans</a>
                             <a href="financial-planner">📋 Financial Planner</a>
                             <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+                            <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
                             <a href="invoice-builder">🧾 Invoice Builder</a>
                             <a href="bitcoin-storage">🏛️ Bitcoin Storage</a>
                             <a href="pleb-release">📰 Pleb Release</a>
@@ -309,25 +384,37 @@
                             <div class="affiliate-item"><h4>How to validate</h4><a href="https://store.start9.com/" target="_blank" class="affiliate-link">Start9</a><p class="discount-code">CODE: BNC5 for 5% off</p></div>
                             <div class="affiliate-item"><h4>1:1 Coaching</h4><a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a></div>
                             <div class="affiliate-item"><h4>Where to learn</h4><a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a></div>
-                            <div class="affiliate-item"><h4>Earn free BTC</h4><a href="https://satsarcade.app/" target="_blank" class="affiliate-link">Sats Arcade</a></div>
-                            <div class="affiliate-item"><h4>How to support</h4><a href="https://coinos.io/plebtools" target="_blank" class="affiliate-link">Donate</a></div>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Open Source Section -->
-            <div class="planner-section">
-                <h3 style="text-align: center;">Open Source</h3>
-                <div class="totals-display">
-                    <div style="text-align: center;">
-                        <p>This Bitcoin security checker is free and open source and can be replicated for anyone to verify their own Bitcoin security.</p>
-                        <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" style="background: #28a745; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; display: inline-block; font-weight: bold; transition: all 0.3s ease; margin-top: 1rem;">View on GitHub</a>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+
+    <section class="support-section">
+      <div class="container support-grid">
+        <div class="support-card">
+          <div class="support-icon">⚡</div>
+          <h2 class="support-title">Support Plebtools</h2>
+          <p class="support-text">
+            Enjoying these tools? You can help keep them free and open source by donating sats.
+            Every contribution fuels more Bitcoin-first development.
+          </p>
+          <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Open Source Section -->
+    <div class="planner-section">
+        <h3 style="text-align: center;">Open Source</h3>
+        <div class="totals-display">
+            <div style="text-align: center;">
+                <p style="color: #fff;">This Bitcoin security planner is free and open source and can be replicated for anyone to secure their own Bitcoin.</p>
+                <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" style="background: #28a745; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; display: inline-block; font-weight: bold; transition: all 0.3s ease; margin-top: 1rem;">View on GitHub</a>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">

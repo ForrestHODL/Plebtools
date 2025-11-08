@@ -584,23 +584,19 @@
 
     .affiliate-link {
       display: inline-block;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 0.6rem 1.4rem;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
       color: white;
       text-decoration: none;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+      border-radius: 999px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.25);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .affiliate-link:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-      color: white;
-      text-decoration: none;
+      box-shadow: 0 14px 30px rgba(59, 130, 246, 0.35);
     }
 
     .discount-code {
@@ -827,6 +823,7 @@
               <a href="financial-planner">📋 Financial Planner</a>
               <a href="bitcoin-security">🛡️ Bitcoin Security</a>
               <a href="bitcoin-storage">🏛️ Bitcoin Storage</a>
+              <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
               <a href="invoice-builder">🧾 Invoice Builder</a>
               <a href="pleb-release">📰 Pleb Release</a>
             </div>
@@ -970,36 +967,42 @@
                  <h4>Where to learn</h4>
                  <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
                </div>
-               <div class="affiliate-item">
-                 <h4>Earn free BTC</h4>
-                 <a href="https://satsarcade.app/" target="_blank" class="affiliate-link">Sats Arcade</a>
-               </div>
-               <div class="affiliate-item">
-                 <h4>How to support</h4>
-                 <a href="https://coinos.io/plebtools" target="_blank" class="affiliate-link">Donate</a>
-               </div>
              </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="totals-section">
-        <h3>Open Source</h3>
-        <div class="totals-display">
-          <div style="text-align: center;">
-            <p>This Bitcoin tracker is free and open source and can be replicated for anyone to track their own Bitcoin purchases.</p>
-            <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" class="submit-btn" style="background: #28a745; display: inline-block; margin-top: 1rem;">
-              View on GitHub
-            </a>
           </div>
         </div>
       </div>
     </div>
   </main>
 
+  <section class="support-section">
+    <div class="container support-grid">
+      <div class="support-card">
+        <div class="support-icon">⚡</div>
+        <h2 class="support-title">Support Plebtools</h2>
+        <p class="support-text">
+          Enjoying these tools? You can help keep them free and open source by donating sats.
+          Every contribution fuels more Bitcoin-first development.
+        </p>
+        <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="features-section" style="padding: 4rem 0;">
+    <div class="container" style="text-align: center;">
+      <h2 class="section-title">Open Source</h2>
+      <p style="max-width: 640px; margin: 1.5rem auto; color: #475569;">
+        This Bitcoin treasury dashboard is free and open source and can be replicated for any organization's treasury tracking.
+      </p>
+      <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" class="submit-btn" style="background: #28a745; display: inline-block; margin-top: 0;">
+        View on GitHub
+      </a>
+    </div>
+  </section>
+
   <footer>
     <div class="container">
-      <p>&copy; 2024 Plebtools. All rights reserved.</p>
+      <p>&copy; 2024 Plebtools. Open source Bitcoin treasury management.</p>
     </div>
   </footer>
 
@@ -1100,234 +1103,9 @@
     // Donations data from CSV
     const donationsData = [
       {
-        date: "2025-09-13",
-        amount: 0.00000010, // 10 sats converted to BTC
-        description: "Lightning donation - 10 sats"
-      },
-      {
-        date: "2025-09-14",
-        amount: 0.00000042, // 42 sats converted to BTC
-        description: "Lightning donation - 42 sats"
-      },
-      {
-        date: "2025-09-14",
-        amount: 0.00000001, // 1 sat converted to BTC
-        description: "Lightning donation - 1 sat"
-      },
-      {
-        date: "2025-09-14",
-        amount: 0.00000007, // 7 sats converted to BTC
-        description: "Lightning donation - 7 sats"
-      },
-      {
-        date: "2025-09-14",
-        amount: 0.00000021, // 21 sats converted to BTC
-        description: "Lightning donation - 21 sats"
-      },
-      {
-        date: "2025-09-15",
-        amount: 0.00000010, // 10 sats converted to BTC
-        description: "Lightning donation - 10 sats"
-      },
-      {
-        date: "2025-09-15",
-        amount: 0.00000099, // 99 sats converted to BTC
-        description: "Lightning donation - 99 sats"
-      },
-      {
-        date: "2025-09-15",
-        amount: 0.00000013, // 13 sats converted to BTC
-        description: "Lightning donation from purrsforHer - 13 sats"
-      },
-      {
-        date: "2025-09-16",
-        amount: 0.00000021, // 21 sats converted to BTC
-        description: "Lightning donation - 21 sats"
-      },
-      {
-        date: "2025-09-19",
-        amount: 0.00000021, // 21 sats converted to BTC
-        description: "Lightning donation - 21 sats"
-      },
-      {
-        date: "2025-09-20",
-        amount: 0.00000042, // 42 sats converted to BTC
-        description: "Lightning donation - 42 sats"
-      },
-      {
-        date: "2025-09-21",
-        amount: 0.00000001, // 1 sat converted to BTC
-        description: "Lightning donation - 1 sat"
-      },
-      {
-        date: "2025-09-21",
-        amount: 0.00000011, // 11 sats converted to BTC
-        description: "Lightning donation - 11 sats"
-      },
-      {
-        date: "2025-09-22",
-        amount: 0.00000444, // 444 sats converted to BTC
-        description: "Lightning donation from matteos - 444 sats"
-      },
-      {
-        date: "2025-09-22",
-        amount: 0.00000010, // 10 sats converted to BTC
-        description: "Lightning donation - 10 sats"
-      },
-      {
-        date: "2025-09-23",
-        amount: 0.00000021, // 21 sats converted to BTC
-        description: "Lightning donation - 21 sats"
-      },
-      {
-        date: "2025-09-23",
-        amount: 0.00000021, // 21 sats converted to BTC
-        description: "Lightning donation - 21 sats"
-      },
-      {
-        date: "2025-09-25",
-        amount: 0.00000001, // 1 sat converted to BTC
-        description: "Lightning donation - 1 sat"
-      },
-      {
-        date: "2025-09-25",
-        amount: 0.00000042, // 42 sats converted to BTC
-        description: "Lightning donation from themainevent - 42 sats"
-      },
-      {
-        date: "2025-09-26",
-        amount: 0.00000008, // 8 sats converted to BTC
-        description: "Lightning donation - 8 sats"
-      },
-      {
-        date: "2025-09-28",
-        amount: 0.00000008, // 8 sats converted to BTC
-        description: "Lightning donation - 8 sats"
-      },
-      {
-        date: "2025-10-04",
-        amount: 0.00000021, // 21 sats converted to BTC
-        description: "Lightning donation - 21 sats"
-      },
-      {
-        date: "2025-10-03",
-        amount: 0.00000001, // 1 sat converted to BTC
-        description: "Lightning donation - 1 sat"
-      },
-      {
-        date: "2025-10-03",
-        amount: 0.00000100, // 100 sats converted to BTC
-        description: "Lightning donation - 100 sats"
-      },
-      {
-        date: "2025-10-03",
-        amount: 0.00000100, // 100 sats converted to BTC
-        description: "Lightning donation - 100 sats"
-      },
-      {
-        date: "2025-10-03",
-        amount: 0.00000021, // 21 sats converted to BTC
-        description: "Lightning donation - 21 sats"
-      },
-      {
-        date: "2025-10-02",
-        amount: 0.00000042, // 42 sats converted to BTC
-        description: "Lightning donation - 42 sats"
-      },
-      {
-        date: "2025-10-02",
-        amount: 0.00000010, // 10 sats converted to BTC
-        description: "Lightning donation - 10 sats"
-      },
-      {
-        date: "2025-10-02",
-        amount: 0.00000010, // 10 sats converted to BTC
-        description: "Lightning donation - 10 sats"
-      },
-      {
-        date: "2025-10-02",
-        amount: 0.00000500, // 500 sats converted to BTC
-        description: "Lightning donation - 500 sats"
-      },
-      {
-        date: "2025-10-01",
-        amount: 0.00000021, // 21 sats converted to BTC
-        description: "Lightning donation - 21 sats"
-      },
-      {
-        date: "2025-10-04",
-        amount: 0.00000021, // 21 sats converted to BTC
-        description: "Lightning donation - 21 sats"
-      },
-      {
-        date: "2025-10-05",
-        amount: 0.00001000, // 1,000 sats converted to BTC
-        description: "Lightning donation - 1,000 sats"
-      },
-      {
-        date: "2025-10-06",
-        amount: 0.00000001, // 1 sat converted to BTC
-        description: "Lightning donation - 1 sat"
-      },
-      {
         date: "2025-10-10",
         amount: 0.00014686, // 14,686 sats converted to BTC
         description: "Lightning donation - 14,686 sats"
-      },
-      {
-        date: "2025-10-10",
-        amount: 0.00000042, // 42 sats converted to BTC
-        description: "Lightning donation - 42 sats"
-      },
-      {
-        date: "2025-10-11",
-        amount: 0.00000010, // 10 sats converted to BTC
-        description: "Lightning donation - 10 sats"
-      },
-      {
-        date: "2025-10-11",
-        amount: 0.00000021, // 21 sats converted to BTC
-        description: "Lightning donation - 21 sats"
-      },
-      {
-        date: "2025-10-12",
-        amount: 0.00000021, // 21 sats converted to BTC
-        description: "Lightning donation - 21 sats"
-      },
-      {
-        date: "2025-10-12",
-        amount: 0.00000008, // 8 sats converted to BTC
-        description: "Lightning donation - 8 sats"
-      },
-      {
-        date: "2025-10-12",
-        amount: 0.00000010, // 10 sats converted to BTC
-        description: "Lightning donation - 10 sats"
-      },
-      {
-        date: "2025-10-12",
-        amount: 0.00000010, // 10 sats converted to BTC
-        description: "Lightning donation - 10 sats"
-      },
-      {
-        date: "2025-10-13",
-        amount: 0.00000010, // 10 sats converted to BTC
-        description: "Lightning donation - 10 sats"
-      },
-      {
-        date: "2025-10-07",
-        amount: 0.00000001, // 1 sat converted to BTC
-        description: "Lightning donation - 1 sat"
-      },
-      {
-        date: "2025-10-07",
-        amount: 0.00000010, // 10 sats converted to BTC
-        description: "Lightning donation - 10 sats"
-      },
-      {
-        date: "2025-10-06",
-        amount: 0.00500000, // 500,000 sats converted to BTC
-        description: "Lightning donation - 500,000 sats"
       },
       {
         date: "2025-10-09",
@@ -1335,68 +1113,10 @@
         description: "Lightning donation from Headvoice - 5,555 sats"
       },
       {
-        date: "2025-10-09",
-        amount: 0.00000016, // 16 sats converted to BTC
-        description: "Lightning donation - 16 sats"
-      },
-      {
-        date: "2025-10-09",
-        amount: 0.00000001, // 1 sat converted to BTC
-        description: "Lightning donation - 1 sat"
-      },
-      {
-        date: "2025-10-09",
-        amount: 0.00000021, // 21 sats converted to BTC
-        description: "Lightning donation - 21 sats"
-      },
-      {
-        date: "2025-10-09",
-        amount: 0.00000021, // 21 sats converted to BTC
-        description: "Lightning donation - 21 sats"
-      },
-      { date: "2025-10-26", amount: 0.00000010, description: "Lightning donation - 10 sats" },
-      { date: "2025-10-25", amount: 0.00000011, description: "Lightning donation - 11 sats" },
-      { date: "2025-10-25", amount: 0.00000042, description: "Lightning donation - 42 sats" },
-      { date: "2025-10-25", amount: 0.00000042, description: "Lightning donation - 42 sats" },
-      { date: "2025-10-25", amount: 0.00000025, description: "Lightning donation - 25 sats" },
-      { date: "2025-10-25", amount: 0.00000021, description: "Lightning donation - 21 sats" },
-      { date: "2025-10-23", amount: 0.00000021, description: "Lightning donation - 21 sats" },
-      { date: "2025-10-23", amount: 0.00000050, description: "Lightning donation - 50 sats" },
-      { date: "2025-10-23", amount: 0.00000050, description: "Lightning donation - 50 sats" },
-      { date: "2025-10-23", amount: 0.00000050, description: "Lightning donation - 50 sats" },
-      { date: "2025-10-23", amount: 0.00000050, description: "Lightning donation - 50 sats" },
-      { date: "2025-10-23", amount: 0.00000050, description: "Lightning donation - 50 sats" },
-      { date: "2025-10-23", amount: 0.00000050, description: "Lightning donation - 50 sats" },
-      { date: "2025-10-23", amount: 0.00000050, description: "Lightning donation - 50 sats" },
-      { date: "2025-10-23", amount: 0.00000010, description: "Lightning donation - 10 sats" },
-      { date: "2025-10-23", amount: 0.00000001, description: "Lightning donation - 1 sat" },
-      { date: "2025-10-23", amount: 0.00000020, description: "Lightning donation - 20 sats" },
-      { date: "2025-10-23", amount: 0.00000008, description: "Lightning donation - 8 sats" },
-      { date: "2025-10-23", amount: 0.00000010, description: "Lightning donation - 10 sats" },
-      { date: "2025-10-23", amount: 0.00000033, description: "Lightning donation - 33 sats" },
-      { date: "2025-10-23", amount: 0.00000005, description: "Lightning donation - 5 sats" },
-      { date: "2025-10-22", amount: 0.00000021, description: "Lightning donation - 21 sats" },
-      { date: "2025-10-22", amount: 0.00000008, description: "Lightning donation - 8 sats" },
-      { date: "2025-10-22", amount: 0.00000025, description: "Lightning donation - 25 sats" },
-      { date: "2025-10-21", amount: 0.00000011, description: "Lightning donation - 11 sats" },
-      { date: "2025-10-21", amount: 0.00000042, description: "Lightning donation - 42 sats" },
-      { date: "2025-10-21", amount: 0.00000007, description: "Lightning donation from OFFGRID - 7 sats" },
-      { date: "2025-10-19", amount: 0.00000021, description: "Lightning donation - 21 sats" },
-      { date: "2025-10-19", amount: 0.00000031, description: "Lightning donation - 31 sats" },
-      { date: "2025-10-18", amount: 0.00000020, description: "Lightning donation - 20 sats" },
-      { date: "2025-10-18", amount: 0.00000023, description: "Lightning donation - 23 sats" },
-      { date: "2025-10-18", amount: 0.00000021, description: "Lightning donation - 21 sats" },
-      { date: "2025-10-18", amount: 0.00000021, description: "Lightning donation - 21 sats" },
-      { date: "2025-10-18", amount: 0.00000020, description: "Lightning donation - 20 sats" },
-      { date: "2025-10-17", amount: 0.00000001, description: "Lightning donation - 1 sat" },
-      { date: "2025-10-16", amount: 0.00000008, description: "Lightning donation - 8 sats" },
-      { date: "2025-10-15", amount: 0.00000021, description: "Lightning donation - 21 sats" },
-      { date: "2025-10-15", amount: 0.00000001, description: "Lightning donation - 1 sat" },
-      { date: "2025-10-14", amount: 0.00000018, description: "Lightning donation - 18 sats" },
-      { date: "2025-10-14", amount: 0.00000021, description: "Lightning donation - 21 sats" },
-      { date: "2025-10-14", amount: 0.00000042, description: "Lightning donation - 42 sats" },
-      { date: "2025-10-14", amount: 0.00000021, description: "Lightning donation - 21 sats" },
-      { date: "2025-10-13", amount: 0.00000010, description: "Lightning donation - 10 sats" }
+        date: "2025-10-06",
+        amount: 0.00500000, // 500,000 sats converted to BTC
+        description: "Lightning donation - 500,000 sats"
+      }
     ];
 
     // Clear any existing data and force reload with latest Bitcoin Well data
@@ -2451,4 +2171,5 @@
   </script>
 </body>
 </html>
+
 
