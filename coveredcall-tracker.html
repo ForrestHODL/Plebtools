@@ -9,9 +9,14 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <style>
+    /* Keep logo purple */
+    .logo {
+      color: #667eea !important;
+    }
+
     /* Modern dropdown styles */
     #toolsDropdown { position: relative; display: inline-block; }
-    #toolsBtn { background: none; border: none; color: #333; font-weight: 500; font-size: 1rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; }
+    #toolsBtn { background: none; border: none; color: white; font-weight: 500; font-size: 1rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; }
     .dark-theme #toolsBtn { color: #e0e0e0 !important; }
     #toolsBtn:hover { background: rgba(102, 126, 234, 0.1); color: #667eea; }
     .dropdown-arrow { font-size: 0.8rem; transition: transform 0.3s ease; }
@@ -40,8 +45,8 @@
       text-align: center;
       margin-bottom: 3rem;
       padding: 2rem 0;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: #1a1a1a;
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
@@ -50,7 +55,8 @@
       font-size: 2.5rem;
       font-weight: bold;
       margin-bottom: 1rem;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      color: #1a1a1a;
+      text-shadow: none;
     }
 
     .tracker-description {
@@ -58,6 +64,7 @@
       opacity: 0.9;
       max-width: 600px;
       margin: 0 auto;
+      color: #1a1a1a;
     }
 
     /* Public Portfolio Section */
@@ -192,7 +199,7 @@
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
       color: white;
     }
 
@@ -307,6 +314,7 @@
       padding: 1rem;
       text-align: left;
       border-bottom: 1px solid #e0e0e0;
+      color: #212529;
     }
 
     .table th {
@@ -466,7 +474,7 @@
 
     .affiliate-link {
       display: inline-block;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
       color: white;
       text-decoration: none;
       padding: 0.5rem 1rem;
@@ -507,6 +515,10 @@
       color: #e0e0e0;
     }
 
+    .dark-theme .open-source-text {
+      color: white !important;
+    }
+
     .dark-theme .affiliate-item {
       background: #3d3d3d;
       color: #e0e0e0;
@@ -530,7 +542,7 @@
     }
 
     .dark-theme .table td {
-      color: #e0e0e0;
+      color: #ffffff !important;
     }
 
     .dark-theme .table tr:hover {
@@ -686,7 +698,7 @@
     }
 
     .submit-btn {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
       color: white;
       border: none;
       padding: 0.75rem 1.5rem;
@@ -725,8 +737,10 @@
     <nav>
       <div class="nav-container">
         <div class="logo-container">
-          <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
-          <h1 class="logo">Plebtools</h1>
+          <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+            <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+            <h1 class="logo">Plebtools</h1>
+          </a>
         </div>
         <div class="nav-links">
           <div class="dropdown" id="toolsDropdown">
@@ -740,6 +754,7 @@
               <a href="financial-planner">📋 Financial Planner</a>
               <a href="bitcoin-security">🛡️ Bitcoin Security</a>
               <a href="bitcoin-storage">🏛️ Bitcoin Storage</a>
+              <a href="invoice-builder">🧾 Invoice Builder</a>
               <a href="pleb-release">📰 Pleb Release</a>
             </div>
           </div>
@@ -910,6 +925,7 @@
         </div>
       </div>
     </div>
+
   </main>
 
   <!-- Affiliate Links Section -->
@@ -939,7 +955,7 @@
           </div>
           <div class="affiliate-item">
             <h4>1:1 Coaching</h4>
-            <a href="https://www.differentmedia.ca/bitcoin1-1" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+            <a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
           </div>
           <div class="affiliate-item">
             <h4>Where to learn</h4>
@@ -954,6 +970,17 @@
             <a href="https://coinos.io/plebtools" target="_blank" class="affiliate-link">Donate</a>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Open Source Section -->
+  <section class="features-section">
+    <div class="container">
+      <h2 class="section-title">Open Source</h2>
+      <div style="text-align: center;">
+        <p class="open-source-text" style="margin-bottom: 1rem; color: #212529;">This covered call tracker is free and open source and can be replicated for anyone to track their own trades.</p>
+        <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" style="background: #28a745; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; display: inline-block; font-weight: bold; transition: all 0.3s ease;">View on GitHub</a>
       </div>
     </div>
   </section>

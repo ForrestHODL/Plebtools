@@ -9,21 +9,26 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
+        /* Keep logo purple */
+        .logo {
+            color: #667eea !important;
+        }
+
         /* Modern dropdown styles */
         #toolsDropdown { position: relative; display: inline-block; }
-        #toolsBtn { background: none; border: none; color: #333; font-weight: 500; font-size: 1rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; }
+        #toolsBtn { background: none; border: none; color: white; font-weight: 500; font-size: 1rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; }
         .dark-theme #toolsBtn { color: #e0e0e0 !important; }
-        #toolsBtn:hover { background: rgba(102, 126, 234, 0.1); color: #667eea; }
+        #toolsBtn:hover { background: rgba(102, 126, 234, 0.1); color: #f59e0b; }
         .dropdown-arrow { font-size: 0.8rem; transition: transform 0.3s ease; }
         #toolsContent { position: absolute; top: 100%; right: 0; background: white; min-width: 220px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); border-radius: 12px; z-index: 1001; padding: 0.75rem 0; border: 1px solid rgba(0, 0, 0, 0.08); backdrop-filter: blur(10px); margin-top: 8px; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; }
         #toolsContent.show { opacity: 1; transform: translateY(0); }
         #toolsContent a { display: block; padding: 0.875rem 1.5rem; color: #333; text-decoration: none; transition: all 0.3s ease; font-weight: 500; border-radius: 0; position: relative; }
         .dark-theme #toolsContent a { color: #e0e0e0 !important; }
-        #toolsContent a:hover { background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); color: #667eea; transform: translateX(8px); }
+        #toolsContent a:hover { background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%); color: #f59e0b; transform: translateX(8px); }
         #toolsContent a:first-child { border-radius: 12px 12px 0 0; }
         #toolsContent a:last-child { border-radius: 0 0 12px 12px; }
         .dark-theme #toolsContent { background: #2d2d2d !important; border-color: #555 !important; }
-        .dark-theme #toolsContent a:hover { background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%) !important; color: #667eea !important; }
+        .dark-theme #toolsContent a:hover { background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(251, 191, 36, 0.2) 100%) !important; color: #f59e0b !important; }
     </style>
     
     <style>
@@ -40,23 +45,28 @@
             text-align: center;
             margin-bottom: 3rem;
             padding: 2rem 0;
-            background: linear-gradient(135deg, #f7931a 0%, #ff6b35 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: white;
-            border-radius: 20px;
+            border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #333;
+            position: relative;
         }
 
         .calculator-title {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: bold;
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background: -webkit-linear-gradient(45deg, #f59e0b, #fbbf24, #fde68a);
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
         }
 
         .calculator-description {
             font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 600px;
+            color: #ccc;
+            max-width: 800px;
             margin: 0 auto;
         }
 
@@ -230,6 +240,7 @@
             text-align: left;
             border-bottom: 1px solid #e0e0e0;
             font-size: 0.9rem;
+            color: #212529;
         }
 
         .table th {
@@ -314,6 +325,10 @@
             background: #2d2d2d;
         }
 
+        .dark-theme .calculator-header {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+        }
+
         /* Force affiliate styling to work */
         .features-section .affiliate-links {
             display: grid !important;
@@ -344,7 +359,7 @@
 
         .features-section .affiliate-link {
             display: inline-block !important;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%) !important;
             color: white !important;
             padding: 0.5rem 1rem !important;
             border-radius: 5px !important;
@@ -427,6 +442,10 @@
         .dark-theme .table tr:hover {
             background: #3d3d3d;
         }
+
+        .dark-theme .open-source-text {
+            color: white !important;
+        }
     </style>
 </head>
 <body>
@@ -434,8 +453,10 @@
         <nav>
             <div class="nav-container">
                 <div class="logo-container">
-                    <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
-                    <h1 class="logo">Plebtools</h1>
+                    <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+                        <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+                        <h1 class="logo">Plebtools</h1>
+                    </a>
                 </div>
                 <div class="nav-links">
                 <div class="dropdown" id="toolsDropdown">
@@ -448,6 +469,7 @@
               <a href="btc-loan-ltv">🔒 BTC Loans</a>
               <a href="financial-planner">📋 Financial Planner</a>
               <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+              <a href="invoice-builder">🧾 Invoice Builder</a>
               <a href="bitcoin-storage">🏛️ Bitcoin Storage</a>
               <a href="pleb-release">📰 Pleb Release</a>
                     </div>
@@ -526,7 +548,7 @@
                         <div class="form-row">
                             <div class="control-group">
                                 <label class="control-label" for="currentStockPortfolio">Current Stock Portfolio ($)</label>
-                                <input type="number" id="currentStockPortfolio" class="control-input" placeholder="50000" value="50000" step="100" title="Current value of your stock portfolio">
+                                <input type="number" id="currentStockPortfolio" class="control-input" placeholder="0" value="0" step="100" title="Current value of your existing stock portfolio (leave at 0 if starting fresh)">
                             </div>
                             <div class="control-group">
                                 <label class="control-label" for="stockGrowthRate">Stock Annual Growth Rate (%)</label>
@@ -656,7 +678,7 @@
                         </div>
                         <div class="affiliate-item">
                             <h4>1:1 Coaching</h4>
-                            <a href="https://www.differentmedia.ca/bitcoin1-1" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+                            <a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
                         </div>
                         <div class="affiliate-item">
                             <h4>Where to learn</h4>
@@ -671,6 +693,17 @@
                             <a href="https://coinos.io/plebtools" target="_blank" class="affiliate-link">Donate</a>
                         </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Open Source Section -->
+    <section class="features-section">
+        <div class="container">
+            <h2 class="section-title">Open Source</h2>
+            <div style="text-align: center;">
+                <p class="open-source-text" style="margin-bottom: 1rem; color: white;">This Bitcoin compound interest calculator is free and open source and can be replicated for anyone to track their own Bitcoin growth.</p>
+                <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" style="background: #28a745; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; display: inline-block; font-weight: bold; transition: all 0.3s ease;">View on GitHub</a>
             </div>
         </div>
     </section>
@@ -700,6 +733,7 @@
 
             // Load default calculation
             calculateResults();
+            updateChartButtons();
         });
 
 
@@ -713,19 +747,23 @@
             const bitcoinGrowthRate = parseFloat(document.getElementById('bitcoinGrowthRate').value) || 25;
             const currentStockPortfolio = parseFloat(document.getElementById('currentStockPortfolio').value) || 0;
             const stockGrowthRate = parseFloat(document.getElementById('stockGrowthRate').value) || 10;
-            const housePrice = parseFloat(document.getElementById('housePrice').value) || 450000;
-            const houseAppreciation = parseFloat(document.getElementById('houseAppreciation').value) || 5;
+            const housePrice = parseFloat(document.getElementById('housePrice').value) || 0;
+            const houseAppreciation = parseFloat(document.getElementById('houseAppreciation').value) || 0;
             const years = parseInt(document.getElementById('years').value) || 15;
 
-            // Calculate monthly rates
-            const monthlyHouseGrowth = Math.pow(1 + houseAppreciation / 100, 1/12) - 1;
+            // Validate inputs
+            if (bitcoinPrice <= 0) {
+                alert('Bitcoin price must be greater than 0');
+                return;
+            }
 
             // Initialize variables
-            let bitcoinBalance = 0;
-            let fiatBalance = initialInvestment;
+            // Convert initial investment to Bitcoin at starting price
+            let bitcoinBalance = bitcoinPrice > 0 ? (initialInvestment / bitcoinPrice) : 0;
+            let fiatBalance = 0;
             let stockBalance = currentStockPortfolio + initialStockInvestment;
             let currentHousePrice = housePrice;
-            let totalBitcoinAdded = 0;
+            let totalBitcoinAdded = bitcoinBalance;
             let totalStockAdded = 0;
 
             calculationResults = [];
@@ -739,52 +777,55 @@
                 let yearlyBitcoinAdded = 0;
                 let yearlyStockAdded = 0;
                 for (let month = 0; month < 12; month++) {
-                    // Add monthly contribution to fiat balance
-                    fiatBalance += monthlyContribution;
-                    
                     // Calculate how much Bitcoin to buy with monthly contribution
-                    const bitcoinToAdd = monthlyContribution / currentBitcoinPrice;
-                    bitcoinBalance += bitcoinToAdd;
-                    yearlyBitcoinAdded += bitcoinToAdd;
-                    totalBitcoinAdded += bitcoinToAdd;
+                    // Monthly contribution is used to buy Bitcoin, not added to fiat
+                    // Handle zero monthly contribution safely
+                    if (monthlyContribution > 0 && currentBitcoinPrice > 0) {
+                        const bitcoinToAdd = monthlyContribution / currentBitcoinPrice;
+                        bitcoinBalance += bitcoinToAdd;
+                        yearlyBitcoinAdded += bitcoinToAdd;
+                        totalBitcoinAdded += bitcoinToAdd;
+                    }
                     
                     // Add monthly stock contribution
                     stockBalance += monthlyStockContribution;
                     yearlyStockAdded += monthlyStockContribution;
                     totalStockAdded += monthlyStockContribution;
-                    
-                    // Apply monthly growth to house only
-                    // Bitcoin balance grows only from new purchases, not price appreciation
-                    currentHousePrice *= (1 + monthlyHouseGrowth);
                 }
-
-                // Apply annual stock growth
-                stockBalance *= (1 + stockGrowthRate / 100);
                 
-                // Calculate values
-                const fiatValue = fiatBalance;
-                const bitcoinValue = bitcoinBalance * currentBitcoinPrice;
-                const totalPortfolioValue = fiatValue + bitcoinValue + stockBalance;
-                const stackToHouseRatio = (bitcoinValue / currentHousePrice) * 100;
-                const stockToHouseRatio = (stockBalance / currentHousePrice) * 100;
+                // Apply annual compound growth to all assets at end of year
+                // Don't apply growth in year 0 (starting year)
+                if (year > 0) {
+                    stockBalance *= (1 + stockGrowthRate / 100);
+                    currentHousePrice *= (1 + houseAppreciation / 100);
+                }
+                
+                // Calculate values - ensure all are valid numbers
+                const fiatValue = fiatBalance || 0;
+                const bitcoinValue = (bitcoinBalance || 0) * (currentBitcoinPrice || 0);
+                const totalPortfolioValue = fiatValue + bitcoinValue + (stockBalance || 0);
+                const stackToHouseRatio = currentHousePrice > 0 ? ((bitcoinValue / currentHousePrice) * 100) : 0;
+                const stockToHouseRatio = currentHousePrice > 0 ? ((stockBalance / currentHousePrice) * 100) : 0;
 
+                // Ensure all values are valid numbers (not NaN or Infinity)
                 calculationResults.push({
                     year: currentYear,
-                    bitcoinPrice: currentBitcoinPrice,
-                    bitcoinBalance: bitcoinBalance,
-                    fiatBalance: fiatBalance,
-                    stockBalance: stockBalance,
-                    houseValue: currentHousePrice,
-                    stackToHouseRatio: stackToHouseRatio,
-                    stockToHouseRatio: stockToHouseRatio,
-                    portfolioValue: totalPortfolioValue,
-                    bitcoinAdded: yearlyBitcoinAdded,
-                    stockAdded: yearlyStockAdded
+                    bitcoinPrice: isFinite(currentBitcoinPrice) ? currentBitcoinPrice : 0,
+                    bitcoinBalance: isFinite(bitcoinBalance) ? bitcoinBalance : 0,
+                    fiatBalance: isFinite(fiatValue) ? fiatValue : 0,
+                    stockBalance: isFinite(stockBalance) ? stockBalance : 0,
+                    houseValue: isFinite(currentHousePrice) ? currentHousePrice : 0,
+                    stackToHouseRatio: isFinite(stackToHouseRatio) ? stackToHouseRatio : 0,
+                    stockToHouseRatio: isFinite(stockToHouseRatio) ? stockToHouseRatio : 0,
+                    portfolioValue: isFinite(totalPortfolioValue) ? totalPortfolioValue : 0,
+                    bitcoinAdded: isFinite(yearlyBitcoinAdded) ? yearlyBitcoinAdded : 0,
+                    stockAdded: isFinite(yearlyStockAdded) ? yearlyStockAdded : 0
                 });
             }
 
             // Update display
             updateStats();
+            updateChartButtons();
             updateChart();
             updateTable();
         }
@@ -822,7 +863,10 @@
                 datasets = [
                     {
                         label: 'Bitcoin Value ($)',
-                        data: calculationResults.map(r => r.bitcoinBalance * r.bitcoinPrice),
+                        data: calculationResults.map(r => {
+                            const value = r.bitcoinBalance * r.bitcoinPrice;
+                            return isFinite(value) ? value : 0;
+                        }),
                         borderColor: '#f7931a',
                         backgroundColor: 'rgba(247, 147, 26, 0.1)',
                         borderWidth: 3,
@@ -831,44 +875,60 @@
                     },
                     {
                         label: 'Stock Portfolio ($)',
-                        data: calculationResults.map(r => r.stockBalance),
+                        data: calculationResults.map(r => isFinite(r.stockBalance) ? r.stockBalance : 0),
                         borderColor: '#007bff',
                         backgroundColor: 'rgba(0, 123, 255, 0.1)',
                         borderWidth: 3,
                         fill: true,
                         tension: 0.4
-                    },
-                    {
+                    }
+                ];
+                
+                // Only add house value if house price is greater than 0
+                const housePriceInput = parseFloat(document.getElementById('housePrice').value) || 0;
+                if (housePriceInput > 0) {
+                    datasets.push({
                         label: 'House Value ($)',
-                        data: calculationResults.map(r => r.houseValue),
+                        data: calculationResults.map(r => isFinite(r.houseValue) ? r.houseValue : 0),
                         borderColor: '#28a745',
                         backgroundColor: 'rgba(40, 167, 69, 0.1)',
                         borderWidth: 3,
                         fill: true,
                         tension: 0.4
-                    }
-                ];
+                    });
+                }
             } else if (currentChartType === 'ratio') {
-                datasets = [
-                    {
-                        label: 'BTC/House Ratio (%)',
-                        data: calculationResults.map(r => r.stackToHouseRatio),
-                        borderColor: '#f7931a',
-                        backgroundColor: 'rgba(247, 147, 26, 0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4
-                    },
-                    {
-                        label: 'Stock/House Ratio (%)',
-                        data: calculationResults.map(r => r.stockToHouseRatio),
-                        borderColor: '#007bff',
-                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4
-                    }
-                ];
+                datasets = [];
+                
+                // Only add ratio charts if house price is greater than 0
+                const housePriceInput = parseFloat(document.getElementById('housePrice').value) || 0;
+                if (housePriceInput > 0) {
+                    datasets.push(
+                        {
+                            label: 'BTC/House Ratio (%)',
+                            data: calculationResults.map(r => isFinite(r.stackToHouseRatio) ? r.stackToHouseRatio : 0),
+                            borderColor: '#f7931a',
+                            backgroundColor: 'rgba(247, 147, 26, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Stock/House Ratio (%)',
+                            data: calculationResults.map(r => isFinite(r.stockToHouseRatio) ? r.stockToHouseRatio : 0),
+                            borderColor: '#007bff',
+                            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }
+                    );
+                }
+            }
+
+            // Don't create chart if no datasets (e.g., ratio chart with no house)
+            if (datasets.length === 0) {
+                return;
             }
 
             currentChart = new Chart(ctx, {
@@ -894,6 +954,7 @@
                             beginAtZero: true,
                             ticks: {
                                 callback: function(value) {
+                                    if (!isFinite(value)) return '0';
                                     if (currentChartType === 'price' || currentChartType === 'value') {
                                         return '$' + value.toLocaleString();
                                     } else {
@@ -918,12 +979,41 @@
 
         // Show specific chart type
         function showChart(type) {
+            // Check if house price is 0 and user is trying to view ratio chart
+            const housePriceInput = parseFloat(document.getElementById('housePrice').value) || 0;
+            if (type === 'ratio' && housePriceInput <= 0) {
+                alert('Please enter a house price to view ratio charts');
+                return;
+            }
+            
             // Update button states
             document.querySelectorAll('.chart-toggle-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(type + 'ChartBtn').classList.add('active');
             
             currentChartType = type;
             updateChart();
+        }
+        
+        // Update chart button states based on house price
+        function updateChartButtons() {
+            const housePriceInput = parseFloat(document.getElementById('housePrice').value) || 0;
+            const ratioBtn = document.getElementById('ratioChartBtn');
+            
+            if (housePriceInput <= 0) {
+                ratioBtn.disabled = true;
+                ratioBtn.style.opacity = '0.5';
+                ratioBtn.style.cursor = 'not-allowed';
+                // If ratio chart is active but house price is 0, switch to value chart
+                if (currentChartType === 'ratio') {
+                    currentChartType = 'value';
+                    document.querySelectorAll('.chart-toggle-btn').forEach(btn => btn.classList.remove('active'));
+                    document.getElementById('valueChartBtn').classList.add('active');
+                }
+            } else {
+                ratioBtn.disabled = false;
+                ratioBtn.style.opacity = '1';
+                ratioBtn.style.cursor = 'pointer';
+            }
         }
 
         // Update results table
@@ -964,7 +1054,7 @@
             document.getElementById('monthlyStockContribution').value = 1000;
             document.getElementById('bitcoinPrice').value = 114268.74;
             document.getElementById('bitcoinGrowthRate').value = 25;
-            document.getElementById('currentStockPortfolio').value = 50000;
+            document.getElementById('currentStockPortfolio').value = 0;
             document.getElementById('stockGrowthRate').value = 10;
             document.getElementById('housePrice').value = 450000;
             document.getElementById('houseAppreciation').value = 5;

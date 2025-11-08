@@ -8,8 +8,8 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
-  color: #333;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #e0e0e0;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
   min-height: 100vh;
 }
 
@@ -19,10 +19,11 @@ header {
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(26, 26, 46, 0.95);
   backdrop-filter: blur(10px);
   z-index: 1000;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid #333;
 }
 
 nav {
@@ -54,7 +55,7 @@ nav {
 .logo {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #667eea;
+  color: #f59e0b;
   margin: 0;
 }
 
@@ -75,14 +76,14 @@ nav {
 
 .nav-links a {
   text-decoration: none;
-  color: #333;
+  color: #e0e0e0;
   font-weight: 500;
   transition: color 0.3s ease;
   position: relative;
 }
 
 .nav-links a:hover {
-  color: #667eea;
+  color: #f59e0b;
 }
 
 .nav-links a::after {
@@ -92,7 +93,7 @@ nav {
   left: 0;
   width: 0;
   height: 2px;
-  background: #667eea;
+  background: #f59e0b;
   transition: width 0.3s ease;
 }
 
@@ -109,7 +110,7 @@ nav {
 .dropdown-btn {
   background: none;
   border: none;
-  color: #333;
+  color: #e0e0e0;
   font-weight: 500;
   font-size: 1rem;
   cursor: pointer;
@@ -122,8 +123,8 @@ nav {
 }
 
 .dropdown-btn:hover {
-  background: rgba(102, 126, 234, 0.1);
-  color: #667eea;
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
 }
 
 .dropdown-arrow {
@@ -138,15 +139,15 @@ nav {
 .dropdown-content {
   display: none;
   position: absolute;
-  background: white;
+  background: #1a1a2e;
   min-width: 200px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   border-radius: 10px;
   z-index: 1001;
   top: 100%;
   right: 0;
   padding: 0.5rem 0;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid #333;
   backdrop-filter: blur(10px);
 }
 
@@ -172,7 +173,7 @@ nav {
 .dropdown-content a {
   display: block;
   padding: 0.75rem 1.5rem;
-  color: #333;
+  color: #e0e0e0;
   text-decoration: none;
   transition: all 0.3s ease;
   border-radius: 0;
@@ -184,8 +185,8 @@ nav {
 }
 
 .dropdown-content a:hover {
-  background: rgba(102, 126, 234, 0.1);
-  color: #667eea;
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
   transform: translateX(5px);
 }
 
@@ -256,17 +257,18 @@ main {
 /* Sections */
 section {
   padding: 4rem 0;
-  background: white;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   margin: 2rem 0;
   border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border: 1px solid #333;
 }
 
 .section-title {
   text-align: center;
   font-size: 2.5rem;
   margin-bottom: 3rem;
-  color: #333;
+  color: #f59e0b;
 }
 
 .section-content {
@@ -284,11 +286,13 @@ section {
 }
 
 .about-card {
-  background: #f8f9fa;
+  background: linear-gradient(135deg, #2d2d2d 0%, #1a1a2e 100%);
   padding: 2rem;
   border-radius: 15px;
   text-align: center;
   transition: transform 0.3s ease;
+  border: 1px solid #444;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .about-card:hover {
@@ -296,13 +300,13 @@ section {
 }
 
 .about-card h3 {
-  color: #667eea;
+  color: #f59e0b;
   margin-bottom: 1rem;
   font-size: 1.5rem;
 }
 
 .about-card p {
-  color: #666;
+  color: #ccc;
   line-height: 1.6;
 }
 
@@ -315,12 +319,13 @@ section {
 }
 
 .service-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  color: #1a1a1a;
   padding: 2rem;
   border-radius: 15px;
   text-align: center;
   transition: transform 0.3s ease;
+  border: 1px solid #fbbf24;
 }
 
 .service-card:hover {
@@ -351,28 +356,30 @@ section {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: bold;
-  color: #333;
+  color: #e0e0e0;
 }
 
 .form-group input,
 .form-group textarea {
   width: 100%;
   padding: 1rem;
-  border: 2px solid #e9ecef;
+  border: 2px solid #333;
   border-radius: 10px;
   font-size: 1rem;
   transition: border-color 0.3s ease;
+  background: #2d2d2d;
+  color: #e0e0e0;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #f59e0b;
 }
 
 .submit-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  color: #1a1a1a;
   border: none;
   padding: 1rem 2rem;
   font-size: 1.1rem;
@@ -381,20 +388,22 @@ section {
   cursor: pointer;
   transition: all 0.3s ease;
   width: 100%;
+  box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
 }
 
 .submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.6);
 }
 
 /* Footer */
 footer {
-  background: #333;
-  color: white;
+  background: #0f0f23;
+  color: #e0e0e0;
   text-align: center;
   padding: 2rem 0;
   margin-top: 2rem;
+  border-top: 1px solid #333;
 }
 
 footer p {
@@ -447,6 +456,12 @@ footer p {
 
 .dark-theme header {
   background: rgba(45, 45, 45, 0.95);
+}
+
+/* Header in light theme - white background */
+body.light-theme header {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-bottom: 1px solid #dee2e6;
 }
 
 .dark-theme .nav-links a {
@@ -532,12 +547,13 @@ footer p {
 }
 
 .affiliate-item {
-  background: white;
+  background: linear-gradient(135deg, #2d2d2d 0%, #1a1a2e 100%);
   padding: 1.5rem;
   border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.5);
   text-align: center;
   transition: transform 0.3s ease;
+  border: 1px solid #444;
 }
 
 .affiliate-item:hover {
@@ -545,7 +561,7 @@ footer p {
 }
 
 .affiliate-item h4 {
-  color: #333;
+  color: #f59e0b;
   margin-bottom: 0.5rem;
   font-size: 1rem;
   font-weight: bold;
@@ -553,8 +569,8 @@ footer p {
 
 .affiliate-link {
   display: inline-block;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  color: #1a1a1a;
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 20px;
@@ -562,13 +578,13 @@ footer p {
   font-weight: bold;
   margin-bottom: 0.5rem;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
 }
 
 .affiliate-link:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-  color: white;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+  color: #1a1a1a;
   text-decoration: none;
 }
 
@@ -622,12 +638,13 @@ footer p {
 
 .guidelines-section .affiliate-item,
 .totals-display .affiliate-item {
-  background: white;
+  background: linear-gradient(135deg, #2d2d2d 0%, #1a1a2e 100%);
   padding: 1.5rem;
   border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.5);
   text-align: center;
   transition: transform 0.3s ease;
+  border: 1px solid #444;
 }
 
 .guidelines-section .affiliate-item:hover,
@@ -637,7 +654,7 @@ footer p {
 
 .guidelines-section .affiliate-item h4,
 .totals-display .affiliate-item h4 {
-  color: #333;
+  color: #f59e0b;
   margin-bottom: 0.5rem;
   font-size: 1rem;
   font-weight: bold;
@@ -646,8 +663,8 @@ footer p {
 .guidelines-section .affiliate-link,
 .totals-display .affiliate-link {
   display: inline-block;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  color: #1a1a1a;
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 20px;
@@ -655,14 +672,14 @@ footer p {
   font-weight: bold;
   margin-bottom: 0.5rem;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
 }
 
 .guidelines-section .affiliate-link:hover,
 .totals-display .affiliate-link:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-  color: white;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+  color: #1a1a1a;
   text-decoration: none;
 }
 

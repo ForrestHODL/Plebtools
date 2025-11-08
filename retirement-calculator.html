@@ -17,18 +17,27 @@
         .calculator-header {
             text-align: center;
             margin-bottom: 3rem;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #333;
+            position: relative;
         }
 
         .calculator-title {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: bold;
-            color: #333;
             margin-bottom: 1rem;
+            background: -webkit-linear-gradient(45deg, #f59e0b, #fbbf24, #fde68a);
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
         }
 
         .calculator-subtitle {
             font-size: 1.2rem;
-            color: #666;
+            color: #ccc;
             margin-bottom: 2rem;
         }
 
@@ -75,7 +84,7 @@
         .calculate-btn {
             width: 100%;
             padding: 1rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
             color: white;
             border: none;
             border-radius: 8px;
@@ -87,7 +96,7 @@
 
         .calculate-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
         }
 
         .results-section {
@@ -198,12 +207,43 @@
             }
         }
 
+        /* Keep logo purple */
+        .logo {
+            color: #667eea !important;
+        }
+
+        #toolsBtn {
+            color: white !important;
+        }
+
         /* Dark theme support */
         .dark-theme .input-section,
         .dark-theme .results-section,
         .dark-theme .chart-container {
             background: #3d3d3d;
             border-color: #555;
+        }
+
+        .dark-theme .calculator-header {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+        }
+
+        /* Dark theme for affiliate and Open Source sections */
+        .dark-theme div[style*="background: white"] {
+            background: #3d3d3d !important;
+            border-color: #555 !important;
+        }
+
+        .dark-theme h3 {
+            color: #fff !important;
+        }
+
+        .dark-theme h4 {
+            color: #fff !important;
+        }
+
+        .dark-theme p {
+            color: #ccc !important;
         }
 
         .dark-theme .input-label {
@@ -329,8 +369,10 @@
         <nav>
             <div class="nav-container">
                 <div class="logo-container">
-                    <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
-                    <h1 class="logo">Plebtools</h1>
+                    <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+                        <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+                        <h1 class="logo">Plebtools</h1>
+                    </a>
                 </div>
                 <div class="nav-links">
                     <div class="dropdown" id="toolsDropdown">
@@ -345,6 +387,7 @@
                             <a href="btc-loan-ltv">🔒 BTC Loans</a>
                             <a href="financial-planner">📋 Financial Planner</a>
                             <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+                            <a href="invoice-builder">🧾 Invoice Builder</a>
                             <a href="pleb-release">📰 Pleb Release</a>
                         </div>
                     </div>
@@ -427,6 +470,59 @@
             <div class="chart-container">
                 <h2>Financial Progression Chart</h2>
                 <canvas id="chart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- Affiliate Links Section -->
+        <div style="margin: 3rem 0; padding: 2rem; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid #e0e0e0;">
+            <h3 style="text-align: center;">Want to buy and secure your Bitcoin?</h3>
+            <div style="text-align: center;">
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                    <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                        <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">Where to buy</h4>
+                        <a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Bitcoin Well</a>
+                    </div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                        <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">Where to store</h4>
+                        <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Blockstream Jade</a>
+                    </div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                        <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">How to protect</h4>
+                        <a href="https://www.stampseed.com/" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Stamp Seed</a>
+                        <p style="font-size: 0.8rem; color: #4CAF50; margin-top: 0.5rem; font-weight: 500;">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
+                    </div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                        <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">How to validate</h4>
+                        <a href="https://store.start9.com/" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Start9</a>
+                        <p style="font-size: 0.8rem; color: #4CAF50; margin-top: 0.5rem; font-weight: 500;">CODE: BNC5 for 5% off</p>
+                    </div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                        <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">1:1 Coaching</h4>
+                        <a href="https://pathtobitcoin.xyz" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Bitcoin 1:1</a>
+                    </div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                        <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">Where to learn</h4>
+                        <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">YouTube</a>
+                    </div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                        <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">Earn free BTC</h4>
+                        <a href="https://satsarcade.app/" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Sats Arcade</a>
+                    </div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                        <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">How to support</h4>
+                        <a href="https://coinos.io/plebtools" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Donate</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Open Source Section -->
+        <div style="margin: 3rem 0; padding: 2rem; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid #e0e0e0;">
+            <h3 style="text-align: center; color: #000;">Open Source</h3>
+            <div style="text-align: center;">
+                <p style="margin-bottom: 1rem; color: #000;">This Bitcoin retirement calculator is free and open source and can be replicated for anyone to plan their Bitcoin-based retirement.</p>
+                <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" style="background: #28a745; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; display: inline-block; font-weight: bold; transition: all 0.3s ease;">View on GitHub</a>
             </div>
         </div>
     </main>
@@ -532,23 +628,26 @@
                 const remainingBtc = parseFloat(document.getElementById('remainingBtc').value);
                 
                 // Validate inputs
-                if (years < 1 || years > 50) {
-                    throw new Error('Years must be between 1 and 50');
+                if (isNaN(years) || years < 1 || years > 50) {
+                    throw new Error('Years must be a number between 1 and 50');
                 }
-                if (monthlySpend < 0) {
-                    throw new Error('Monthly spend cannot be negative');
+                if (isNaN(monthlySpend) || monthlySpend < 0) {
+                    throw new Error('Monthly spend must be a non-negative number');
                 }
-                if (inflation < 0 || inflation > 0.2) {
-                    throw new Error('Inflation rate must be between 0% and 20%');
+                if (isNaN(inflation) || inflation < 0 || inflation > 0.2) {
+                    throw new Error('Inflation rate must be a number between 0% and 20%');
                 }
-                if (appreciation < 0 || appreciation > 0.5) {
-                    throw new Error('Appreciation rate must be between 0% and 50%');
+                if (isNaN(appreciation) || appreciation < 0 || appreciation > 0.5) {
+                    throw new Error('Appreciation rate must be a number between 0% and 50%');
                 }
-                if (btcPrice <= 0) {
-                    throw new Error('Bitcoin price must be positive');
+                if (isNaN(btcPrice) || btcPrice <= 0) {
+                    throw new Error('Bitcoin price must be a positive number');
                 }
-                if (remainingBtc < 0) {
-                    throw new Error('Remaining Bitcoin cannot be negative');
+                if (isNaN(startYear) || startYear < 2024 || startYear > 2100) {
+                    throw new Error('Starting year must be a number between 2024 and 2100');
+                }
+                if (isNaN(remainingBtc) || remainingBtc < 0) {
+                    throw new Error('Remaining Bitcoin must be a non-negative number');
                 }
                 
                 const annualExpenses = monthlySpend * 12;
@@ -581,8 +680,16 @@
                     const subtotal = balance + assetGrowth;
                     const endingBalance = subtotal - expenses;
                     // Convert expenses to BTC using current BTC price for this year
+                    if (currentBtcPrice <= 0) {
+                        throw new Error(`Invalid BTC price: $${currentBtcPrice}. This should not happen.`);
+                    }
                     const expensesInBtc = expenses / currentBtcPrice;
                     const endingBtcBalance = btcBalance - expensesInBtc;
+                    
+                    // Safety check: BTC balance should not go negative
+                    if (endingBtcBalance < -0.00000001) {
+                        throw new Error(`BTC balance would go negative in year ${year}. This suggests the required assets calculation is insufficient.`);
+                    }
                     
                     tableData.push({
                         year: startYear + year - 1,
@@ -620,9 +727,22 @@
                 });
                 
                 // Calculate final values
-                const finalBtcPrice = btcPrice * Math.pow(1 + appreciation, years - 1);
+                const finalBtcPrice = currentBtcPrice; // Use the actual final BTC price from the loop
                 const finalBtcValue = remainingBtc * finalBtcPrice;
                 const finalBalance = balance - finalBtcValue;
+                
+                // Verify BTC balance consistency
+                const btcBalanceDifference = Math.abs(btcBalance - remainingBtc);
+                if (btcBalanceDifference > 0.01) { // Allow for reasonable rounding errors
+                    console.warn(`BTC balance mismatch: ending BTC balance (${btcBalance.toFixed(8)}) differs from remaining BTC (${remainingBtc.toFixed(8)}) by ${btcBalanceDifference.toFixed(8)} BTC`);
+                }
+                
+                // Verify USD balance consistency
+                const expectedBalance = btcBalance * finalBtcPrice;
+                const balanceDifference = Math.abs(balance - expectedBalance);
+                if (balanceDifference > 100) { // Allow for reasonable rounding errors
+                    console.warn(`Balance mismatch: ending balance ($${balance.toLocaleString()}) differs from BTC balance * price ($${expectedBalance.toLocaleString()}) by $${balanceDifference.toLocaleString()}`);
+                }
                 
                 // The binary search should ensure this is very close to zero
                 // If it's significantly negative, there's an error in our calculation

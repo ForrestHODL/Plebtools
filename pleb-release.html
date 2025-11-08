@@ -42,23 +42,27 @@
       text-align: center;
       margin-bottom: 3rem;
       padding: 2rem 0;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
       color: white;
-      border-radius: 20px;
+      border-radius: 12px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      border: 1px solid #333;
       position: relative;
     }
 
     .tool-title {
-      font-size: 2.5rem;
+      font-size: 3rem;
       font-weight: bold;
       margin-bottom: 1rem;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      background: -webkit-linear-gradient(45deg, #f59e0b, #fbbf24, #fde68a);
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
     }
 
     .tool-description {
       font-size: 1.2rem;
-      opacity: 0.9;
+      color: #ccc;
       max-width: 600px;
       margin: 0 auto;
     }
@@ -253,9 +257,31 @@
       }
     }
 
+    /* Keep logo purple */
+    .logo {
+      color: #667eea !important;
+    }
+
+    #toolsBtn {
+      color: white !important;
+    }
+
     /* Dark theme support */
     .dark-theme .press-release-container {
       background: #2d2d2d;
+    }
+
+    .dark-theme .tool-header {
+      background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+    }
+
+    /* Open Source section dark theme */
+    .dark-theme .features-section .section-title {
+      color: #fff !important;
+    }
+
+    .dark-theme .features-section p {
+      color: #fff !important;
     }
 
     /* Force affiliate styling to work */
@@ -288,7 +314,7 @@
 
     .features-section .affiliate-link {
       display: inline-block !important;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%) !important;
       color: white !important;
       padding: 0.5rem 1rem !important;
       border-radius: 5px !important;
@@ -299,7 +325,7 @@
 
     .features-section .affiliate-link:hover {
       transform: translateY(-2px) !important;
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4) !important;
+      box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4) !important;
     }
 
     .features-section .discount-code {
@@ -372,8 +398,10 @@
     <nav>
       <div class="nav-container">
         <div class="logo-container">
-          <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
-          <h1 class="logo">Plebtools</h1>
+          <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+            <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+            <h1 class="logo">Plebtools</h1>
+          </a>
         </div>
         <div class="nav-links">
           <div class="dropdown" id="toolsDropdown">
@@ -388,6 +416,7 @@
               <a href="financial-planner">📋 Financial Planner</a>
               <a href="bitcoin-security">🛡️ Bitcoin Security</a>
               <a href="bitcoin-storage">🏛️ Bitcoin Storage</a>
+              <a href="invoice-builder">🧾 Invoice Builder</a>
               <a href="pleb-release">📰 Pleb Release</a>
             </div>
           </div>
@@ -502,17 +531,6 @@ Now Holds</textarea>
       <h2 class="section-title">Want to buy and secure your Bitcoin?</h2>
       <div style="text-align: center;">
         <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
-        <div id="brave-warning" class="brave-warning">
-            <strong>⚠️ Brave Browser Detected:</strong> Some affiliate links may be blocked. 
-            <button onclick="showBraveInstructions()">Show Instructions</button>
-        </div>
-        <div id="brave-instructions" class="brave-instructions">
-            <strong>How to enable affiliate links in Brave:</strong><br>
-            1. Click the Brave shield icon (🛡️) in your address bar<br>
-            2. Toggle "Shields" to "Down" for this site<br>
-            3. Refresh the page<br>
-            <em>Or right-click any link and select "Open in new tab"</em>
-        </div>
         <div class="affiliate-links">
             <div class="affiliate-item">
               <h4>Where to buy</h4>
@@ -534,7 +552,7 @@ Now Holds</textarea>
             </div>
             <div class="affiliate-item">
               <h4>1:1 Coaching</h4>
-              <a href="https://www.differentmedia.ca/bitcoin1-1" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+              <a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
             </div>
             <div class="affiliate-item">
               <h4>Where to learn</h4>
@@ -549,6 +567,17 @@ Now Holds</textarea>
               <a href="https://coinos.io/plebtools" target="_blank" class="affiliate-link">Donate</a>
             </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Open Source Section -->
+  <section class="features-section">
+    <div class="container">
+      <h2 class="section-title">Open Source</h2>
+      <div style="text-align: center;">
+        <p style="margin-bottom: 1rem; color: #000;">This pleb release tool is free and open source and can be replicated for anyone to create their own Bitcoin press releases.</p>
+        <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" style="background: #28a745; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; display: inline-block; font-weight: bold; transition: all 0.3s ease;">View on GitHub</a>
       </div>
     </div>
   </section>
@@ -915,6 +944,8 @@ Now Holds</textarea>
     });
 
     // Brave browser detection and affiliate link handling
+    // Commented out - Brave warning removed per user request
+    /*
     function isBraveBrowser() {
         return (navigator.brave && typeof navigator.brave.isBrave === 'function') ||
                (window.chrome && window.chrome.runtime && window.chrome.runtime.onConnect);
@@ -929,6 +960,7 @@ Now Holds</textarea>
     if (isBraveBrowser()) {
         document.getElementById('brave-warning').style.display = 'block';
     }
+    */
 
     // Add click handlers to affiliate links for better UX
     document.addEventListener('DOMContentLoaded', function() {
