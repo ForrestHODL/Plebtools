@@ -40,22 +40,27 @@
             text-align: center;
             margin-bottom: 3rem;
             padding: 2rem 0;
-            background: linear-gradient(135deg, #f7931a 0%, #ff6b35 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: white;
-            border-radius: 20px;
+            border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #333;
+            position: relative;
         }
 
         .calculator-title {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: bold;
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background: -webkit-linear-gradient(45deg, #f59e0b, #fbbf24, #fde68a);
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
         }
 
         .calculator-description {
             font-size: 1.2rem;
-            opacity: 0.9;
+            color: #ccc;
             max-width: 800px;
             margin: 0 auto;
         }
@@ -212,6 +217,7 @@
             text-align: left;
             border-bottom: 1px solid #e0e0e0;
             font-size: 0.9rem;
+            color: #000;
         }
 
         .table th {
@@ -297,9 +303,22 @@
             }
         }
 
+        /* Keep logo purple */
+        .logo {
+            color: #667eea !important;
+        }
+
+        #toolsBtn {
+            color: white !important;
+        }
+
         /* Dark theme support */
         .dark-theme .calculator-container {
             background: #2d2d2d;
+        }
+
+        .dark-theme .calculator-header {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
         }
 
         /* Force affiliate styling to work */
@@ -332,7 +351,7 @@
 
         .features-section .affiliate-link {
             display: inline-block !important;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%) !important;
             color: white !important;
             padding: 0.5rem 1rem !important;
             border-radius: 5px !important;
@@ -343,7 +362,7 @@
 
         .features-section .affiliate-link:hover {
             transform: translateY(-2px) !important;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4) !important;
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4) !important;
         }
 
         .features-section .discount-code {
@@ -426,6 +445,15 @@
             color: #ccc;
         }
 
+        /* Open Source section dark theme */
+        .dark-theme .totals-section h3 {
+            color: #e0e0e0 !important;
+        }
+
+        .dark-theme .totals-section p {
+            color: white !important;
+        }
+
 
         .control-input[readonly] {
             background-color: #f8f9fa;
@@ -493,13 +521,13 @@
         .dark-theme .visualization-panel h3,
         .dark-theme .chart-section h3,
         .dark-theme .raw-data-section h3 {
-            color: #e0e0e0;
+            color: #e0e0e0 !important;
         }
 
         .dark-theme .visualization-panel p,
         .dark-theme .chart-section p,
         .dark-theme .raw-data-section p {
-            color: #ccc;
+            color: #ccc !important;
         }
 
         /* Dark theme overrides for controls panel */
@@ -516,8 +544,10 @@
         <nav>
             <div class="nav-container">
                 <div class="logo-container">
-                    <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
-                    <h1 class="logo">Plebtools</h1>
+                    <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+                        <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+                        <h1 class="logo">Plebtools</h1>
+                    </a>
                 </div>
                 <div class="nav-links">
                 <div class="dropdown" id="toolsDropdown">
@@ -531,6 +561,7 @@
                         <a href="financial-planner">📋 Financial Planner</a>
                         <a href="bitcoin-security">🛡️ Bitcoin Security</a>
                         <a href="bitcoin-storage">🏛️ Bitcoin Storage</a>
+                        <a href="invoice-builder">🧾 Invoice Builder</a>
                         <a href="pleb-release">📰 Pleb Release</a>
                     </div>
                 </div>
@@ -630,8 +661,8 @@
 
                     <!-- Chart Section -->
                     <div class="chart-section">
-                        <h3 style="margin-bottom: 1rem;">Loan Analysis Chart</h3>
-                        <p style="margin-bottom: 1.5rem; font-size: 0.9rem;">
+                        <h3 style="margin-bottom: 1rem; color: #000;">Loan Analysis Chart</h3>
+                        <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: #000;">
                             Track your loan amount growth, LTV ratio, and liquidation risk over time
                         </p>
 
@@ -711,7 +742,7 @@
                                     </div>
                                     <div class="affiliate-item">
                                         <h4>1:1 Coaching</h4>
-                                        <a href="https://www.differentmedia.ca/bitcoin1-1" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+                                        <a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
                                     </div>
                                     <div class="affiliate-item">
                                         <h4>Where to learn</h4>
@@ -727,6 +758,17 @@
                                     </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Open Source Section -->
+            <div class="totals-section">
+                <h3 style="text-align: center; color: #000;">Open Source</h3>
+                <div class="totals-display">
+                    <div style="text-align: center;">
+                        <p style="color: #000;">This Bitcoin loan LTV calculator is free and open source and can be replicated for anyone to analyze their own Bitcoin-backed loans.</p>
+                        <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" style="background: #28a745; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; display: inline-block; font-weight: bold; transition: all 0.3s ease; margin-top: 1rem;">View on GitHub</a>
                     </div>
                 </div>
             </div>
@@ -1121,6 +1163,10 @@
                 document.body.classList.remove("dark-theme");
                 themeToggle.textContent = "🌙";
                 localStorage.setItem("theme", "light");
+            }
+            // Re-draw chart with new theme colors
+            if (calculationResults && calculationResults.length > 0) {
+                updateChart();
             }
         });
 

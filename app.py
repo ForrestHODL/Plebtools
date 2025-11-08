@@ -674,6 +674,14 @@ def financial_planner_html():
 def pleb_release():
     return send_from_directory('.', 'pleb-release.html')
 
+@app.route('/invoice-builder')
+def invoice_builder():
+    return send_from_directory('.', 'invoice-builder.html')
+
+@app.route('/invoice-builder.html')
+def invoice_builder_html():
+    return send_from_directory('.', 'invoice-builder.html')
+
 @app.route('/bitcoin-security')
 def bitcoin_security():
     return send_from_directory('.', 'bitcoin-security.html')

@@ -29,6 +29,12 @@
             transform: translateY(-5px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
+
+        /* Dark theme for card */
+        .dark-theme .card {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a2e 100%);
+            border-color: #555;
+        }
         
         .number-animation {
             font-weight: 900;
@@ -107,11 +113,6 @@
         }
         
         /* Dark theme adjustments */
-        .dark-theme .card {
-            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a2e 100%);
-            border-color: #555;
-        }
-        
         .dark-theme .comparison-card {
             background: linear-gradient(135deg, #3d3d3d 0%, #2a2a2e 100%);
             border-color: #666;
@@ -129,17 +130,83 @@
         .dark-theme .key-display {
             background: rgba(0, 0, 0, 0.5);
         }
+
+        /* Light theme - make backgrounds light */
+        body:not(.dark-theme) .card {
+            background: #ffffff !important;
+            border-color: #dee2e6 !important;
+        }
+
+        body:not(.dark-theme) .security-section {
+            background: #ffffff !important;
+            border-color: #dee2e6 !important;
+        }
+
+        body:not(.dark-theme) .comparison-card {
+            background: #f8f9fa !important;
+            border-color: #dee2e6 !important;
+        }
+
+        body:not(.dark-theme) .simulation-container {
+            background: #ffffff !important;
+        }
+
+        /* Open Source and affiliate section text colors - white for both themes */
+        .planner-section h3 {
+            color: #fff !important;
+        }
+
+        .planner-section p {
+            color: #fff !important;
+        }
+
+        h3 {
+            color: #fff !important;
+        }
+
+        /* Light theme - make gray text black */
+        body:not(.dark-theme) .security-section {
+            color: #000 !important;
+        }
+
+        body:not(.dark-theme) .security-section h3 {
+            color: #f59e0b !important;
+        }
+
+        body:not(.dark-theme) .security-section p {
+            color: #000 !important;
+        }
+
+        body:not(.dark-theme) p {
+            color: #000 !important;
+        }
+
+        body:not(.dark-theme) .stat-label {
+            color: #000 !important;
+        }
+
+        body:not(.dark-theme) .key-display {
+            color: #000 !important;
+        }
+
+        /* Make gray text black in light theme */
+        body:not(.dark-theme) p[style*="color: #888"],
+        body:not(.dark-theme) p[style*="color: #ccc"] {
+            color: #000 !important;
+        }
     </style>
 </head>
 <body>
     <!-- Header -->
     <header>
         <nav>
-            <div class="nav-container">
-                <div class="logo-container">
-                    <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
-                    <h1 class="logo">Plebtools</h1>
-                </div>
+      <div class="nav-container">
+        <div class="logo-container">
+          <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+            <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+            <h1 class="logo">Plebtools</h1>
+          </a>
+        </div>
                 <div class="nav-links">
                     <div class="dropdown" id="toolsDropdown">
                         <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
@@ -153,6 +220,7 @@
                             <a href="btc-loan-ltv">🔒 BTC Loans</a>
                             <a href="financial-planner">📋 Financial Planner</a>
                             <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+                            <a href="invoice-builder">🧾 Invoice Builder</a>
                             <a href="bitcoin-storage">🏛️ Bitcoin Storage</a>
                             <a href="pleb-release">📰 Pleb Release</a>
                         </div>
@@ -234,23 +302,12 @@
                 <div class="totals-display">
                     <div style="text-align: center;">
                         <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
-                        <div id="brave-warning" class="brave-warning">
-                            <strong>⚠️ Brave Browser Detected:</strong> Some affiliate links may be blocked. 
-                            <button onclick="showBraveInstructions()">Show Instructions</button>
-                        </div>
-                        <div id="brave-instructions" class="brave-instructions">
-                            <strong>How to enable affiliate links in Brave:</strong><br>
-                            1. Click the Brave shield icon (🛡️) in your address bar<br>
-                            2. Toggle "Shields" to "Down" for this site<br>
-                            3. Refresh the page<br>
-                            <em>Or right-click any link and select "Open in new tab"</em>
-                        </div>
                         <div class="affiliate-links">
                             <div class="affiliate-item"><h4>Where to buy</h4><a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" class="affiliate-link">Bitcoin Well</a></div>
                             <div class="affiliate-item"><h4>Where to store</h4><a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a></div>
                             <div class="affiliate-item"><h4>How to protect</h4><a href="https://www.stampseed.com/" target="_blank" class="affiliate-link">Stamp Seed</a><p class="discount-code">USE CODE: BTCNOTCRYPTO15 for 15% off</p></div>
                             <div class="affiliate-item"><h4>How to validate</h4><a href="https://store.start9.com/" target="_blank" class="affiliate-link">Start9</a><p class="discount-code">CODE: BNC5 for 5% off</p></div>
-                            <div class="affiliate-item"><h4>1:1 Coaching</h4><a href="https://www.differentmedia.ca/bitcoin1-1" target="_blank" class="affiliate-link">Bitcoin 1:1</a></div>
+                            <div class="affiliate-item"><h4>1:1 Coaching</h4><a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a></div>
                             <div class="affiliate-item"><h4>Where to learn</h4><a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a></div>
                             <div class="affiliate-item"><h4>Earn free BTC</h4><a href="https://satsarcade.app/" target="_blank" class="affiliate-link">Sats Arcade</a></div>
                             <div class="affiliate-item"><h4>How to support</h4><a href="https://coinos.io/plebtools" target="_blank" class="affiliate-link">Donate</a></div>
@@ -260,14 +317,14 @@
             </div>
 
             <!-- Open Source Section -->
-            <div class="feature-card">
-                <span class="feature-icon">🚀</span>
-                <h3 class="feature-title">Open Source</h3>
-                <p class="feature-description">
-                    Free and open source tools that you can customize, deploy, 
-                    and contribute to. Built by the community, for the community.
-                </p>
-                <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" class="feature-btn">View on GitHub</a>
+            <div class="planner-section">
+                <h3 style="text-align: center;">Open Source</h3>
+                <div class="totals-display">
+                    <div style="text-align: center;">
+                        <p>This Bitcoin security checker is free and open source and can be replicated for anyone to verify their own Bitcoin security.</p>
+                        <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" style="background: #28a745; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; display: inline-block; font-weight: bold; transition: all 0.3s ease; margin-top: 1rem;">View on GitHub</a>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -419,6 +476,8 @@
         });
 
         // Brave browser detection and affiliate link handling
+        // Commented out - Brave warning removed per user request
+        /*
         function isBraveBrowser() {
             return (navigator.brave && typeof navigator.brave.isBrave === 'function') ||
                    (window.chrome && window.chrome.runtime && window.chrome.runtime.onConnect);
@@ -433,6 +492,7 @@
         if (isBraveBrowser()) {
             document.getElementById('brave-warning').style.display = 'block';
         }
+        */
 
         // Add click handlers to affiliate links for better UX
         document.addEventListener('DOMContentLoaded', function() {

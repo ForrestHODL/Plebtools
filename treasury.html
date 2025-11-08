@@ -12,6 +12,106 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <style>
+    /* Bitcoin Storage Theme for Header */
+    .gradient-text {
+      background: -webkit-linear-gradient(45deg, #f59e0b, #fbbf24, #fde68a);
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
+    }
+
+    .storage-section {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+      border: 1px solid #333;
+      position: relative;
+    }
+
+    /* Dark Theme for Body Background */
+    body {
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+      min-height: 100vh;
+    }
+
+    /* Light Theme */
+    body.light-theme {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+
+    body.light-theme .tracker-container {
+      background: transparent;
+    }
+
+    body.light-theme .storage-section {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      border: 1px solid #dee2e6;
+    }
+
+    body.light-theme .storage-section p {
+      color: #6c757d;
+    }
+
+    /* Light Theme Text Colors */
+    body.light-theme h1,
+    body.light-theme h2,
+    body.light-theme h3,
+    body.light-theme h4,
+    body.light-theme h5,
+    body.light-theme h6,
+    body.light-theme p,
+    body.light-theme span,
+    body.light-theme div,
+    body.light-theme td,
+    body.light-theme th,
+    body.light-theme li,
+    body.light-theme label {
+      color: #212529 !important;
+    }
+
+    body.light-theme .totals-section,
+    body.light-theme .table-section,
+    body.light-theme .chart-section,
+    body.light-theme .tracker-form,
+    body.light-theme .proof-of-reserves-section {
+      background: #ffffff;
+      border: 1px solid #dee2e6;
+      color: #212529;
+    }
+
+    body.light-theme .tracker-table td {
+      color: #212529 !important;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    body.light-theme .totals-display,
+    body.light-theme .empty-state {
+      color: #212529 !important;
+    }
+
+    body.light-theme .form-group input {
+      background: #ffffff;
+      border: 2px solid #dee2e6;
+      color: #212529;
+    }
+
+    body.light-theme .wallet-item {
+      background: #ffffff;
+      border: 1px solid #dee2e6;
+    }
+
+    body.light-theme .wallet-address {
+      color: #495057 !important;
+    }
+
+    body.light-theme .affiliate-item {
+      background: #ffffff;
+      border: 1px solid #dee2e6;
+    }
+  </style>
+  
+  <style>
     /* Modern dropdown styles */
     #toolsDropdown {
       position: relative;
@@ -21,7 +121,7 @@
     #toolsBtn {
       background: none;
       border: none;
-      color: #333;
+      color: black;
       font-weight: 500;
       font-size: 1rem;
       cursor: pointer;
@@ -33,31 +133,31 @@
       gap: 0.5rem;
     }
     
+    .dropdown-arrow {
+      font-size: 0.8rem;
+      transition: transform 0.3s ease;
+      color: inherit;
+    }
+    
     .dark-theme #toolsBtn {
-      color: #e0e0e0 !important;
+      color: white;
     }
     
     #toolsBtn:hover {
       background: rgba(102, 126, 234, 0.1);
-      color: #667eea;
-    }
-    
-    .dropdown-arrow {
-      font-size: 0.8rem;
-      transition: transform 0.3s ease;
     }
     
     #toolsContent {
       position: absolute;
       top: 100%;
       right: 0;
-      background: white;
+      background: white !important;
       min-width: 220px;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
       border-radius: 12px;
       z-index: 1001;
       padding: 0.75rem 0;
-      border: 1px solid rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(0, 0, 0, 0.08) !important;
       backdrop-filter: blur(10px);
       margin-top: 8px;
       opacity: 0;
@@ -73,7 +173,7 @@
     #toolsContent a {
       display: block;
       padding: 0.875rem 1.5rem;
-      color: #333;
+      color: #333 !important;
       text-decoration: none;
       transition: all 0.3s ease;
       font-weight: 500;
@@ -82,12 +182,12 @@
     }
     
     .dark-theme #toolsContent a {
-      color: #e0e0e0 !important;
+      color: #333 !important;
     }
     
     #toolsContent a:hover {
       background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-      color: #667eea;
+      color: #667eea !important;
       transform: translateX(8px);
     }
     
@@ -100,13 +200,31 @@
     }
     
     .dark-theme #toolsContent {
-      background: #2d2d2d !important;
-      border-color: #555 !important;
+      background: white !important;
+      border-color: rgba(0, 0, 0, 0.08) !important;
     }
     
     .dark-theme #toolsContent a:hover {
-      background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%) !important;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%) !important;
       color: #667eea !important;
+    }
+
+    .account-link {
+      color: white;
+      text-decoration: none;
+    }
+
+    .account-link:hover {
+      color: white;
+      opacity: 0.8;
+    }
+
+    .dark-theme .account-link {
+      color: white !important;
+    }
+
+    .dark-theme .account-link:hover {
+      color: white !important;
     }
   </style>
   
@@ -116,7 +234,7 @@
       max-width: 1000px;
       margin: 0 auto;
       padding: 120px 20px 80px;
-      background: white;
+      background: transparent;
       min-height: 100vh;
     }
 
@@ -251,8 +369,8 @@
     }
 
     .tracker-table th {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: #1a1a1a !important;
       padding: 15px;
       text-align: center;
       font-weight: bold;
@@ -262,6 +380,7 @@
       padding: 15px;
       text-align: center;
       border-bottom: 1px solid #e9ecef;
+      color: #212529;
     }
 
     .tracker-table tbody tr:hover {
@@ -561,13 +680,13 @@
     }
 
     .dark-theme .tracker-table th {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: #1a1a1a !important;
     }
 
     .dark-theme .tracker-table td {
       border-bottom: 1px solid #444;
-      color: #e0e0e0;
+      color: #ffffff !important;
     }
 
     .dark-theme .tracker-table tbody tr:hover {
@@ -664,6 +783,26 @@
       }
     }
 
+    /* Light theme - make Tools and Account text black */
+    body.light-theme .dropdown-btn {
+      color: #212529 !important;
+    }
+
+    body.light-theme .dropdown-btn:hover {
+      color: #212529 !important;
+    }
+
+    body.light-theme .dropdown-arrow {
+      color: #212529 !important;
+    }
+
+    body.light-theme .account-link {
+      color: #212529 !important;
+    }
+
+    body.light-theme .account-link:hover {
+      color: #212529 !important;
+    }
   </style>
 </head>
 <body>
@@ -671,8 +810,10 @@
     <nav>
       <div class="nav-container">
         <div class="logo-container">
-          <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
-          <h1 class="logo">Plebtools</h1>
+          <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+            <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+            <h1 class="logo">Plebtools</h1>
+          </a>
         </div>
         <div class="nav-links">
           <div class="dropdown" id="toolsDropdown">
@@ -686,6 +827,7 @@
               <a href="financial-planner">📋 Financial Planner</a>
               <a href="bitcoin-security">🛡️ Bitcoin Security</a>
               <a href="bitcoin-storage">🏛️ Bitcoin Storage</a>
+              <a href="invoice-builder">🧾 Invoice Builder</a>
               <a href="pleb-release">📰 Pleb Release</a>
             </div>
           </div>
@@ -697,11 +839,13 @@
 
   <main>
     <div class="tracker-container">
-      <div class="tracker-header">
-        <h1>Plebtools Treasury</h1>
-        <p>Bitcoin Treasury Holdings</p>
-        <button id="themeToggle" class="theme-toggle-btn">🌙</button>
-      </div>
+      <section class="storage-section">
+        <h1 class="gradient-text" style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">Plebtools Treasury</h1>
+        <p style="text-align: center; font-size: 1.2rem; color: #ccc; max-width: 800px; margin: 0 auto;">
+          Bitcoin Treasury Holdings
+        </p>
+        <button id="themeToggle" class="theme-toggle-btn" style="position: absolute; top: 20px; right: 20px;">🌙</button>
+      </section>
 
       <div class="totals-section">
         <h3>Portfolio Summary</h3>
@@ -799,17 +943,6 @@
         <div class="totals-display">
           <div style="text-align: center;">
             <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
-            <div id="brave-warning" class="brave-warning">
-                <strong>⚠️ Brave Browser Detected:</strong> Some affiliate links may be blocked. 
-                <button onclick="showBraveInstructions()">Show Instructions</button>
-            </div>
-            <div id="brave-instructions" class="brave-instructions">
-                <strong>How to enable affiliate links in Brave:</strong><br>
-                1. Click the Brave shield icon (🛡️) in your address bar<br>
-                2. Toggle "Shields" to "Down" for this site<br>
-                3. Refresh the page<br>
-                <em>Or right-click any link and select "Open in new tab"</em>
-            </div>
             <div class="affiliate-links">
               <div class="affiliate-item">
                 <h4>Where to buy</h4>
@@ -831,7 +964,7 @@
               </div>
                <div class="affiliate-item">
                  <h4>1:1 Coaching</h4>
-                 <a href="https://www.differentmedia.ca/bitcoin1-1" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+                 <a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
                </div>
                <div class="affiliate-item">
                  <h4>Where to learn</h4>
@@ -873,6 +1006,27 @@
   <script>
     // Bitcoin Well transaction data (pre-loaded)
     const bitcoinWellData = [
+      {
+        date: "2025-11-03",
+        btcAmount: 0.00065055, // 65,055 sats converted to BTC
+        priceUsd: 153714.00,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
+      {
+        date: "2025-10-27",
+        btcAmount: 0.00061323, // 61,323 sats converted to BTC
+        priceUsd: 163068.99,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
+      {
+        date: "2025-10-20",
+        btcAmount: 0.00066852, // 66,852 sats converted to BTC
+        priceUsd: 149582.26,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
       {
         date: "2025-10-13",
         btcAmount: 0.00061321, // 61,321 sats converted to BTC
@@ -1199,7 +1353,50 @@
         date: "2025-10-09",
         amount: 0.00000021, // 21 sats converted to BTC
         description: "Lightning donation - 21 sats"
-      }
+      },
+      { date: "2025-10-26", amount: 0.00000010, description: "Lightning donation - 10 sats" },
+      { date: "2025-10-25", amount: 0.00000011, description: "Lightning donation - 11 sats" },
+      { date: "2025-10-25", amount: 0.00000042, description: "Lightning donation - 42 sats" },
+      { date: "2025-10-25", amount: 0.00000042, description: "Lightning donation - 42 sats" },
+      { date: "2025-10-25", amount: 0.00000025, description: "Lightning donation - 25 sats" },
+      { date: "2025-10-25", amount: 0.00000021, description: "Lightning donation - 21 sats" },
+      { date: "2025-10-23", amount: 0.00000021, description: "Lightning donation - 21 sats" },
+      { date: "2025-10-23", amount: 0.00000050, description: "Lightning donation - 50 sats" },
+      { date: "2025-10-23", amount: 0.00000050, description: "Lightning donation - 50 sats" },
+      { date: "2025-10-23", amount: 0.00000050, description: "Lightning donation - 50 sats" },
+      { date: "2025-10-23", amount: 0.00000050, description: "Lightning donation - 50 sats" },
+      { date: "2025-10-23", amount: 0.00000050, description: "Lightning donation - 50 sats" },
+      { date: "2025-10-23", amount: 0.00000050, description: "Lightning donation - 50 sats" },
+      { date: "2025-10-23", amount: 0.00000050, description: "Lightning donation - 50 sats" },
+      { date: "2025-10-23", amount: 0.00000010, description: "Lightning donation - 10 sats" },
+      { date: "2025-10-23", amount: 0.00000001, description: "Lightning donation - 1 sat" },
+      { date: "2025-10-23", amount: 0.00000020, description: "Lightning donation - 20 sats" },
+      { date: "2025-10-23", amount: 0.00000008, description: "Lightning donation - 8 sats" },
+      { date: "2025-10-23", amount: 0.00000010, description: "Lightning donation - 10 sats" },
+      { date: "2025-10-23", amount: 0.00000033, description: "Lightning donation - 33 sats" },
+      { date: "2025-10-23", amount: 0.00000005, description: "Lightning donation - 5 sats" },
+      { date: "2025-10-22", amount: 0.00000021, description: "Lightning donation - 21 sats" },
+      { date: "2025-10-22", amount: 0.00000008, description: "Lightning donation - 8 sats" },
+      { date: "2025-10-22", amount: 0.00000025, description: "Lightning donation - 25 sats" },
+      { date: "2025-10-21", amount: 0.00000011, description: "Lightning donation - 11 sats" },
+      { date: "2025-10-21", amount: 0.00000042, description: "Lightning donation - 42 sats" },
+      { date: "2025-10-21", amount: 0.00000007, description: "Lightning donation from OFFGRID - 7 sats" },
+      { date: "2025-10-19", amount: 0.00000021, description: "Lightning donation - 21 sats" },
+      { date: "2025-10-19", amount: 0.00000031, description: "Lightning donation - 31 sats" },
+      { date: "2025-10-18", amount: 0.00000020, description: "Lightning donation - 20 sats" },
+      { date: "2025-10-18", amount: 0.00000023, description: "Lightning donation - 23 sats" },
+      { date: "2025-10-18", amount: 0.00000021, description: "Lightning donation - 21 sats" },
+      { date: "2025-10-18", amount: 0.00000021, description: "Lightning donation - 21 sats" },
+      { date: "2025-10-18", amount: 0.00000020, description: "Lightning donation - 20 sats" },
+      { date: "2025-10-17", amount: 0.00000001, description: "Lightning donation - 1 sat" },
+      { date: "2025-10-16", amount: 0.00000008, description: "Lightning donation - 8 sats" },
+      { date: "2025-10-15", amount: 0.00000021, description: "Lightning donation - 21 sats" },
+      { date: "2025-10-15", amount: 0.00000001, description: "Lightning donation - 1 sat" },
+      { date: "2025-10-14", amount: 0.00000018, description: "Lightning donation - 18 sats" },
+      { date: "2025-10-14", amount: 0.00000021, description: "Lightning donation - 21 sats" },
+      { date: "2025-10-14", amount: 0.00000042, description: "Lightning donation - 42 sats" },
+      { date: "2025-10-14", amount: 0.00000021, description: "Lightning donation - 21 sats" },
+      { date: "2025-10-13", amount: 0.00000010, description: "Lightning donation - 10 sats" }
     ];
 
     // Clear any existing data and force reload with latest Bitcoin Well data
@@ -1209,8 +1406,10 @@
     let buys = bitcoinWellData.map(transaction => ({
       date: transaction.date,
       btcAmount: transaction.btcAmount,
-      priceUsd: transaction.priceUsd
+      priceUsd: transaction.priceUsd,
+      fiatAmount: transaction.fiatAmount
     }));
+    console.log('Loaded buys from bitcoinWellData:', buys);
     localStorage.setItem("buys", JSON.stringify(buys));
 
     const table = document.getElementById("buysTable");
@@ -1415,6 +1614,8 @@
       let historicalPrices = {};
       try {
         historicalPrices = await fetchHistoricalBtcPrices(startDate, endDate);
+        console.log('Historical prices for portfolio chart:', Object.keys(historicalPrices).length, 'days');
+        console.log('October 17 price available:', historicalPrices['2025-10-17'] ? 'YES' : 'NO');
       } catch (error) {
         console.log('Historical price API failed');
         historicalPrices = {};
@@ -1467,12 +1668,21 @@
 
       const purchaseDates = buys.map(buy => buy.date).sort();
       const startDate = purchaseDates.length > 0 ? purchaseDates[0] : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // Default to 30 days ago if no purchases
-      const endDate = new Date().toISOString().split('T')[0];
+      
+      // Extend end date to include latest purchase plus a few days buffer
+      const latestPurchaseDate = purchaseDates.length > 0 ? purchaseDates[purchaseDates.length - 1] : new Date().toISOString().split('T')[0];
+      const today = new Date().toISOString().split('T')[0];
+      const endDate = latestPurchaseDate > today ? latestPurchaseDate : today;
+      
+      // Add a few days buffer to ensure purchase markers are visible
+      const endDateObj = new Date(endDate);
+      endDateObj.setDate(endDateObj.getDate() + 3); // Add 3 days buffer
+      const endDateWithBuffer = endDateObj.toISOString().split('T')[0];
 
-      // Fetch historical Bitcoin prices
+      // Fetch historical Bitcoin prices (use buffered end date to ensure we get recent data)
       let historicalPrices = {};
       try {
-        historicalPrices = await fetchHistoricalBtcPrices(startDate, endDate);
+        historicalPrices = await fetchHistoricalBtcPrices(startDate, endDateWithBuffer);
         console.log('Historical prices fetched:', Object.keys(historicalPrices).length, 'days');
       } catch (error) {
         console.log('Historical price API failed for price chart');
@@ -1482,23 +1692,29 @@
       // Generate daily price data
       const priceData = [];
       const currentDate = new Date(startDate);
-      const endDateObj = new Date(endDate);
+      const endDateObjForLoop = new Date(endDateWithBuffer);
       let hasAnyPriceData = false;
 
-      while (currentDate <= endDateObj) {
+      while (currentDate <= endDateObjForLoop) {
         const dateStr = currentDate.toISOString().split('T')[0];
         
         let priceForThisDate;
-        if (dateStr === endDate && currentBtcPriceCAD) {
+        if (dateStr === today && currentBtcPriceCAD) {
           priceForThisDate = currentBtcPriceCAD;
           hasAnyPriceData = true;
         } else if (historicalPrices[dateStr]) {
           priceForThisDate = historicalPrices[dateStr];
           hasAnyPriceData = true;
         } else {
-          // Skip dates without price data
-          currentDate.setDate(currentDate.getDate() + 1);
-          continue;
+          // For future dates or dates without price data, use the latest available price or current price
+          if (dateStr > today && currentBtcPriceCAD) {
+            priceForThisDate = currentBtcPriceCAD;
+            hasAnyPriceData = true;
+          } else {
+            // Skip dates without price data
+            currentDate.setDate(currentDate.getDate() + 1);
+            continue;
+          }
         }
 
         priceData.push({
@@ -1509,18 +1725,39 @@
         currentDate.setDate(currentDate.getDate() + 1);
       }
 
+      // Ensure all purchase dates are included in priceData (add missing dates with purchase price)
+      buys.forEach(buy => {
+        const hasDate = priceData.find(p => p.date === buy.date);
+        if (!hasDate) {
+          // Add the purchase date even if we don't have historical price data for it
+          // Use the purchase price from the transaction
+          priceData.push({
+            date: buy.date,
+            price: buy.priceUsd
+          });
+        }
+      });
+
+      // Sort priceData by date to ensure proper ordering
+      priceData.sort((a, b) => new Date(a.date) - new Date(b.date));
 
       // Create purchase markers - position them on the actual Bitcoin price line for that date
       const purchaseMarkers = [];
       buys.forEach(buy => {
         // Find the actual Bitcoin price on the purchase date
         let actualPriceOnPurchaseDate;
-        if (buy.date === endDate && currentBtcPriceCAD) {
-          actualPriceOnPurchaseDate = currentBtcPriceCAD;
+        
+        // Check if we have price data for this date in our priceData array (most reliable)
+        const priceDataPoint = priceData.find(p => p.date === buy.date);
+        if (priceDataPoint) {
+          actualPriceOnPurchaseDate = priceDataPoint.price;
         } else if (historicalPrices[buy.date]) {
           actualPriceOnPurchaseDate = historicalPrices[buy.date];
+        } else if (buy.date === today && currentBtcPriceCAD) {
+          // For today's purchase, use current price
+          actualPriceOnPurchaseDate = currentBtcPriceCAD;
         } else {
-          // Fallback to purchase price if no historical data
+          // Fallback to purchase price from transaction data
           actualPriceOnPurchaseDate = buy.priceUsd;
         }
         
@@ -1535,26 +1772,43 @@
       return { priceData, purchaseMarkers };
     }
 
-    // Generate donations chart
+    // Generate donations chart - group by day
     function generateDonationsChart() {
       if (donationsData.length === 0) {
         return null;
       }
 
-      // Sort donations by date
-      const sortedDonations = [...donationsData].sort((a, b) => new Date(a.date) - new Date(b.date));
+      // Group donations by date
+      const donationsByDate = {};
       
-      // Calculate cumulative donations
+      donationsData.forEach(donation => {
+        if (!donationsByDate[donation.date]) {
+          donationsByDate[donation.date] = {
+            date: donation.date,
+            amount: 0,
+            count: 0,
+            description: `Lightning donations - ${donation.date}`
+          };
+        }
+        donationsByDate[donation.date].amount += donation.amount;
+        donationsByDate[donation.date].count += 1;
+      });
+
+      // Sort by date and calculate cumulative
+      const sortedDates = Object.keys(donationsByDate).sort((a, b) => new Date(a) - new Date(b));
       const cumulativeData = [];
       let cumulativeAmount = 0;
       
-      sortedDonations.forEach(donation => {
-        cumulativeAmount += donation.amount;
+      sortedDates.forEach(date => {
+        const dayTotal = donationsByDate[date];
+        cumulativeAmount += dayTotal.amount;
+        const sats = Math.round(dayTotal.amount * 100000000);
         cumulativeData.push({
-          date: donation.date,
-          amount: donation.amount,
+          date: date,
+          amount: dayTotal.amount,
+          count: dayTotal.count,
           cumulative: cumulativeAmount,
-          description: donation.description
+          description: `${dayTotal.count} donation(s) - ${sats.toLocaleString()} sats total`
         });
       });
 
@@ -1564,7 +1818,7 @@
     async function updateDisplay() {
       // Update table
       table.innerHTML = "";
-      let totalBtc = 0, totalUsd = 0;
+      let totalBtc = 0, totalCad = 0;
       
       if (buys.length === 0) {
         table.innerHTML = `<tr><td colspan="4" class="empty-state"><p>No purchases recorded yet</p></td></tr>`;
@@ -1580,25 +1834,25 @@
 
       buys.forEach(buy => {
         totalBtc += buy.btcAmount;
-        totalUsd += buy.btcAmount * buy.priceUsd;
+        totalCad += buy.fiatAmount || (buy.btcAmount * buy.priceUsd); // Use fiatAmount if available
         const sats = Math.round(buy.btcAmount * 100000000);
         const row = `<tr>
           <td>${buy.date}</td>
           <td>${buy.btcAmount.toFixed(8)}<br><small style="color: #666;">(${sats.toLocaleString()} sats)</small></td>
           <td>$${buy.priceUsd.toFixed(2)}</td>
-          <td>$${(buy.btcAmount * buy.priceUsd).toFixed(2)}</td>
+          <td>$${(buy.fiatAmount || (buy.btcAmount * buy.priceUsd)).toFixed(2)}</td>
         </tr>`;
         table.innerHTML += row;
       });
       
-      const avgPrice = totalBtc ? (totalUsd / totalBtc) : 0;
+      const avgPrice = totalBtc ? (totalCad / totalBtc) : 0;
       const totalSats = Math.round(totalBtc * 100000000); // Convert BTC to sats
       const currentCadValue = currentBtcPriceCAD ? totalBtc * currentBtcPriceCAD : null;
       const currentCadValueDisplay = currentCadValue ? `$${currentCadValue.toFixed(2)}` : 'N/A';
       totalsDiv.innerHTML = `
         <div class="totals-display">
           <div><span class="totals-highlight">Total BTC:</span> ${totalBtc.toFixed(8)} (${totalSats.toLocaleString()} sats)</div>
-          <div><span class="totals-highlight">Total CAD Invested:</span> $${totalUsd.toFixed(2)}</div>
+          <div><span class="totals-highlight">Total CAD Invested:</span> $${totalCad.toFixed(2)}</div>
           <div><span class="totals-highlight">Current CAD Value:</span> ${currentCadValueDisplay}</div>
           <div><span class="totals-highlight">Average Buy Price:</span> $${avgPrice.toFixed(2)}</div>
         </div>
@@ -1612,12 +1866,12 @@
       const currentCadValueWithDonationsDisplay = currentCadValueWithDonations ? `$${currentCadValueWithDonations.toFixed(2)}` : 'N/A';
       
       // Calculate profit/loss (donations count as $0 cost)
-      const profitLoss = currentCadValueWithDonations ? currentCadValueWithDonations - totalUsd : null;
+      const profitLoss = currentCadValueWithDonations ? currentCadValueWithDonations - totalCad : null;
       const profitLossDisplay = profitLoss !== null ? (profitLoss >= 0 ? `+$${profitLoss.toFixed(2)}` : `-$${Math.abs(profitLoss).toFixed(2)}`) : 'N/A';
       const profitLossColor = profitLoss !== null ? (profitLoss >= 0 ? '#28a745' : '#dc3545') : '#666';
       
       // Calculate average cost including donations at $0
-      const avgPriceWithDonations = totalBtcWithDonations ? (totalUsd / totalBtcWithDonations) : 0;
+      const avgPriceWithDonations = totalBtcWithDonations ? (totalCad / totalBtcWithDonations) : 0;
 
       if (totalBtcWithDonations === 0) {
         adjustedTotalsDiv.innerHTML = `
@@ -1632,7 +1886,7 @@
             <div><span class="totals-highlight">Total BTC (Purchased + Donated):</span> ${totalBtcWithDonations.toFixed(8)} (${totalSatsWithDonations.toLocaleString()} sats)</div>
             <div><span class="totals-highlight">Purchased BTC:</span> ${totalBtc.toFixed(8)} BTC</div>
             <div><span class="totals-highlight">Donated BTC:</span> ${totalDonations.toFixed(8)} BTC</div>
-            <div><span class="totals-highlight">Total CAD Invested:</span> $${totalUsd.toFixed(2)} (purchases only)</div>
+            <div><span class="totals-highlight">Total CAD Invested:</span> $${totalCad.toFixed(2)} (purchases only)</div>
             <div><span class="totals-highlight">Current CAD Value:</span> ${currentCadValueWithDonationsDisplay}</div>
             <div><span class="totals-highlight">Profit/Loss:</span> <span style="color: ${profitLossColor}; font-weight: bold;">${profitLossDisplay}</span></div>
             <div><span class="totals-highlight">Average Cost (including donations at $0):</span> $${avgPriceWithDonations.toFixed(2)}</div>
@@ -1910,7 +2164,7 @@
             labels: donationLabels,
             datasets: [
               {
-                label: "Individual Donations (BTC)",
+                label: "Daily Donations (BTC)",
                 data: donationAmounts,
                 borderColor: "#28a745",
                 backgroundColor: "rgba(40, 167, 69, 0.1)",
@@ -1976,14 +2230,15 @@
                   label: function(context) {
                     if (context.datasetIndex === 0) {
                       const donation = donationsChartData[context.dataIndex];
+                      const sats = Math.round(donation.amount * 100000000);
                       return [
-                        `Donation: ${donation.amount.toFixed(8)} BTC`,
-                        `Description: ${donation.description}`
+                        `Daily Total: ${donation.amount.toFixed(8)} BTC`,
+                        `${donation.count} donation(s) - ${sats.toLocaleString()} sats`
                       ];
                     } else {
                       const cumulative = context.parsed.y;
                       const sats = Math.round(cumulative * 100000000);
-                      return `Total Donations: ${cumulative.toFixed(8)} BTC (${sats.toLocaleString()} sats)`;
+                      return `Cumulative: ${cumulative.toFixed(8)} BTC (${sats.toLocaleString()} sats)`;
                     }
                   }
                 }
@@ -2153,15 +2408,16 @@
                (window.chrome && window.chrome.runtime && window.chrome.runtime.onConnect);
     }
 
-    function showBraveInstructions() {
-        const instructions = document.getElementById('brave-instructions');
-        instructions.style.display = instructions.style.display === 'none' ? 'block' : 'none';
-    }
+    // Removed - showBraveInstructions function no longer needed
+    // function showBraveInstructions() {
+    //     const instructions = document.getElementById('brave-instructions');
+    //     instructions.style.display = instructions.style.display === 'none' ? 'block' : 'none';
+    // }
 
-    // Show Brave warning if detected
-    if (isBraveBrowser()) {
-        document.getElementById('brave-warning').style.display = 'block';
-    }
+    // Show Brave warning if detected (removed - warning element no longer exists)
+    // if (isBraveBrowser()) {
+    //     document.getElementById('brave-warning').style.display = 'block';
+    // }
 
     // Add click handlers to affiliate links for better UX
     document.addEventListener('DOMContentLoaded', function() {
@@ -2176,6 +2432,22 @@
             });
         });
     });
+
+    // Theme Toggle
+    function toggleTheme() {
+      document.body.classList.toggle('light-theme');
+      const isLight = document.body.classList.contains('light-theme');
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      document.getElementById('themeToggle').textContent = isLight ? '☀️' : '🌙';
+    }
+
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'light') {
+      document.body.classList.add('light-theme');
+      document.getElementById('themeToggle').textContent = '☀️';
+    }
+
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
   </script>
 </body>
 </html>

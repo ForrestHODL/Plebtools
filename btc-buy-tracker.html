@@ -12,6 +12,104 @@
   <meta http-equiv="Expires" content="0">
   
   <style>
+    /* Bitcoin Storage Theme for Header */
+    .gradient-text {
+      background: -webkit-linear-gradient(45deg, #f59e0b, #fbbf24, #fde68a);
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
+    }
+
+    .storage-section {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+      border: 1px solid #333;
+      position: relative;
+    }
+
+    /* Dark Theme for Body Background */
+    body {
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+      min-height: 100vh;
+    }
+
+    /* Light Theme */
+    body.light-theme {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+
+    body.light-theme .tracker-container {
+      background: transparent;
+    }
+
+    body.light-theme .storage-section {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      border: 1px solid #dee2e6;
+    }
+
+    body.light-theme .storage-section p {
+      color: #6c757d;
+    }
+
+    /* Light Theme Text Colors */
+    body.light-theme h1,
+    body.light-theme h2,
+    body.light-theme h3,
+    body.light-theme h4,
+    body.light-theme h5,
+    body.light-theme h6,
+    body.light-theme p,
+    body.light-theme span,
+    body.light-theme div,
+    body.light-theme td,
+    body.light-theme th,
+    body.light-theme li,
+    body.light-theme label {
+      color: #212529 !important;
+    }
+
+    body.light-theme .totals-section,
+    body.light-theme .table-section,
+    body.light-theme .chart-section,
+    body.light-theme .tracker-form,
+    body.light-theme .proof-of-reserves-section {
+      background: #ffffff !important;
+      border: 1px solid #dee2e6;
+      color: #212529;
+    }
+
+    body.light-theme .tracker-table td {
+      color: #212529 !important;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    body.light-theme .totals-display,
+    body.light-theme .empty-state {
+      color: #212529 !important;
+    }
+
+    body.light-theme .form-group input {
+      background: #ffffff;
+      border: 2px solid #dee2e6;
+      color: #212529;
+    }
+
+    body.light-theme .wallet-item {
+      background: #ffffff;
+      border: 1px solid #dee2e6;
+    }
+
+    body.light-theme .wallet-address {
+      color: #495057 !important;
+    }
+
+    body.light-theme .affiliate-item {
+      background: #ffffff;
+      border: 1px solid #dee2e6;
+    }
+
     /* Modern dropdown styles */
     #toolsDropdown {
       position: relative;
@@ -116,39 +214,44 @@
       max-width: 1000px;
       margin: 0 auto;
       padding: 120px 20px 80px;
-      background: white;
+      background: transparent;
       min-height: 100vh;
     }
 
     .tracker-header {
       text-align: center;
       margin-bottom: 3rem;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: #1a1a1a;
       padding: 3rem 2rem;
       border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
       position: relative;
     }
 
     .tracker-header h1 {
       font-size: 2.5rem;
       margin-bottom: 1rem;
-      color: white;
+      color: #1a1a1a;
     }
 
     .tracker-header p {
       font-size: 1.1rem;
       opacity: 0.9;
       margin-bottom: 0;
+      color: #1a1a1a;
     }
 
     .tracker-form {
-      background: #f8f9fa;
+      background: white;
       padding: 2rem;
       border-radius: 15px;
       margin-bottom: 2rem;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      box-shadow: none;
+    }
+
+    body.dark-theme .tracker-form {
+      background: #2d2d2d;
     }
 
     .form-row {
@@ -167,7 +270,7 @@
       display: block;
       margin-bottom: 0.5rem;
       font-weight: bold;
-      color: #333;
+      color: #1a1a1a;
     }
 
     .form-group input {
@@ -203,8 +306,8 @@
     }
 
     .submit-btn {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: #1a1a1a;
       border: none;
       padding: 15px 30px;
       font-size: 1.1rem;
@@ -212,12 +315,13 @@
       border-radius: 10px;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      box-shadow: none;
     }
 
     .submit-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+      box-shadow: none;
+      color: #1a1a1a;
     }
 
     .totals-section {
@@ -225,7 +329,7 @@
       padding: 2rem;
       border-radius: 15px;
       margin-bottom: 2rem;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      box-shadow: none;
       border-left: 5px solid #667eea;
     }
 
@@ -267,8 +371,8 @@
     }
 
     .tracker-table th {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: #1a1a1a !important;
       padding: 15px;
       text-align: center;
       font-weight: bold;
@@ -278,6 +382,7 @@
       padding: 15px;
       text-align: center;
       border-bottom: 1px solid #e9ecef;
+      color: #212529;
     }
 
     .tracker-table tbody tr:hover {
@@ -393,8 +498,8 @@
     }
 
     .add-wallet-btn {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: #1a1a1a;
       border: none;
       padding: 0.75rem 1.5rem;
       border-radius: 8px;
@@ -407,7 +512,8 @@
 
     .add-wallet-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      box-shadow: none;
+      color: #1a1a1a;
     }
 
     .wallet-list {
@@ -640,8 +746,8 @@
     }
 
     .dark-theme .tracker-table th {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: #1a1a1a !important;
     }
 
     .dark-theme .tracker-table td {
@@ -955,6 +1061,7 @@
               <a href="financial-planner">📋 Financial Planner</a>
               <a href="bitcoin-security">🛡️ Bitcoin Security</a>
               <a href="bitcoin-storage">🏛️ Bitcoin Storage</a>
+              <a href="invoice-builder">🧾 Invoice Builder</a>
               <a href="pleb-release">📰 Pleb Release</a>
             </div>
           </div>
@@ -966,20 +1073,20 @@
 
   <main>
     <div class="tracker-container">
-      <div class="tracker-header">
-        <h1>Plebtools BTC Tracker</h1>
-        <p>Track your Bitcoin purchases and portfolio performance</p>
+      <section class="storage-section">
+        <h1 class="gradient-text" style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">Plebtools BTC Tracker</h1>
+        <p style="text-align: center; font-size: 1.2rem; color: #ccc; max-width: 800px; margin: 0 auto;">Track your Bitcoin purchases and portfolio performance</p>
         <div style="position: absolute; top: 20px; left: 120px;">
           <button id="currencyToggle" class="theme-toggle-btn" style="background: rgba(255, 255, 255, 0.2); border: 2px solid rgba(255, 255, 255, 0.3); color: white; font-size: 1rem; width: 80px; height: 50px; border-radius: 10px; cursor: pointer; transition: all 0.3s ease;">USD</button>
         </div>
         <div style="position: absolute; top: 20px; right: 20px;">
           <button id="themeToggle" class="theme-toggle-btn">🌙</button>
         </div>
-      </div>
+      </section>
 
 
       <div class="tracker-form">
-        <h3 style="color: #667eea; margin-bottom: 1.5rem; text-align: center;">Add New Purchase/Sale</h3>
+        <h3 style="color: #1a1a1a; margin-bottom: 1.5rem; text-align: center;">Add New Purchase/Sale</h3>
         <form id="purchaseForm">
           <div class="form-row">
             <div class="form-group">
@@ -1099,17 +1206,6 @@
         <div class="totals-display">
           <div style="text-align: center;">
             <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
-            <div id="brave-warning" class="brave-warning">
-                <strong>⚠️ Brave Browser Detected:</strong> Some affiliate links may be blocked. 
-                <button onclick="showBraveInstructions()">Show Instructions</button>
-            </div>
-            <div id="brave-instructions" class="brave-instructions">
-                <strong>How to enable affiliate links in Brave:</strong><br>
-                1. Click the Brave shield icon (🛡️) in your address bar<br>
-                2. Toggle "Shields" to "Down" for this site<br>
-                3. Refresh the page<br>
-                <em>Or right-click any link and select "Open in new tab"</em>
-            </div>
             <div class="affiliate-links">
               <div class="affiliate-item">
                 <h4>Where to buy</h4>
@@ -1131,7 +1227,7 @@
               </div>
                <div class="affiliate-item">
                  <h4>1:1 Coaching</h4>
-                 <a href="https://www.differentmedia.ca/bitcoin1-1" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+                 <a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
                </div>
                <div class="affiliate-item">
                  <h4>Where to learn</h4>
@@ -1155,7 +1251,7 @@
         <div class="totals-display">
           <div style="text-align: center;">
             <p>This Bitcoin tracker is free and open source and can be replicated for anyone to track their own Bitcoin purchases.</p>
-            <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" class="submit-btn" style="background: #667eea; display: inline-block; margin-top: 1rem;">
+            <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" class="submit-btn" style="background: #28a745; display: inline-block; margin-top: 1rem;">
               View on GitHub
             </a>
           </div>
@@ -2816,10 +2912,10 @@
         instructions.style.display = instructions.style.display === 'none' ? 'block' : 'none';
     }
 
-    // Show Brave warning if detected
-    if (isBraveBrowser()) {
-        document.getElementById('brave-warning').style.display = 'block';
-    }
+    // Show Brave warning if detected (removed - warning element no longer exists)
+    // if (isBraveBrowser()) {
+    //     document.getElementById('brave-warning').style.display = 'block';
+    // }
 
     // Add click handlers to affiliate links for better UX
     document.addEventListener('DOMContentLoaded', function() {

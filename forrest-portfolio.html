@@ -348,8 +348,10 @@
     <nav>
       <div class="nav-container">
         <div class="logo-container">
-          <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
-          <h1 class="logo">Plebtools</h1>
+          <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+            <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+            <h1 class="logo">Plebtools</h1>
+          </a>
         </div>
         <div class="nav-links">
           <div class="dropdown" id="toolsDropdown">
@@ -362,6 +364,7 @@
               <a href="btc-loan-ltv">🔒 BTC Loans</a>
               <a href="financial-planner">📋 Financial Planner</a>
               <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+              <a href="invoice-builder">🧾 Invoice Builder</a>
               <a href="pleb-release">📰 Pleb Release</a>
             </div>
           </div>
@@ -490,7 +493,7 @@
           </div>
           <div class="affiliate-item">
             <h4>1:1 Coaching</h4>
-            <a href="https://www.differentmedia.ca/bitcoin1-1" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+            <a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
           </div>
           <div class="affiliate-item">
             <h4>Where to learn</h4>
@@ -629,6 +632,38 @@
           notes: 'MSTR Nov14\'25 415 Call',
           pnl: 0,
           dateAdded: '2025-10-13T00:00:00.000Z'
+        },
+        // New covered call trade - $2.90 premium
+        {
+          id: 5,
+          tradeType: 'covered-call',
+          symbol: 'MSTR',
+          shares: 100,
+          originalCostBasis: 404.02,
+          newCostBasis: 401.12, // 404.02 - 2.90
+          strikePrice: null, // TBD
+          premium: 290.00, // $2.90 per share × 100 shares
+          expirationDate: '2025-12-01T00:00:00.000Z', // TBD
+          currentPrice: 0,
+          notes: 'MSTR covered call - $2.90 premium',
+          pnl: 0,
+          dateAdded: new Date().toISOString()
+        },
+        // New covered call trade - $6.00 premium
+        {
+          id: 6,
+          tradeType: 'covered-call',
+          symbol: 'MSTR',
+          shares: 100,
+          originalCostBasis: 401.12,
+          newCostBasis: 395.12, // 401.12 - 6.00
+          strikePrice: null, // TBD
+          premium: 600.00, // $6.00 per share × 100 shares
+          expirationDate: '2025-12-15T00:00:00.000Z', // TBD
+          currentPrice: 0,
+          notes: 'MSTR covered call - $6.00 premium',
+          pnl: 0,
+          dateAdded: new Date().toISOString()
         }
       ];
 
