@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Step by Step to Self Custody - Plebtools</title>
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg" />
+  <link rel="stylesheet" href="styles.css?v=5" />
+  <style>
+    :root {
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    body {
+      margin: 0;
+      color: #e5e7eb;
+      background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
+      min-height: 100vh;
+    }
+
+    body.light-theme {
+      color: #14203b;
+      background: #f5f6fb;
+    }
+
+    body.light-theme .hero-section {
+      background: linear-gradient(135deg, #ffffff 0%, #f6f9ff 100%);
+      color: #0f172a;
+    }
+
+    body.light-theme .step-card,
+    body.light-theme .resource-card,
+    body.light-theme .checklist-card,
+    body.light-theme .callout-card,
+    body.light-theme .faq-card {
+      background: #ffffff;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      box-shadow: 0 16px 40px -28px rgba(15, 23, 42, 0.28);
+      color: #1f2937;
+    }
+
+    body.light-theme .step-card h3,
+    body.light-theme .resource-card h3,
+    body.light-theme .checklist-card h3,
+    body.light-theme .faq-card h3 {
+      color: #0f172a;
+    }
+
+    body.light-theme .quiz-question {
+      color: #0f172a;
+    }
+
+    body.light-theme .quiz-choice {
+      background: #f8fafc;
+      border: 1px solid rgba(15, 23, 42, 0.12);
+      color: #0f172a;
+      box-shadow: 0 14px 36px -30px rgba(15, 23, 42, 0.45);
+    }
+
+    body.light-theme .quiz-choice.correct {
+      background: linear-gradient(135deg, #f97316 0%, #fbbf24 100%);
+      color: #0f172a;
+      border-color: rgba(251, 191, 36, 0.65);
+    }
+
+    body.light-theme .quiz-choice.incorrect {
+      background: rgba(248, 113, 113, 0.18);
+      border-color: rgba(239, 68, 68, 0.55);
+      color: #b91c1c;
+    }
+
+    body.light-theme .quiz-feedback {
+      color: rgba(15, 23, 42, 0.7);
+    }
+
+    body.light-theme .quiz-feedback.success {
+      color: #15803d;
+    }
+
+    body.light-theme .quiz-feedback.error {
+      color: #b91c1c;
+    }
+
+    .page {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 120px 24px 80px;
+    }
+
+    .hero-section {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.9) 100%);
+      border-radius: 28px;
+      padding: 56px 48px;
+      margin-bottom: 48px;
+      box-shadow: 0 40px 80px -60px rgba(15, 23, 42, 0.8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-section::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(250, 204, 21, 0.18), transparent 55%),
+        radial-gradient(circle at 80% 30%, rgba(56, 189, 248, 0.16), transparent 60%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(248, 250, 252, 0.08);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      font-size: 0.88rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #facc15;
+      margin-bottom: 20px;
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      margin-bottom: 18px;
+      color: #f8fafc;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: rgba(226, 232, 240, 0.88);
+      max-width: 680px;
+      margin-bottom: 32px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .hero-actions a {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.9rem 1.8rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .primary-action {
+      background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+      color: #0f172a;
+      box-shadow: 0 22px 40px -18px rgba(249, 115, 22, 0.6);
+    }
+
+    .primary-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 30px 60px -24px rgba(249, 115, 22, 0.7);
+    }
+
+    .secondary-action {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: #e0f2fe;
+      box-shadow: 0 18px 48px -36px rgba(14, 165, 233, 0.5);
+    }
+
+    .secondary-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 28px 60px -28px rgba(14, 165, 233, 0.45);
+    }
+
+    .section-title {
+      font-size: 1.9rem;
+      color: #facc15;
+      letter-spacing: 0.01em;
+      margin-bottom: 12px;
+    }
+
+    .section-description {
+      font-size: 1.02rem;
+      color: rgba(226, 232, 240, 0.78);
+      margin-bottom: 28px;
+      max-width: 760px;
+    }
+
+    .step-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .step-card {
+      background: rgba(30, 41, 59, 0.82);
+      border-radius: 18px;
+      padding: 28px 26px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      box-shadow: 0 24px 52px -36px rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(18px);
+      position: relative;
+    }
+
+    .step-card.locked {
+      display: none;
+    }
+
+    .step-card.active {
+      border-color: rgba(56, 189, 248, 0.55);
+      box-shadow: 0 36px 70px -44px rgba(56, 189, 248, 0.35);
+    }
+
+    .step-card.completed {
+      border-color: rgba(250, 204, 21, 0.45);
+      box-shadow: 0 40px 80px -50px rgba(250, 204, 21, 0.45);
+    }
+
+    .step-number {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #38bdf8;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .step-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+      color: #f8fafc;
+    }
+
+    .step-card p {
+      color: rgba(226, 232, 240, 0.78);
+      margin-bottom: 18px;
+    }
+
+    .step-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .step-card ul li {
+      color: rgba(226, 232, 240, 0.82);
+      font-size: 0.95rem;
+      padding-left: 22px;
+      position: relative;
+    }
+
+    .step-card ul li::before {
+      content: "✔";
+      position: absolute;
+      left: 0;
+      color: #facc15;
+      font-size: 0.85rem;
+    }
+
+    .step-quiz {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(148, 163, 184, 0.28);
+      display: grid;
+      gap: 14px;
+    }
+
+    .quiz-question {
+      font-weight: 600;
+      color: #facc15;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .quiz-choice-group {
+      display: grid;
+      gap: 10px;
+    }
+
+    .quiz-choice {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: #e2e8f0;
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border 0.18s ease, background 0.18s ease;
+    }
+
+    .quiz-choice:hover {
+      transform: translateY(-1px);
+      border-color: rgba(94, 234, 212, 0.45);
+      box-shadow: 0 12px 28px -18px rgba(56, 189, 248, 0.35);
+    }
+
+    .quiz-choice.correct {
+      background: linear-gradient(135deg, #f97316 0%, #facc15 100%);
+      color: #0f172a;
+      border-color: rgba(250, 204, 21, 0.6);
+      box-shadow: 0 24px 44px -28px rgba(250, 204, 21, 0.55);
+    }
+
+    .quiz-choice.incorrect {
+      background: rgba(185, 28, 28, 0.22);
+      border-color: rgba(248, 113, 113, 0.55);
+      color: #fecaca;
+    }
+
+    .quiz-choice.dimmed {
+      opacity: 0.6;
+    }
+
+    .quiz-choice:disabled {
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .quiz-feedback {
+      font-size: 0.92rem;
+      color: rgba(226, 232, 240, 0.7);
+      min-height: 20px;
+    }
+
+    .quiz-feedback.success {
+      color: #bef264;
+    }
+
+    .quiz-feedback.error {
+      color: #fca5a5;
+    }
+
+    .supporting-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .checklist-card,
+    .resource-card,
+    .callout-card,
+    .faq-card {
+      background: rgba(30, 41, 59, 0.84);
+      border-radius: 18px;
+      padding: 28px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      box-shadow: 0 24px 52px -36px rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+    }
+
+    .checklist-card h3,
+    .resource-card h3,
+    .callout-card h3,
+    .faq-card h3 {
+      font-size: 1.25rem;
+      color: #f8fafc;
+      margin-bottom: 18px;
+    }
+
+    .checklist-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .checklist-card li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      color: rgba(226, 232, 240, 0.85);
+      font-size: 0.95rem;
+    }
+
+    .checklist-card li span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(248, 250, 252, 0.08);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      color: #facc15;
+      font-weight: 600;
+    }
+
+    .resource-list {
+      display: grid;
+      gap: 14px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .resource-list li a {
+      color: #38bdf8;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .resource-list li a:hover {
+      color: #facc15;
+    }
+
+    .callout-card {
+      border: 1px solid rgba(250, 204, 21, 0.4);
+      background: rgba(120, 53, 15, 0.1);
+    }
+
+    .callout-card p {
+      color: rgba(254, 240, 138, 0.95);
+      margin-bottom: 12px;
+    }
+
+    .tip-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .tip-list li {
+      color: rgba(226, 232, 240, 0.88);
+      font-size: 0.95rem;
+      padding-left: 22px;
+      position: relative;
+    }
+
+    .tip-list li::before {
+      content: "⚠";
+      position: absolute;
+      left: 0;
+      font-size: 0.82rem;
+      color: #fbbf24;
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 16px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .faq-list li {
+      color: rgba(226, 232, 240, 0.88);
+    }
+
+    .faq-question {
+      font-weight: 600;
+      color: #facc15;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .locked-widget {
+      display: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 32px 0 48px;
+      color: rgba(226, 232, 240, 0.6);
+    }
+
+    @media (max-width: 720px) {
+      .hero-section {
+        padding: 40px 32px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .step-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .supporting-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="nav-container">
+        <div class="logo-container">
+          <a href="index.html" class="logo-link">
+            <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo" />
+            <span class="logo">Plebtools</span>
+          </a>
+        </div>
+        <div class="nav-links">
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn">
+              Tools <span class="dropdown-arrow">▼</span>
+            </button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="treasury">📊 Treasury</a>
+              <a href="btc-buy-tracker">💼 Portfolio</a>
+              <a href="coveredcall-tracker">📈 Covered Calls</a>
+              <a href="compound-interest-calculator">💰 Calculator</a>
+              <a href="retirement-calculator">🏖️ Retirement</a>
+              <a href="btc-loan-ltv">🔒 BTC Loans</a>
+              <a href="financial-planner">📋 Financial Planner</a>
+              <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+              <a href="pleb-release">📰 Pleb Release</a>
+              <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
+              <a href="invoice-builder">🧾 Invoice Builder</a>
+            </div>
+          </div>
+          <a href="account" class="account-link">👤 Account</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="hero-section">
+      <div class="hero-content">
+        <span class="hero-kicker">Bitcoin Cold Storage</span>
+        <h1 class="hero-title">Step-by-Step Path to Self Custody</h1>
+        <p class="hero-subtitle">
+          Move from exchange exposure to sovereign ownership with a practical, human-readable checklist. This guide
+          walks you through each stage—from picking hardware to executing your first withdrawal—so you can hold your own
+          keys with confidence.
+        </p>
+        <div class="hero-actions">
+          <a href="#self-custody-steps" class="primary-action">Start the Guided Process</a>
+          <a href="#resources" class="secondary-action">Browse Hardware & Education</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="self-custody-steps">
+      <h2 class="section-title">Nine Stages to Confident Self Custody</h2>
+      <p class="section-description">
+        Each phase builds on the previous one. Take it slow, verify at every checkpoint, and don’t migrate significant
+        funds until you can explain the why behind every step.
+      </p>
+
+      <div class="step-grid">
+        <article class="step-card active" data-success="Great choice—every sat you buy should land in a wallet you control.">
+          <span class="step-number">Step 1</span>
+          <h3>Acquire Bitcoin the Right Way</h3>
+          <p>Pick on-ramps that let you control custody quickly, regardless of where you buy.</p>
+          <ul>
+            <li>Use reputable exchanges for liquidity, but withdraw immediately after each purchase.</li>
+            <li>Explore P2P marketplaces (RoboSats, Peach, Hodl Hodl) for privacy—lean on escrow and reputation systems.</li>
+            <li>Leverage non-custodial brokers like Bitcoin Well that deliver straight to your wallet during checkout.</li>
+          </ul>
+          <div class="step-quiz">
+            <p class="quiz-question">What’s the best way to buy bitcoin if you want control and fair fees?</p>
+            <div class="quiz-choice-group">
+              <button type="button" class="quiz-choice" data-correct="false">
+                Use crypto exchanges that hide spreads, charge big withdrawal fees, and encourage you to gamble
+              </button>
+              <button type="button" class="quiz-choice" data-correct="true">
+                Use reputable Bitcoin-only exchanges or non-custodial brokers with fair fees that send sats straight to your wallet
+              </button>
+              <button type="button" class="quiz-choice" data-correct="false">
+                It doesn’t matter—I’ll just leave the bitcoin on the exchange and let them manage it for me
+              </button>
+              <button
+                type="button"
+                class="quiz-choice learn-more-choice"
+                data-learnmore="true"
+                data-url="https://www.youtube.com/watch?v=BJLqKXzFp8E"
+              >
+                Still wondering the answer? Click here to learn more
+              </button>
+            </div>
+            <p class="quiz-feedback"></p>
+          </div>
+        </article>
+
+        <article class="step-card locked" data-success="Excellent—you’re moving meaningful UTXOs into your own custody.">
+          <span class="step-number">Step 2</span>
+          <h3>Understand UTXOs & Plan Withdrawals</h3>
+          <p>Move your stack off exchanges in sensible chunks so every output stays useful later.</p>
+          <ul>
+            <li>Batch small purchases into withdrawals that justify the mining fee and avoid dust outputs.</li>
+            <li>Label the UTXOs you receive so you know which exchange or purpose they’re tied to.</li>
+            <li>Schedule regular sweeps before balances grow too risky to leave under someone else’s control.</li>
+          </ul>
+          <div class="step-quiz">
+            <p class="quiz-question">Why combine multiple small buys before withdrawing to your own wallet?</p>
+            <div class="quiz-choice-group">
+              <button type="button" class="quiz-choice" data-correct="false">
+                Because exchanges pay bonuses if you withdraw less frequently
+              </button>
+              <button type="button" class="quiz-choice" data-correct="false">
+                Since leaving funds online longer makes them safer thanks to the exchange’s security team
+              </button>
+              <button type="button" class="quiz-choice" data-correct="true">
+                To avoid high fees later and prevent a pile of dust-like UTXOs that are expensive to spend
+              </button>
+              <button
+                type="button"
+                class="quiz-choice learn-more-choice"
+                data-learnmore="true"
+                data-url="https://youtu.be/fH-mGZU_CI8"
+              >
+                Need help understanding UTXOs? Click here to learn more
+              </button>
+            </div>
+            <p class="quiz-feedback"></p>
+          </div>
+        </article>
+
+        <article class="step-card locked" data-success="Great start—your hardware choice keeps you in control.">
+          <span class="step-number">Step 3</span>
+          <h3>Pick a Bitcoin-First Hardware Wallet</h3>
+          <p>Use devices that are open source, audit-friendly, and laser-focused on Bitcoin.</p>
+          <ul>
+            <li>Prefer Bitcoin-only firmware (Coldcard, Passport, SeedSigner, Jade) that minimizes attack surface.</li>
+            <li>Choose open-source designs so the community can verify there are no backdoors or insecure code paths.</li>
+            <li>Validate each device’s supply chain integrity—buy direct or from vetted resellers to avoid tampering.</li>
+          </ul>
+          <div class="step-quiz">
+            <p class="quiz-question">Why opt for an open-source, Bitcoin-only hardware wallet?</p>
+            <div class="quiz-choice-group">
+              <button type="button" class="quiz-choice" data-correct="false">
+                Because Bitcoin wallets only support small balances, so the risk is lower
+              </button>
+              <button type="button" class="quiz-choice" data-correct="true">
+                So experts can audit the firmware and the device avoids unnecessary altcoin features that expand attack surface
+              </button>
+              <button type="button" class="quiz-choice" data-correct="false">
+                Since closed-source manufacturers usually publish their code after a few years
+              </button>
+              <button
+                type="button"
+                class="quiz-choice learn-more-choice"
+                data-learnmore="true"
+                data-url="https://youtube.com/playlist?list=PLoFH8Ldz6CgmOH5NuC3PF9PavfYO5z9il&si=ubhwKjafZ18L3uZi"
+              >
+                Need help choosing a Bitcoin-only wallet? Click here to learn more
+              </button>
+            </div>
+            <p class="quiz-feedback"></p>
+          </div>
+        </article>
+
+        <article class="step-card locked" data-success="Nice—your device is clean and verified.">
+          <span class="step-number">Step 4</span>
+          <h3>Secure Setup Environment</h3>
+          <p>Keep malware and prying eyes out of the equation while you initialize your wallet.</p>
+          <ul>
+            <li>Update the hardware wallet firmware from the official vendor site.</li>
+            <li>Verify device authenticity (hologram, anti-tamper check, vendor instructions).</li>
+            <li>Power the device from a trusted source; avoid public USB hubs.</li>
+          </ul>
+          <div class="step-quiz">
+            <p class="quiz-question">What is the safest first move before you pair the device to software?</p>
+            <div class="quiz-choice-group">
+              <button type="button" class="quiz-choice" data-correct="false">
+                Plug it into any available computer and skip firmware updates to save time
+              </button>
+              <button type="button" class="quiz-choice" data-correct="false">
+                Hand the device to customer support so they can initialize it for you
+              </button>
+              <button type="button" class="quiz-choice" data-correct="true">
+                Install the latest firmware from the manufacturer and verify tamper checks
+              </button>
+              <button
+                type="button"
+                class="quiz-choice learn-more-choice"
+                data-learnmore="true"
+                data-url="https://youtu.be/nd_qexdQK3Y"
+              >
+                Need help hardening your setup environment? Click here to learn more
+              </button>
+            </div>
+            <p class="quiz-feedback"></p>
+          </div>
+        </article>
+
+        <article class="step-card locked" data-success="Excellent—you know how to secure the secret itself.">
+          <span class="step-number">Step 5</span>
+          <h3>Secure Your Seed & Xpub</h3>
+          <p>Create your recovery keys offline and harden them against leaks.</p>
+          <ul>
+            <li>Let the hardware wallet generate your 12- or 24-word seed entirely offline.</li>
+            <li>Add a passphrase (BIP39) to create a hidden wallet layer for simple single-sig setups.</li>
+            <li>Export the Bitcoin xpub from the device offline to use in watch-only wallets; never reveal the seed.</li>
+          </ul>
+          <div class="step-quiz">
+            <p class="quiz-question">Why generate the seed and xpub on the hardware wallet itself?</p>
+            <div class="quiz-choice-group">
+              <button type="button" class="quiz-choice" data-correct="false">
+                So you can email the seed to yourself later without using the device again
+              </button>
+              <button type="button" class="quiz-choice" data-correct="true">
+                Because keeping generation offline prevents your keys from touching an internet-connected device
+              </button>
+              <button type="button" class="quiz-choice" data-correct="false">
+                To avoid writing anything down, since the device saves backups in the cloud
+              </button>
+              <button
+                type="button"
+                class="quiz-choice learn-more-choice"
+                data-learnmore="true"
+                data-url="https://youtu.be/CwiOABDcokU"
+              >
+                Learn more about seed phrase + passphrase wallets here
+              </button>
+            </div>
+            <p class="quiz-feedback"></p>
+          </div>
+        </article>
+
+        <article class="step-card locked" data-success="Your backups are resilient and redundant.">
+          <span class="step-number">Step 6</span>
+          <h3>Back Up Your Backups</h3>
+          <p>Protect the seed, passphrase, and xpub redundantly so no single incident wipes you out.</p>
+          <ul>
+            <li>Engrave or stamp the seed (and passphrase) into metal backups stored in distinct locations.</li>
+            <li>Keep the xpub separate so watch-only wallets can track balances without exposing spending keys.</li>
+            <li>Document recovery instructions in plain language for a trusted heir or executor.</li>
+          </ul>
+          <div class="step-quiz">
+            <p class="quiz-question">How do you make sure a single disaster doesn’t destroy your recovery data?</p>
+            <div class="quiz-choice-group">
+              <button type="button" class="quiz-choice" data-correct="false">
+                Keep everything in one safe to make recovery simple for your future self
+              </button>
+              <button type="button" class="quiz-choice" data-correct="false">
+                Share the seed with an exchange so they can restore it if you lose it
+              </button>
+              <button type="button" class="quiz-choice" data-correct="true">
+                Store multiple seed backups (plus passphrase and xpub) in different secure locations
+              </button>
+              <button
+                type="button"
+                class="quiz-choice learn-more-choice"
+                data-learnmore="true"
+                data-url="https://youtu.be/VNxE8oY1mA8"
+              >
+                Understand more about how backups work here
+              </button>
+            </div>
+            <p class="quiz-feedback"></p>
+          </div>
+        </article>
+
+        <article class="step-card locked" data-success="Your companion app mirrors your hardware wallet securely.">
+          <span class="step-number">Step 7</span>
+          <h3>Set Up a Software Companion Wallet</h3>
+          <p>Pair a watch-only desktop or mobile app with your hardware wallet to monitor balances and craft PSBTs safely.</p>
+          <ul>
+            <li>Install an open-source companion like Sparrow, Specter, or Nunchuk on a trusted device.</li>
+            <li>Import the xpub via QR, SD card, or USB so the app can derive receive addresses without the seed.</li>
+            <li>Verify every displayed address on the hardware wallet screen before sharing or receiving funds.</li>
+          </ul>
+          <div class="step-quiz">
+            <p class="quiz-question">Why use a software companion app with a hardware wallet?</p>
+            <div class="quiz-choice-group">
+              <button type="button" class="quiz-choice" data-correct="false">
+                It lets you spend coins from any computer without plugging in the hardware wallet
+              </button>
+              <button type="button" class="quiz-choice" data-correct="true">
+                It tracks balances and builds PSBTs while keeping the signing keys isolated on the hardware device
+              </button>
+              <button type="button" class="quiz-choice" data-correct="false">
+                It automatically stores your seed in the cloud as a backup
+              </button>
+              <button
+                type="button"
+                class="quiz-choice learn-more-choice"
+                data-learnmore="true"
+                data-url="https://youtu.be/1ElACsIb8ZA"
+              >
+                Learn more about software companion wallets here
+              </button>
+            </div>
+            <p class="quiz-feedback"></p>
+          </div>
+        </article>
+
+        <article class="step-card locked" data-success="Test run complete—you’ve proven you can receive and spend.">
+          <span class="step-number">Step 8</span>
+          <h3>Run a Low-Stakes Rehearsal</h3>
+          <p>Practice the entire flow with a meaningful, but not mission-critical, amount of bitcoin.</p>
+          <ul>
+            <li>Withdraw a small test amount from the exchange to your new receive address.</li>
+            <li>Wait for on-chain confirmations, then label the transaction in your software wallet.</li>
+            <li>Create and send a return transaction back to the exchange to validate spending.</li>
+          </ul>
+          <div class="step-quiz">
+            <p class="quiz-question">What’s the purpose of the rehearsal transaction?</p>
+            <div class="quiz-choice-group">
+              <button type="button" class="quiz-choice" data-correct="false">
+                To skip confirmations so you can move everything faster
+              </button>
+              <button type="button" class="quiz-choice" data-correct="false">
+                To practice sharing your seed phrase with support if something goes wrong
+              </button>
+              <button type="button" class="quiz-choice" data-correct="true">
+                To verify you can receive, identify, and spend from the new wallet without stress
+              </button>
+              <button
+                type="button"
+                class="quiz-choice learn-more-choice"
+                data-learnmore="true"
+                data-url="https://youtu.be/mTND_i-E-Zk"
+              >
+                Learn more about rehearsal transactions here
+              </button>
+            </div>
+            <p class="quiz-feedback"></p>
+          </div>
+        </article>
+
+        <article class="step-card locked" data-success="You proved recovery works—now migrate with confidence.">
+          <span class="step-number">Step 9</span>
+          <h3>Test Recovery Before Full Migration</h3>
+          <p>Run a full restore from your backups so you know your private keys—and only your private keys—control your bitcoin.</p>
+          <ul>
+            <li>Factory reset (or use a spare device) and recover using your seed words plus passphrase before moving the full balance.</li>
+            <li>Confirm the regenerated wallet matches your watch-only xpub and produces the same receive addresses.</li>
+            <li>Once the drill succeeds, transfer the remaining funds; your private keys are the sole proof of ownership.</li>
+            <li>If you ever import the seed into hot software for testing, treat it as compromised and restart the cold-storage process.</li>
+          </ul>
+          <div class="step-quiz">
+            <p class="quiz-question">Why complete a recovery drill before sending your entire stack?</p>
+            <div class="quiz-choice-group">
+              <button type="button" class="quiz-choice" data-correct="false">
+                To wipe your transaction history from the blockchain before consolidating funds
+              </button>
+              <button type="button" class="quiz-choice" data-correct="true">
+                To verify your backups and confirm the seed + passphrase recreate the exact wallet that controls your bitcoin
+              </button>
+              <button type="button" class="quiz-choice" data-correct="false">
+                So you can throw away the old seed after the reset, since the device stores the keys for you
+              </button>
+              <button
+                type="button"
+                class="quiz-choice learn-more-choice"
+                data-learnmore="true"
+                data-url="https://youtu.be/3ZKc6rY4hJc"
+              >
+                Learn more about recovery drills and compromised seeds here
+              </button>
+            </div>
+            <p class="quiz-feedback"></p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="post-steps-widget" class="supporting-grid locked-widget">
+      <article class="step-card" data-static="true" style="grid-column: 1 / -1;">
+        <span class="step-number">Next Steps</span>
+        <h3>Keep Building Your Self-Custody Skillset and Support This Project</h3>
+        <p style="margin-bottom: 1.5rem;">
+          You made it through all nine steps. If you feel like you got value, consider supporting this open-source project, and if you still need additional help with your setup, book a 1-on-1 coaching session with me.
+        </p>
+        <div class="quiz-choice-group">
+          <a
+            href="https://coinos.io/plebtools"
+            target="_blank"
+            rel="noopener"
+            class="quiz-choice"
+            style="text-decoration: none;"
+          >
+            ⚡ Donate to Plebtools using Bitcoin & Lightning
+          </a>
+          <a
+            href="https://pathtobitcoin.xyz/"
+            target="_blank"
+            rel="noopener"
+            class="quiz-choice"
+            style="text-decoration: none;"
+          >
+            🤝 Book a 1:1 Bitcoin Session
+          </a>
+        </div>
+      </article>
+    </section>
+
+    <section class="supporting-grid">
+      <article class="checklist-card">
+        <h3>Pre-Migration Checklist</h3>
+        <ul>
+          <li><span>1</span>Hardware wallet unboxed, verified genuine, and firmware updated.</li>
+          <li><span>2</span>Seed phrase written twice, cross-checked, and secured in two separate places.</li>
+          <li><span>3</span>Passphrase (if used) memorized, recorded in a secure, sealed envelope, and backed up multiple times.</li>
+          <li><span>4</span>Software wallet installed, paired, and displaying the correct receive address.</li>
+          <li>
+            <span>5</span>Test send a transaction, confirm it on a block explorer, and restore the wallet from your backup to verify full control.
+          </li>
+          <li><span>6</span>Instruction letter drafted for trusted beneficiary explaining recovery steps.</li>
+        </ul>
+      </article>
+
+      <article class="resource-card" id="resources">
+        <h3>Trusted Resources</h3>
+        <ul class="resource-list">
+          <li>
+            <a href="https://store.coinkite.com/promo/169FA71FECC4928F725D" target="_blank" rel="noopener">
+              🔐 Coldcard - Bitcoin-Only Hardware Wallet
+            </a>
+          </li>
+          <li>
+            <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" rel="noopener">
+              🟧 Blockstream Jade - Official Store
+            </a>
+          </li>
+          <li>
+            <a href="https://www.stampseed.com/" target="_blank" rel="noopener">
+              🛠️ Stamp Seed - Durable Seed Backup
+            </a>
+            <span class="resource-note">Use code BTCNOTCRYPTO15 for 15% off the Stamp Seed kit.</span>
+          </li>
+          <li>
+            <a href="https://store.start9.com/" target="_blank" rel="noopener">
+              🖥️ Start9 - Self-hosted Node & Services
+            </a>
+            <span class="resource-note">Use code BNC5 for 5% off Start9 gear.</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" rel="noopener">
+              🎥 Bitcoin Not Crypto - Tutorials & Walkthroughs
+            </a>
+          </li>
+        </ul>
+      </article>
+
+      <article class="callout-card">
+        <h3>Threat Modeling Tips</h3>
+        <p>Self custody is a spectrum. Match your setup to the value at risk and the threats you actually face.</p>
+        <ul class="tip-list">
+          <li>Keep hot wallet balances minimal; treat phones as convenience tools, not vaults.</li>
+          <li>Beware of social engineering—never plug a hardware wallet into an unknown computer.</li>
+          <li>Consider multisig with geographically separated backups once balances become life-changing.</li>
+          <li>Practice recovery annually from written instructions to ensure nothing has degraded.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="supporting-grid">
+      <article class="faq-card">
+        <h3>Self Custody FAQ</h3>
+        <ul class="faq-list">
+          <li>
+            <span class="faq-question">Do I need multisig right away?</span>
+            Start with single-sig until you can run through a recovery from memory and documentation.
+            Multisig adds security but also complexity—graduate to it once single-sig feels trivial.
+          </li>
+          <li>
+            <span class="faq-question">What if I’m not ready to move everything?</span>
+            Move a percentage on a set schedule. The rehearsal stage is the perfect time to discover friction
+            without risking your entire stack.
+          </li>
+          <li>
+            <span class="faq-question">How should I brief family or business partners?</span>
+            Write plain-language recovery steps and store them alongside legal documents. Ideally, rehearse with
+            a trusted party so they have muscle memory if they ever need to execute.
+          </li>
+          <li>
+            <span class="faq-question">How often should I refresh my setup?</span>
+            Review quarterly. Confirm firmware updates, test backups, and ensure your instructions still match your
+            hardware and wallet versions.
+          </li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="features-section">
+      <div class="container">
+        <h2 class="section-title">Want to buy and secure your Bitcoin?</h2>
+        <div style="text-align: center;">
+          <p style="font-size: 0.9rem; color: var(--text-color-light, #94a3b8); margin-bottom: 1.5rem;">
+            These are affiliate/discount links
+          </p>
+          <div class="affiliate-links">
+            <div class="affiliate-item">
+              <h4>Where to buy</h4>
+              <a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" class="affiliate-link">Bitcoin Well</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>Where to store</h4>
+              <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>How to protect</h4>
+              <a href="https://www.stampseed.com/" target="_blank" class="affiliate-link">Stamp Seed</a>
+              <p class="discount-code">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
+            </div>
+            <div class="affiliate-item">
+              <h4>How to validate</h4>
+              <a href="https://store.start9.com/" target="_blank" class="affiliate-link">Start9</a>
+              <p class="discount-code">CODE: BNC5 for 5% off</p>
+            </div>
+            <div class="affiliate-item">
+              <h4>1:1 Coaching</h4>
+              <a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>Where to learn</h4>
+              <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="support-section">
+      <div class="container support-grid">
+        <div class="support-card">
+          <div class="support-icon">⚡</div>
+          <h2 class="support-title">Support Plebtools</h2>
+          <p class="support-text">
+            Enjoying these tools? You can help keep them free and open source by donating sats.
+            Every contribution fuels more Bitcoin-first development.
+          </p>
+          <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="features-section" style="padding: 4rem 0;">
+      <div class="container" style="text-align: center;">
+        <h2 class="section-title">Open Source</h2>
+        <p style="max-width: 680px; margin: 1.5rem auto; color: var(--text-muted, #94a3b8);">
+          Plebtools is fully open source. Fork the code, submit improvements, or deploy your own instance to track Bitcoin
+          operations your way.
+        </p>
+        <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" class="feature-btn" style="display: inline-block;">
+          View on GitHub
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 Plebtools. Open source Bitcoin tracking tools.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Shuffle quiz choices so the correct answer isn't always in the same spot
+    const shuffleArray = (array) => {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    };
+
+    document.querySelectorAll(".quiz-choice-group").forEach((group) => {
+      const answerButtons = Array.from(group.querySelectorAll(".quiz-choice")).filter(
+        (btn) => btn.dataset.learnmore !== "true"
+      );
+      const learnMoreButtons = Array.from(group.querySelectorAll(".quiz-choice")).filter(
+        (btn) => btn.dataset.learnmore === "true"
+      );
+
+      shuffleArray(answerButtons);
+
+      group.innerHTML = "";
+      answerButtons.forEach((btn) => group.appendChild(btn));
+      learnMoreButtons.forEach((btn) => group.appendChild(btn));
+    });
+
+    // Progressive step flow
+    const stepCards = Array.from(
+      document.querySelectorAll(".step-card")
+    ).filter((card) => card.dataset.static !== "true");
+
+    if (stepCards.length) {
+      const unlockDonationWidget = () => {
+        const donationSection = document.getElementById("post-steps-widget");
+        if (donationSection) {
+          donationSection.classList.remove("locked-widget");
+          setTimeout(() => {
+            donationSection.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 300);
+        }
+      };
+
+      const revealStep = (card) => {
+        card.classList.remove("locked");
+        card.classList.remove("completed");
+        card.classList.add("active");
+        const feedback = card.querySelector(".quiz-feedback");
+        if (feedback) {
+          feedback.textContent = "";
+          feedback.classList.remove("success", "error");
+        }
+        card.querySelectorAll(".quiz-choice").forEach((btn) => {
+          btn.disabled = false;
+          btn.classList.remove("dimmed", "correct", "incorrect");
+        });
+      };
+
+      stepCards.forEach((card, index) => {
+        if (index === 0) {
+          card.classList.remove("locked");
+          card.classList.add("active");
+        }
+
+        const buttons = Array.from(card.querySelectorAll(".quiz-choice"));
+        const feedback = card.querySelector(".quiz-feedback");
+
+        buttons.forEach((button) => {
+          if (button.dataset.learnmore === "true") {
+            button.addEventListener("click", () => {
+              const targetUrl = button.dataset.url;
+              if (targetUrl) {
+                window.open(targetUrl, "_blank", "noopener");
+              }
+            });
+            return;
+          }
+
+          button.addEventListener("click", () => {
+            const isCorrect = button.dataset.correct === "true";
+
+            if (isCorrect) {
+              button.classList.add("correct");
+              buttons.forEach((choice) => {
+                if (choice.dataset.learnmore === "true") {
+                  return;
+                }
+                choice.disabled = true;
+                if (choice !== button) {
+                  choice.classList.add("dimmed");
+                }
+              });
+
+              card.classList.remove("active");
+              card.classList.add("completed");
+
+              if (feedback) {
+                feedback.textContent = card.dataset.success || "Correct! Keep going.";
+                feedback.classList.remove("error");
+                feedback.classList.add("success");
+              }
+
+              const nextCard = stepCards[index + 1];
+              if (nextCard) {
+                revealStep(nextCard);
+                setTimeout(() => {
+                  nextCard.scrollIntoView({ behavior: "smooth", block: "start" });
+                }, 600);
+              } else {
+                unlockDonationWidget();
+              }
+            } else {
+              button.classList.add("incorrect");
+              button.disabled = true;
+
+              if (feedback) {
+                feedback.textContent = "Not quite. Try another option.";
+                feedback.classList.remove("success");
+                feedback.classList.add("error");
+              }
+
+              setTimeout(() => {
+                button.classList.remove("incorrect");
+              }, 1000);
+            }
+          });
+        });
+      });
+    }
+
+    // Theme toggle button
+    const themeToggle = document.createElement("button");
+    themeToggle.innerHTML = "☀️";
+    themeToggle.style.cssText = `
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: #e5e7eb;
+      font-size: 1.35rem;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      box-shadow: 0 18px 40px -28px rgba(15, 23, 42, 0.9);
+    `;
+
+    themeToggle.addEventListener("mouseenter", () => {
+      themeToggle.style.transform = "translateY(-2px)";
+      themeToggle.style.boxShadow = "0 24px 55px -28px rgba(59, 130, 246, 0.45)";
+    });
+
+    themeToggle.addEventListener("mouseleave", () => {
+      themeToggle.style.transform = "translateY(0)";
+      themeToggle.style.boxShadow = "0 18px 40px -28px rgba(15, 23, 42, 0.9)";
+    });
+
+    let isDarkTheme = true;
+    document.body.appendChild(themeToggle);
+
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "light") {
+      isDarkTheme = false;
+      document.body.classList.remove("dark-theme");
+      document.body.classList.add("light-theme");
+      themeToggle.textContent = "🌙";
+    } else {
+      document.body.classList.add("dark-theme");
+      document.body.classList.remove("light-theme");
+      themeToggle.textContent = "☀️";
+    }
+
+    themeToggle.addEventListener("click", () => {
+      isDarkTheme = !isDarkTheme;
+      if (isDarkTheme) {
+        document.body.classList.add("dark-theme");
+        document.body.classList.remove("light-theme");
+        themeToggle.textContent = "☀️";
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.body.classList.remove("dark-theme");
+        document.body.classList.add("light-theme");
+        themeToggle.textContent = "🌙";
+        localStorage.setItem("theme", "light");
+      }
+    });
+
+    // Dropdown toggle
+    const toolsBtn = document.getElementById("toolsBtn");
+    const toolsContent = document.getElementById("toolsContent");
+    let dropdownOpen = false;
+
+    toolsBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      dropdownOpen = !dropdownOpen;
+      if (dropdownOpen) {
+        toolsContent.style.display = "block";
+        requestAnimationFrame(() => {
+          toolsContent.classList.add("show");
+        });
+      } else {
+        toolsContent.classList.remove("show");
+        setTimeout(() => {
+          toolsContent.style.display = "none";
+        }, 250);
+      }
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!document.getElementById("toolsDropdown").contains(event.target)) {
+        toolsContent.classList.remove("show");
+        setTimeout(() => {
+          toolsContent.style.display = "none";
+        }, 250);
+        dropdownOpen = false;
+      }
+    });
+  </script>
+</body>
+</html>
+
+

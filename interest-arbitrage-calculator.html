@@ -572,6 +572,10 @@
       border: 1px solid rgba(148, 163, 184, 0.25);
       border-radius: 18px;
       padding: 2.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
       text-align: center;
       box-shadow: 0 28px 60px -30px rgba(15, 23, 42, 0.6);
       color: #e2e8f0;
@@ -592,27 +596,42 @@
     .support-text {
       color: #cbd5f5;
       font-size: 1rem;
-      margin: 1rem 0 2rem;
+      margin: 0;
+      max-width: 420px;
       line-height: 1.6;
     }
 
     .support-btn {
-      display: inline-block;
-      padding: 0.9rem 2.2rem;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
-      color: #f8fafc;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem 2.6rem;
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at top left, rgba(251, 191, 36, 0.35), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.25), transparent 60%),
+        linear-gradient(135deg, #f97316 0%, #fb923c 55%, #f59e0b 100%);
+      border: 1px solid rgba(251, 191, 36, 0.38);
+      color: #0f172a;
+      font-weight: 700;
+      letter-spacing: 0.05em;
       text-decoration: none;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 18px 35px -18px rgba(249, 115, 22, 0.55);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      box-shadow:
+        0 20px 45px -22px rgba(251, 191, 36, 0.65),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
     }
 
     .support-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 22px 45px -20px rgba(249, 115, 22, 0.65);
-      color: #f8fafc;
+      transform: translateY(-3px);
+      box-shadow:
+        0 26px 55px -24px rgba(251, 191, 36, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
+      background:
+        radial-gradient(circle at top left, rgba(251, 191, 36, 0.45), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(96, 165, 250, 0.25), transparent 60%),
+        linear-gradient(135deg, #fb923c 0%, #f97316 65%, #f59e0b 100%);
+      color: #0f172a;
     }
 
     .cta-section {
@@ -709,9 +728,9 @@
                 <a href="btc-loan-ltv">🔒 BTC Loans</a>
                 <a href="financial-planner">📋 Financial Planner</a>
                 <a href="bitcoin-security">🛡️ Bitcoin Security</a>
-                <a href="bitcoin-storage">🏛️ Bitcoin Storage</a>
                 <a href="pleb-release">📰 Pleb Release</a>
               <a href="interest-arbitrage-calculator" aria-current="page">💹 Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
                 <a href="invoice-builder">🧾 Invoice Builder</a>
               </div>
             </div>
@@ -919,11 +938,10 @@
       <div class="support-card">
         <div class="support-icon">⚡</div>
         <h2 class="support-title">Support Plebtools</h2>
-        <p class="support-text">
-          Enjoying these tools? You can help keep them free and open source by donating sats.
-          Every contribution fuels more Bitcoin-first development.
-        </p>
         <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+        <p class="support-text">
+          Enjoying these tools? You can help keep them free and open source by donating sats. Every contribution fuels more Bitcoin-first development.
+        </p>
       </div>
     </div>
   </section>
