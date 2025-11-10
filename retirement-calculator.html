@@ -8,6 +8,14 @@
     <link rel="stylesheet" href="styles.css?v=3">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        body {
+            color: #111;
+        }
+
+        .dark-theme {
+            color: #e5e7eb;
+        }
+
         .calculator-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -37,7 +45,7 @@
 
         .calculator-subtitle {
             font-size: 1.2rem;
-            color: #ccc;
+            color: #ffffff;
             margin-bottom: 2rem;
         }
 
@@ -115,23 +123,48 @@
         }
 
         .summary-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1.5rem;
+            background: #22c55e;
+            color: #ffffff;
+            padding: 1.1rem 1.25rem;
             border-radius: 10px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            justify-content: center;
         }
 
         .summary-card h3 {
-            margin: 0 0 0.5rem 0;
+            margin: 0;
             font-size: 0.9rem;
-            opacity: 0.9;
+            color: #ffffff;
         }
 
         .summary-card .value {
             font-size: 1.5rem;
             font-weight: bold;
             margin: 0;
+            color: #ffffff;
+        }
+
+        .input-help {
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .dark-theme .input-help {
+            color: #bbbbbb;
+        }
+
+        .dark-theme .summary-card {
+            background: #16a34a;
+            color: #ffffff !important;
+            padding: 1.1rem 1.25rem;
+        }
+
+        .dark-theme .summary-card h3,
+        .dark-theme .summary-card .value {
+            color: #ffffff !important;
         }
 
         .table-container {
@@ -169,6 +202,27 @@
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             border: 1px solid #e0e0e0;
+        }
+
+        .chart-description {
+            margin-top: 1rem;
+            color: #333;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .dark-theme .chart-description {
+            color: #bbbbbb;
+        }
+
+        .affiliate-note {
+            font-size: 0.9rem;
+            color: #1f1f1f;
+            margin-bottom: 1.5rem;
+        }
+
+        .dark-theme .affiliate-note {
+            color: #cbd5f5;
         }
 
         .error-message {
@@ -472,37 +526,43 @@
                     <div class="input-group">
                         <label class="input-label" for="years">Number of Years (default: 25)</label>
                         <input type="number" id="years" class="input-field" value="25" min="1" max="50">
+                        <small class="input-help">How long you expect your retirement withdrawals to last</small>
                     </div>
 
                     <div class="input-group">
-                        <label class="input-label" for="monthlySpend">Monthly Spend ($)</label>
-                        <input type="number" id="monthlySpend" class="input-field" value="5000" min="0">
+                        <label class="input-label" for="annualSpend">Annual Spend ($)</label>
+                        <input type="number" id="annualSpend" class="input-field" value="60000" min="0">
+                        <small class="input-help">Total dollars you plan to spend each year in retirement</small>
                     </div>
 
                     <div class="input-group">
                         <label class="input-label" for="inflation">Inflation Rate (%)</label>
                         <input type="number" id="inflation" class="input-field" value="7" min="0" max="20" step="0.1">
+                        <small class="input-help">Yearly cost-of-living increase caused by fiat debasement</small>
                     </div>
 
                     <div class="input-group">
                         <label class="input-label" for="appreciation">Bitcoin Appreciation Rate (%)</label>
                         <input type="number" id="appreciation" class="input-field" value="15" min="0" max="50" step="0.1">
+                        <small class="input-help">Expected annual percentage gain in Bitcoin’s USD price</small>
                     </div>
 
                     <div class="input-group">
                         <label class="input-label" for="btcPrice">Bitcoin Price at retirement ($)</label>
                         <input type="number" id="btcPrice" class="input-field" value="623197" min="0">
+                        <small class="input-help">Spot price of Bitcoin when you begin retirement withdrawals</small>
                     </div>
 
                     <div class="input-group">
                         <label class="input-label" for="startYear">Starting Year</label>
-                        <input type="number" id="startYear" class="input-field" value="2032" min="2024" max="2100">
+                        <input type="number" id="startYear" class="input-field" value="2026" min="2024" max="2100">
+                        <small class="input-help">Calendar year when this retirement plan starts</small>
                     </div>
 
                     <div class="input-group">
                         <label class="input-label" for="remainingBtc">BTC to Pass on</label>
                         <input type="number" id="remainingBtc" class="input-field" value="0" min="0" step="0.001">
-                        <small style="color: #666; font-size: 0.9rem;">How much Bitcoin you want to keep after the retirement period ends</small>
+                        <small class="input-help">Bitcoin you want to still hold at the end of the plan</small>
                     </div>
 
                     <button class="calculate-btn" onclick="calculateRetirement()">
@@ -528,6 +588,9 @@
             <div class="chart-container">
                 <h2>Financial Progression Chart</h2>
                 <canvas id="chart" width="400" height="200"></canvas>
+                <p class="chart-description">
+                    Each year begins by increasing the Bitcoin price by the appreciation rate and raising your planned dollar expenses by the inflation rate. Immediately afterward, the required cash for the year is raised by selling Bitcoin at that year’s adjusted price, which reduces the Bitcoin stack shown in orange. The remaining BTC then compounds for the following year.
+                </p>
             </div>
         </div>
 
@@ -535,7 +598,7 @@
         <div style="margin: 3rem 0; padding: 2rem; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid #e0e0e0;">
             <h3 style="text-align: center;">Want to buy and secure your Bitcoin?</h3>
             <div style="text-align: center;">
-                <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
+                <p class="affiliate-note">These are affiliate/discount links</p>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
                     <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
                         <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">Where to buy</h4>
@@ -586,6 +649,7 @@
             <h3 style="text-align: center; color: #000;">Open Source</h3>
             <div style="text-align: center;">
                 <p style="margin-bottom: 1rem; color: #000;">This Bitcoin retirement calculator is free and open source and can be replicated for anyone to plan their Bitcoin-based retirement.</p>
+                <p style="margin-bottom: 1.5rem; color: #000; font-weight: 600;">Open source contributors: TotesNpro and ForrestHODL</p>
                 <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" style="background: #28a745; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; display: inline-block; font-weight: bold; transition: all 0.3s ease;">View on GitHub</a>
             </div>
         </div>
@@ -612,32 +676,32 @@
             }
         }
 
-        // Calculate balance with skip growth (no growth in year 1)
-        function calculateBalanceWithSkipGrowth(assets, years, annualExpenses, inflationRate, appreciationRate, btcPrice, remainingBtc) {
-            let balance = assets * btcPrice;
+        // Simulate retirement using annual beginning-of-year adjustments
+        function simulateRemainingBtc(assets, years, annualExpenses, inflationRate, appreciationRate, btcPrice, remainingBtc) {
+            let btcBalance = assets;
             let currentBtcPrice = btcPrice;
+            let expensesForYear = annualExpenses;
             
             for (let year = 1; year <= years; year++) {
-                const expenses = annualExpenses * Math.pow(1 + inflationRate, year - 1);
+                if (year > 1) {
+                    expensesForYear *= (1 + inflationRate);
+                    currentBtcPrice *= (1 + appreciationRate);
+                }
                 
-                if (year === 1) {
-                    // Skip growth in year 1
-                    balance = balance - expenses;
-                } else {
-                    const assetGrowth = balance * appreciationRate;
-                    balance = balance + assetGrowth - expenses;
-                    // Update BTC price for this year
-                    currentBtcPrice = currentBtcPrice * (1 + appreciationRate);
+                if (currentBtcPrice <= 0) {
+                    throw new Error(`Invalid BTC price encountered during simulation: $${currentBtcPrice}.`);
+                }
+                
+                const expensesInBtc = expensesForYear / currentBtcPrice;
+                btcBalance -= expensesInBtc;
+                
+                if (btcBalance < -1e-8) {
+                    // Early exit: we already dipped below zero BTC
+                    return btcBalance - remainingBtc;
                 }
             }
             
-            // The remaining Bitcoin should be worth the final BTC price
-            const finalBtcPrice = btcPrice * Math.pow(1 + appreciationRate, years - 1);
-            const remainingBtcValue = remainingBtc * finalBtcPrice;
-            
-            // We want the final balance to be exactly equal to the remaining Bitcoin value
-            // So we return the difference (should be 0 when we have the right amount)
-            return balance - remainingBtcValue;
+            return btcBalance - remainingBtc;
         }
 
         // Find required assets using binary search
@@ -647,8 +711,8 @@
             const tolerance = 0.0001; // More precise tolerance
             
             // Expand search range if needed
-            while (calculateBalanceWithSkipGrowth(low, years, annualExpenses, inflationRate, appreciationRate, btcPrice, remainingBtc) * 
-                   calculateBalanceWithSkipGrowth(high, years, annualExpenses, inflationRate, appreciationRate, btcPrice, remainingBtc) > 0) {
+            while (simulateRemainingBtc(low, years, annualExpenses, inflationRate, appreciationRate, btcPrice, remainingBtc) * 
+                   simulateRemainingBtc(high, years, annualExpenses, inflationRate, appreciationRate, btcPrice, remainingBtc) > 0) {
                 low /= 2;
                 high *= 2;
                 if (low < 1e-8 || high > 1e8) {
@@ -659,16 +723,93 @@
             // Binary search
             while (high - low > tolerance) {
                 const mid = (low + high) / 2;
-                const balance = calculateBalanceWithSkipGrowth(mid, years, annualExpenses, inflationRate, appreciationRate, btcPrice, remainingBtc);
+                const balanceDifference = simulateRemainingBtc(mid, years, annualExpenses, inflationRate, appreciationRate, btcPrice, remainingBtc);
                 
-                if (balance > 0) {
+                if (balanceDifference > 0) {
                     high = mid;
                 } else {
                     low = mid;
                 }
             }
             
-            return (low + high) / 2;
+            return high;
+        }
+
+        // Build detailed retirement plan data
+        function generateRetirementPlan(requiredAssets, years, annualExpenses, inflationRate, appreciationRate, btcPrice, startYear) {
+            const tableData = [];
+            let btcBalance = requiredAssets;
+            let currentBtcPrice = btcPrice;
+            let expensesForYear = annualExpenses;
+            let totalExpenses = 0;
+            let totalAppreciation = 0;
+            
+            for (let year = 1; year <= years; year++) {
+                if (year > 1) {
+                    expensesForYear *= (1 + inflationRate);
+                    currentBtcPrice *= (1 + appreciationRate);
+                }
+                
+                if (currentBtcPrice <= 0) {
+                    throw new Error(`Invalid BTC price: $${currentBtcPrice}. This should not happen.`);
+                }
+                
+                const currentYearExpenses = expensesForYear;
+                const startingBtc = btcBalance;
+                const previousPrice = year === 1 ? currentBtcPrice : currentBtcPrice / (1 + appreciationRate);
+                const balanceBeforeAppreciation = startingBtc * previousPrice;
+                const startingBalance = startingBtc * currentBtcPrice;
+                const yearlyAppreciation = startingBalance - balanceBeforeAppreciation;
+                const expensesInBtc = currentYearExpenses / currentBtcPrice;
+                const endingBtcBalance = startingBtc - expensesInBtc;
+                
+                if (endingBtcBalance < -1e-6) {
+                    throw new Error(`BTC balance would go negative in year ${startYear + year - 1}. This suggests the required assets calculation is insufficient.`);
+                }
+                
+                const sanitizedEndingBtc = endingBtcBalance < 0 ? 0 : endingBtcBalance;
+                const endingBalance = sanitizedEndingBtc * currentBtcPrice;
+                
+                tableData.push({
+                    year: startYear + year - 1,
+                    startingBalance: startingBalance,
+                    startingBtc: startingBtc,
+                    currentBtcPrice: currentBtcPrice,
+                    appreciationRate: (appreciationRate * 100).toFixed(1) + '%',
+                    appreciationValue: yearlyAppreciation,
+                    subtotal: startingBalance,
+                    livingExpenses: currentYearExpenses,
+                    expensesInBtc: expensesInBtc,
+                    endingBalance: endingBalance,
+                    endingBtc: sanitizedEndingBtc
+                });
+                
+                btcBalance = endingBtcBalance;
+                totalExpenses += currentYearExpenses;
+                totalAppreciation += yearlyAppreciation;
+            }
+            
+            tableData.push({
+                year: 'Total',
+                startingBalance: '-',
+                startingBtc: '-',
+                currentBtcPrice: '-',
+                appreciationRate: '-',
+                appreciationValue: totalAppreciation,
+                subtotal: '-',
+                livingExpenses: totalExpenses,
+                expensesInBtc: '-',
+                endingBalance: '-',
+                endingBtc: '-'
+            });
+            
+            return {
+                tableData,
+                totalExpenses,
+                totalAppreciation,
+                endingBtcBalance: btcBalance,
+                finalBtcPrice: currentBtcPrice
+            };
         }
 
         async function calculateRetirement() {
@@ -684,7 +825,7 @@
             try {
                 // Get input values
                 const years = parseInt(document.getElementById('years').value);
-                const monthlySpend = parseFloat(document.getElementById('monthlySpend').value);
+                const annualSpend = parseFloat(document.getElementById('annualSpend').value);
                 const inflation = parseFloat(document.getElementById('inflation').value) / 100;
                 const appreciation = parseFloat(document.getElementById('appreciation').value) / 100;
                 const btcPrice = parseFloat(document.getElementById('btcPrice').value);
@@ -695,8 +836,8 @@
                 if (isNaN(years) || years < 1 || years > 50) {
                     throw new Error('Years must be a number between 1 and 50');
                 }
-                if (isNaN(monthlySpend) || monthlySpend < 0) {
-                    throw new Error('Monthly spend must be a non-negative number');
+                if (isNaN(annualSpend) || annualSpend < 0) {
+                    throw new Error('Annual spend must be a non-negative number');
                 }
                 if (isNaN(inflation) || inflation < 0 || inflation > 0.2) {
                     throw new Error('Inflation rate must be a number between 0% and 20%');
@@ -714,111 +855,24 @@
                     throw new Error('Remaining Bitcoin must be a non-negative number');
                 }
                 
-                const annualExpenses = monthlySpend * 12;
+                const annualExpenses = annualSpend;
                 
                 // Calculate required assets
                 const requiredAssets = findRequiredAssets(years, annualExpenses, inflation, appreciation, btcPrice, remainingBtc);
                 const totalCost = requiredAssets * btcPrice;
                 
-                // Generate table data
-                const tableData = [];
-                let balance = requiredAssets * btcPrice;
-                let btcBalance = requiredAssets; // Track Bitcoin amount
-                let currentBtcPrice = btcPrice; // Track current BTC price
-                let totalExpenses = 0;
-                let totalAppreciation = 0;
+                // Generate detailed plan
+                const plan = generateRetirementPlan(requiredAssets, years, annualExpenses, inflation, appreciation, btcPrice, startYear);
+                const tableData = plan.tableData;
+                const finalBtcPrice = plan.finalBtcPrice;
+                const finalDifferenceBtc = plan.endingBtcBalance - remainingBtc;
+                const finalBalanceUsd = finalDifferenceBtc * finalBtcPrice;
                 
-                for (let year = 1; year <= years; year++) {
-                    const expenses = annualExpenses * Math.pow(1 + inflation, year - 1);
-                    let assetGrowth = 0;
-                    
-                    if (year === 1) {
-                        // Skip growth in year 1
-                        assetGrowth = 0;
-                    } else {
-                        assetGrowth = balance * appreciation;
-                        // Update BTC price for this year (appreciates with the same rate)
-                        currentBtcPrice = currentBtcPrice * (1 + appreciation);
-                    }
-                    
-                    const subtotal = balance + assetGrowth;
-                    const endingBalance = subtotal - expenses;
-                    // Convert expenses to BTC using current BTC price for this year
-                    if (currentBtcPrice <= 0) {
-                        throw new Error(`Invalid BTC price: $${currentBtcPrice}. This should not happen.`);
-                    }
-                    const expensesInBtc = expenses / currentBtcPrice;
-                    const endingBtcBalance = btcBalance - expensesInBtc;
-                    
-                    // Safety check: BTC balance should not go negative
-                    if (endingBtcBalance < -0.00000001) {
-                        throw new Error(`BTC balance would go negative in year ${year}. This suggests the required assets calculation is insufficient.`);
-                    }
-                    
-                    tableData.push({
-                        year: startYear + year - 1,
-                        startingBalance: balance,
-                        startingBtc: btcBalance,
-                        currentBtcPrice: currentBtcPrice,
-                        appreciationRate: (appreciation * 100).toFixed(1) + '%',
-                        appreciationValue: assetGrowth,
-                        subtotal: subtotal,
-                        livingExpenses: expenses,
-                        expensesInBtc: expensesInBtc,
-                        endingBalance: endingBalance,
-                        endingBtc: endingBtcBalance
-                    });
-                    
-                    balance = endingBalance;
-                    btcBalance = endingBtcBalance;
-                    totalExpenses += expenses;
-                    totalAppreciation += assetGrowth;
+                if (finalBalanceUsd < -100) {
+                    throw new Error(`Calculation error! Final balance is significantly negative ($${finalBalanceUsd.toLocaleString()}). This should not happen with the binary search algorithm.`);
                 }
                 
-                // Add totals row
-                tableData.push({
-                    year: 'Total',
-                    startingBalance: '-',
-                    startingBtc: '-',
-                    currentBtcPrice: '-',
-                    appreciationRate: '-',
-                    appreciationValue: totalAppreciation,
-                    subtotal: '-',
-                    livingExpenses: totalExpenses,
-                    expensesInBtc: '-',
-                    endingBalance: '-',
-                    endingBtc: '-'
-                });
-                
-                // Calculate final values
-                const finalBtcPrice = currentBtcPrice; // Use the actual final BTC price from the loop
-                const finalBtcValue = remainingBtc * finalBtcPrice;
-                const finalBalance = balance - finalBtcValue;
-                
-                // Verify BTC balance consistency
-                const btcBalanceDifference = Math.abs(btcBalance - remainingBtc);
-                if (btcBalanceDifference > 0.01) { // Allow for reasonable rounding errors
-                    console.warn(`BTC balance mismatch: ending BTC balance (${btcBalance.toFixed(8)}) differs from remaining BTC (${remainingBtc.toFixed(8)}) by ${btcBalanceDifference.toFixed(8)} BTC`);
-                }
-                
-                // Verify USD balance consistency
-                const expectedBalance = btcBalance * finalBtcPrice;
-                const balanceDifference = Math.abs(balance - expectedBalance);
-                if (balanceDifference > 100) { // Allow for reasonable rounding errors
-                    console.warn(`Balance mismatch: ending balance ($${balance.toLocaleString()}) differs from BTC balance * price ($${expectedBalance.toLocaleString()}) by $${balanceDifference.toLocaleString()}`);
-                }
-                
-                // The binary search should ensure this is very close to zero
-                // If it's significantly negative, there's an error in our calculation
-                if (finalBalance < -100) { // Allow for reasonable rounding errors
-                    throw new Error(`Calculation error! Final balance is significantly negative ($${finalBalance.toLocaleString()}). This should not happen with the binary search algorithm.`);
-                }
-                
-                // If final balance is slightly negative due to rounding, set it to zero
-                const displayFinalBalance = finalBalance < 0 ? 0 : finalBalance;
-                if (finalBalance < 0) {
-                    console.log(`Adjusting final balance from $${finalBalance.toLocaleString()} to $0 due to rounding`);
-                }
+                const displayFinalBalance = finalBalanceUsd < 0 ? 0 : finalBalanceUsd;
                 
                 // Update summary cards
                 const summaryCards = document.getElementById('summaryCards');
@@ -851,7 +905,6 @@
                     <thead>
                         <tr>
                             <th>Year</th>
-                            <th>Starting Balance ($)</th>
                             <th>Starting BTC</th>
                             <th>BTC Price ($)</th>
                             <th>Appreciation Rate</th>
@@ -859,7 +912,7 @@
                             <th>Subtotal ($)</th>
                             <th>Living Expenses ($)</th>
                             <th>Expenses (BTC)</th>
-                            <th>Ending Balance ($)</th>
+                            <th>Year-End Balance ($)</th>
                             <th>Ending BTC</th>
                         </tr>
                     </thead>
@@ -867,7 +920,6 @@
                         ${tableData.map(row => `
                             <tr>
                                 <td>${row.year}</td>
-                                <td>${typeof row.startingBalance === 'number' ? '$' + row.startingBalance.toLocaleString() : row.startingBalance}</td>
                                 <td>${typeof row.startingBtc === 'number' ? row.startingBtc.toFixed(8) : row.startingBtc}</td>
                                 <td>${typeof row.currentBtcPrice === 'number' ? '$' + row.currentBtcPrice.toLocaleString() : row.currentBtcPrice}</td>
                                 <td>${row.appreciationRate}</td>
@@ -908,17 +960,19 @@
                 data: {
                     labels: data.map(row => row.year),
                     datasets: [{
-                        label: 'Starting Balance',
-                        data: data.map(row => row.startingBalance),
-                        borderColor: '#667eea',
-                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                        tension: 0.4
-                    }, {
-                        label: 'Ending Balance',
+                        label: 'Year-End Balance',
                         data: data.map(row => row.endingBalance),
                         borderColor: '#764ba2',
                         backgroundColor: 'rgba(118, 75, 162, 0.1)',
-                        tension: 0.4
+                        tension: 0.4,
+                        yAxisID: 'y'
+                    }, {
+                        label: 'Ending BTC',
+                        data: data.map(row => row.endingBtc),
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.15)',
+                        tension: 0.4,
+                        yAxisID: 'y1'
                     }]
                 },
                 options: {
@@ -930,7 +984,10 @@
                         },
                         legend: {
                             display: true,
-                            position: 'top'
+                            position: 'top',
+                            labels: {
+                                color: '#333'
+                            }
                         }
                     },
                     scales: {
@@ -941,10 +998,47 @@
                                     return '$' + value.toLocaleString();
                                 }
                             }
+                        },
+                        y1: {
+                            position: 'right',
+                            beginAtZero: false,
+                            grid: {
+                                drawOnChartArea: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(2) + ' BTC';
+                                }
+                            }
                         }
                     }
                 }
             });
+            
+            applyChartTheme();
+        }
+
+        function applyChartTheme() {
+            if (!chart) return;
+            const isDark = document.body.classList.contains('dark-theme');
+            const legendColor = isDark ? '#bbbbbb' : '#333';
+            const titleColor = legendColor;
+            chart.options.plugins.legend.labels.color = legendColor;
+            if (chart.options.plugins.title) {
+                chart.options.plugins.title.color = titleColor;
+            }
+            
+            if (chart.options.scales.x && chart.options.scales.x.ticks) {
+                chart.options.scales.x.ticks.color = legendColor;
+            }
+            if (chart.options.scales.y && chart.options.scales.y.ticks) {
+                chart.options.scales.y.ticks.color = legendColor;
+            }
+            if (chart.options.scales.y1 && chart.options.scales.y1.ticks) {
+                chart.options.scales.y1.ticks.color = legendColor;
+            }
+            
+            chart.update('none');
         }
 
         // Load current Bitcoin price on page load
@@ -1027,6 +1121,7 @@
                 themeToggle.textContent = "🌙";
                 localStorage.setItem("theme", "light");
             }
+            applyChartTheme();
         });
 
         // Load saved theme on page load
@@ -1038,6 +1133,7 @@
         }
 
         document.body.appendChild(themeToggle);
+        applyChartTheme();
     </script>
 </body>
 </html>
