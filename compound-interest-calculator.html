@@ -757,8 +757,9 @@
                             <div class="stat-tertiary" id="totalBitcoinValueReal">Real (today's $): $0.00</div>
                         </div>
                         <div class="stat-card" title="Current value of your stock portfolio including growth and contributions">
-                            <div class="stat-value" id="totalStockValue">$0.00</div>
+                            <div class="stat-value" id="totalStockValueNominal">$0.00</div>
                             <div class="stat-label">Stock Portfolio</div>
+                            <div class="stat-tertiary" id="totalStockValueReal">Real (today's $): $0.00</div>
                         </div>
                         <div class="stat-card" title="Combined value of Bitcoin, stocks, and fiat holdings">
                             <div class="stat-value" id="totalValue">$0.00</div>
@@ -808,7 +809,7 @@
                                     <th>Year</th>
                                     <th>BTC Price (Nominal)</th>
                                     <th>BTC Balance</th>
-                                    <th>Stock Value</th>
+                                    <th>Stock Value (Nominal)</th>
                                     <th>Fiat PP Index</th>
                                     <th>House Value</th>
                                     <th>BTC/House</th>
@@ -1054,17 +1055,23 @@
                     currentHousePrice *= (1 + houseAppreciation / 100);
                 }
                 
+                const stockValueReal = isFinite(stockBalance) ? stockBalance : 0;
+                const stockValueNominal = isFinite(priceAdjustment) ? stockValueReal * priceAdjustment : stockValueReal;
+                const stockPriceReal = Math.pow(1 + stockGrowthRate / 100, year);
+                const stockPriceNominal = stockPriceReal * priceAdjustment;
+                const stockPriceIndexReal = isFinite(stockPriceReal) ? stockPriceReal * 100 : 0;
+                const stockPriceIndexNominal = isFinite(stockPriceNominal) ? stockPriceNominal * 100 : 0;
+
                 // Calculate values - ensure all are valid numbers
                 const fiatValue = fiatBalance || 0;
                 const bitcoinValueNominal = (bitcoinBalance || 0) * (isFinite(bitcoinPriceNominal) ? bitcoinPriceNominal : 0);
                 const bitcoinValueReal = (bitcoinBalance || 0) * (isFinite(bitcoinPriceReal) ? bitcoinPriceReal : 0);
-                const totalPortfolioValue = fiatValue + bitcoinValueNominal + (stockBalance || 0);
+                const totalPortfolioValue = fiatValue + bitcoinValueNominal + (isFinite(stockValueNominal) ? stockValueNominal : 0);
                 const stackToHouseRatio = currentHousePrice > 0 ? ((bitcoinValueNominal / currentHousePrice) * 100) : 0;
-                const stockToHouseRatio = currentHousePrice > 0 ? ((stockBalance / currentHousePrice) * 100) : 0;
+                const stockToHouseRatio = currentHousePrice > 0 ? ((stockValueNominal / currentHousePrice) * 100) : 0;
                 const fiatPurchasingPowerIndex = isFinite(fiatValueFactor) ? fiatValueFactor * 100 : 0;
                 const bitcoinPriceIndexNominal = (bitcoinPrice > 0 && isFinite(bitcoinPriceNominal)) ? (bitcoinPriceNominal / bitcoinPrice) * 100 : 0;
                 const bitcoinPriceIndexReal = (bitcoinPrice > 0 && isFinite(bitcoinPriceReal)) ? (bitcoinPriceReal / bitcoinPrice) * 100 : 0;
-
                 // Ensure all values are valid numbers (not NaN or Infinity)
                 calculationResults.push({
                     year: currentYear,
@@ -1079,9 +1086,13 @@
                     portfolioValue: isFinite(totalPortfolioValue) ? totalPortfolioValue : 0,
                     bitcoinValueNominal: isFinite(bitcoinValueNominal) ? bitcoinValueNominal : 0,
                     bitcoinValueReal: isFinite(bitcoinValueReal) ? bitcoinValueReal : 0,
+                    stockValueNominal: isFinite(stockValueNominal) ? stockValueNominal : 0,
+                    stockValueReal: isFinite(stockValueReal) ? stockValueReal : 0,
                     fiatPurchasingPowerIndex: isFinite(fiatPurchasingPowerIndex) ? fiatPurchasingPowerIndex : 0,
                     bitcoinPriceIndexNominal: isFinite(bitcoinPriceIndexNominal) ? bitcoinPriceIndexNominal : 0,
                     bitcoinPriceIndexReal: isFinite(bitcoinPriceIndexReal) ? bitcoinPriceIndexReal : 0,
+                    stockPriceIndexNominal: isFinite(stockPriceIndexNominal) ? stockPriceIndexNominal : 0,
+                    stockPriceIndexReal: isFinite(stockPriceIndexReal) ? stockPriceIndexReal : 0,
                     bitcoinAdded: isFinite(yearlyBitcoinAdded) ? yearlyBitcoinAdded : 0,
                     stockAdded: isFinite(yearlyStockAdded) ? yearlyStockAdded : 0
                 });
@@ -1101,7 +1112,8 @@
                 document.getElementById('totalBitcoin').textContent = '0.00000000';
                 document.getElementById('totalBitcoinValueNominal').textContent = '$0.00';
                 document.getElementById('totalBitcoinValueReal').textContent = "Real (today's $): $0.00";
-                document.getElementById('totalStockValue').textContent = '$0.00';
+                document.getElementById('totalStockValueNominal').textContent = '$0.00';
+                document.getElementById('totalStockValueReal').textContent = "Real (today's $): $0.00";
                 document.getElementById('totalValue').textContent = '$0.00';
                 document.getElementById('houseValue').textContent = '$0.00';
                 document.getElementById('stackToHouse').textContent = '0.00%';
@@ -1120,7 +1132,8 @@
             document.getElementById('totalBitcoin').textContent = lastResult.bitcoinBalance.toFixed(8);
             document.getElementById('totalBitcoinValueNominal').textContent = `$${bitcoinValueNominal.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
             document.getElementById('totalBitcoinValueReal').textContent = `Real (today's $): $${bitcoinValueReal.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
-            document.getElementById('totalStockValue').textContent = `$${lastResult.stockBalance.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+            document.getElementById('totalStockValueNominal').textContent = `$${(lastResult.stockValueNominal || 0).toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+            document.getElementById('totalStockValueReal').textContent = `Real (today's $): $${(lastResult.stockValueReal || 0).toLocaleString(undefined, {maximumFractionDigits: 0})}`;
             document.getElementById('totalValue').textContent = `$${lastResult.portfolioValue.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
             document.getElementById('houseValue').textContent = `$${lastResult.houseValue.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
             document.getElementById('stackToHouse').textContent = `${lastResult.stackToHouseRatio.toFixed(2)}%`;
@@ -1173,10 +1186,20 @@
                     },
                     {
                         label: 'Stock Portfolio ($)',
-                        data: calculationResults.map(r => isFinite(r.stockBalance) ? r.stockBalance : 0),
+                        data: calculationResults.map(r => isFinite(r.stockValueNominal) ? r.stockValueNominal : 0),
                         borderColor: '#007bff',
                         backgroundColor: 'rgba(0, 123, 255, 0.1)',
                         borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: "Stock Portfolio (Real $)",
+                        data: calculationResults.map(r => isFinite(r.stockValueReal) ? r.stockValueReal : 0),
+                        borderColor: '#60a5fa',
+                        backgroundColor: 'rgba(96, 165, 250, 0.05)',
+                        borderWidth: 2,
+                        borderDash: [4, 6],
                         fill: true,
                         tension: 0.4
                     }
@@ -1288,6 +1311,8 @@
             const fiatIndex = calculationResults.map(r => isFinite(r.fiatPurchasingPowerIndex) ? r.fiatPurchasingPowerIndex : 0);
             const bitcoinNominalIndex = calculationResults.map(r => isFinite(r.bitcoinPriceIndexNominal) ? r.bitcoinPriceIndexNominal : 0);
             const bitcoinRealIndex = calculationResults.map(r => isFinite(r.bitcoinPriceIndexReal) ? r.bitcoinPriceIndexReal : 0);
+            const stockNominalIndex = calculationResults.map(r => isFinite(r.stockPriceIndexNominal) ? r.stockPriceIndexNominal : 0);
+            const stockRealIndex = calculationResults.map(r => isFinite(r.stockPriceIndexReal) ? r.stockPriceIndexReal : 0);
 
             fiatImpactChart = new Chart(ctx, {
                 type: 'line',
@@ -1317,6 +1342,25 @@
                             data: bitcoinRealIndex,
                             borderColor: '#22c55e',
                             backgroundColor: 'rgba(34, 197, 94, 0.06)',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            fill: false,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Stock Price Index (Nominal)',
+                            data: stockNominalIndex,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.08)',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Stock Price Index (Real)',
+                            data: stockRealIndex,
+                            borderColor: '#1d4ed8',
+                            backgroundColor: 'rgba(29, 78, 216, 0.06)',
                             borderWidth: 2,
                             borderDash: [6, 6],
                             fill: false,
@@ -1417,7 +1461,7 @@
                     <td>${result.year}</td>
                     <td>$${result.bitcoinPrice.toLocaleString(undefined, {maximumFractionDigits: 2})}<span class="table-subtext">Real: $${result.bitcoinPriceReal.toLocaleString(undefined, {maximumFractionDigits: 2})}</span></td>
                     <td>${result.bitcoinBalance.toFixed(8)}</td>
-                    <td>$${result.stockBalance.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                    <td>$${result.stockValueNominal.toLocaleString(undefined, {maximumFractionDigits: 0})}<span class="table-subtext">Real: $${result.stockValueReal.toLocaleString(undefined, {maximumFractionDigits: 0})}</span></td>
                     <td>${result.fiatPurchasingPowerIndex.toFixed(2)}%</td>
                     <td>$${result.houseValue.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
                     <td>${result.stackToHouseRatio.toFixed(2)}%</td>
@@ -1478,14 +1522,15 @@
             }
 
             const csvContent = [
-                ['Year', 'Bitcoin Price (Nominal)', 'Bitcoin Price (Real)', 'Bitcoin Balance', 'Fiat Purchasing Power Index', 'Stock Value', 'House Value', 'Stack/House Ratio (%)', 'Stock/House Ratio (%)', 'Portfolio Value (Nominal)', 'Bitcoin Value (Nominal)', 'Bitcoin Value (Real)'],
+                ['Year', 'Bitcoin Price (Nominal)', 'Bitcoin Price (Real)', 'Bitcoin Balance', 'Fiat Purchasing Power Index', 'Stock Value (Nominal)', 'Stock Value (Real)', 'House Value', 'Stack/House Ratio (%)', 'Stock/House Ratio (%)', 'Portfolio Value (Nominal)', 'Bitcoin Value (Nominal)', 'Bitcoin Value (Real)'],
                 ...calculationResults.map(result => [
                     result.year,
                     result.bitcoinPrice.toFixed(2),
                     result.bitcoinPriceReal.toFixed(2),
                     result.bitcoinBalance.toFixed(8),
                     result.fiatPurchasingPowerIndex.toFixed(2),
-                    result.stockBalance.toFixed(2),
+                    result.stockValueNominal.toFixed(2),
+                    result.stockValueReal.toFixed(2),
                     result.houseValue.toFixed(2),
                     result.stackToHouseRatio.toFixed(2),
                     result.stockToHouseRatio.toFixed(2),
