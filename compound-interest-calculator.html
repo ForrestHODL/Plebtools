@@ -32,6 +32,10 @@
     </style>
     
     <style>
+        body {
+            overflow-x: hidden;
+        }
+
         /* Calculator specific styles */
         .calculator-container {
             max-width: 1400px;
@@ -39,6 +43,16 @@
             padding: 2rem;
             background: white;
             min-height: 100vh;
+        }
+        @media (max-width: 1200px) {
+            .calculator-container {
+                padding: 1.5rem 1.25rem;
+            }
+        }
+        @media (max-width: 768px) {
+            .calculator-container {
+                padding: 1.25rem 0.75rem 2rem;
+            }
         }
 
         .calculator-header {
@@ -76,6 +90,11 @@
             gap: 2rem;
             margin-bottom: 2rem;
         }
+        @media (max-width: 1200px) {
+            .calculator-interface {
+                grid-template-columns: 1fr;
+            }
+        }
 
         .controls-panel {
             background: #f8f9fa;
@@ -83,6 +102,11 @@
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             height: fit-content;
+        }
+        @media (max-width: 768px) {
+            .controls-panel {
+                padding: 1.5rem;
+            }
         }
 
         .control-group {
@@ -191,6 +215,23 @@
             position: relative;
             height: 400px;
             margin-bottom: 2rem;
+            width: 100%;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 320px;
+            }
+        }
+        @media (max-width: 480px) {
+            .chart-container {
+                height: 280px;
+            }
+        }
+
+        .chart-container canvas {
+            width: 100% !important;
+            height: 100% !important;
+            max-width: 100%;
         }
 
         .stats-grid {
@@ -198,6 +239,16 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
             margin-bottom: 2rem;
+        }
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            }
+        }
+        @media (max-width: 640px) {
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
         }
 
         .stat-card {
@@ -220,6 +271,26 @@
             font-size: 0.9rem;
         }
 
+        .stat-secondary {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2933;
+            margin-top: 0.35rem;
+        }
+
+        .stat-tertiary {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+        }
+
+        .table-subtext {
+            display: block;
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+        }
+
         .results-table {
             background: white;
             border-radius: 10px;
@@ -227,11 +298,21 @@
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             max-height: 400px;
             overflow-y: auto;
+            overflow-x: auto;
+            width: 100%;
+            max-width: 100%;
+            -webkit-overflow-scrolling: touch;
         }
 
         .table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 720px;
+        }
+        @media (max-width: 480px) {
+            .table {
+                min-width: 600px;
+            }
         }
 
         .table th,
@@ -316,7 +397,7 @@
             }
 
             .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             }
         }
 
@@ -415,6 +496,18 @@
 
         .dark-theme .stat-label {
             color: #ccc;
+        }
+
+        .dark-theme .stat-secondary {
+            color: #fbbf24;
+        }
+
+        .dark-theme .stat-tertiary {
+            color: #cbd5f5;
+        }
+
+        .dark-theme .table-subtext {
+            color: #cbd5f5;
         }
 
         .dark-theme .controls-panel h3,
@@ -582,6 +675,15 @@
                             </div>
                         </div>
 
+                        <!-- Fiat Settings -->
+                        <h4 style="margin-bottom: 1rem; color: #333; border-bottom: 2px solid #ef4444; padding-bottom: 0.5rem; margin-top: 2rem;">Fiat Settings</h4>
+                        <div class="form-row">
+                            <div class="control-group">
+                                <label class="control-label" for="fiatDebasementRate">Fiat Debasement Rate (%)</label>
+                                <input type="number" id="fiatDebasementRate" class="control-input" placeholder="7" value="7" step="0.1" min="-50" max="99" title="Estimated annual loss of purchasing power for your local currency">
+                            </div>
+                        </div>
+
                         <!-- House Settings -->
                         <h4 style="margin-bottom: 1rem; color: #333; border-bottom: 2px solid #28a745; padding-bottom: 0.5rem; margin-top: 2rem;">House Settings</h4>
                         <div class="form-row">
@@ -651,11 +753,13 @@
                         <div class="stat-card" title="Total Bitcoin accumulated through DCA over the projection period">
                             <div class="stat-value" id="totalBitcoin">0.00</div>
                             <div class="stat-label">Total Bitcoin</div>
-                            <div class="stat-value" id="totalBitcoinValue" style="font-size: 1.2rem; margin-top: 0.5rem;">$0.00</div>
+                            <div class="stat-secondary" id="totalBitcoinValueNominal">$0.00</div>
+                            <div class="stat-tertiary" id="totalBitcoinValueReal">Real (today's $): $0.00</div>
                         </div>
                         <div class="stat-card" title="Current value of your stock portfolio including growth and contributions">
-                            <div class="stat-value" id="totalStockValue">$0.00</div>
+                            <div class="stat-value" id="totalStockValueNominal">$0.00</div>
                             <div class="stat-label">Stock Portfolio</div>
+                            <div class="stat-tertiary" id="totalStockValueReal">Real (today's $): $0.00</div>
                         </div>
                         <div class="stat-card" title="Combined value of Bitcoin, stocks, and fiat holdings">
                             <div class="stat-value" id="totalValue">$0.00</div>
@@ -673,6 +777,11 @@
                             <div class="stat-value" id="stockToHouse">0.00%</div>
                             <div class="stat-label">Stock/House Ratio</div>
                         </div>
+                        <div class="stat-card" title="How much purchasing power remains assuming your fiat debasement rate">
+                            <div class="stat-value" id="fiatPurchasingPower">100.00%</div>
+                            <div class="stat-label">Fiat Purchasing Power</div>
+                            <div class="stat-tertiary" id="fiatPurchasingPowerLoss">Loss since start: 0.00%</div>
+                        </div>
                     </div>
 
                     <div class="chart-controls">
@@ -684,20 +793,28 @@
                         <canvas id="resultsChart"></canvas>
                     </div>
 
+                    <h4 style="margin-bottom: 0.5rem; color: #333;">Fiat Debasement Impact</h4>
+                    <p style="margin-bottom: 1.5rem; color: #4b5563; font-size: 0.9rem;">
+                        Track how Bitcoin price growth and fiat purchasing power diverge when your measuring stick shrinks.
+                    </p>
+                    <div class="chart-container" style="height: 320px;">
+                        <canvas id="fiatDebasementChart"></canvas>
+                    </div>
+
                     <h4 style="margin-bottom: 1rem; color: #333;">Yearly Projections</h4>
                     <div class="results-table">
                         <table class="table">
                             <thead>
                                 <tr>
                                     <th>Year</th>
-                                    <th>BTC Price</th>
+                                    <th>BTC Price (Nominal)</th>
                                     <th>BTC Balance</th>
-                                    <th>Stock Value</th>
-                                    <th>Fiat Balance</th>
+                                    <th>Stock Value (Nominal)</th>
+                                    <th>Fiat PP Index</th>
                                     <th>House Value</th>
                                     <th>BTC/House</th>
                                     <th>Stock/House</th>
-                                    <th>Portfolio Value</th>
+                                    <th>Portfolio Value (Nominal)</th>
                                 </tr>
                             </thead>
                             <tbody id="resultsTableBody">
@@ -791,6 +908,64 @@
         let calculationResults = [];
         let currentChart = null;
         let currentChartType = 'value';
+        let fiatImpactChart = null;
+        const CALCULATOR_STORAGE_KEY = 'plebtools-compound-settings';
+        const CALCULATOR_INPUT_IDS = [
+            'initialInvestment',
+            'monthlyContribution',
+            'bitcoinPrice',
+            'bitcoinGrowthRate',
+            'fiatDebasementRate',
+            'housePrice',
+            'houseAppreciation',
+            'initialStockInvestment',
+            'monthlyStockContribution',
+            'currentStockPortfolio',
+            'stockGrowthRate',
+            'years'
+        ];
+
+        function loadSavedSettings() {
+            try {
+                const rawSettings = localStorage.getItem(CALCULATOR_STORAGE_KEY);
+                if (!rawSettings) return;
+
+                const parsedSettings = JSON.parse(rawSettings);
+                CALCULATOR_INPUT_IDS.forEach(id => {
+                    if (Object.prototype.hasOwnProperty.call(parsedSettings, id)) {
+                        const field = document.getElementById(id);
+                        if (field) {
+                            field.value = parsedSettings[id];
+                        }
+                    }
+                });
+            } catch (error) {
+                console.warn('Unable to load saved calculator settings from localStorage.', error);
+            }
+        }
+
+        function saveCurrentSettings() {
+            try {
+                const payload = {};
+                CALCULATOR_INPUT_IDS.forEach(id => {
+                    const field = document.getElementById(id);
+                    if (field) {
+                        payload[id] = field.value;
+                    }
+                });
+                localStorage.setItem(CALCULATOR_STORAGE_KEY, JSON.stringify(payload));
+            } catch (error) {
+                console.warn('Unable to save calculator settings to localStorage.', error);
+            }
+        }
+
+        function clearSavedSettings() {
+            try {
+                localStorage.removeItem(CALCULATOR_STORAGE_KEY);
+            } catch (error) {
+                console.warn('Unable to clear calculator settings from localStorage.', error);
+            }
+        }
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
@@ -800,6 +975,7 @@
                 calculateResults();
             });
 
+            loadSavedSettings();
             // Load default calculation
             calculateResults();
             updateChartButtons();
@@ -814,6 +990,7 @@
             const monthlyStockContribution = parseFloat(document.getElementById('monthlyStockContribution').value) || 0;
             const bitcoinPrice = parseFloat(document.getElementById('bitcoinPrice').value) || 114268.74;
             const bitcoinGrowthRate = parseFloat(document.getElementById('bitcoinGrowthRate').value) || 25;
+            const fiatDebasementRate = parseFloat(document.getElementById('fiatDebasementRate').value) || 0;
             const currentStockPortfolio = parseFloat(document.getElementById('currentStockPortfolio').value) || 0;
             const stockGrowthRate = parseFloat(document.getElementById('stockGrowthRate').value) || 10;
             const housePrice = parseFloat(document.getElementById('housePrice').value) || 0;
@@ -825,6 +1002,12 @@
                 alert('Bitcoin price must be greater than 0');
                 return;
             }
+            if (fiatDebasementRate >= 100) {
+                alert('Fiat debasement rate must be less than 100%');
+                return;
+            }
+
+            saveCurrentSettings();
 
             // Initialize variables
             // Convert initial investment to Bitcoin at starting price
@@ -840,7 +1023,10 @@
             // Calculate for each year
             for (let year = 0; year <= years; year++) {
                 const currentYear = 2025 + year;
-                const currentBitcoinPrice = bitcoinPrice * Math.pow(1 + bitcoinGrowthRate / 100, year);
+                const bitcoinPriceReal = bitcoinPrice * Math.pow(1 + bitcoinGrowthRate / 100, year);
+                const fiatValueFactor = Math.pow(1 - fiatDebasementRate / 100, year);
+                const priceAdjustment = fiatValueFactor !== 0 ? (1 / fiatValueFactor) : Number.POSITIVE_INFINITY;
+                const bitcoinPriceNominal = bitcoinPriceReal * priceAdjustment;
                 
                 // Calculate monthly contributions for this year
                 let yearlyBitcoinAdded = 0;
@@ -849,8 +1035,8 @@
                     // Calculate how much Bitcoin to buy with monthly contribution
                     // Monthly contribution is used to buy Bitcoin, not added to fiat
                     // Handle zero monthly contribution safely
-                    if (monthlyContribution > 0 && currentBitcoinPrice > 0) {
-                        const bitcoinToAdd = monthlyContribution / currentBitcoinPrice;
+                    if (monthlyContribution > 0 && bitcoinPriceNominal > 0 && isFinite(bitcoinPriceNominal)) {
+                        const bitcoinToAdd = monthlyContribution / bitcoinPriceNominal;
                         bitcoinBalance += bitcoinToAdd;
                         yearlyBitcoinAdded += bitcoinToAdd;
                         totalBitcoinAdded += bitcoinToAdd;
@@ -869,17 +1055,28 @@
                     currentHousePrice *= (1 + houseAppreciation / 100);
                 }
                 
+                const stockValueReal = isFinite(stockBalance) ? stockBalance : 0;
+                const stockValueNominal = isFinite(priceAdjustment) ? stockValueReal * priceAdjustment : stockValueReal;
+                const stockPriceReal = Math.pow(1 + stockGrowthRate / 100, year);
+                const stockPriceNominal = stockPriceReal * priceAdjustment;
+                const stockPriceIndexReal = isFinite(stockPriceReal) ? stockPriceReal * 100 : 0;
+                const stockPriceIndexNominal = isFinite(stockPriceNominal) ? stockPriceNominal * 100 : 0;
+
                 // Calculate values - ensure all are valid numbers
                 const fiatValue = fiatBalance || 0;
-                const bitcoinValue = (bitcoinBalance || 0) * (currentBitcoinPrice || 0);
-                const totalPortfolioValue = fiatValue + bitcoinValue + (stockBalance || 0);
-                const stackToHouseRatio = currentHousePrice > 0 ? ((bitcoinValue / currentHousePrice) * 100) : 0;
-                const stockToHouseRatio = currentHousePrice > 0 ? ((stockBalance / currentHousePrice) * 100) : 0;
-
+                const bitcoinValueNominal = (bitcoinBalance || 0) * (isFinite(bitcoinPriceNominal) ? bitcoinPriceNominal : 0);
+                const bitcoinValueReal = (bitcoinBalance || 0) * (isFinite(bitcoinPriceReal) ? bitcoinPriceReal : 0);
+                const totalPortfolioValue = fiatValue + bitcoinValueNominal + (isFinite(stockValueNominal) ? stockValueNominal : 0);
+                const stackToHouseRatio = currentHousePrice > 0 ? ((bitcoinValueNominal / currentHousePrice) * 100) : 0;
+                const stockToHouseRatio = currentHousePrice > 0 ? ((stockValueNominal / currentHousePrice) * 100) : 0;
+                const fiatPurchasingPowerIndex = isFinite(fiatValueFactor) ? fiatValueFactor * 100 : 0;
+                const bitcoinPriceIndexNominal = (bitcoinPrice > 0 && isFinite(bitcoinPriceNominal)) ? (bitcoinPriceNominal / bitcoinPrice) * 100 : 0;
+                const bitcoinPriceIndexReal = (bitcoinPrice > 0 && isFinite(bitcoinPriceReal)) ? (bitcoinPriceReal / bitcoinPrice) * 100 : 0;
                 // Ensure all values are valid numbers (not NaN or Infinity)
                 calculationResults.push({
                     year: currentYear,
-                    bitcoinPrice: isFinite(currentBitcoinPrice) ? currentBitcoinPrice : 0,
+                    bitcoinPrice: isFinite(bitcoinPriceNominal) ? bitcoinPriceNominal : 0,
+                    bitcoinPriceReal: isFinite(bitcoinPriceReal) ? bitcoinPriceReal : 0,
                     bitcoinBalance: isFinite(bitcoinBalance) ? bitcoinBalance : 0,
                     fiatBalance: isFinite(fiatValue) ? fiatValue : 0,
                     stockBalance: isFinite(stockBalance) ? stockBalance : 0,
@@ -887,6 +1084,15 @@
                     stackToHouseRatio: isFinite(stackToHouseRatio) ? stackToHouseRatio : 0,
                     stockToHouseRatio: isFinite(stockToHouseRatio) ? stockToHouseRatio : 0,
                     portfolioValue: isFinite(totalPortfolioValue) ? totalPortfolioValue : 0,
+                    bitcoinValueNominal: isFinite(bitcoinValueNominal) ? bitcoinValueNominal : 0,
+                    bitcoinValueReal: isFinite(bitcoinValueReal) ? bitcoinValueReal : 0,
+                    stockValueNominal: isFinite(stockValueNominal) ? stockValueNominal : 0,
+                    stockValueReal: isFinite(stockValueReal) ? stockValueReal : 0,
+                    fiatPurchasingPowerIndex: isFinite(fiatPurchasingPowerIndex) ? fiatPurchasingPowerIndex : 0,
+                    bitcoinPriceIndexNominal: isFinite(bitcoinPriceIndexNominal) ? bitcoinPriceIndexNominal : 0,
+                    bitcoinPriceIndexReal: isFinite(bitcoinPriceIndexReal) ? bitcoinPriceIndexReal : 0,
+                    stockPriceIndexNominal: isFinite(stockPriceIndexNominal) ? stockPriceIndexNominal : 0,
+                    stockPriceIndexReal: isFinite(stockPriceIndexReal) ? stockPriceIndexReal : 0,
                     bitcoinAdded: isFinite(yearlyBitcoinAdded) ? yearlyBitcoinAdded : 0,
                     stockAdded: isFinite(yearlyStockAdded) ? yearlyStockAdded : 0
                 });
@@ -896,28 +1102,57 @@
             updateStats();
             updateChartButtons();
             updateChart();
+            updateFiatImpactChart();
             updateTable();
         }
 
         // Update statistics display
         function updateStats() {
-            if (calculationResults.length === 0) return;
+            if (calculationResults.length === 0) {
+                document.getElementById('totalBitcoin').textContent = '0.00000000';
+                document.getElementById('totalBitcoinValueNominal').textContent = '$0.00';
+                document.getElementById('totalBitcoinValueReal').textContent = "Real (today's $): $0.00";
+                document.getElementById('totalStockValueNominal').textContent = '$0.00';
+                document.getElementById('totalStockValueReal').textContent = "Real (today's $): $0.00";
+                document.getElementById('totalValue').textContent = '$0.00';
+                document.getElementById('houseValue').textContent = '$0.00';
+                document.getElementById('stackToHouse').textContent = '0.00%';
+                document.getElementById('stockToHouse').textContent = '0.00%';
+                document.getElementById('fiatPurchasingPower').textContent = '100.00%';
+                document.getElementById('fiatPurchasingPowerLoss').textContent = 'Loss since start: 0.00%';
+                return;
+            }
 
             const lastResult = calculationResults[calculationResults.length - 1];
-            const bitcoinValue = lastResult.bitcoinBalance * lastResult.bitcoinPrice;
+            const bitcoinValueNominal = lastResult.bitcoinValueNominal || 0;
+            const bitcoinValueReal = lastResult.bitcoinValueReal || 0;
+            const fiatPower = lastResult.fiatPurchasingPowerIndex || 0;
+            const fiatChange = fiatPower - 100;
             
             document.getElementById('totalBitcoin').textContent = lastResult.bitcoinBalance.toFixed(8);
-            document.getElementById('totalBitcoinValue').textContent = `$${bitcoinValue.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
-            document.getElementById('totalStockValue').textContent = `$${lastResult.stockBalance.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+            document.getElementById('totalBitcoinValueNominal').textContent = `$${bitcoinValueNominal.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+            document.getElementById('totalBitcoinValueReal').textContent = `Real (today's $): $${bitcoinValueReal.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+            document.getElementById('totalStockValueNominal').textContent = `$${(lastResult.stockValueNominal || 0).toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+            document.getElementById('totalStockValueReal').textContent = `Real (today's $): $${(lastResult.stockValueReal || 0).toLocaleString(undefined, {maximumFractionDigits: 0})}`;
             document.getElementById('totalValue').textContent = `$${lastResult.portfolioValue.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
             document.getElementById('houseValue').textContent = `$${lastResult.houseValue.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
             document.getElementById('stackToHouse').textContent = `${lastResult.stackToHouseRatio.toFixed(2)}%`;
             document.getElementById('stockToHouse').textContent = `${lastResult.stockToHouseRatio.toFixed(2)}%`;
+            document.getElementById('fiatPurchasingPower').textContent = `${fiatPower.toFixed(2)}%`;
+            document.getElementById('fiatPurchasingPowerLoss').textContent = fiatChange >= 0
+                ? `Gain since start: ${fiatChange.toFixed(2)}%`
+                : `Loss since start: ${Math.abs(fiatChange).toFixed(2)}%`;
         }
 
         // Update chart
         function updateChart() {
-            if (calculationResults.length === 0) return;
+            if (calculationResults.length === 0) {
+                if (currentChart) {
+                    currentChart.destroy();
+                    currentChart = null;
+                }
+                return;
+            }
 
             const ctx = document.getElementById('resultsChart').getContext('2d');
             
@@ -931,11 +1166,8 @@
             if (currentChartType === 'value') {
                 datasets = [
                     {
-                        label: 'Bitcoin Value ($)',
-                        data: calculationResults.map(r => {
-                            const value = r.bitcoinBalance * r.bitcoinPrice;
-                            return isFinite(value) ? value : 0;
-                        }),
+                        label: 'Bitcoin Value (Nominal $)',
+                        data: calculationResults.map(r => isFinite(r.bitcoinValueNominal) ? r.bitcoinValueNominal : 0),
                         borderColor: '#f7931a',
                         backgroundColor: 'rgba(247, 147, 26, 0.1)',
                         borderWidth: 3,
@@ -943,11 +1175,31 @@
                         tension: 0.4
                     },
                     {
+                        label: "Bitcoin Value (Real $)",
+                        data: calculationResults.map(r => isFinite(r.bitcoinValueReal) ? r.bitcoinValueReal : 0),
+                        borderColor: '#fb923c',
+                        backgroundColor: 'rgba(251, 146, 60, 0.05)',
+                        borderWidth: 2,
+                        borderDash: [6, 6],
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
                         label: 'Stock Portfolio ($)',
-                        data: calculationResults.map(r => isFinite(r.stockBalance) ? r.stockBalance : 0),
+                        data: calculationResults.map(r => isFinite(r.stockValueNominal) ? r.stockValueNominal : 0),
                         borderColor: '#007bff',
                         backgroundColor: 'rgba(0, 123, 255, 0.1)',
                         borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: "Stock Portfolio (Real $)",
+                        data: calculationResults.map(r => isFinite(r.stockValueReal) ? r.stockValueReal : 0),
+                        borderColor: '#60a5fa',
+                        backgroundColor: 'rgba(96, 165, 250, 0.05)',
+                        borderWidth: 2,
+                        borderDash: [4, 6],
                         fill: true,
                         tension: 0.4
                     }
@@ -1037,6 +1289,110 @@
             });
         }
 
+        function updateFiatImpactChart() {
+            const chartCanvas = document.getElementById('fiatDebasementChart');
+            if (!chartCanvas) return;
+
+            if (calculationResults.length === 0) {
+                if (fiatImpactChart) {
+                    fiatImpactChart.destroy();
+                    fiatImpactChart = null;
+                }
+                return;
+            }
+
+            const ctx = chartCanvas.getContext('2d');
+
+            if (fiatImpactChart) {
+                fiatImpactChart.destroy();
+            }
+
+            const labels = calculationResults.map(r => r.year.toString());
+            const fiatIndex = calculationResults.map(r => isFinite(r.fiatPurchasingPowerIndex) ? r.fiatPurchasingPowerIndex : 0);
+            const bitcoinNominalIndex = calculationResults.map(r => isFinite(r.bitcoinPriceIndexNominal) ? r.bitcoinPriceIndexNominal : 0);
+            const bitcoinRealIndex = calculationResults.map(r => isFinite(r.bitcoinPriceIndexReal) ? r.bitcoinPriceIndexReal : 0);
+            const stockNominalIndex = calculationResults.map(r => isFinite(r.stockPriceIndexNominal) ? r.stockPriceIndexNominal : 0);
+            const stockRealIndex = calculationResults.map(r => isFinite(r.stockPriceIndexReal) ? r.stockPriceIndexReal : 0);
+
+            fiatImpactChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Fiat Purchasing Power Index',
+                            data: fiatIndex,
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Bitcoin Price Index (Nominal)',
+                            data: bitcoinNominalIndex,
+                            borderColor: '#0ea5e9',
+                            backgroundColor: 'rgba(14, 165, 233, 0.08)',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4
+                        },
+                        {
+                            label: "Bitcoin Price Index (Real)",
+                            data: bitcoinRealIndex,
+                            borderColor: '#22c55e',
+                            backgroundColor: 'rgba(34, 197, 94, 0.06)',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            fill: false,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Stock Price Index (Nominal)',
+                            data: stockNominalIndex,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.08)',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Stock Price Index (Real)',
+                            data: stockRealIndex,
+                            borderColor: '#1d4ed8',
+                            backgroundColor: 'rgba(29, 78, 216, 0.06)',
+                            borderWidth: 2,
+                            borderDash: [6, 6],
+                            fill: false,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Indexed Comparison (Start = 100)'
+                        },
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Index Value'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
         // Get chart title based on current type
         function getChartTitle() {
             switch(currentChartType) {
@@ -1103,10 +1459,10 @@
             tbody.innerHTML = calculationResults.map(result => `
                 <tr>
                     <td>${result.year}</td>
-                    <td>$${result.bitcoinPrice.toLocaleString(undefined, {maximumFractionDigits: 2})}</td>
+                    <td>$${result.bitcoinPrice.toLocaleString(undefined, {maximumFractionDigits: 2})}<span class="table-subtext">Real: $${result.bitcoinPriceReal.toLocaleString(undefined, {maximumFractionDigits: 2})}</span></td>
                     <td>${result.bitcoinBalance.toFixed(8)}</td>
-                    <td>$${result.stockBalance.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
-                    <td>$${result.fiatBalance.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
+                    <td>$${result.stockValueNominal.toLocaleString(undefined, {maximumFractionDigits: 0})}<span class="table-subtext">Real: $${result.stockValueReal.toLocaleString(undefined, {maximumFractionDigits: 0})}</span></td>
+                    <td>${result.fiatPurchasingPowerIndex.toFixed(2)}%</td>
                     <td>$${result.houseValue.toLocaleString(undefined, {maximumFractionDigits: 0})}</td>
                     <td>${result.stackToHouseRatio.toFixed(2)}%</td>
                     <td>${result.stockToHouseRatio.toFixed(2)}%</td>
@@ -1123,6 +1479,7 @@
             document.getElementById('monthlyStockContribution').value = 1000;
             document.getElementById('bitcoinPrice').value = 114268.74;
             document.getElementById('bitcoinGrowthRate').value = 25;
+            document.getElementById('fiatDebasementRate').value = 7;
             document.getElementById('currentStockPortfolio').value = 0;
             document.getElementById('stockGrowthRate').value = 10;
             document.getElementById('housePrice').value = 450000;
@@ -1140,16 +1497,20 @@
             document.getElementById('monthlyStockContribution').value = 0;
             document.getElementById('bitcoinPrice').value = 0;
             document.getElementById('bitcoinGrowthRate').value = 0;
+            document.getElementById('fiatDebasementRate').value = 0;
             document.getElementById('currentStockPortfolio').value = 0;
             document.getElementById('stockGrowthRate').value = 0;
             document.getElementById('housePrice').value = 0;
             document.getElementById('houseAppreciation').value = 0;
             document.getElementById('years').value = 0;
             
+            clearSavedSettings();
+
             // Clear the results
             calculationResults = [];
             updateStats();
             updateChart();
+            updateFiatImpactChart();
             updateTable();
         }
 
@@ -1161,15 +1522,21 @@
             }
 
             const csvContent = [
-                ['Year', 'Bitcoin Price', 'Bitcoin Balance', 'Fiat Balance', 'House Value', 'Stack/House Ratio (%)', 'Portfolio Value'],
+                ['Year', 'Bitcoin Price (Nominal)', 'Bitcoin Price (Real)', 'Bitcoin Balance', 'Fiat Purchasing Power Index', 'Stock Value (Nominal)', 'Stock Value (Real)', 'House Value', 'Stack/House Ratio (%)', 'Stock/House Ratio (%)', 'Portfolio Value (Nominal)', 'Bitcoin Value (Nominal)', 'Bitcoin Value (Real)'],
                 ...calculationResults.map(result => [
                     result.year,
                     result.bitcoinPrice.toFixed(2),
+                    result.bitcoinPriceReal.toFixed(2),
                     result.bitcoinBalance.toFixed(8),
-                    result.fiatBalance.toFixed(2),
+                    result.fiatPurchasingPowerIndex.toFixed(2),
+                    result.stockValueNominal.toFixed(2),
+                    result.stockValueReal.toFixed(2),
                     result.houseValue.toFixed(2),
                     result.stackToHouseRatio.toFixed(2),
-                    result.portfolioValue.toFixed(2)
+                    result.stockToHouseRatio.toFixed(2),
+                    result.portfolioValue.toFixed(2),
+                    result.bitcoinValueNominal.toFixed(2),
+                    result.bitcoinValueReal.toFixed(2)
                 ])
             ].map(row => row.join(',')).join('\n');
 
