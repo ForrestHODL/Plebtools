@@ -4,13 +4,129 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Plebtools - Bitcoin Treasury & Portfolio Tracking</title>
-  <link rel="icon" type="image/x-icon" href="images/channels4_profile.jpg">
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
   <link rel="stylesheet" href="styles.css?v=3">
+  
+  <style>
+    /* Inline dropdown styles to ensure they work */
+    #toolsDropdown {
+      position: relative;
+      display: inline-block;
+    }
+    
+    #toolsBtn {
+      background: none;
+      border: none;
+      color: #333;
+      font-weight: 500;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    /* Ensure button text color changes with theme */
+    .dark-theme #toolsBtn {
+      color: #e0e0e0 !important;
+    }
+    
+    #toolsBtn:hover {
+      background: rgba(102, 126, 234, 0.1);
+      color: #667eea;
+    }
+    
+    .dropdown-arrow {
+      font-size: 0.8rem;
+      transition: transform 0.3s ease;
+    }
+    
+    #toolsContent {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      min-width: 220px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      z-index: 1001;
+      padding: 0.75rem 0;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(10px);
+      margin-top: 8px;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+    }
+    
+    #toolsContent.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    #toolsContent a {
+      display: block;
+      padding: 0.875rem 1.5rem;
+      color: #333;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      border-radius: 0;
+      position: relative;
+    }
+    
+    /* Force text color in dark theme */
+    .dark-theme #toolsContent a {
+      color: #e0e0e0 !important;
+    }
+    
+    #toolsContent a:hover {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      color: #667eea;
+      transform: translateX(8px);
+    }
+    
+    #toolsContent a:first-child {
+      border-radius: 12px 12px 0 0;
+    }
+    
+    #toolsContent a:last-child {
+      border-radius: 0 0 12px 12px;
+    }
+    
+    /* Dark theme support */
+    .dark-theme #toolsBtn {
+      color: #e0e0e0;
+    }
+    
+    .dark-theme #toolsBtn:hover {
+      background: rgba(102, 126, 234, 0.2);
+      color: #667eea;
+    }
+    
+    .dark-theme #toolsContent {
+      background: #2d2d2d !important;
+      border-color: #555 !important;
+    }
+    
+    .dark-theme #toolsContent a {
+      color: #e0e0e0 !important;
+    }
+    
+    .dark-theme #toolsContent a:hover {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%) !important;
+      color: #667eea !important;
+    }
+  </style>
+  
   <style>
     /* Home page specific styles */
     .hero-section {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      color: #1f2937;
       padding: 120px 0 80px;
       text-align: center;
       position: relative;
@@ -24,8 +140,8 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-      opacity: 0.3;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(15,23,42,0.08)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+      opacity: 0.22;
     }
 
     .hero-content {
@@ -61,34 +177,31 @@
     .hero-btn {
       display: inline-block;
       padding: 1rem 2rem;
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
+      background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+      color: #ffffff;
       text-decoration: none;
       border-radius: 50px;
       font-weight: bold;
       font-size: 1.1rem;
       transition: all 0.3s ease;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(10px);
+      border: none;
+      box-shadow: 0 10px 25px rgba(249, 115, 22, 0.35);
     }
 
     .hero-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
       transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      color: white;
+      box-shadow: 0 15px 35px rgba(249, 115, 22, 0.45);
+      color: #ffffff;
       text-decoration: none;
     }
 
     .hero-btn.primary {
-      background: rgba(255, 255, 255, 0.9);
-      color: #667eea;
-      border-color: rgba(255, 255, 255, 0.9);
+      background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+      color: #ffffff;
     }
 
     .hero-btn.primary:hover {
-      background: white;
-      color: #667eea;
+      background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
     }
 
     .features-section {
@@ -142,18 +255,19 @@
     .feature-btn {
       display: inline-block;
       padding: 0.8rem 1.5rem;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+      color: #ffffff;
       text-decoration: none;
       border-radius: 25px;
       font-weight: bold;
       transition: all 0.3s ease;
+      box-shadow: 0 8px 22px rgba(249, 115, 22, 0.35);
     }
 
     .feature-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-      color: white;
+      box-shadow: 0 12px 30px rgba(249, 115, 22, 0.45);
+      color: #ffffff;
       text-decoration: none;
     }
 
@@ -225,33 +339,33 @@
     .cta-btn {
       display: inline-block;
       padding: 1rem 2rem;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+      color: #ffffff;
       text-decoration: none;
       border-radius: 50px;
       font-weight: bold;
       font-size: 1.1rem;
       transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 10px 30px rgba(249, 115, 22, 0.4);
     }
 
     .cta-btn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.6);
-      color: white;
+      box-shadow: 0 15px 40px rgba(249, 115, 22, 0.5);
+      color: #ffffff;
       text-decoration: none;
     }
 
     .cta-btn.secondary {
       background: transparent;
-      color: #667eea;
-      border: 2px solid #667eea;
+      color: #f97316;
+      border: 2px solid #f97316;
       box-shadow: none;
     }
 
     .cta-btn.secondary:hover {
-      background: #667eea;
-      color: white;
+      background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+      color: #ffffff;
     }
 
     /* Mobile responsiveness */
@@ -327,6 +441,269 @@
     .dark-theme .cta-description {
       color: #ccc;
     }
+
+    /* Affiliate Links Section */
+    .affiliate-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .affiliate-item {
+      background: #f7f9ff;
+      border: 1px solid #e1e7ff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: 0 24px 50px -30px rgba(66, 78, 132, 0.3);
+    }
+
+    .dark-theme .affiliate-item {
+      background: #3d3d3d;
+      border-color: rgba(148, 163, 184, 0.25);
+      box-shadow: 0 24px 50px -28px rgba(15, 23, 42, 0.55);
+    }
+
+    .affiliate-item:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 28px 60px -32px rgba(66, 78, 132, 0.35);
+    }
+
+    .affiliate-item h4 {
+      margin-bottom: 0.9rem;
+      font-weight: 700;
+      color: #2c3a6d;
+      font-size: 1rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .dark-theme .affiliate-item h4 {
+      color: #667eea;
+    }
+
+    .affiliate-link {
+      display: inline-block;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: #ffffff;
+      padding: 0.6rem 1.4rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 16px 40px -22px rgba(59, 130, 246, 0.55);
+    }
+
+    .affiliate-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 50px -24px rgba(59, 130, 246, 0.65);
+    }
+
+    .discount-code {
+      margin-top: 0.7rem;
+      font-size: 0.82rem;
+      color: #64748b;
+      letter-spacing: 0.05em;
+    }
+
+    .dark-theme .discount-code {
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    /* Mobile responsiveness for affiliate links */
+    @media (max-width: 768px) {
+      .affiliate-links {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .affiliate-item {
+        padding: 1rem;
+      }
+      
+      .affiliate-link {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+      }
+    }
+
+    /* Contact Section Styles */
+    .contact-section {
+      background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
+      color: #1f2937;
+      padding: 80px 0;
+      text-align: center;
+    }
+
+    .contact-content {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .contact-title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .contact-description {
+      font-size: 1.2rem;
+      margin-bottom: 3rem;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+
+    .contact-widget {
+      display: flex;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .contact-item {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .contact-item:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    }
+
+    .contact-icon {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    .contact-info h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+
+    .contact-email {
+      color: #1f2937;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 500;
+      padding: 0.8rem 1.5rem;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 25px;
+      display: inline-block;
+      transition: all 0.3s ease;
+      border: 2px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .contact-email:hover {
+      background: rgba(255, 255, 255, 0.85);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      color: #1f2937;
+      text-decoration: none;
+    }
+
+    .dark-theme .contact-email {
+      color: #f8fafc;
+      background: rgba(255, 255, 255, 0.15);
+      border: 2px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .dark-theme .contact-email:hover {
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      color: #f8fafc;
+    }
+
+    /* Mobile responsiveness for contact section */
+    @media (max-width: 768px) {
+      .contact-title {
+        font-size: 2rem;
+      }
+
+      .contact-description {
+        font-size: 1.1rem;
+      }
+
+      .contact-item {
+        padding: 1.5rem;
+        margin: 0 1rem;
+      }
+
+      .contact-email {
+        font-size: 1rem;
+        padding: 0.6rem 1.2rem;
+      }
+    }
+
+    /* Dark theme support for contact section */
+    .dark-theme .contact-section {
+      background: linear-gradient(135deg, #1f3b70 0%, #12254a 100%);
+      color: white;
+    }
+
+    .support-section {
+      padding: 4rem 0;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(30, 41, 59, 0.98) 100%);
+    }
+
+    .support-grid {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .support-card {
+      background: rgba(30, 41, 59, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 18px;
+      padding: 2.25rem;
+      text-align: center;
+      box-shadow: 0 28px 60px -30px rgba(15, 23, 42, 0.6);
+      color: #e2e8f0;
+    }
+
+    .support-icon {
+      font-size: 2.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .support-text {
+      color: #cbd5f5;
+      font-size: 1rem;
+      margin: 1rem 0 2rem;
+      line-height: 1.6;
+    }
+
+    .support-btn {
+      display: inline-block;
+      padding: 0.9rem 2.2rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+      color: #f8fafc;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 18px 35px -18px rgba(249, 115, 22, 0.55);
+    }
+
+    .support-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 45px -20px rgba(249, 115, 22, 0.65);
+      color: #f8fafc;
+    }
   </style>
 </head>
 <body>
@@ -334,15 +711,30 @@
     <nav>
       <div class="nav-container">
         <div class="logo-container">
-          <img src="images/channels4_profile.jpg" alt="Plebtools" class="nav-logo">
+          <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
           <h1 class="logo">Plebtools</h1>
         </div>
-        <ul class="nav-links">
-          <li><a href="#features">Features</a></li>
-          <li><a href="#trackers">Trackers</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
+        <div class="nav-links">
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+
+              <a href="treasury">📊 Treasury</a>
+              <a href="btc-buy-tracker">�� Portfolio</a>
+              <a href="coveredcall-tracker">�� Covered Calls</a>
+              <a href="compound-interest-calculator">💰 Calculator</a>
+              <a href="retirement-calculator">🏖️ Retirement</a>
+              <a href="btc-loan-ltv">🔒 BTC Loans</a>
+              <a href="financial-planner">📋 Financial Planner</a>
+              <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+              <a href="pleb-release">📰 Pleb Release</a>
+              <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
+              <a href="invoice-builder">🧾 Invoice Builder</a>
+            </div>
+          </div>
+          <a href="account" class="account-link">👤 Account</a>
+        </div>
       </div>
     </nav>
   </header>
@@ -357,8 +749,7 @@
           Track your Bitcoin purchases, monitor portfolio performance, and make data-driven decisions.
         </p>
         <div class="hero-buttons">
-          <a href="/treasury" class="hero-btn primary">Treasury Tracker</a>
-          <a href="/plebtools-btc" class="hero-btn">BTC Portfolio Tracker</a>
+          <a href="#features" class="hero-btn">Explore All Tools</a>
         </div>
       </div>
     </section>
@@ -373,7 +764,7 @@
             Pre-configured Bitcoin treasury tracking with real-time price data, 
             historical analysis, and comprehensive portfolio visualization.
           </p>
-          <a href="/treasury" class="feature-btn">View Treasury Tracker</a>
+          <a href="treasury" class="feature-btn">View Treasury Tracker</a>
         </div>
 
         <div class="feature-card">
@@ -383,28 +774,112 @@
             Interactive Bitcoin portfolio management. Add, edit, and delete purchases 
             with real-time price updates and performance analytics.
           </p>
-          <a href="/plebtools-btc" class="feature-btn">View Portfolio Tracker</a>
+          <a href="btc-buy-tracker" class="feature-btn">View Portfolio Tracker</a>
         </div>
 
         <div class="feature-card">
           <span class="feature-icon">📈</span>
-          <h3 class="feature-title">Real-time Data</h3>
+          <h3 class="feature-title">Covered Call Tracker</h3>
           <p class="feature-description">
-            Live Bitcoin price feeds from CoinGecko API with historical price data 
-            for accurate portfolio valuation and trend analysis.
+            Track covered call trades and analyze portfolio performance. Monitor cost basis 
+            adjustments, premium income, and visualize your options strategy results.
           </p>
-          <a href="/treasury" class="feature-btn">See Live Data</a>
+          <a href="coveredcall-tracker" class="feature-btn">View Covered Call Tracker</a>
         </div>
 
         <div class="feature-card">
-          <span class="feature-icon">🎨</span>
-          <h3 class="feature-title">Modern UI</h3>
+          <span class="feature-icon">🧾</span>
+          <h3 class="feature-title">Invoice Builder</h3>
           <p class="feature-description">
-            Beautiful, responsive design with dark/light themes, mobile optimization, 
-            and intuitive user experience across all devices.
+            Generate polished invoices with customizable line items, logo uploads, tax handling, and PDF export.
+            Save reusable templates directly in your browser for fast repeat billing.
           </p>
-          <a href="/plebtools-btc" class="feature-btn">Try Interface</a>
+          <a href="invoice-builder" class="feature-btn">Build Invoices</a>
         </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">💰</span>
+          <h3 class="feature-title">Compound Interest Calculator</h3>
+          <p class="feature-description">
+            Calculate your Bitcoin wealth over time with compound interest projections. 
+            Compare Bitcoin growth against house appreciation and traditional investments.
+          </p>
+          <a href="compound-interest-calculator" class="feature-btn">View Calculator</a>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">💹</span>
+          <h3 class="feature-title">Yield Arbitrage Calculator</h3>
+          <p class="feature-description">
+            Model debt-funded yield strategies with side-by-side projections. Stress test spreads,
+            servicing plans, and reinvestment assumptions before deploying capital.
+          </p>
+          <a href="interest-arbitrage-calculator" class="feature-btn">Explore Yield Arbitrage</a>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">🔑</span>
+          <h3 class="feature-title">Self-Custody Step-by-Step Guide</h3>
+          <p class="feature-description">
+            Follow an interactive, quiz-gated process that takes you from buying Bitcoin to secure cold
+            storage with rehearsed recovery and hardened backups.
+          </p>
+          <a href="step-by-step-to-self-custody" class="feature-btn">Start the Self-Custody Guide</a>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">🏖️</span>
+          <h3 class="feature-title">Bitcoin Retirement Calculator</h3>
+          <p class="feature-description">
+            Plan your Bitcoin retirement with detailed calculations. Determine how much Bitcoin 
+            you need to retire based on expenses, inflation, and Bitcoin appreciation rates.
+          </p>
+          <a href="retirement-calculator.html" class="feature-btn">Plan Retirement</a>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">🔍</span>
+          <h3 class="feature-title">Transaction Privacy Analyzer</h3>
+          <p class="feature-description">
+            Analyze Bitcoin transaction privacy using advanced heuristics. Detect wallet clustering, 
+            address reuse, change outputs, and other privacy concerns with detailed risk scoring.
+          </p>
+          <a href="privacy-analyzer.html" class="feature-btn">Analyze Privacy</a>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">📰</span>
+          <h3 class="feature-title">Pleb Release Tool</h3>
+          <p class="feature-description">
+            Create professional press release images with custom text overlays. 
+            Choose from multiple fonts, colors, and backgrounds. Perfect for 
+            Bitcoin announcements and corporate communications.
+          </p>
+          <a href="pleb-release" class="feature-btn">Create Pleb Release</a>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">📋</span>
+          <h3 class="feature-title">Financial Planner</h3>
+          <p class="feature-description">
+            Comprehensive financial planning tool to track income, expenses, 
+            and investment growth. Plan your financial future with detailed 
+            projections and scenario analysis.
+          </p>
+          <a href="financial-planner" class="feature-btn">View Financial Planner</a>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">🛡️</span>
+          <h3 class="feature-title">Bitcoin Security</h3>
+          <p class="feature-description">
+            Understand the incredible security of Bitcoin private keys through 
+            interactive visualizations and comparisons. Learn why your Bitcoin 
+            is protected by mathematics and the scale of the universe.
+          </p>
+          <a href="bitcoin-security" class="feature-btn">View Bitcoin Security</a>
+        </div>
+
 
         <div class="feature-card">
           <span class="feature-icon">🔒</span>
@@ -412,8 +887,9 @@
           <p class="feature-description">
             All data stored locally in your browser. No accounts required, 
             no data collection, complete privacy and control over your information.
+            As an open source project, you can clone the repository and run it 
+            locally on your own machine for maximum security.
           </p>
-          <a href="/treasury" class="feature-btn">Learn More</a>
         </div>
 
         <div class="feature-card">
@@ -428,43 +904,96 @@
       </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="stats-section">
-      <div class="stats-grid">
-        <div class="stat-item">
-          <span class="stat-number">2</span>
-          <span class="stat-label">Professional Trackers</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-number">100%</span>
-          <span class="stat-label">Privacy Focused</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-number">∞</span>
-          <span class="stat-label">Free to Use</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-number">24/7</span>
-          <span class="stat-label">Real-time Updates</span>
+    <!-- Affiliate Links Section -->
+    <section class="features-section">
+      <div class="container">
+        <h2 class="section-title">Want to buy and secure your Bitcoin?</h2>
+        <div style="text-align: center;">
+          <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
+          <div class="affiliate-links">
+            <div class="affiliate-item">
+              <h4>Where to buy</h4>
+              <a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" class="affiliate-link">Bitcoin Well</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>Where to store</h4>
+              <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>How to protect</h4>
+              <a href="https://www.stampseed.com/" target="_blank" class="affiliate-link">Stamp Seed</a>
+              <p class="discount-code">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
+            </div>
+            <div class="affiliate-item">
+              <h4>How to validate</h4>
+              <a href="https://store.start9.com/" target="_blank" class="affiliate-link">Start9</a>
+              <p class="discount-code">CODE: BNC5 for 5% off</p>
+            </div>
+            <div class="affiliate-item">
+              <h4>1:1 Coaching</h4>
+              <a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>Where to learn</h4>
+              <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta-section" id="trackers">
-      <div class="cta-content">
-        <h2 class="cta-title">Ready to Track Your Bitcoin?</h2>
-        <p class="cta-description">
-          Choose the tracker that fits your needs. Start with our pre-configured treasury tracker 
-          or build your own portfolio from scratch.
-        </p>
-        <div class="cta-buttons">
-          <a href="/treasury" class="cta-btn">Start with Treasury Tracker</a>
-          <a href="/plebtools-btc" class="cta-btn secondary">Build Custom Portfolio</a>
+    <section class="support-section">
+      <div class="container support-grid">
+        <div class="support-card">
+          <div class="support-icon">⚡</div>
+          <h2 class="section-title">Support Plebtools</h2>
+          <p class="support-text">
+            Enjoying these tools? You can help keep them free and open source by donating sats.
+            Every contribution fuels more Bitcoin-first development.
+          </p>
+          <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
         </div>
       </div>
     </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+      <div class="container">
+        <div class="contact-content">
+          <h2 class="contact-title">Get in Touch</h2>
+          <p class="contact-description">
+            Have questions about Plebtools or need help with Bitcoin tracking? 
+            Reach out to us and we'll get back to you as soon as possible.
+          </p>
+          <div class="contact-widget">
+            <div class="contact-item">
+              <span class="contact-icon">📧</span>
+              <div class="contact-info">
+                <h3>Email Us</h3>
+                <a href="mailto:Bitcoinnotcryptopod@gmail.com" class="contact-email">
+                  Bitcoinnotcryptopod@gmail.com
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features-section" style="padding: 4rem 0;">
+      <div class="container" style="text-align: center;">
+        <h2 class="section-title">Open Source</h2>
+        <p style="max-width: 680px; margin: 1.5rem auto; color: var(--text-muted, #475569);">
+          Plebtools is fully open source. Fork the code, submit improvements, or deploy your own instance to track Bitcoin operations your way.
+        </p>
+        <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" class="feature-btn" style="display: inline-block;">
+          View on GitHub
+        </a>
+      </div>
+    </section>
+
   </main>
+
 
   <footer>
     <div class="container">
@@ -477,9 +1006,9 @@
     const themeToggle = document.createElement('button');
     themeToggle.innerHTML = '🌙';
     themeToggle.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
+      position: absolute;
+      top: 140px;
+      right: 40px;
       background: rgba(255, 255, 255, 0.2);
       border: 2px solid rgba(255, 255, 255, 0.3);
       color: white;
@@ -520,6 +1049,41 @@
 
     document.body.appendChild(themeToggle);
 
+    // Simple dropdown functionality
+    const toolsBtn = document.getElementById('toolsBtn');
+    const toolsContent = document.getElementById('toolsContent');
+    let isOpen = false;
+
+    toolsBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (isOpen) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      } else {
+        toolsContent.style.display = 'block';
+        setTimeout(() => {
+          toolsContent.classList.add('show');
+        }, 10);
+        isOpen = true;
+      }
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('toolsDropdown').contains(e.target)) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      }
+    });
+
     // Smooth scrolling for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
@@ -536,3 +1100,4 @@
   </script>
 </body>
 </html>
+

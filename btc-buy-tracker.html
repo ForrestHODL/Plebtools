@@ -4,48 +4,254 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Plebtools BTC Tracker</title>
-  <link rel="icon" type="image/x-icon" href="images/channels4_profile.jpg">
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
+  <link rel="stylesheet" href="styles.css?v=3">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
+  <style>
+    /* Bitcoin Storage Theme for Header */
+    .gradient-text {
+      background: -webkit-linear-gradient(45deg, #f59e0b, #fbbf24, #fde68a);
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
+    }
+
+    .storage-section {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+      border: 1px solid #333;
+      position: relative;
+    }
+
+    /* Dark Theme for Body Background */
+    body {
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+      min-height: 100vh;
+    }
+
+    /* Light Theme */
+    body.light-theme {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+
+    body.light-theme .tracker-container {
+      background: transparent;
+    }
+
+    body.light-theme .storage-section {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      border: 1px solid #dee2e6;
+    }
+
+    body.light-theme .storage-section p {
+      color: #6c757d;
+    }
+
+    /* Light Theme Text Colors */
+    body.light-theme h1,
+    body.light-theme h2,
+    body.light-theme h3,
+    body.light-theme h4,
+    body.light-theme h5,
+    body.light-theme h6,
+    body.light-theme p,
+    body.light-theme span,
+    body.light-theme div,
+    body.light-theme td,
+    body.light-theme th,
+    body.light-theme li,
+    body.light-theme label {
+      color: #212529 !important;
+    }
+
+    body.light-theme .totals-section,
+    body.light-theme .table-section,
+    body.light-theme .chart-section,
+    body.light-theme .tracker-form,
+    body.light-theme .proof-of-reserves-section {
+      background: #ffffff !important;
+      border: 1px solid #dee2e6;
+      color: #212529;
+    }
+
+    body.light-theme .tracker-table td {
+      color: #212529 !important;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    body.light-theme .totals-display,
+    body.light-theme .empty-state {
+      color: #212529 !important;
+    }
+
+    body.light-theme .form-group input {
+      background: #ffffff;
+      border: 2px solid #dee2e6;
+      color: #212529;
+    }
+
+    body.light-theme .wallet-item {
+      background: #ffffff;
+      border: 1px solid #dee2e6;
+    }
+
+    body.light-theme .wallet-address {
+      color: #495057 !important;
+    }
+
+    body.light-theme .affiliate-item {
+      background: #ffffff;
+      border: 1px solid #dee2e6;
+    }
+
+    /* Modern dropdown styles */
+    #toolsDropdown {
+      position: relative;
+      display: inline-block;
+    }
+    
+    #toolsBtn {
+      background: none;
+      border: none;
+      color: #333;
+      font-weight: 500;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .dark-theme #toolsBtn {
+      color: #e0e0e0 !important;
+    }
+    
+    #toolsBtn:hover {
+      background: rgba(102, 126, 234, 0.1);
+      color: #667eea;
+    }
+    
+    .dropdown-arrow {
+      font-size: 0.8rem;
+      transition: transform 0.3s ease;
+    }
+    
+    #toolsContent {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      min-width: 220px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      z-index: 1001;
+      padding: 0.75rem 0;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(10px);
+      margin-top: 8px;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+    }
+    
+    #toolsContent.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    #toolsContent a {
+      display: block;
+      padding: 0.875rem 1.5rem;
+      color: #333;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      border-radius: 0;
+      position: relative;
+    }
+    
+    .dark-theme #toolsContent a {
+      color: #e0e0e0 !important;
+    }
+    
+    #toolsContent a:hover {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      color: #667eea;
+      transform: translateX(8px);
+    }
+    
+    #toolsContent a:first-child {
+      border-radius: 12px 12px 0 0;
+    }
+    
+    #toolsContent a:last-child {
+      border-radius: 0 0 12px 12px;
+    }
+    
+    .dark-theme #toolsContent {
+      background: #2d2d2d !important;
+      border-color: #555 !important;
+    }
+    
+    .dark-theme #toolsContent a:hover {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%) !important;
+      color: #667eea !important;
+    }
+  </style>
+  
   <style>
     /* Tracker-specific styles */
     .tracker-container {
       max-width: 1000px;
       margin: 0 auto;
       padding: 120px 20px 80px;
-      background: white;
+      background: transparent;
       min-height: 100vh;
     }
 
     .tracker-header {
       text-align: center;
       margin-bottom: 3rem;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: #1a1a1a;
       padding: 3rem 2rem;
       border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
       position: relative;
     }
 
     .tracker-header h1 {
       font-size: 2.5rem;
       margin-bottom: 1rem;
-      color: white;
+      color: #1a1a1a;
     }
 
     .tracker-header p {
       font-size: 1.1rem;
       opacity: 0.9;
       margin-bottom: 0;
+      color: #1a1a1a;
     }
 
     .tracker-form {
-      background: #f8f9fa;
+      background: white;
       padding: 2rem;
       border-radius: 15px;
       margin-bottom: 2rem;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      box-shadow: none;
+    }
+
+    body.dark-theme .tracker-form {
+      background: #2d2d2d;
     }
 
     .form-row {
@@ -64,7 +270,7 @@
       display: block;
       margin-bottom: 0.5rem;
       font-weight: bold;
-      color: #333;
+      color: #1a1a1a;
     }
 
     .form-group input {
@@ -100,8 +306,8 @@
     }
 
     .submit-btn {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: #1a1a1a;
       border: none;
       padding: 15px 30px;
       font-size: 1.1rem;
@@ -109,12 +315,13 @@
       border-radius: 10px;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      box-shadow: none;
     }
 
     .submit-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+      box-shadow: none;
+      color: #1a1a1a;
     }
 
     .totals-section {
@@ -122,7 +329,7 @@
       padding: 2rem;
       border-radius: 15px;
       margin-bottom: 2rem;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      box-shadow: none;
       border-left: 5px solid #667eea;
     }
 
@@ -164,8 +371,8 @@
     }
 
     .tracker-table th {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: #1a1a1a !important;
       padding: 15px;
       text-align: center;
       font-weight: bold;
@@ -175,6 +382,7 @@
       padding: 15px;
       text-align: center;
       border-bottom: 1px solid #e9ecef;
+      color: #212529;
     }
 
     .tracker-table tbody tr:hover {
@@ -248,6 +456,169 @@
       }
     }
 
+    /* Proof of Reserves Section */
+    .proof-of-reserves-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: #f8f9fa;
+      border-radius: 15px;
+      border: 1px solid #e9ecef;
+    }
+
+    .proof-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .wallet-addresses {
+      margin-top: 1rem;
+    }
+
+    .add-wallet-form {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .wallet-input {
+      flex: 1;
+      min-width: 300px;
+      padding: 0.75rem;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .wallet-input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .add-wallet-btn {
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: #1a1a1a;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .add-wallet-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: none;
+      color: #1a1a1a;
+    }
+
+    .wallet-list {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .wallet-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      background: white;
+      border: 1px solid #e9ecef;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .wallet-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .wallet-info {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .wallet-address {
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      color: #495057;
+      word-break: break-all;
+    }
+
+    .wallet-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .view-btn, .remove-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .view-btn {
+      background: #28a745;
+      color: white;
+    }
+
+    .view-btn:hover {
+      background: #218838;
+      transform: translateY(-1px);
+    }
+
+    .remove-btn {
+      background: #dc3545;
+      color: white;
+    }
+
+    .remove-btn:hover {
+      background: #c82333;
+      transform: translateY(-1px);
+    }
+
+    /* Mobile responsiveness for Proof of Reserves */
+    @media (max-width: 768px) {
+      .proof-of-reserves-section {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .add-wallet-form {
+        flex-direction: column;
+      }
+
+      .wallet-input {
+        min-width: 100%;
+      }
+
+      .wallet-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .wallet-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      .wallet-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
     /* Affiliate Links Section */
     .affiliate-links {
       display: grid;
@@ -278,23 +649,19 @@
 
     .affiliate-link {
       display: inline-block;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 0.6rem 1.4rem;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
       color: white;
       text-decoration: none;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+      border-radius: 999px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.25);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .affiliate-link:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-      color: white;
-      text-decoration: none;
+      box-shadow: 0 14px 30px rgba(59, 130, 246, 0.35);
     }
 
     .discount-code {
@@ -375,8 +742,8 @@
     }
 
     .dark-theme .tracker-table th {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: #1a1a1a !important;
     }
 
     .dark-theme .tracker-table td {
@@ -388,6 +755,39 @@
       background: #3d3d3d;
     }
 
+    .dark-theme .proof-of-reserves-section {
+      background: #2d2d2d;
+      border-color: #404040;
+    }
+
+    .dark-theme .proof-description p {
+      color: #b0b0b0;
+    }
+
+    .dark-theme .wallet-input {
+      background: #3d3d3d;
+      border-color: #555;
+      color: #e0e0e0;
+    }
+
+    .dark-theme .wallet-input:focus {
+      border-color: #667eea;
+      background: #3d3d3d;
+    }
+
+    .dark-theme .wallet-input::placeholder {
+      color: #888;
+    }
+
+    .dark-theme .wallet-item {
+      background: #3d3d3d;
+      border-color: #555;
+    }
+
+    .dark-theme .wallet-address {
+      color: #e0e0e0;
+    }
+
     .dark-theme .affiliate-item {
       background: #3d3d3d;
       color: #e0e0e0;
@@ -395,6 +795,10 @@
 
     .dark-theme .affiliate-item h4 {
       color: #667eea;
+    }
+
+    .dark-theme .discount-code {
+      color: #4CAF50;
     }
 
     .dark-theme .empty-state h3 {
@@ -413,6 +817,11 @@
     .dark-theme h5,
     .dark-theme h6 {
       color: #e0e0e0 !important;
+    }
+
+    /* Override logo color in dark theme to maintain brand color */
+    .dark-theme .logo {
+      color: #667eea !important;
     }
 
     .dark-theme p,
@@ -502,6 +911,188 @@
       }
     }
 
+    /* Account Modal Styles */
+    .modal {
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .dark-theme .modal-content {
+      background: #2d2d2d;
+      color: #e0e0e0;
+    }
+
+    .close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #aaa;
+    }
+
+    .close:hover {
+      color: #000;
+    }
+
+    .dark-theme .close {
+      color: #ccc;
+    }
+
+    .dark-theme .close:hover {
+      color: #fff;
+    }
+
+    .account-form h2 {
+      color: #667eea;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .dark-theme .account-form h2 {
+      color: #e0e0e0;
+    }
+
+    .user-info {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .dark-theme .user-info {
+      background: #3d3d3d;
+    }
+
+    .user-info p {
+      margin: 0.5rem 0;
+    }
+
+    .user-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .user-actions button {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .account-form small {
+      color: #666;
+      font-size: 0.8rem;
+    }
+
+    .dark-theme .account-form small {
+      color: #999;
+    }
+
+    .account-form a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .account-form a:hover {
+      text-decoration: underline;
+    }
+
+    /* Mobile responsiveness for modal */
+    @media (max-width: 768px) {
+      .modal-content {
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+
+      .user-actions {
+        flex-direction: column;
+      }
+
+      .user-actions button {
+        width: 100%;
+      }
+    }
+
+    /* Support Section Styles */
+    .support-section {
+      padding: 4rem 0;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(30, 41, 59, 0.98) 100%);
+    }
+
+    .support-grid {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .support-card {
+      background: rgba(30, 41, 59, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 18px;
+      padding: 2.25rem;
+      text-align: center;
+      box-shadow: 0 28px 60px -30px rgba(15, 23, 42, 0.6);
+      color: #e2e8f0;
+    }
+
+    .support-icon {
+      font-size: 2.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .support-title {
+      font-size: 1.6rem;
+      color: #f8fafc;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+
+    .support-text {
+      color: #cbd5f5;
+      font-size: 1rem;
+      margin: 1rem 0 2rem;
+      line-height: 1.6;
+    }
+
+    .support-btn {
+      display: inline-block;
+      padding: 0.9rem 2.2rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+      color: #f8fafc;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 18px 35px -18px rgba(249, 115, 22, 0.55);
+    }
+
+    .support-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 45px -20px rgba(249, 115, 22, 0.65);
+      color: #f8fafc;
+    }
   </style>
 </head>
 <body>
@@ -509,35 +1100,48 @@
     <nav>
       <div class="nav-container">
         <div class="logo-container">
-          <img src="images/channels4_profile.jpg" alt="Plebtools" class="nav-logo">
+          <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
           <h1 class="logo">Plebtools</h1>
         </div>
-        <ul class="nav-links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/#about">About</a></li>
-          <li><a href="/#services">Services</a></li>
-          <li><a href="/#contact">Contact</a></li>
-          <li><a href="/webinars">Webinars</a></li>
-        </ul>
+        <div class="nav-links">
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="home">🏠 Home</a>
+              <a href="treasury">📊 Treasury</a>
+              <a href="coveredcall-tracker">📈 Covered Calls</a>
+              <a href="compound-interest-calculator">💰 Calculator</a>
+              <a href="btc-loan-ltv">🔒 BTC Loans</a>
+              <a href="financial-planner">📋 Financial Planner</a>
+              <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+              <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
+              <a href="invoice-builder">🧾 Invoice Builder</a>
+              <a href="pleb-release">📰 Pleb Release</a>
+            </div>
+          </div>
+          <a href="account" class="account-link">👤 Account</a>
+        </div>
       </div>
     </nav>
   </header>
 
   <main>
     <div class="tracker-container">
-      <div class="tracker-header">
-        <h1>Plebtools BTC Tracker</h1>
-        <p>Track your Bitcoin purchases and portfolio performance</p>
+      <section class="storage-section">
+        <h1 class="gradient-text" style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">Plebtools BTC Tracker</h1>
+        <p style="text-align: center; font-size: 1.2rem; color: #ccc; max-width: 800px; margin: 0 auto;">Track your Bitcoin purchases and portfolio performance</p>
         <div style="position: absolute; top: 20px; left: 120px;">
           <button id="currencyToggle" class="theme-toggle-btn" style="background: rgba(255, 255, 255, 0.2); border: 2px solid rgba(255, 255, 255, 0.3); color: white; font-size: 1rem; width: 80px; height: 50px; border-radius: 10px; cursor: pointer; transition: all 0.3s ease;">USD</button>
         </div>
         <div style="position: absolute; top: 20px; right: 20px;">
           <button id="themeToggle" class="theme-toggle-btn">🌙</button>
         </div>
-      </div>
+      </section>
+
 
       <div class="tracker-form">
-        <h3 style="color: #667eea; margin-bottom: 1.5rem; text-align: center;">Add New Purchase/Sale</h3>
+        <h3 style="color: #1a1a1a; margin-bottom: 1.5rem; text-align: center;">Add New Purchase/Sale</h3>
         <form id="purchaseForm">
           <div class="form-row">
             <div class="form-group">
@@ -560,10 +1164,18 @@
       </div>
 
       <div class="tracker-form">
-        <h3 style="color: #667eea; margin-bottom: 1.5rem; text-align: center;">Import CSV File</h3>
-        <div class="form-group">
-          <label for="csvFile">Select CSV File</label>
-          <input type="file" id="csvFile" accept=".csv">
+        <h3 style="color: #667eea; margin-bottom: 1.5rem; text-align: center;">Import/Export CSV File</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="csvFile">Select CSV File to Import</label>
+            <input type="file" id="csvFile" accept=".csv">
+          </div>
+          <div class="form-group">
+            <label>Export Data</label>
+            <button id="exportBtn" class="submit-btn" style="background: #28a745; width: 100%; margin-top: 0;">
+              📊 Export to CSV
+            </button>
+          </div>
         </div>
         <div id="csvStatus" style="text-align: center; margin-top: 1rem; font-weight: bold;"></div>
       </div>
@@ -624,71 +1236,95 @@
       </div>
 
       <div class="totals-section">
+        <!-- Proof of Reserves Section -->
+        <div class="proof-of-reserves-section">
+          <h3 style="text-align: center;">Proof of Reserves</h3>
+          <div class="proof-container">
+            <div class="proof-description">
+              <p style="text-align: center; color: #666; margin-bottom: 1.5rem;">
+                Verify my Bitcoin holdings on-chain. Add wallet addresses to track my reserves.
+              </p>
+            </div>
+            <div class="wallet-addresses">
+              <div class="add-wallet-form">
+                <input type="text" id="walletAddress" placeholder="Enter Bitcoin wallet address (e.g., bc1q...)" class="wallet-input">
+                <button id="addWalletBtn" class="add-wallet-btn">Add Address</button>
+              </div>
+              <div id="walletList" class="wallet-list">
+                <!-- Wallet addresses will be added here dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+
         <h3 style="text-align: center;">Want to buy and secure your Bitcoin?</h3>
         <div class="totals-display">
           <div style="text-align: center;">
             <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
             <div class="affiliate-links">
               <div class="affiliate-item">
-                <h4>Where I buy</h4>
+                <h4>Where to buy</h4>
                 <a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" class="affiliate-link">Bitcoin Well</a>
               </div>
               <div class="affiliate-item">
-                <h4>How I store</h4>
+                <h4>Where to store</h4>
                 <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a>
               </div>
               <div class="affiliate-item">
-                <h4>How I protect</h4>
+                <h4>How to protect</h4>
                 <a href="https://www.stampseed.com/" target="_blank" class="affiliate-link">Stamp Seed</a>
                 <p class="discount-code">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
               </div>
               <div class="affiliate-item">
-                <h4>How I validate</h4>
+                <h4>How to validate</h4>
                 <a href="https://store.start9.com/" target="_blank" class="affiliate-link">Start9</a>
                 <p class="discount-code">CODE: BNC5 for 5% off</p>
               </div>
                <div class="affiliate-item">
                  <h4>1:1 Coaching</h4>
-                 <a href="https://www.differentmedia.ca/bitcoin1-1" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+                 <a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
                </div>
                <div class="affiliate-item">
                  <h4>Where to learn</h4>
                  <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
                </div>
-               <div class="affiliate-item">
-                 <h4>Earn free BTC</h4>
-                 <a href="https://satsarcade.app/" target="_blank" class="affiliate-link">Sats Arcade</a>
-               </div>
-               <div class="affiliate-item">
-                 <h4>How to support</h4>
-                 <a href="https://coinos.io/plebtools" target="_blank" class="affiliate-link">Donate</a>
-               </div>
              </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="totals-section">
-        <h3>Open Source</h3>
-        <div class="totals-display">
-          <div style="text-align: center;">
-            <p>This Bitcoin tracker is free and open source and can be replicated for anyone to track their own Bitcoin purchases.</p>
-            <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" class="submit-btn" style="background: #667eea; display: inline-block; margin-top: 1rem;">
-              View on GitHub
-            </a>
           </div>
         </div>
       </div>
     </div>
   </main>
 
-  <footer>
-    <div class="container">
-      <p>&copy; 2024 Plebtools. All rights reserved.</p>
+  <section class="support-section">
+    <div class="container support-grid">
+      <div class="support-card">
+        <div class="support-icon">⚡</div>
+        <h2 class="support-title">Support Plebtools</h2>
+        <p class="support-text">
+          Enjoying these tools? You can help keep them free and open source by donating sats.
+          Every contribution fuels more Bitcoin-first development.
+        </p>
+        <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+      </div>
     </div>
+  </section>
+
+  <section class="features-section" style="margin-top: 1rem;">
+    <div class="container" style="text-align: center;">
+      <h2 class="section-title">Open Source</h2>
+      <p>Bitcoin Buy Tracker is free and open source and can be replicated for anyone to track their own Bitcoin purchases.</p>
+      <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" class="affiliate-link">View on GitHub</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2024 Plebtools. Track your Bitcoin stack with precision and privacy.</p>
   </footer>
 
   <script>
+    // Version: 2025-01-27 - Updated with new purchase and improved price fetching
+    console.log('BTC Tracker loaded - Version 2025-01-27');
+    
     // Current Bitcoin price data
     let currentBtcPrice = null;
     let currentBtcPriceCAD = null;
@@ -710,14 +1346,73 @@
     // Fetch current Bitcoin price in USD and CAD
     async function fetchCurrentBtcPrice() {
       try {
-        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,cad&include_24hr_change=true');
-        const data = await response.json();
-        currentBtcPrice = data.bitcoin.usd;
-        currentBtcPriceCAD = data.bitcoin.cad;
-        return isCAD ? currentBtcPriceCAD : currentBtcPrice;
+        // Try multiple APIs for better reliability
+        const apis = [
+          'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,cad&include_24hr_change=true',
+          'https://api.coinbase.com/v2/exchange-rates?currency=BTC',
+          'https://blockchain.info/ticker',
+          'https://cors-anywhere.herokuapp.com/https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,cad&include_24hr_change=true'
+        ];
+        
+        for (let i = 0; i < apis.length; i++) {
+          try {
+            const response = await fetch(apis[i]);
+            if (!response.ok) continue;
+            
+            const data = await response.json();
+            
+            if (i === 0 || i === 3) {
+              // CoinGecko format (including CORS proxy)
+              currentBtcPrice = data.bitcoin.usd;
+              currentBtcPriceCAD = data.bitcoin.cad;
+              break;
+            } else if (i === 1) {
+              // Coinbase format
+              const rates = data.data.rates;
+              currentBtcPrice = parseFloat(rates.USD);
+              currentBtcPriceCAD = parseFloat(rates.CAD);
+              break;
+            } else if (i === 2) {
+              // Blockchain.info format
+              currentBtcPrice = data.USD.last;
+              currentBtcPriceCAD = data.CAD.last;
+              break;
+            }
+          } catch (apiError) {
+            console.log(`API ${i + 1} failed, trying next...`);
+            continue;
+          }
+        }
+        
+        if (currentBtcPrice && currentBtcPriceCAD) {
+          console.log('Bitcoin price fetched successfully:', { USD: currentBtcPrice, CAD: currentBtcPriceCAD });
+          return isCAD ? currentBtcPriceCAD : currentBtcPrice;
+        } else {
+          throw new Error('All price APIs failed');
+        }
       } catch (error) {
         console.error('Error fetching Bitcoin price:', error);
-        return null;
+        
+        // Try one more approach using a different method
+        try {
+          const fallbackResponse = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
+          if (fallbackResponse.ok) {
+            const fallbackData = await fallbackResponse.json();
+            currentBtcPrice = parseFloat(fallbackData.price);
+            // Estimate CAD price (rough conversion)
+            currentBtcPriceCAD = currentBtcPrice * 1.35;
+            console.log('Using Binance fallback price:', { USD: currentBtcPrice, CAD: currentBtcPriceCAD });
+            return isCAD ? currentBtcPriceCAD : currentBtcPrice;
+          }
+        } catch (fallbackError) {
+          console.log('Fallback API also failed');
+        }
+        
+        // Set static fallback prices if all APIs fail
+        currentBtcPrice = 50000; // Fallback USD price
+        currentBtcPriceCAD = 67500; // Fallback CAD price
+        console.log('Using static fallback prices:', { USD: currentBtcPrice, CAD: currentBtcPriceCAD });
+        return isCAD ? currentBtcPriceCAD : currentBtcPrice;
       }
     }
 
@@ -728,7 +1423,13 @@
         const endTimestamp = Math.floor(new Date(endDate).getTime() / 1000);
         const currency = isCAD ? 'cad' : 'usd';
         
+        // Try CoinGecko first, then fallback to current price
         const response = await fetch(`https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range?vs_currency=${currency}&from=${startTimestamp}&to=${endTimestamp}`);
+        
+        if (!response.ok) {
+          throw new Error('CoinGecko API failed');
+        }
+        
         const data = await response.json();
         
         // Convert the data to a more usable format
@@ -741,6 +1442,7 @@
         return priceHistory;
       } catch (error) {
         console.error('Error fetching historical Bitcoin prices:', error);
+        // Return empty object - the calling code will handle fallback
         return {};
       }
     }
@@ -827,10 +1529,10 @@
 
     // Generate Bitcoin price chart with purchase markers
     async function generatePriceChart() {
-      if (buys.length === 0) return;
+      // Always generate price chart, even without purchases
 
       const purchaseDates = buys.map(buy => buy.date).sort();
-      const startDate = purchaseDates[0];
+      const startDate = purchaseDates.length > 0 ? purchaseDates[0] : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // Default to 30 days ago if no purchases
       const endDate = new Date().toISOString().split('T')[0];
 
       // Fetch historical Bitcoin prices
@@ -1291,7 +1993,7 @@
     }
 
     // Add purchase form handler
-    purchaseForm.addEventListener("submit", function(e) {
+    purchaseForm.addEventListener("submit", async function(e) {
       e.preventDefault();
       
       const date = document.getElementById("purchaseDate").value;
@@ -1320,26 +2022,58 @@
         type: isSell ? 'sell' : 'buy'
       };
       
+      // Always store locally first
       buys.push(newPurchase);
       localStorage.setItem("btcBuys", JSON.stringify(buys));
+      
+      // Also sync to server if user is logged in and backend is available
+      if (isLoggedIn && backendAvailable) {
+        try {
+          const result = await apiCall('/btc-purchases', 'POST', {
+            date: newPurchase.date,
+            btc_amount: newPurchase.btcAmount,
+            price_usd: newPurchase.priceUsd,
+            original_price: newPurchase.originalPrice,
+            original_currency: newPurchase.originalCurrency,
+            transaction_type: newPurchase.type
+          });
+          // Store server ID for future reference
+          newPurchase.serverId = result.id;
+        } catch (error) {
+          console.error('Failed to sync purchase to server:', error);
+          // Data is still saved locally, so user can continue working
+        }
+      }
       
       // Clear form
       purchaseForm.reset();
       
-    // Update display
-    updateDisplay();
-    
-    // Force chart refresh even if API fails
-    setTimeout(() => {
+      // Update display
       updateDisplay();
-    }, 1000);
+      
+      // Force chart refresh even if API fails
+      setTimeout(() => {
+        updateDisplay();
+      }, 1000);
     });
 
     // Delete purchase function
-    function deletePurchase(index) {
+    async function deletePurchase(index) {
       if (confirm("Are you sure you want to delete this purchase?")) {
+        const purchase = buys[index];
         buys.splice(index, 1);
         localStorage.setItem("btcBuys", JSON.stringify(buys));
+        
+        // Also delete from server if user is logged in, backend is available, and we have a server ID
+        if (isLoggedIn && backendAvailable && purchase.serverId) {
+          try {
+            await apiCall(`/btc-purchases/${purchase.serverId}`, 'DELETE');
+          } catch (error) {
+            console.error('Failed to delete purchase from server:', error);
+            // Data is still deleted locally, so user can continue working
+          }
+        }
+        
         updateDisplay();
       }
     }
@@ -1350,12 +2084,29 @@
       const currentPrice = isCAD ? currentBtcPriceCAD : currentBtcPrice;
       const currency = isCAD ? 'CAD' : 'USD';
       
-      if (currentPrice) {
+      if (currentPrice && currentPrice > 0) {
         const lastUpdate = new Date().toLocaleTimeString();
         priceInfo.innerHTML = `Current Bitcoin Price: $${currentPrice.toFixed(2)} ${currency} (Updated: ${lastUpdate})`;
       } else {
-        priceInfo.innerHTML = "Unable to fetch current price";
+        priceInfo.innerHTML = `
+          <div style="color: #dc3545;">
+            ⚠️ Unable to fetch current price. 
+            <button onclick="retryPriceFetch()" style="background: #667eea; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; margin-left: 8px;">
+              Retry
+            </button>
+          </div>
+        `;
       }
+    }
+    
+    // Retry price fetch function
+    async function retryPriceFetch() {
+      const priceInfo = document.getElementById("priceInfo");
+      priceInfo.innerHTML = "🔄 Fetching price...";
+      
+      await fetchCurrentBtcPrice();
+      updatePriceInfo();
+      await updateDisplay();
     }
 
     // Update currency display
@@ -1423,6 +2174,41 @@
       document.body.classList.add("dark-theme");
       themeToggle.textContent = "☀️";
     }
+
+    // Simple dropdown functionality
+    const toolsBtn = document.getElementById('toolsBtn');
+    const toolsContent = document.getElementById('toolsContent');
+    let isOpen = false;
+
+    toolsBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (isOpen) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      } else {
+        toolsContent.style.display = 'block';
+        setTimeout(() => {
+          toolsContent.classList.add('show');
+        }, 10);
+        isOpen = true;
+      }
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('toolsDropdown').contains(e.target)) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      }
+    });
 
     const savedCurrency = localStorage.getItem("currency");
     if (savedCurrency === "cad") {
@@ -1740,9 +2526,90 @@
       window.URL.revokeObjectURL(url);
     }
     
-    // CSV import event listeners
+    function exportToCSV() {
+      if (buys.length === 0) {
+        alert('No data to export. Please add some purchases first.');
+        return;
+      }
+      
+      // Create CSV header
+      const currency = isCAD ? 'CAD' : 'USD';
+      const headers = ['Date', 'BTC Amount', `Price (${currency})`, `${currency} Spent`, 'Type'];
+      
+      // Create CSV rows
+      const csvRows = [headers.join(',')];
+      
+      buys.forEach(buy => {
+        // Get the correct price for display
+        let displayPrice = buy.priceUsd;
+        
+        // If we have original currency info, use it
+        if (buy.originalCurrency && buy.originalPrice) {
+          if (isCAD && buy.originalCurrency === 'CAD') {
+            displayPrice = buy.originalPrice;
+          } else if (!isCAD && buy.originalCurrency === 'USD') {
+            displayPrice = buy.originalPrice;
+          } else if (currentBtcPriceCAD && currentBtcPrice) {
+            // Convert between currencies
+            if (isCAD && buy.originalCurrency === 'USD') {
+              const usdToCadRate = currentBtcPriceCAD / currentBtcPrice;
+              displayPrice = buy.originalPrice * usdToCadRate;
+            } else if (!isCAD && buy.originalCurrency === 'CAD') {
+              const cadToUsdRate = currentBtcPrice / currentBtcPriceCAD;
+              displayPrice = buy.originalPrice * cadToUsdRate;
+            }
+          }
+        } else if (currentBtcPriceCAD && currentBtcPrice) {
+          // Fallback to old conversion logic
+          if (isCAD) {
+            const usdToCadRate = currentBtcPriceCAD / currentBtcPrice;
+            displayPrice = buy.priceUsd * usdToCadRate;
+          } else {
+            const cadToUsdRate = currentBtcPrice / currentBtcPriceCAD;
+            displayPrice = buy.priceUsd * cadToUsdRate;
+          }
+        }
+        
+        const spentAmount = buy.btcAmount * displayPrice;
+        const type = buy.type || 'buy';
+        
+        const row = [
+          buy.date,
+          buy.btcAmount.toFixed(8),
+          displayPrice.toFixed(2),
+          spentAmount.toFixed(2),
+          type.toUpperCase()
+        ];
+        
+        csvRows.push(row.join(','));
+      });
+      
+      // Create and download the CSV file
+      const csvContent = csvRows.join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `bitcoin_tracker_export_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      
+      // Show success message
+      const csvStatus = document.getElementById('csvStatus');
+      csvStatus.innerHTML = `<span style="color: #28a745;">Successfully exported ${buys.length} purchase(s) to CSV</span>`;
+      setTimeout(() => {
+        csvStatus.innerHTML = '';
+      }, 3000);
+    }
+    
+    // CSV import/export event listeners
     const csvFileInput = document.getElementById('csvFile');
     const csvStatus = document.getElementById('csvStatus');
+    const exportBtn = document.getElementById('exportBtn');
+    
+    exportBtn.addEventListener('click', exportToCSV);
     
     csvFileInput.addEventListener('change', function() {
       const file = csvFileInput.files[0];
@@ -1812,6 +2679,128 @@
       reader.readAsText(file);
     });
 
+    // Proof of Reserves functionality
+    let walletAddresses = JSON.parse(localStorage.getItem('walletAddresses') || '[]');
+
+    function saveWalletAddresses() {
+      localStorage.setItem('walletAddresses', JSON.stringify(walletAddresses));
+    }
+
+    function isValidBitcoinAddress(address) {
+      // Basic validation for Bitcoin addresses (bech32, legacy, and P2SH)
+      const bech32Regex = /^bc1[a-z0-9]{39,59}$/i;
+      const legacyRegex = /^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$/;
+      const p2shRegex = /^3[a-km-zA-HJ-NP-Z1-9]{25,34}$/;
+      
+      return bech32Regex.test(address) || legacyRegex.test(address) || p2shRegex.test(address);
+    }
+
+    async function addWalletAddress(address) {
+      const trimmedAddress = address.trim();
+      
+      if (!trimmedAddress) {
+        alert('Please enter a wallet address');
+        return;
+      }
+
+      if (!isValidBitcoinAddress(trimmedAddress)) {
+        alert('Please enter a valid Bitcoin address');
+        return;
+      }
+
+      if (walletAddresses.includes(trimmedAddress)) {
+        alert('This wallet address is already added');
+        return;
+      }
+
+      // Always store locally first
+      walletAddresses.push(trimmedAddress);
+      saveWalletAddresses();
+      renderWalletList();
+      
+      // Also sync to server if user is logged in and backend is available
+      if (isLoggedIn && backendAvailable) {
+        try {
+          await apiCall('/wallet-addresses', 'POST', { address: trimmedAddress });
+        } catch (error) {
+          console.error('Failed to sync wallet address to server:', error);
+          // Data is still saved locally, so user can continue working
+        }
+      }
+      
+      // Clear the input
+      document.getElementById('walletAddress').value = '';
+    }
+
+    async function removeWalletAddress(address) {
+      if (confirm('Are you sure you want to remove this wallet address?')) {
+        walletAddresses = walletAddresses.filter(addr => addr !== address);
+        saveWalletAddresses();
+        renderWalletList();
+        
+        // Also delete from server if user is logged in and backend is available
+        if (isLoggedIn && backendAvailable) {
+          try {
+            // Find the wallet ID from the server data
+            const addresses = await apiCall('/wallet-addresses');
+            const wallet = addresses.find(w => w.address === address);
+            if (wallet) {
+              await apiCall(`/wallet-addresses/${wallet.id}`, 'DELETE');
+            }
+          } catch (error) {
+            console.error('Failed to remove wallet address from server:', error);
+            // Data is still deleted locally, so user can continue working
+          }
+        }
+      }
+    }
+
+    function viewOnMempool(address) {
+      const url = `https://mempool.space/address/${address}`;
+      window.open(url, '_blank');
+    }
+
+    function renderWalletList() {
+      const walletList = document.getElementById('walletList');
+      
+      if (walletAddresses.length === 0) {
+        walletList.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">No wallet addresses added yet</p>';
+        return;
+      }
+
+      walletList.innerHTML = walletAddresses.map(address => `
+        <div class="wallet-item">
+          <div class="wallet-info">
+            <div class="wallet-address">${address}</div>
+          </div>
+          <div class="wallet-actions">
+            <button class="view-btn" onclick="viewOnMempool('${address}')">View on Mempool</button>
+            <button class="remove-btn" onclick="removeWalletAddress('${address}')">Remove</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Initialize Proof of Reserves when page loads
+    function initializeProofOfReserves() {
+      const addWalletBtn = document.getElementById('addWalletBtn');
+      const walletAddressInput = document.getElementById('walletAddress');
+
+      addWalletBtn.addEventListener('click', function() {
+        const address = walletAddressInput.value;
+        addWalletAddress(address);
+      });
+
+      walletAddressInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          const address = walletAddressInput.value;
+          addWalletAddress(address);
+        }
+      });
+
+      renderWalletList();
+    }
+
     // Initialize the tracker
     async function initializeTracker() {
       await fetchCurrentBtcPrice();
@@ -1819,7 +2808,182 @@
       await updateDisplay();
     }
     
-    initializeTracker();
+    // Account System Variables (simplified for redirect to account page)
+    let currentUser = null;
+    const API_BASE_URL = '/api'; // Production URL for cPanel deployment
+    let backendAvailable = false;
+    let isLoggedIn = false;
+
+    // Account System Functions
+    async function apiCall(endpoint, method = 'GET', data = null) {
+      if (!backendAvailable) {
+        throw new Error('Backend not available');
+      }
+      
+      const options = {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include' // Important for session cookies
+      };
+      
+      if (data) {
+        options.body = JSON.stringify(data);
+      }
+      
+      try {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+        const result = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(result.error || 'API call failed');
+        }
+        
+        return result;
+      } catch (error) {
+        console.error('API Error:', error);
+        throw error;
+      }
+    }
+
+    async function checkAuthStatus() {
+      // First check if backend is available
+      try {
+        const response = await fetch(`${API_BASE_URL}/user`, { 
+          method: 'GET',
+          credentials: 'include'
+        });
+        if (response.ok) {
+          backendAvailable = true;
+          const user = await response.json();
+          currentUser = user;
+          isLoggedIn = true;
+          showUserDashboard();
+          return true;
+        } else {
+          backendAvailable = true;
+          currentUser = null;
+          isLoggedIn = false;
+          showLoginForm();
+          return false;
+        }
+      } catch (e) {
+        backendAvailable = false;
+        currentUser = null;
+        isLoggedIn = false;
+        showLoginForm();
+        return false;
+      }
+    }
+
+    // UI functions removed - handled on account.html page
+
+    async function loadUserData() {
+      if (!isLoggedIn || !backendAvailable) return;
+      
+      try {
+        // Load BTC purchases from server
+        const purchases = await apiCall('/btc-purchases');
+        const serverPurchases = purchases.map(p => ({
+          date: p.date,
+          btcAmount: p.btc_amount,
+          priceUsd: p.price_usd,
+          originalPrice: p.original_price,
+          originalCurrency: p.original_currency,
+          type: p.transaction_type,
+          serverId: p.id
+        }));
+        
+        // Load wallet addresses from server
+        const addresses = await apiCall('/wallet-addresses');
+        const serverAddresses = addresses.map(a => a.address);
+        
+        // Merge server data with local data (server data takes precedence)
+        buys = serverPurchases;
+        walletAddresses = serverAddresses;
+        
+        // Update localStorage with merged data
+        localStorage.setItem("btcBuys", JSON.stringify(buys));
+        localStorage.setItem('walletAddresses', JSON.stringify(walletAddresses));
+        
+        // Update display
+        updateDisplay();
+        renderWalletList();
+        
+      } catch (error) {
+        console.error('Error loading user data:', error);
+        // Continue with local data if server fails
+      }
+    }
+
+    async function syncDataToServer() {
+      if (!isLoggedIn || !backendAvailable) {
+        alert('Backend not available or not logged in. Data is stored locally only.');
+        return;
+      }
+      
+      try {
+        const purchases = buys.map(buy => ({
+          date: buy.date,
+          btc_amount: buy.btcAmount,
+          price_usd: buy.priceUsd,
+          original_price: buy.originalPrice,
+          original_currency: buy.originalCurrency,
+          transaction_type: buy.type || 'buy'
+        }));
+        
+        const addresses = walletAddresses.map(addr => ({ address: addr }));
+        
+        await apiCall('/sync-data', 'POST', {
+          purchases,
+          wallet_addresses: addresses
+        });
+        
+        alert('Data synced successfully!');
+      } catch (error) {
+        alert('Sync failed: ' + error.message);
+      }
+    }
+
+    // Account event listeners removed - handled on account.html page
+
+    // Initialize everything when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeTracker();
+      initializeProofOfReserves();
+      checkAuthStatus(); // Check if user is already logged in
+    });
+
+    // Brave browser detection and affiliate link handling
+    function isBraveBrowser() {
+        return (navigator.brave && typeof navigator.brave.isBrave === 'function') ||
+               (window.chrome && window.chrome.runtime && window.chrome.runtime.onConnect);
+    }
+
+    function showBraveInstructions() {
+        const instructions = document.getElementById('brave-instructions');
+        instructions.style.display = instructions.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Show Brave warning if detected (removed - warning element no longer exists)
+    // if (isBraveBrowser()) {
+    //     document.getElementById('brave-warning').style.display = 'block';
+    // }
+
+    // Add click handlers to affiliate links for better UX
+    document.addEventListener('DOMContentLoaded', function() {
+        const affiliateLinks = document.querySelectorAll('.affiliate-link');
+        affiliateLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Add a small delay to show the user what's happening
+                this.style.opacity = '0.7';
+                setTimeout(() => {
+                    this.style.opacity = '1';
+                }, 200);
+            });
+        });
+    });
   </script>
 </body>
 </html>

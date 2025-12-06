@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plebtools Financial Planner</title>
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
+  <link rel="stylesheet" href="styles.css?v=2">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+  
+  <style>
+    /* Modern dropdown styles */
+    #toolsDropdown {
+      position: relative;
+      display: inline-block;
+    }
+    
+    #toolsBtn {
+      background: none;
+      border: none;
+      color: #333;
+      font-weight: 500;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .dark-theme #toolsBtn {
+      color: #e0e0e0 !important;
+    }
+    
+    #toolsBtn:hover {
+      background: rgba(102, 126, 234, 0.1);
+      color: #667eea;
+    }
+    
+    .dropdown-arrow {
+      font-size: 0.8rem;
+      transition: transform 0.3s ease;
+    }
+    
+    #toolsContent {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      min-width: 220px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      z-index: 1001;
+      padding: 0.75rem 0;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(10px);
+      margin-top: 8px;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+    }
+    
+    #toolsContent.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    #toolsContent a {
+      display: block;
+      padding: 0.875rem 1.5rem;
+      color: #333;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      border-radius: 0;
+      position: relative;
+    }
+    
+    .dark-theme #toolsContent a {
+      color: #e0e0e0 !important;
+    }
+    
+    #toolsContent a:hover {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      color: #667eea;
+      transform: translateX(8px);
+    }
+    
+    #toolsContent a:first-child {
+      border-radius: 12px 12px 0 0;
+    }
+    
+    #toolsContent a:last-child {
+      border-radius: 0 0 12px 12px;
+    }
+    
+    .dark-theme #toolsContent {
+      background: #2d2d2d !important;
+      border-color: #555 !important;
+    }
+    
+    .dark-theme #toolsContent a:hover {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%) !important;
+      color: #667eea !important;
+    }
+
+    /* Financial Planner specific styles */
+    .planner-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 120px 20px 80px;
+      background: white;
+      min-height: 100vh;
+    }
+
+    .planner-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: white;
+      padding: 3rem 2rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      border: 1px solid #333;
+      position: relative;
+    }
+
+    .planner-header h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      background: -webkit-linear-gradient(45deg, #f59e0b, #fbbf24, #fde68a);
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
+    }
+
+    .planner-header p {
+      font-size: 1.2rem;
+      color: #ccc;
+      margin-bottom: 0;
+    }
+
+    .planner-section {
+      background: #f8f9fa;
+      padding: 2rem;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .planner-section h2 {
+      color: #667eea;
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      text-align: center;
+    }
+
+    .t-chart-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .t-chart-column {
+      flex: 1;
+      padding: 1.5rem;
+      border-radius: 15px;
+      background: white;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .t-chart-column.income {
+      border: 3px solid #28a745;
+    }
+
+    .t-chart-column.expenses {
+      border: 3px solid #dc3545;
+    }
+
+    .t-chart-column h3 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .t-chart-column.income h3 {
+      color: #28a745;
+    }
+
+    .t-chart-column.expenses h3 {
+      color: #dc3545;
+    }
+
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      padding: 0.5rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .list-item:hover {
+      background: #e9ecef;
+      transform: translateX(5px);
+    }
+
+    .list-item span:first-child {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .list-item span:last-child {
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .add-form {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .add-form input {
+      flex: 1;
+      min-width: 120px;
+      padding: 0.75rem;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .add-form input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .add-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+    }
+
+    .add-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .add-btn.income {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    }
+
+    .add-btn.expenses {
+      background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+    }
+
+    .total-display {
+      text-align: right;
+      font-size: 1.2rem;
+      font-weight: bold;
+      padding: 1rem;
+      background: rgba(102, 126, 234, 0.1);
+      border-radius: 10px;
+      margin-top: 1rem;
+    }
+
+    .total-display.income {
+      color: #28a745;
+      background: rgba(40, 167, 69, 0.1);
+    }
+
+    .total-display.expenses {
+      color: #dc3545;
+      background: rgba(220, 53, 69, 0.1);
+    }
+
+    .savings-display {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 15px;
+      margin: 2rem 0;
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .investment-section {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .investment-section h2 {
+      color: #667eea;
+      margin-bottom: 2rem;
+      font-size: 1.8rem;
+      text-align: center;
+    }
+
+    .investment-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .control-group label {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    .control-group input, .control-group select {
+      padding: 0.75rem;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .control-group input:focus, .control-group select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+
+    .radio-group input[type="radio"] {
+      margin-right: 0.5rem;
+    }
+
+    .scenarios-list {
+      margin-bottom: 2rem;
+    }
+
+    .scenario-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 10px;
+      margin-bottom: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .scenario-item:hover {
+      background: #e9ecef;
+      transform: translateX(5px);
+    }
+
+    .scenario-info {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .remove-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .remove-btn:hover {
+      background: #c82333;
+      transform: translateY(-1px);
+    }
+
+    .chart-container {
+      position: relative;
+      height: 400px;
+      margin: 2rem 0;
+      background: white;
+      border-radius: 15px;
+      padding: 1rem;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .export-btn {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: block;
+      margin: 2rem auto;
+      box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
+    }
+
+    .export-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .planner-container {
+        padding: 100px 15px 60px;
+      }
+
+      .planner-header h1 {
+        font-size: 2rem;
+      }
+
+      .t-chart-container {
+        flex-direction: column;
+      }
+
+      .add-form {
+        flex-direction: column;
+      }
+
+      .investment-controls {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-container {
+        height: 300px;
+      }
+    }
+
+    /* Keep logo purple */
+    .logo {
+      color: #667eea !important;
+    }
+
+    #toolsBtn {
+      color: white !important;
+    }
+
+    /* Dark theme support */
+    .dark-theme .planner-container {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .planner-header {
+      background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+    }
+
+    /* Open Source section text colors */
+    .planner-section h3 {
+      color: #000;
+    }
+
+    .planner-section p {
+      color: #000;
+    }
+
+    .dark-theme .planner-section h3 {
+      color: #fff !important;
+    }
+
+    .dark-theme .planner-section p {
+      color: #fff !important;
+    }
+
+    .dark-theme .planner-section,
+    .dark-theme .investment-section {
+      background: #3d3d3d;
+    }
+
+    .dark-theme .t-chart-column {
+      background: #3d3d3d;
+    }
+
+    .dark-theme .list-item {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .list-item:hover {
+      background: #404040;
+    }
+
+    .dark-theme .list-item span:first-child {
+      color: #e0e0e0;
+    }
+
+    .dark-theme .control-group label {
+      color: #e0e0e0;
+    }
+
+    .dark-theme .control-group input,
+    .dark-theme .control-group select {
+      background: #2d2d2d;
+      color: #e0e0e0;
+      border-color: #555;
+    }
+
+    .dark-theme .control-group input:focus,
+    .dark-theme .control-group select:focus {
+      border-color: #667eea;
+    }
+
+    .dark-theme .scenario-item {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .scenario-item:hover {
+      background: #404040;
+    }
+
+    .dark-theme .scenario-info {
+      color: #ccc;
+    }
+
+    .dark-theme .chart-container {
+      background: #3d3d3d;
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      font-size: 1.5rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    .theme-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+    }
+
+    /* Dark theme text colors */
+    .dark-theme h1,
+    .dark-theme h2,
+    .dark-theme h3,
+    .dark-theme h4,
+    .dark-theme h5,
+    .dark-theme h6 {
+      color: #e0e0e0 !important;
+    }
+
+    .dark-theme p,
+    .dark-theme span,
+    .dark-theme div,
+    .dark-theme td,
+    .dark-theme th,
+    .dark-theme li {
+      color: #e0e0e0 !important;
+    }
+
+    .dark-theme .logo {
+      color: #667eea !important;
+    }
+
+    /* Affiliate Links Section */
+    .affiliate-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .affiliate-item {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .affiliate-item:hover {
+      transform: translateY(-3px);
+    }
+
+    .affiliate-item h4 {
+      color: #667eea;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .affiliate-link {
+      display: inline-block;
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+    }
+
+    .affiliate-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 50px -24px rgba(59, 130, 246, 0.65);
+    }
+
+    .discount-code {
+      margin-top: 0.7rem;
+      font-size: 0.82rem;
+      color: #94a3b8;
+      letter-spacing: 0.05em;
+    }
+
+    .support-section {
+      padding: 4rem 0;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(30, 41, 59, 0.98) 100%);
+    }
+
+    .support-grid {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .support-card {
+      background: rgba(30, 41, 59, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 18px;
+      padding: 2.25rem;
+      text-align: center;
+      box-shadow: 0 28px 60px -30px rgba(15, 23, 42, 0.6);
+      color: #e2e8f0;
+    }
+
+    .support-icon {
+      font-size: 2.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .support-title {
+      font-size: 1.6rem;
+      color: #f8fafc;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+
+    .support-text {
+      color: #cbd5f5;
+      font-size: 1rem;
+      margin: 1rem 0 2rem;
+      line-height: 1.6;
+    }
+
+    .support-btn {
+      display: inline-block;
+      padding: 0.9rem 2.2rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+      color: #f8fafc;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 18px 35px -18px rgba(249, 115, 22, 0.55);
+    }
+
+    .support-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 45px -20px rgba(249, 115, 22, 0.65);
+      color: #f8fafc;
+    }
+
+    /* Mobile responsiveness for affiliate links */
+    @media (max-width: 768px) {
+      .affiliate-links {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .affiliate-item {
+        padding: 1rem;
+      }
+      
+      .affiliate-link {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+      }
+    }
+
+    /* Dark theme for affiliate links */
+    .dark-theme .affiliate-item {
+      background: #3d3d3d;
+      color: #e0e0e0;
+    }
+
+    .dark-theme .affiliate-item h4 {
+      color: #667eea;
+    }
+
+    .dark-theme .discount-code {
+      color: #4CAF50;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="nav-container">
+        <div class="logo-container">
+          <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+            <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+            <h1 class="logo">Plebtools</h1>
+          </a>
+        </div>
+        <div class="nav-links">
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="home">🏠 Home</a>
+              <a href="treasury">📊 Treasury</a>
+              <a href="btc-buy-tracker">💼 Portfolio</a>
+              <a href="coveredcall-tracker">📈 Covered Calls</a>
+              <a href="compound-interest-calculator">💰 Calculator</a>
+              <a href="btc-loan-ltv">🔒 BTC Loans</a>
+              <a href="financial-planner">📋 Financial Planner</a>
+              <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+              <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
+              <a href="invoice-builder">🧾 Invoice Builder</a>
+              <a href="pleb-release">📰 Pleb Release</a>
+            </div>
+          </div>
+          <a href="account" class="account-link">👤 Account</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="planner-container">
+      <div class="planner-header">
+        <h1>Financial Planner</h1>
+        <p>Track your income, expenses, and investment growth with comprehensive financial planning tools</p>
+        <div style="position: absolute; top: 20px; right: 20px;">
+          <button id="themeToggle" class="theme-toggle-btn">🌙</button>
+        </div>
+      </div>
+
+      <!-- Income vs Expenses Section -->
+      <div class="planner-section">
+        <h2>Income vs. Expenses</h2>
+        <div class="t-chart-container">
+          <!-- Income Column -->
+          <div class="t-chart-column income">
+            <h3>Income</h3>
+            <div id="income-list">
+              <div class="list-item">
+                <span>Salary</span>
+                <span>$2,500</span>
+                <button onclick="removeEntry('income', 'Salary')" class="remove-btn" style="margin-left: 10px; padding: 0.25rem 0.5rem; font-size: 0.8rem;">×</button>
+              </div>
+            </div>
+            <div class="add-form">
+              <input type="text" id="new-income-name" placeholder="Name" class="table-input">
+              <input type="number" id="new-income-amount" placeholder="Amount" class="table-input">
+              <button onclick="addEntry('income')" class="add-btn income">Add</button>
+            </div>
+            <div class="total-display income">
+              Total: $<span id="total-income">2500</span>
+            </div>
+          </div>
+
+          <!-- Expenses Column -->
+          <div class="t-chart-column expenses">
+            <h3>Expenses</h3>
+            <div id="expenses-list">
+              <div class="list-item">
+                <span>Rent</span>
+                <span>$1,000</span>
+                <button onclick="removeEntry('expenses', 'Rent')" class="remove-btn" style="margin-left: 10px; padding: 0.25rem 0.5rem; font-size: 0.8rem;">×</button>
+              </div>
+              <div class="list-item">
+                <span>Groceries</span>
+                <span>$400</span>
+                <button onclick="removeEntry('expenses', 'Groceries')" class="remove-btn" style="margin-left: 10px; padding: 0.25rem 0.5rem; font-size: 0.8rem;">×</button>
+              </div>
+              <div class="list-item">
+                <span>Utilities</span>
+                <span>$200</span>
+                <button onclick="removeEntry('expenses', 'Utilities')" class="remove-btn" style="margin-left: 10px; padding: 0.25rem 0.5rem; font-size: 0.8rem;">×</button>
+              </div>
+            </div>
+            <div class="add-form">
+              <input type="text" id="new-expense-name" placeholder="Name" class="table-input">
+              <input type="number" id="new-expense-amount" placeholder="Amount" class="table-input">
+              <button onclick="addEntry('expenses')" class="add-btn expenses">Add</button>
+            </div>
+            <div class="total-display expenses">
+              Total: $<span id="total-expenses">1600</span>
+            </div>
+          </div>
+        </div>
+        <div class="savings-display">
+          <span id="savings-label">Savings:</span>
+          <span id="total-savings">$900</span>
+        </div>
+      </div>
+
+      <!-- Investment Section -->
+      <div class="investment-section">
+        <h2>Investment Growth Simulator</h2>
+        <div class="investment-controls">
+          <div class="control-group">
+            <label for="initial-investment">Starting Balance ($):</label>
+            <input type="number" id="initial-investment" value="0">
+          </div>
+          <div class="control-group">
+            <label for="investment-amount-dollars">Monthly Investment ($):</label>
+            <input type="number" id="investment-amount-dollars" value="900">
+          </div>
+          <div class="control-group">
+            <label for="investment-rate">Annual Interest Rate (%):</label>
+            <input type="number" id="investment-rate" value="7">
+          </div>
+          <div class="control-group">
+            <label for="investment-years">Investment Period (Years):</label>
+            <input type="number" id="investment-years" value="10">
+          </div>
+          <div class="control-group">
+            <label for="inflation-rate">Annual Inflation Rate (%):</label>
+            <input type="number" id="inflation-rate" value="3">
+          </div>
+          <div class="control-group">
+            <button onclick="addScenario()" class="add-btn" style="margin-top: 1.5rem;">Add Scenario</button>
+          </div>
+        </div>
+        
+        <!-- List of scenarios -->
+        <div id="scenarios-list" class="scenarios-list"></div>
+
+        <!-- Chart -->
+        <div class="chart-container">
+          <canvas id="savings-chart"></canvas>
+        </div>
+
+        <!-- Export button -->
+        <button onclick="exportData()" class="export-btn">Export to CSV</button>
+      </div>
+
+      <!-- Affiliate Links Section -->
+      <div class="planner-section">
+        <h3 style="text-align: center;">Want to buy and secure your Bitcoin?</h3>
+        <div class="totals-display">
+          <div style="text-align: center;">
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
+            <div class="affiliate-links">
+              <div class="affiliate-item">
+                <h4>Where to buy</h4>
+                <a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" class="affiliate-link">Bitcoin Well</a>
+              </div>
+              <div class="affiliate-item">
+                <h4>Where to store</h4>
+                <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a>
+              </div>
+              <div class="affiliate-item">
+                <h4>How to protect</h4>
+                <a href="https://www.stampseed.com/" target="_blank" class="affiliate-link">Stamp Seed</a>
+                <p class="discount-code">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
+              </div>
+              <div class="affiliate-item">
+                <h4>How to validate</h4>
+                <a href="https://store.start9.com/" target="_blank" class="affiliate-link">Start9</a>
+                <p class="discount-code">CODE: BNC5 for 5% off</p>
+              </div>
+              <div class="affiliate-item">
+                <h4>1:1 Coaching</h4>
+                <a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+              </div>
+              <div class="affiliate-item">
+                <h4>Where to learn</h4>
+                <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <section class="support-section">
+    <div class="container support-grid">
+      <div class="support-card">
+        <div class="support-icon">⚡</div>
+        <h2 class="support-title">Support Plebtools</h2>
+        <p class="support-text">
+          Enjoying these tools? You can help keep them free and open source by donating sats.
+          Every contribution fuels more Bitcoin-first development.
+        </p>
+        <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Open Source Section -->
+  <section class="planner-section" style="padding: 4rem 0;">
+    <div class="container" style="text-align: center;">
+      <h3>Open Source</h3>
+      <p style="max-width: 640px; margin: 1.5rem auto; color: #334155;">
+        This financial planner is free and open source and can be replicated for anyone to plan their financial future.
+      </p>
+      <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" class="add-btn" style="background: #667eea; display: inline-block; margin-top: 0;">
+        View on GitHub
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 Plebtools. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Set up initial data
+    let income = {
+      'Salary': 2500
+    };
+    let expenses = {
+      'Rent': 1000,
+      'Groceries': 400,
+      'Utilities': 200
+    };
+    
+    // This array will hold the different scenarios for comparison
+    let scenarios = [];
+
+    // Colors for chart lines
+    const chartColors = [
+      'rgb(75, 192, 192)',
+      'rgb(255, 99, 132)',
+      'rgb(54, 162, 235)',
+      'rgb(255, 205, 86)',
+      'rgb(153, 102, 255)',
+      'rgb(201, 203, 207)'
+    ];
+
+    // Get elements
+    const incomeList = document.getElementById('income-list');
+    const expensesList = document.getElementById('expenses-list');
+    const totalIncomeSpan = document.getElementById('total-income');
+    const totalExpensesSpan = document.getElementById('total-expenses');
+    const totalSavingsSpan = document.getElementById('total-savings');
+    const initialInvestmentInput = document.getElementById('initial-investment');
+    const investmentAmountDollarsInput = document.getElementById('investment-amount-dollars');
+    const investmentRateInput = document.getElementById('investment-rate');
+    const investmentYearsInput = document.getElementById('investment-years');
+    const inflationRateInput = document.getElementById('inflation-rate');
+    const scenariosListDiv = document.getElementById('scenarios-list');
+
+    // Initial rendering of the T-chart and totals
+    function renderTChart() {
+      // Clear lists
+      incomeList.innerHTML = '';
+      expensesList.innerHTML = '';
+
+      // Render income list
+      for (const name in income) {
+        const item = document.createElement('div');
+        item.className = 'list-item';
+        item.innerHTML = `
+          <span>${name}</span>
+          <span>$${income[name]}</span>
+          <button onclick="removeEntry('income', '${name}')" class="remove-btn" style="margin-left: 10px; padding: 0.25rem 0.5rem; font-size: 0.8rem;">×</button>
+        `;
+        incomeList.appendChild(item);
+      }
+
+      // Render expenses list
+      for (const name in expenses) {
+        const item = document.createElement('div');
+        item.className = 'list-item';
+        item.innerHTML = `
+          <span>${name}</span>
+          <span>$${expenses[name]}</span>
+          <button onclick="removeEntry('expenses', '${name}')" class="remove-btn" style="margin-left: 10px; padding: 0.25rem 0.5rem; font-size: 0.8rem;">×</button>
+        `;
+        expensesList.appendChild(item);
+      }
+    }
+
+    function calculateTotals() {
+      const totalIncome = Object.values(income).reduce((sum, amount) => sum + amount, 0);
+      const totalExpenses = Object.values(expenses).reduce((sum, amount) => sum + amount, 0);
+      return { totalIncome, totalExpenses, savings: totalIncome - totalExpenses };
+    }
+
+    function updateTotals() {
+      const { totalIncome, totalExpenses, savings } = calculateTotals();
+      totalIncomeSpan.textContent = totalIncome;
+      totalExpensesSpan.textContent = totalExpenses;
+      totalSavingsSpan.textContent = savings;
+      
+      // Set the initial value of the dollar amount input to the calculated savings
+      investmentAmountDollarsInput.value = savings > 0 ? savings : 0;
+    }
+
+    function addEntry(type) {
+      const nameInput = document.getElementById(`new-${type}-name`);
+      const amountInput = document.getElementById(`new-${type}-amount`);
+      const name = nameInput.value.trim();
+      const amount = parseFloat(amountInput.value);
+
+      if (name && !isNaN(amount) && amount > 0) {
+        if (type === 'income') {
+          income[name] = amount;
+        } else {
+          expenses[name] = amount;
+        }
+        renderTChart();
+        updateTotals();
+        nameInput.value = '';
+        amountInput.value = '';
+      } else {
+        // Use a simple message box since alert() is not allowed
+        const messageBox = document.createElement('div');
+        messageBox.className = 'fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50';
+        messageBox.innerHTML = `
+          <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+            <p class="text-lg font-bold">Please enter a valid name and positive amount.</p>
+            <button onclick="this.parentElement.parentElement.remove()" class="mt-4 bg-indigo-500 text-white px-4 py-2 rounded-lg">OK</button>
+          </div>
+        `;
+        document.body.appendChild(messageBox);
+      }
+    }
+
+    function removeEntry(type, name) {
+      if (type === 'income') {
+        delete income[name];
+      } else {
+        delete expenses[name];
+      }
+      renderTChart();
+      updateTotals();
+    }
+
+    // Calculates the future value of a savings plan, both nominal and real
+    function calculateGrowth(initialInvestment, monthlyContribution, annualRate, years, inflationRate) {
+      const rate = annualRate / 100 / 12;
+      const infRate = inflationRate / 100;
+      const months = years * 12;
+      let nominalData = [];
+      let realData = [];
+      let futureValue = initialInvestment;
+
+      for (let i = 0; i <= months; i++) {
+        futureValue = futureValue * (1 + rate) + monthlyContribution;
+        // Only show data points every 12 months (or at the end)
+        if (i % 12 === 0 || i === months) {
+          const year = i / 12;
+          const realValue = futureValue / Math.pow(1 + infRate, year);
+          nominalData.push({ x: year, y: futureValue });
+          realData.push({ x: year, y: realValue });
+        }
+      }
+      return { nominalData, realData };
+    }
+    
+    let savingsChart;
+    
+    function getMonthlyInvestmentAmount() {
+      return parseFloat(investmentAmountDollarsInput.value);
+    }
+    
+    function getInitialInvestmentAmount() {
+      return parseFloat(initialInvestmentInput.value);
+    }
+    
+    function getInflationRate() {
+      return parseFloat(inflationRateInput.value);
+    }
+
+    // Adds the current inputs as a new scenario to the chart
+    function addScenario() {
+      const initialInvestment = getInitialInvestmentAmount();
+      const monthlyInvestment = getMonthlyInvestmentAmount();
+      const annualRate = parseFloat(investmentRateInput.value);
+      const years = parseInt(investmentYearsInput.value);
+      const inflationRate = getInflationRate();
+
+      const scenario = {
+        initialInvestment,
+        monthlyInvestment,
+        annualRate,
+        years,
+        inflationRate,
+        label: `I: $${initialInvestment}, M: $${monthlyInvestment}, R: ${annualRate}%, Y: ${years}, Infl: ${inflationRate}%`
+      };
+      
+      scenarios.push(scenario);
+      renderChart();
+      renderScenariosList();
+    }
+
+    // Removes a scenario by index
+    function removeScenario(index) {
+      scenarios.splice(index, 1);
+      renderChart();
+      renderScenariosList();
+    }
+
+    // Renders the list of current scenarios
+    function renderScenariosList() {
+      scenariosListDiv.innerHTML = '';
+      scenarios.forEach((scenario, index) => {
+        const scenarioElement = document.createElement('div');
+        scenarioElement.className = 'scenario-item';
+        scenarioElement.innerHTML = `
+          <div class="scenario-info">${scenario.label}</div>
+          <button onclick="removeScenario(${index})" class="remove-btn">Remove</button>
+        `;
+        scenariosListDiv.appendChild(scenarioElement);
+      });
+    }
+    
+    // Renders the chart with all current scenarios
+    function renderChart() {
+      let datasets = [];
+      let allYears = new Set();
+      
+      scenarios.forEach((scenario, index) => {
+        const { nominalData, realData } = calculateGrowth(
+          scenario.initialInvestment, 
+          scenario.monthlyInvestment, 
+          scenario.annualRate, 
+          scenario.years,
+          scenario.inflationRate
+        );
+
+        // Add nominal dataset (no fill)
+        datasets.push({
+          label: `Nominal - ${scenario.label}`,
+          data: nominalData.map(d => d.y),
+          borderColor: chartColors[index % chartColors.length],
+          tension: 0.1,
+          fill: false,
+          pointRadius: 5,
+          pointHoverRadius: 7
+        });
+
+        // Add real value dataset (no fill)
+        datasets.push({
+          label: `Real - ${scenario.label}`,
+          data: realData.map(d => d.y),
+          borderColor: 'rgb(255, 159, 64)', // A different color for real value
+          tension: 0.1,
+          fill: false,
+          pointRadius: 5,
+          pointHoverRadius: 7
+        });
+        
+        nominalData.forEach(d => allYears.add(d.x));
+      });
+
+      const labels = [...allYears].sort((a, b) => a - b).map(year => `Year ${year}`);
+      
+      const ctx = document.getElementById('savings-chart').getContext('2d');
+      if (savingsChart) {
+        savingsChart.destroy();
+      }
+
+      savingsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: datasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Years'
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Value ($)'
+              },
+              beginAtZero: true
+            }
+          },
+          plugins: {
+            legend: {
+              display: true
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `Value: $${context.parsed.y.toFixed(2)}`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Function to export data to a CSV file
+    function exportData() {
+      if (scenarios.length === 0) {
+        const messageBox = document.createElement('div');
+        messageBox.className = 'fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50';
+        messageBox.innerHTML = `
+          <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+            <p class="text-lg font-bold">Please add at least one scenario to export.</p>
+            <button onclick="this.parentElement.parentElement.remove()" class="mt-4 bg-indigo-500 text-white px-4 py-2 rounded-lg">OK</button>
+          </div>
+        `;
+        document.body.appendChild(messageBox);
+        return;
+      }
+
+      let csvContent = "data:text/csv;charset=utf-8,";
+      
+      // Build the header row
+      let header = ["Year"];
+      scenarios.forEach((scenario, index) => {
+        header.push(`Scenario ${index + 1} (Nominal)`);
+        header.push(`Scenario ${index + 1} (Real)`);
+      });
+      csvContent += header.join(",") + "\n";
+
+      // Determine the maximum number of years to iterate over
+      let maxYears = 0;
+      scenarios.forEach(scenario => {
+        if (scenario.years > maxYears) {
+          maxYears = scenario.years;
+        }
+      });
+
+      // Build the data rows
+      for (let i = 0; i <= maxYears; i++) {
+        let row = [i];
+        scenarios.forEach(scenario => {
+          const { nominalData, realData } = calculateGrowth(
+            scenario.initialInvestment, 
+            scenario.monthlyInvestment, 
+            scenario.annualRate, 
+            i, // pass the current year
+            scenario.inflationRate
+          );
+          const nominalValue = nominalData[nominalData.length - 1].y.toFixed(2);
+          const realValue = realData[realData.length - 1].y.toFixed(2);
+          row.push(nominalValue);
+          row.push(realValue);
+        });
+        csvContent += row.join(",") + "\n";
+      }
+
+      // Create and download the CSV file
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "financial_planner_data.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+
+    // Theme toggle functionality
+    const themeToggle = document.getElementById("themeToggle");
+    let isDarkTheme = false;
+
+    themeToggle.addEventListener("click", () => {
+      isDarkTheme = !isDarkTheme;
+      if (isDarkTheme) {
+        document.body.classList.add("dark-theme");
+        themeToggle.textContent = "☀️";
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.body.classList.remove("dark-theme");
+        themeToggle.textContent = "🌙";
+        localStorage.setItem("theme", "light");
+      }
+    });
+
+    // Load saved theme on page load
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      isDarkTheme = true;
+      document.body.classList.add("dark-theme");
+      themeToggle.textContent = "☀️";
+    }
+
+    // Simple dropdown functionality
+    const toolsBtn = document.getElementById('toolsBtn');
+    const toolsContent = document.getElementById('toolsContent');
+    let isOpen = false;
+
+    toolsBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (isOpen) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      } else {
+        toolsContent.style.display = 'block';
+        setTimeout(() => {
+          toolsContent.classList.add('show');
+        }, 10);
+        isOpen = true;
+      }
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('toolsDropdown').contains(e.target)) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      }
+    });
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      renderTChart();
+      updateTotals();
+      // Add a default scenario on page load
+      const initialScenario = {
+        initialInvestment: 0,
+        monthlyInvestment: 900,
+        annualRate: 7,
+        years: 10,
+        inflationRate: 3,
+        label: 'Initial Plan'
+      };
+      scenarios.push(initialScenario);
+      renderChart();
+      renderScenariosList();
+    });
+  </script>
+</body>
+</html>

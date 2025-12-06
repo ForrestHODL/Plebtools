@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Security - Plebtools</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Bitcoin Security specific styles */
+        .gradient-text {
+            background: -webkit-linear-gradient(45deg, #f59e0b, #fbbf24, #fde68a);
+            background-clip: text;
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .card {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 2rem;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Dark theme for card */
+        .dark-theme .card {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a2e 100%);
+            border-color: #555;
+        }
+        
+        .number-animation {
+            font-weight: 900;
+            font-size: 2.25rem;
+            transition: all 0.3s ease-in-out;
+        }
+        
+        
+        .security-section {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid #333;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .comparison-card {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a2e 100%);
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .comparison-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .simulation-container {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .key-display {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            word-break: break-all;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #f59e0b;
+        }
+        
+        .stat-label {
+            color: #888;
+            font-size: 1.1rem;
+        }
+        
+        /* Dark theme adjustments */
+        .dark-theme .comparison-card {
+            background: linear-gradient(135deg, #3d3d3d 0%, #2a2a2e 100%);
+            border-color: #666;
+        }
+        
+        .dark-theme .security-section {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a2e 100%);
+            border-color: #555;
+        }
+        
+        .dark-theme .simulation-container {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f23 100%);
+        }
+        
+        .dark-theme .key-display {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Light theme - make backgrounds light */
+        body:not(.dark-theme) .card {
+            background: #ffffff !important;
+            border-color: #dee2e6 !important;
+        }
+
+        body:not(.dark-theme) .security-section {
+            background: #ffffff !important;
+            border-color: #dee2e6 !important;
+        }
+
+        body:not(.dark-theme) .comparison-card {
+            background: #f8f9fa !important;
+            border-color: #dee2e6 !important;
+        }
+
+        body:not(.dark-theme) .simulation-container {
+            background: #ffffff !important;
+        }
+
+        /* Open Source and affiliate section text colors - white for both themes */
+        .planner-section h3 {
+            color: #fff !important;
+        }
+
+        .planner-section p {
+            color: #fff !important;
+        }
+
+        h3 {
+            color: #fff !important;
+        }
+
+        /* Light theme - make gray text black */
+        body:not(.dark-theme) .security-section {
+            color: #000 !important;
+        }
+
+        body:not(.dark-theme) .security-section h3 {
+            color: #f59e0b !important;
+        }
+
+        body:not(.dark-theme) .security-section p {
+            color: #000 !important;
+        }
+
+        body:not(.dark-theme) p {
+            color: #000 !important;
+        }
+
+        body:not(.dark-theme) .stat-label {
+            color: #000 !important;
+        }
+
+        body:not(.dark-theme) .key-display {
+            color: #000 !important;
+        }
+
+        /* Make gray text black in light theme */
+        body:not(.dark-theme) p[style*="color: #888"],
+        body:not(.dark-theme) p[style*="color: #ccc"] {
+            color: #000 !important;
+        }
+
+        .affiliate-link {
+  display: inline-block;
+  padding: 0.6rem 1.4rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.affiliate-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(59, 130, 246, 0.3);
+}
+
+.support-section {
+  padding: 4rem 0;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(30, 41, 59, 0.98) 100%);
+}
+
+.support-grid {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.support-card {
+  background: rgba(30, 41, 59, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 18px;
+  padding: 2.25rem;
+  text-align: center;
+  box-shadow: 0 28px 60px -30px rgba(15, 23, 42, 0.6);
+  color: #e2e8f0;
+}
+
+.support-icon {
+  font-size: 2.4rem;
+  margin-bottom: 1rem;
+}
+
+.support-title {
+  font-size: 1.6rem;
+  color: #f8fafc;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.support-text {
+  color: #cbd5f5;
+  font-size: 1rem;
+  margin: 1rem 0 2rem;
+  line-height: 1.6;
+}
+
+.support-btn {
+  display: inline-block;
+  padding: 0.9rem 2.2rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+  color: #f8fafc;
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 18px 35px -18px rgba(249, 115, 22, 0.55);
+}
+
+.support-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 45px -20px rgba(249, 115, 22, 0.65);
+  color: #f8fafc;
+}
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+      <div class="nav-container">
+        <div class="logo-container">
+          <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+            <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+            <h1 class="logo">Plebtools</h1>
+          </a>
+        </div>
+                <div class="nav-links">
+                    <div class="dropdown" id="toolsDropdown">
+                        <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+                        <div class="dropdown-content" id="toolsContent" style="display: none;">
+                            <a href="home">🏠 Home</a>
+                            <a href="treasury">📊 Treasury</a>
+                            <a href="btc-buy-tracker">💼 Portfolio</a>
+                            <a href="coveredcall-tracker">📈 Covered Calls</a>
+                            <a href="compound-interest-calculator">💰 Calculator</a>
+                            <a href="retirement-calculator">🏖️ Retirement</a>
+                            <a href="btc-loan-ltv">🔒 BTC Loans</a>
+                            <a href="financial-planner">📋 Financial Planner</a>
+                            <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+              <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
+              <a href="invoice-builder">🧾 Invoice Builder</a>
+                            <a href="pleb-release">📰 Pleb Release</a>
+                        </div>
+                    </div>
+                    <a href="account" class="account-link">👤 Account</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Header Section -->
+            <section class="security-section">
+                <h1 class="gradient-text" style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">How Secure is a Bitcoin Private Key?</h1>
+                <p style="text-align: center; font-size: 1.2rem; color: #ccc; max-width: 800px; margin: 0 auto;">
+                    Your Bitcoin private key is a single number. But it's a number so colossally large that it's practically impossible to guess. Let's explore the scale of this security.
+                </p>
+            </section>
+
+            <!-- The Big Number -->
+            <section class="security-section">
+                <div style="text-align: center;">
+                    <p style="color: #888; margin-bottom: 1rem; font-size: 1.1rem;">The number of possible Bitcoin private keys is:</p>
+                    <h2 style="font-size: 4rem; font-weight: 900; color: #f59e0b; margin: 1rem 0;">2<sup style="font-size: 2.5rem;">256</sup></h2>
+                    <p style="color: #888; margin: 1rem 0; font-size: 1rem;">
+                        That's a 78-digit number. Writing it out looks like this:
+                    </p>
+                    <div class="key-display" style="color: #fbbf24; font-size: 1.2rem; line-height: 1.4;">
+                        115,792,089,237,316,195,423,570,985,008,687,907,853,269,984,665,640,564,039,457,584,007,913,129,639,936
+                    </div>
+                </div>
+            </section>
+
+
+
+            <!-- Brute Force Attack Simulation -->
+            <section class="security-section">
+                <h3 style="font-size: 2rem; text-align: center; margin-bottom: 2rem; color: #f59e0b;">Brute Force Attack Simulation</h3>
+                <p style="text-align: center; color: #ccc; margin-bottom: 2rem; font-size: 1.1rem;">
+                    Let's see what happens if a supercomputer tries to guess your private key. We'll simulate guessing billions of keys every second.
+                </p>
+                <div class="simulation-container">
+                    <p style="color: #888; margin-bottom: 0.5rem;">Target Key (Your Wallet):</p>
+                    <div id="targetKey" class="key-display" style="color: #4ade80;">0000...0000</div>
+                    
+                    <p style="color: #888; margin: 1.5rem 0 0.5rem;">Attacker's Current Guess:</p>
+                    <div id="guessKey" class="key-display" style="color: #f87171;">0000...0000</div>
+
+                    <div class="stats-container">
+                        <div class="stat-item">
+                            <p class="stat-label">Keys Guessed:</p>
+                            <p id="keysGuessed" class="stat-value">0</p>
+                        </div>
+                        <div class="stat-item">
+                            <p class="stat-label">Time Elapsed:</p>
+                            <p id="timeElapsed" class="stat-value">0s</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <p style="font-size: 1.3rem; color: #ccc; margin-bottom: 0.5rem;">Estimated time to find your key:</p>
+                    <p style="font-size: 2rem; font-weight: bold; color: #f59e0b;">Longer than the age of the universe.</p>
+                </div>
+            </section>
+
+            <!-- Conclusion -->
+            <section class="security-section">
+                <h3 style="font-size: 2rem; text-align: center; margin-bottom: 1rem; color: #f59e0b;">Conclusion: Your Keys are Safe</h3>
+                <p style="text-align: center; color: #ccc; font-size: 1.1rem; max-width: 800px; margin: 0 auto;">
+                    The security of Bitcoin isn't based on a secret algorithm; it's based on the mathematical impossibility of guessing a single, specific number out of an unfathomably large range. As long as you keep your private key secret, your Bitcoin is protected by the laws of mathematics.
+                </p>
+            </section>
+
+            <!-- Affiliate Links Section -->
+            <div class="planner-section">
+                <h3 style="text-align: center;">Want to buy and secure your Bitcoin?</h3>
+                <div class="totals-display">
+                    <div style="text-align: center;">
+                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
+                        <div class="affiliate-links">
+                            <div class="affiliate-item"><h4>Where to buy</h4><a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" class="affiliate-link">Bitcoin Well</a></div>
+                            <div class="affiliate-item"><h4>Where to store</h4><a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a></div>
+                            <div class="affiliate-item"><h4>How to protect</h4><a href="https://www.stampseed.com/" target="_blank" class="affiliate-link">Stamp Seed</a><p class="discount-code">USE CODE: BTCNOTCRYPTO15 for 15% off</p></div>
+                            <div class="affiliate-item"><h4>How to validate</h4><a href="https://store.start9.com/" target="_blank" class="affiliate-link">Start9</a><p class="discount-code">CODE: BNC5 for 5% off</p></div>
+                            <div class="affiliate-item"><h4>1:1 Coaching</h4><a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a></div>
+                            <div class="affiliate-item"><h4>Where to learn</h4><a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section class="support-section">
+      <div class="container support-grid">
+        <div class="support-card">
+          <div class="support-icon">⚡</div>
+          <h2 class="support-title">Support Plebtools</h2>
+          <p class="support-text">
+            Enjoying these tools? You can help keep them free and open source by donating sats.
+            Every contribution fuels more Bitcoin-first development.
+          </p>
+          <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Open Source Section -->
+    <div class="planner-section">
+        <h3 style="text-align: center;">Open Source</h3>
+        <div class="totals-display">
+            <div style="text-align: center;">
+                <p style="color: #fff;">This Bitcoin security planner is free and open source and can be replicated for anyone to secure their own Bitcoin.</p>
+                <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" style="background: #28a745; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; display: inline-block; font-weight: bold; transition: all 0.3s ease; margin-top: 1rem;">View on GitHub</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 Plebtools. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+        }
+
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
+
+        // Add theme toggle button
+        document.addEventListener('DOMContentLoaded', function() {
+            const nav = document.querySelector('.nav-container');
+            const themeToggle = document.createElement('button');
+            themeToggle.innerHTML = '🌙';
+            themeToggle.className = 'theme-toggle';
+            themeToggle.style.cssText = `
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                margin-left: 1rem;
+                padding: 0.5rem;
+                border-radius: 50%;
+                transition: all 0.3s ease;
+            `;
+            themeToggle.onclick = toggleTheme;
+            nav.appendChild(themeToggle);
+        });
+    </script>
+
+    <!-- Bitcoin Security Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- Dropdown Functionality ---
+            const toolsBtn = document.getElementById('toolsBtn');
+            const toolsContent = document.getElementById('toolsContent');
+            let isOpen = false;
+
+            toolsBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (isOpen) {
+                    toolsContent.classList.remove('show');
+                    setTimeout(() => {
+                        toolsContent.style.display = 'none';
+                    }, 300);
+                    isOpen = false;
+                } else {
+                    toolsContent.style.display = 'block';
+                    setTimeout(() => {
+                        toolsContent.classList.add('show');
+                    }, 10);
+                    isOpen = true;
+                }
+            });
+
+            // Close when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!document.getElementById('toolsDropdown').contains(e.target)) {
+                    toolsContent.classList.remove('show');
+                    setTimeout(() => {
+                        toolsContent.style.display = 'none';
+                    }, 300);
+                    isOpen = false;
+                }
+            });
+            
+            // --- Number Animation ---
+            const animateNumbers = () => {
+                const numberElements = document.querySelectorAll('.number-animation');
+                numberElements.forEach(el => {
+                    const target = parseInt(el.getAttribute('data-target'), 10);
+                    let current = 0;
+                    const increment = target / 100;
+
+                    const update = () => {
+                        if (current < target) {
+                            current += increment;
+                            el.innerHTML = `~2<sup>${Math.ceil(current)}</sup>`;
+                            requestAnimationFrame(update);
+                        } else {
+                            el.innerHTML = `~2<sup>${target}</sup>`;
+                        }
+                    };
+                    update();
+                });
+            };
+            
+            // Intersection Observer to trigger animation on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateNumbers();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            const comparisonSection = document.querySelector('.comparison-grid');
+            if(comparisonSection) {
+                observer.observe(comparisonSection);
+            }
+
+            // --- Brute Force Simulation ---
+            const targetKeyEl = document.getElementById('targetKey');
+            const guessKeyEl = document.getElementById('guessKey');
+            const keysGuessedEl = document.getElementById('keysGuessed');
+            const timeElapsedEl = document.getElementById('timeElapsed');
+
+            const generateKey = () => (
+                [...Array(64)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')
+            );
+
+            const targetKey = generateKey();
+            targetKeyEl.textContent = targetKey.substring(0, 32) + '...' + targetKey.substring(56);
+            
+            let keysGuessed = 0;
+            let startTime = Date.now();
+            const keysPerInterval = 250000000; // Simulate 250 million keys per interval
+
+            const simulationInterval = setInterval(() => {
+                keysGuessed += keysPerInterval * 10; // Making the number go up faster for visual effect
+
+                // Update DOM
+                guessKeyEl.textContent = generateKey().substring(0, 32) + '...' + generateKey().substring(56);
+                keysGuessedEl.textContent = keysGuessed.toLocaleString();
+                
+                const timeElapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+                timeElapsedEl.textContent = `${timeElapsed}s`;
+
+            }, 100);
+        });
+
+        // Brave browser detection and affiliate link handling
+        // Commented out - Brave warning removed per user request
+        /*
+        function isBraveBrowser() {
+            return (navigator.brave && typeof navigator.brave.isBrave === 'function') ||
+                   (window.chrome && window.chrome.runtime && window.chrome.runtime.onConnect);
+        }
+
+        function showBraveInstructions() {
+            const instructions = document.getElementById('brave-instructions');
+            instructions.style.display = instructions.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Show Brave warning if detected
+        if (isBraveBrowser()) {
+            document.getElementById('brave-warning').style.display = 'block';
+        }
+        */
+
+        // Add click handlers to affiliate links for better UX
+        document.addEventListener('DOMContentLoaded', function() {
+            const affiliateLinks = document.querySelectorAll('.affiliate-link');
+            affiliateLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Add a small delay to show the user what's happening
+                    this.style.opacity = '0.7';
+                    setTimeout(() => {
+                        this.style.opacity = '1';
+                    }, 200);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Covered Call Tracker - Plebtools</title>
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
+  <link rel="stylesheet" href="styles.css?v=3">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    /* Keep logo purple */
+    .logo {
+      color: #667eea !important;
+    }
+
+    /* Modern dropdown styles */
+    #toolsDropdown { position: relative; display: inline-block; }
+    #toolsBtn { background: none; border: none; color: white; font-weight: 500; font-size: 1rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; }
+    .dark-theme #toolsBtn { color: #e0e0e0 !important; }
+    #toolsBtn:hover { background: rgba(102, 126, 234, 0.1); color: #667eea; }
+    .dropdown-arrow { font-size: 0.8rem; transition: transform 0.3s ease; }
+    #toolsContent { position: absolute; top: 100%; right: 0; background: white; min-width: 220px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); border-radius: 12px; z-index: 1001; padding: 0.75rem 0; border: 1px solid rgba(0, 0, 0, 0.08); backdrop-filter: blur(10px); margin-top: 8px; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; }
+    #toolsContent.show { opacity: 1; transform: translateY(0); }
+    #toolsContent a { display: block; padding: 0.875rem 1.5rem; color: #333; text-decoration: none; transition: all 0.3s ease; font-weight: 500; border-radius: 0; position: relative; }
+    .dark-theme #toolsContent a { color: #e0e0e0 !important; }
+    #toolsContent a:hover { background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); color: #667eea; transform: translateX(8px); }
+    #toolsContent a:first-child { border-radius: 12px 12px 0 0; }
+    #toolsContent a:last-child { border-radius: 0 0 12px 12px; }
+    .dark-theme #toolsContent { background: #2d2d2d !important; border-color: #555 !important; }
+    .dark-theme #toolsContent a:hover { background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%) !important; color: #667eea !important; }
+  </style>
+  
+  <style>
+    /* Covered Call Tracker Styles */
+    .tracker-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: white;
+      min-height: 100vh;
+    }
+
+    .tracker-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 2rem 0;
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: #1a1a1a;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .tracker-title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #1a1a1a;
+      text-shadow: none;
+    }
+
+    .tracker-description {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+      color: #1a1a1a;
+    }
+
+    /* Public Portfolio Section */
+    .public-portfolio-section {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .public-portfolio-link {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 15px;
+      padding: 1.5rem 2rem;
+      text-decoration: none;
+      color: white;
+      transition: all 0.3s ease;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .public-portfolio-link:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+      color: white;
+      text-decoration: none;
+    }
+
+    .portfolio-icon {
+      font-size: 2rem;
+      margin-right: 1rem;
+      opacity: 0.9;
+    }
+
+    .portfolio-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .portfolio-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 0.3rem;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .portfolio-subtitle {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      font-weight: 400;
+    }
+
+    .portfolio-arrow {
+      font-size: 1.5rem;
+      margin-left: 1rem;
+      opacity: 0.8;
+      transition: transform 0.3s ease;
+    }
+
+    .public-portfolio-link:hover .portfolio-arrow {
+      transform: translateX(5px);
+    }
+
+    .tracker-interface {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .controls-panel {
+      background: #f8f9fa;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      height: fit-content;
+    }
+
+    .control-group {
+      margin-bottom: 2rem;
+    }
+
+    .control-label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    .control-input {
+      width: 100%;
+      padding: 0.8rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .control-input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+    }
+
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .visualization-panel {
+      background: #f8f9fa;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .chart-controls {
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    
+    .chart-toggle-btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.2s;
+    }
+    
+    .chart-toggle-btn:hover {
+      background: #0056b3;
+    }
+    
+    .chart-container {
+      position: relative;
+      height: 400px;
+      margin-bottom: 2rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #667eea;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .trades-table {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+      color: #212529;
+    }
+
+    .table th {
+      background: #f8f9fa;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .table tr:hover {
+      background: #f8f9fa;
+    }
+
+    .profit {
+      color: #28a745;
+      font-weight: bold;
+    }
+
+    .loss {
+      color: #dc3545;
+      font-weight: bold;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-sm {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .tracker-interface {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .tracker-title {
+        font-size: 2rem;
+      }
+
+      .tracker-description {
+        font-size: 1rem;
+      }
+
+      .controls-panel,
+      .visualization-panel {
+        padding: 1rem;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .public-portfolio-link {
+        padding: 1rem 1.5rem;
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+      }
+
+      .portfolio-icon {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+      }
+
+      .portfolio-text {
+        align-items: center;
+      }
+
+      .portfolio-arrow {
+        margin-left: 0;
+        margin-top: 0.5rem;
+      }
+    }
+
+    /* Dark theme support */
+    .dark-theme .tracker-container {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .controls-panel,
+    .dark-theme .visualization-panel {
+      background: #3d3d3d !important;
+    }
+
+    .dark-theme .control-label {
+      color: #e0e0e0;
+    }
+
+    .dark-theme .control-input {
+      background: #4d4d4d;
+      border-color: #555;
+      color: #e0e0e0;
+    }
+
+    .dark-theme .stat-card {
+      background: #4d4d4d;
+    }
+
+    .dark-theme .stat-label {
+      color: #ccc;
+    }
+
+    .dark-theme .controls-panel h3,
+    .dark-theme .visualization-panel h3 {
+      color: #e0e0e0 !important;
+    }
+
+    /* Affiliate Links Section */
+    .features-section {
+      background: #f8f9fa;
+      padding: 4rem 0;
+      margin-top: 2rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .affiliate-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .affiliate-item {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .affiliate-item:hover {
+      transform: translateY(-3px);
+    }
+
+    .affiliate-item h4 {
+      color: #667eea;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .affiliate-link {
+      display: inline-block;
+      padding: 0.6rem 1.4rem;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 999px;
+      font-weight: 600;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .affiliate-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(59, 130, 246, 0.3);
+    }
+
+    .discount-code {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Dark theme for affiliate links */
+    .dark-theme .features-section {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .section-title {
+      color: #e0e0e0;
+    }
+
+    .dark-theme .open-source-text {
+      color: white !important;
+    }
+
+    .dark-theme .affiliate-item {
+      background: #3d3d3d;
+      color: #e0e0e0;
+    }
+
+    .dark-theme .affiliate-item h4 {
+      color: #667eea;
+    }
+
+    .dark-theme .discount-code {
+      color: #4CAF50;
+    }
+
+    .dark-theme .trades-table {
+      background: #4d4d4d;
+    }
+
+    .dark-theme .table th {
+      background: #3d3d3d;
+      color: #e0e0e0;
+    }
+
+    .dark-theme .table td {
+      color: #ffffff !important;
+    }
+
+    .dark-theme .table tr:hover {
+      background: #3d3d3d;
+    }
+
+    /* Account Modal Styles */
+    .modal {
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .dark-theme .modal-content {
+      background: #2d2d2d;
+      color: #e0e0e0;
+    }
+
+    .close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #aaa;
+    }
+
+    .close:hover {
+      color: #000;
+    }
+
+    .dark-theme .close {
+      color: #ccc;
+    }
+
+    .dark-theme .close:hover {
+      color: #fff;
+    }
+
+    /* Dark theme for public portfolio section */
+    .dark-theme .public-portfolio-link {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .dark-theme .public-portfolio-link:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .account-form h2 {
+      color: #667eea;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .dark-theme .account-form h2 {
+      color: #e0e0e0;
+    }
+
+    .user-info {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .dark-theme .user-info {
+      background: #3d3d3d;
+    }
+
+    .user-info p {
+      margin: 0.5rem 0;
+    }
+
+    .user-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .user-actions button {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .account-form small {
+      color: #666;
+      font-size: 0.8rem;
+    }
+
+    .dark-theme .account-form small {
+      color: #999;
+    }
+
+    .account-form a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .account-form a:hover {
+      text-decoration: underline;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .dark-theme .form-group label {
+      color: #e0e0e0;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    .dark-theme .form-group input {
+      background: #3d3d3d;
+      color: #e0e0e0;
+      border-color: #555;
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Mobile responsiveness for modal */
+    @media (max-width: 768px) {
+      .modal-content {
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+
+      .user-actions {
+        flex-direction: column;
+      }
+
+      .user-actions button {
+        width: 100%;
+      }
+    }
+
+    .support-section {
+      padding: 4rem 0;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(30, 41, 59, 0.98) 100%);
+    }
+
+    .support-grid {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .support-card {
+      background: rgba(30, 41, 59, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 18px;
+      padding: 2.25rem;
+      text-align: center;
+      box-shadow: 0 28px 60px -30px rgba(15, 23, 42, 0.6);
+      color: #e2e8f0;
+    }
+
+    .support-icon {
+      font-size: 2.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .support-title {
+      font-size: 1.6rem;
+      color: #f8fafc;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+
+    .support-text {
+      color: #cbd5f5;
+      font-size: 1rem;
+      margin: 1rem 0 2rem;
+      line-height: 1.6;
+    }
+
+    .support-btn {
+      display: inline-block;
+      padding: 0.75rem 2.5rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: #fff;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 18px 48px -24px rgba(34, 197, 94, 0.65);
+    }
+
+    .support-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 28px 60px -30px rgba(34, 197, 94, 0.65);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="nav-container">
+        <div class="logo-container">
+          <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+            <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+            <h1 class="logo">Plebtools</h1>
+          </a>
+        </div>
+        <div class="nav-links">
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="home">🏠 Home</a>
+              <a href="treasury">📊 Treasury</a>
+              <a href="btc-buy-tracker">💼 Portfolio</a>
+              <a href="compound-interest-calculator">💰 Calculator</a>
+              <a href="btc-loan-ltv">🔒 BTC Loans</a>
+              <a href="financial-planner">📋 Financial Planner</a>
+              <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+              <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
+              <a href="invoice-builder">🧾 Invoice Builder</a>
+              <a href="pleb-release">📰 Pleb Release</a>
+            </div>
+          </div>
+          <a href="account" class="account-link">👤 Account</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="tracker-container">
+      <div class="tracker-header">
+        <h1 class="tracker-title">Covered Call Tracker</h1>
+        <p class="tracker-description">
+          Track your covered call trades, monitor premium income, and visualize your cost basis adjustments. 
+          Perfect for managing your options strategy and maximizing returns.
+        </p>
+      </div>
+
+
+      <div class="tracker-interface">
+        <div class="controls-panel">
+          <h3 style="margin-bottom: 2rem; color: #333;">Add New Trade</h3>
+          
+          <form id="tradeForm">
+            <div class="control-group">
+              <label class="control-label" for="tradeType">Trade Type</label>
+              <select id="tradeType" class="control-input" onchange="toggleSymbolFields()">
+                <option value="shares">Share Purchase Only</option>
+                <option value="covered-call">Covered Call Trade</option>
+              </select>
+            </div>
+
+            <div class="control-group" id="symbolInputGroup">
+              <label class="control-label" for="symbol">Stock Symbol</label>
+              <input type="text" id="symbol" class="control-input" placeholder="e.g. MSTR" required>
+            </div>
+
+            <div class="control-group" id="symbolSelectGroup" style="display: none;">
+              <label class="control-label" for="symbolSelect">Select Existing Position</label>
+              <select id="symbolSelect" class="control-input" onchange="loadSelectedPosition()">
+                <option value="">Choose a position...</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="control-group">
+                <label class="control-label" for="shares">Shares</label>
+                <input type="number" id="shares" class="control-input" placeholder="100" required>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="costBasis">Cost Basis per Share</label>
+                <input type="number" id="costBasis" class="control-input" placeholder="150.00" step="0.01" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="control-group">
+                <label class="control-label" for="tradeDate">Trade Date</label>
+                <input type="date" id="tradeDate" class="control-input" required>
+              </div>
+            </div>
+
+            <div class="form-row" id="coveredCallFields" style="display: none;">
+              <div class="control-group">
+                <label class="control-label" for="strikePrice">Strike Price (Optional)</label>
+                <input type="number" id="strikePrice" class="control-input" placeholder="155.00" step="0.01">
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="premium">Premium Received per Share (Optional)</label>
+                <input type="number" id="premium" class="control-input" placeholder="2.50" step="0.01">
+              </div>
+            </div>
+
+            <div class="form-row" id="expiryFields" style="display: none;">
+              <div class="control-group">
+                <label class="control-label" for="expiryDate">Expiry Date (Optional)</label>
+                <input type="date" id="expiryDate" class="control-input">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="notes">Notes (Optional)</label>
+              <textarea id="notes" class="control-input" rows="3" placeholder="Add any notes about this trade..."></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Add Trade</button>
+              <button type="button" class="btn btn-secondary" onclick="clearForm()">Clear</button>
+            </div>
+          </form>
+
+          <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e0e0e0;">
+            <h4 style="margin-bottom: 1rem; color: #333;">Data Management</h4>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <button class="btn btn-success" onclick="exportData()">Export Data</button>
+              <button class="btn btn-danger" onclick="clearAllData()">Clear All</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="visualization-panel">
+          <h3 style="margin-bottom: 2rem; color: #333;">Performance Overview</h3>
+          
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-value" id="totalValue">$0.00</div>
+              <div class="stat-label">Original Cost Basis</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="originalShareCost">$0.00</div>
+              <div class="stat-label">Original Share Cost</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="totalPremium">$0.00</div>
+              <div class="stat-label">Total Premium</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="totalAdjustedCostBasis">$0.00</div>
+              <div class="stat-label">Total Adjusted Cost Basis</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="avgCostBasis">$0.00</div>
+              <div class="stat-label">Avg Adjusted Cost Basis</div>
+            </div>
+        <div class="stat-card">
+          <div class="stat-value" id="currentMarketPrice">$0.00</div>
+          <div class="stat-label">Current Market Price</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="profitLoss">$0.00</div>
+          <div class="stat-label" id="profitLossLabel">P&L</div>
+        </div>
+          </div>
+
+        <div class="chart-controls">
+          <button id="chartToggle" class="chart-toggle-btn">Switch to Line Chart</button>
+        </div>
+        <div class="chart-container">
+          <canvas id="performanceChart"></canvas>
+        </div>
+
+          <h4 style="margin-bottom: 1rem; color: #333;">Recent Trades</h4>
+          <div class="trades-table">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Symbol</th>
+                  <th>Shares</th>
+                  <th>Strike</th>
+                  <th>Premium</th>
+                  <th>Expiry</th>
+                  <th>New Cost Basis</th>
+                  <th>P&L</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="tradesTableBody">
+                <tr>
+                  <td colspan="8" style="text-align: center; color: #666; padding: 2rem;">
+                    No trades yet. Add your first trade above!
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Affiliate Links Section -->
+  <section class="features-section">
+    <div class="container">
+      <h2 class="section-title">Want to buy and secure your Bitcoin?</h2>
+      <div style="text-align: center;">
+        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
+        <div class="affiliate-links">
+          <div class="affiliate-item">
+            <h4>Where to buy</h4>
+            <a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" class="affiliate-link">Bitcoin Well</a>
+          </div>
+          <div class="affiliate-item">
+            <h4>Where to store</h4>
+            <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a>
+          </div>
+          <div class="affiliate-item">
+            <h4>How to protect</h4>
+            <a href="https://www.stampseed.com/" target="_blank" class="affiliate-link">Stamp Seed</a>
+            <p class="discount-code">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
+          </div>
+          <div class="affiliate-item">
+            <h4>How to validate</h4>
+            <a href="https://store.start9.com/" target="_blank" class="affiliate-link">Start9</a>
+            <p class="discount-code">CODE: BNC5 for 5% off</p>
+          </div>
+          <div class="affiliate-item">
+            <h4>1:1 Coaching</h4>
+            <a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+          </div>
+          <div class="affiliate-item">
+            <h4>Where to learn</h4>
+            <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="support-section">
+    <div class="container support-grid">
+      <div class="support-card">
+        <div class="support-icon">⚡</div>
+        <h2 class="support-title">Support Plebtools</h2>
+        <p class="support-text">
+          Enjoying these tools? You can help keep them free and open source by donating sats.
+          Every contribution fuels more Bitcoin-first development.
+        </p>
+        <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Open Source Section -->
+  <section class="features-section">
+    <div class="container">
+      <h2 class="section-title">Open Source</h2>
+      <div style="text-align: center;">
+        <p class="open-source-text" style="margin-bottom: 1rem; color: #212529;">This covered call tracker is free and open source and can be replicated for anyone to track their own trades.</p>
+        <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" style="background: #28a745; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; display: inline-block; font-weight: bold; transition: all 0.3s ease;">View on GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 Plebtools. Open source Bitcoin tracking tools.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Global variables
+    let trades = JSON.parse(localStorage.getItem('coveredCallTrades')) || [];
+    let performanceChart = null;
+    let chartType = 'bar';
+    let isUpdatingChart = false; // 'bar', 'line', or 'pie'
+    
+    // Account System Variables
+    let currentUser = null;
+    const API_BASE_URL = '/api'; // Production URL for cPanel deployment
+    let backendAvailable = false;
+    let isLoggedIn = false;
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Set default date to today
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('tradeDate').value = today;
+      
+      loadTrades();
+      updateStats();
+      await updateChart();
+      updateTable();
+      
+      // Update market price every 30 seconds
+      setInterval(updateCurrentMarketPrice, 30000);
+    });
+
+    // Form submission
+    document.getElementById('tradeForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      addTrade();
+    });
+
+    // Chart toggle
+    document.getElementById('chartToggle').addEventListener('click', async function() {
+      if (chartType === 'bar') {
+        chartType = 'line';
+        this.textContent = 'Switch to Pie Chart';
+      } else if (chartType === 'line') {
+        chartType = 'pie';
+        this.textContent = 'Switch to Bar Chart';
+      } else {
+        chartType = 'bar';
+        this.textContent = 'Switch to Line Chart';
+      }
+      await updateChart();
+    });
+
+    // Toggle optional fields based on trade type
+    function toggleSymbolFields() {
+      const tradeType = document.getElementById('tradeType').value;
+      const symbolInputGroup = document.getElementById('symbolInputGroup');
+      const symbolSelectGroup = document.getElementById('symbolSelectGroup');
+      const coveredCallFields = document.getElementById('coveredCallFields');
+      const expiryFields = document.getElementById('expiryFields');
+      
+      if (tradeType === 'shares') {
+        symbolInputGroup.style.display = 'block';
+        symbolSelectGroup.style.display = 'none';
+        coveredCallFields.style.display = 'none';
+        expiryFields.style.display = 'none';
+      } else {
+        symbolInputGroup.style.display = 'none';
+        symbolSelectGroup.style.display = 'block';
+        coveredCallFields.style.display = 'block';
+        expiryFields.style.display = 'block';
+        updateSymbolSelect();
+      }
+    }
+
+    // Update symbol select dropdown with existing positions
+    function updateSymbolSelect() {
+      const symbolSelect = document.getElementById('symbolSelect');
+      const sharePositions = getSharePositions();
+      
+      // Clear existing options except the first one
+      symbolSelect.innerHTML = '<option value="">Choose a position...</option>';
+      
+      // Add options for each unique symbol with shares
+      sharePositions.forEach(position => {
+        const option = document.createElement('option');
+        option.value = position.symbol;
+        option.textContent = `${position.symbol} (${position.totalShares} shares @ $${position.avgCostBasis.toFixed(2)})`;
+        symbolSelect.appendChild(option);
+      });
+    }
+
+    // Get all share positions (aggregated by symbol)
+    function getSharePositions() {
+      const shareTrades = trades.filter(trade => trade.tradeType === 'shares');
+      const positionMap = new Map();
+      
+      shareTrades.forEach(trade => {
+        if (positionMap.has(trade.symbol)) {
+          const existing = positionMap.get(trade.symbol);
+          const totalShares = existing.totalShares + trade.shares;
+          const totalCost = (existing.avgCostBasis * existing.totalShares) + (trade.newCostBasis * trade.shares);
+          existing.totalShares = totalShares;
+          existing.avgCostBasis = totalCost / totalShares;
+        } else {
+          positionMap.set(trade.symbol, {
+            symbol: trade.symbol,
+            totalShares: trade.shares,
+            avgCostBasis: trade.newCostBasis
+          });
+        }
+      });
+      
+      return Array.from(positionMap.values());
+    }
+
+     // Load selected position data
+     function loadSelectedPosition() {
+       const selectedSymbol = document.getElementById('symbolSelect').value;
+       if (!selectedSymbol) return;
+       
+       const position = getSharePositions().find(p => p.symbol === selectedSymbol);
+       if (position) {
+         document.getElementById('shares').value = position.totalShares;
+         document.getElementById('costBasis').value = position.avgCostBasis.toFixed(2);
+         document.getElementById('symbol').value = selectedSymbol;
+         
+         // Trigger input events to ensure form validation recognizes the values
+         document.getElementById('shares').dispatchEvent(new Event('input', { bubbles: true }));
+         document.getElementById('costBasis').dispatchEvent(new Event('input', { bubbles: true }));
+       }
+     }
+
+    // Add new trade
+    function addTrade() {
+      const tradeType = document.getElementById('tradeType').value;
+      const symbol = tradeType === 'covered-call' ? 
+        document.getElementById('symbolSelect').value.toUpperCase() : 
+        document.getElementById('symbol').value.toUpperCase();
+      const shares = parseInt(document.getElementById('shares').value);
+      const costBasis = parseFloat(document.getElementById('costBasis').value);
+      const strikePrice = parseFloat(document.getElementById('strikePrice').value) || 0;
+      const premiumPerShare = parseFloat(document.getElementById('premium').value) || 0;
+      const tradeDate = document.getElementById('tradeDate').value;
+      const expirationDate = document.getElementById('expiryDate').value || '';
+      const currentPrice = 0;
+      const notes = document.getElementById('notes').value;
+
+      // Calculate total premium and new cost basis
+      const totalPremium = premiumPerShare * shares;
+      let newCostBasis = costBasis;
+      
+      if (premiumPerShare > 0) {
+        // For covered calls, calculate cumulative adjusted cost basis
+        if (tradeType === 'covered-call') {
+          // Get all existing trades for this symbol
+          const existingTrades = trades.filter(t => t.symbol === symbol);
+          const shareTrades = existingTrades.filter(t => t.tradeType === 'shares');
+          const callTrades = existingTrades.filter(t => t.tradeType === 'covered-call');
+          
+          // Calculate total shares and total original cost basis
+          let totalShares = 0;
+          let totalOriginalCostBasis = 0;
+          let totalPremiumReceived = 0;
+          
+          shareTrades.forEach(t => {
+            totalShares += t.shares;
+            totalOriginalCostBasis += t.originalCostBasis * t.shares;
+          });
+          
+          callTrades.forEach(t => {
+            totalPremiumReceived += (t.premium || 0);
+          });
+          
+          // Add current premium
+          totalPremiumReceived += totalPremium;
+          
+          if (totalShares > 0) {
+            const avgOriginalCostBasis = totalOriginalCostBasis / totalShares;
+            newCostBasis = avgOriginalCostBasis - (totalPremiumReceived / totalShares);
+            console.log(`Cumulative cost basis calculation: ${avgOriginalCostBasis} - ${totalPremiumReceived / totalShares} = ${newCostBasis}`);
+          }
+        } else {
+          // For share purchases, premium reduces cost basis per share
+          newCostBasis = costBasis - premiumPerShare;
+          console.log(`Cost basis calculation: ${costBasis} - ${premiumPerShare} = ${newCostBasis}`);
+        }
+      }
+      
+      // Calculate P&L
+      const totalCostBasis = newCostBasis * shares;
+      const currentValue = currentPrice * shares;
+      const pnl = currentValue - totalCostBasis;
+
+      const trade = {
+        id: Date.now(),
+        tradeType,
+        symbol,
+        shares,
+        originalCostBasis: costBasis,
+        newCostBasis: newCostBasis,
+        strikePrice: strikePrice || null,
+        premium: totalPremium || null,
+        expirationDate: expirationDate || null,
+        currentPrice,
+        notes,
+        pnl,
+        dateAdded: tradeDate ? new Date(tradeDate).toISOString() : new Date().toISOString()
+      };
+
+      // Always store locally first
+      trades.push(trade);
+      localStorage.setItem('coveredCallTrades', JSON.stringify(trades));
+      
+      // Also sync to server if user is logged in and backend is available
+      if (isLoggedIn && backendAvailable) {
+        syncTradeToServer(trade);
+      }
+      
+      loadTrades();
+      updateStats();
+      updateChart();
+      updateTable();
+      clearForm();
+    }
+
+    // Load trades from localStorage
+    function loadTrades() {
+      trades = JSON.parse(localStorage.getItem('coveredCallTrades')) || [];
+    }
+
+    // Update statistics
+    // Function to fetch current market price from Yahoo Finance
+    async function fetchCurrentMarketPrice(symbol) {
+      try {
+        // Using a CORS proxy to access Yahoo Finance
+        const proxyUrl = 'https://api.allorigins.win/raw?url=';
+        const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}`;
+        const response = await fetch(proxyUrl + encodeURIComponent(yahooUrl));
+        const data = await response.json();
+        
+        if (data.chart && data.chart.result && data.chart.result[0]) {
+          const result = data.chart.result[0];
+          if (result.meta && result.meta.regularMarketPrice) {
+            return result.meta.regularMarketPrice;
+          }
+        }
+        return null;
+      } catch (error) {
+        console.error('Error fetching market price:', error);
+        return null;
+      }
+    }
+
+    // Function to fetch historical market price for a specific date
+    async function fetchHistoricalPrice(symbol, date) {
+      try {
+        // Convert date to timestamp (ensure we're getting the right day)
+        const tradeDate = new Date(date);
+        const timestamp = Math.floor(tradeDate.getTime() / 1000);
+        const endTimestamp = timestamp + 86400; // Add 1 day to get the closing price
+        
+        console.log(`Fetching historical price for ${symbol} on ${date}:`);
+        console.log(`Trade date: ${tradeDate.toISOString()}`);
+        console.log(`Timestamp range: ${timestamp} to ${endTimestamp}`);
+        
+        // Try multiple approaches to get accurate closing price
+        let data = null;
+        
+        // Method 1: Yahoo Finance v8 API
+        try {
+          const proxyUrl = 'https://api.allorigins.win/raw?url=';
+          const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?period1=${timestamp}&period2=${endTimestamp}&interval=1d`;
+          const response = await fetch(proxyUrl + encodeURIComponent(yahooUrl));
+          data = await response.json();
+          console.log(`Yahoo v8 API response for ${symbol}:`, data);
+        } catch (error) {
+          console.log(`Yahoo v8 API failed for ${symbol}:`, error);
+        }
+        
+        // Method 2: Alternative Yahoo Finance endpoint if first fails
+        if (!data || !data.chart || !data.chart.result || !data.chart.result[0]) {
+          try {
+            const proxyUrl = 'https://api.allorigins.win/raw?url=';
+            const yahooUrl2 = `https://query2.finance.yahoo.com/v8/finance/chart/${symbol}?period1=${timestamp}&period2=${endTimestamp}&interval=1d`;
+            const response2 = await fetch(proxyUrl + encodeURIComponent(yahooUrl2));
+            data = await response2.json();
+            console.log(`Yahoo v8 API (alt) response for ${symbol}:`, data);
+          } catch (error) {
+            console.log(`Yahoo v8 API (alt) failed for ${symbol}:`, error);
+          }
+        }
+        
+        console.log(`Yahoo Finance response for ${symbol}:`, data);
+        
+        if (data.chart && data.chart.result && data.chart.result[0]) {
+          const result = data.chart.result[0];
+          console.log(`Chart result for ${symbol}:`, result);
+          
+          if (result.indicators && result.indicators.quote && result.indicators.quote[0]) {
+            const quote = result.indicators.quote[0];
+            console.log(`Quote data for ${symbol}:`, quote);
+            
+            // Get the closing price for that day
+            if (quote.close && quote.close.length > 0) {
+              const closingPrice = quote.close[quote.close.length - 1];
+              console.log(`Closing price for ${symbol} on ${date}: ${closingPrice}`);
+              return closingPrice;
+            }
+          }
+          
+          // Alternative: try to get from meta data
+          if (result.meta && result.meta.previousClose) {
+            console.log(`Previous close from meta for ${symbol}: ${result.meta.previousClose}`);
+            return result.meta.previousClose;
+          }
+        }
+        
+        console.log(`No closing price found for ${symbol} on ${date}`);
+        return null;
+      } catch (error) {
+        console.error('Error fetching historical price:', error);
+        return null;
+      }
+    }
+
+    // Function to update current market price for all positions
+    async function updateCurrentMarketPrice() {
+      const positions = getSharePositions();
+      if (positions.length === 0) {
+        document.getElementById('currentMarketPrice').textContent = '$0.00';
+        return;
+      }
+
+      // Get unique symbols
+      const symbols = [...new Set(positions.map(pos => pos.symbol))];
+      
+      // Fetch prices for all symbols
+      const pricePromises = symbols.map(async (symbol) => {
+        const price = await fetchCurrentMarketPrice(symbol);
+        return { symbol, price };
+      });
+      
+      const priceResults = await Promise.all(pricePromises);
+      const priceMap = {};
+      priceResults.forEach(({ symbol, price }) => {
+        priceMap[symbol] = price;
+      });
+
+      // Calculate weighted average market price
+      let totalMarketValue = 0;
+      let totalShares = 0;
+      
+      positions.forEach(position => {
+        const currentPrice = priceMap[position.symbol];
+        if (currentPrice && currentPrice > 0) {
+          totalMarketValue += currentPrice * position.totalShares;
+          totalShares += position.totalShares;
+        }
+      });
+
+      const avgMarketPrice = totalShares > 0 ? totalMarketValue / totalShares : 0;
+      document.getElementById('currentMarketPrice').textContent = `$${avgMarketPrice.toFixed(2)}`;
+      
+      // Update chart if it's a bar chart
+      if (chartType === 'bar') {
+        await updateChart();
+      }
+    }
+
+    function updateStats() {
+      const totalPremium = trades.reduce((sum, trade) => sum + (trade.premium || 0), 0);
+      
+      // Calculate portfolio value based on current positions
+      const positions = getSharePositions();
+      let totalValue = 0;
+      let totalCostBasis = 0;
+      let totalAdjustedCostBasis = 0;
+
+      positions.forEach(position => {
+        // Get the most recent current price for this symbol
+        const latestTrade = trades
+          .filter(trade => trade.symbol === position.symbol)
+          .sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded))[0];
+        
+        if (latestTrade && latestTrade.currentPrice > 0) {
+          totalValue += latestTrade.currentPrice * position.totalShares;
+        } else {
+          // If no current price, use the cost basis as fallback
+          totalValue += position.avgCostBasis * position.totalShares;
+        }
+        
+        // Calculate adjusted cost basis (original cost basis minus premium received)
+        const symbolTrades = trades.filter(trade => trade.symbol === position.symbol);
+        const totalPremiumReceived = symbolTrades.reduce((sum, trade) => sum + (trade.premium || 0), 0);
+        const adjustedCostBasisPerShare = position.avgCostBasis - (totalPremiumReceived / position.totalShares);
+        
+        totalCostBasis += position.avgCostBasis * position.totalShares;
+        totalAdjustedCostBasis += Math.max(0, adjustedCostBasisPerShare) * position.totalShares;
+      });
+      
+      const avgCostBasis = positions.length > 0 ? 
+        totalCostBasis / positions.reduce((sum, pos) => sum + pos.totalShares, 0) : 0;
+      
+      const avgAdjustedCostBasis = positions.length > 0 ? 
+        totalAdjustedCostBasis / positions.reduce((sum, pos) => sum + pos.totalShares, 0) : 0;
+
+      console.log('Portfolio stats update:', {
+        totalPremium,
+        avgCostBasis,
+        totalValue,
+        totalAdjustedCostBasis,
+        positions: positions.length
+      });
+
+      // Calculate original share cost (average cost per share)
+      const shareTrades = trades.filter(t => t.tradeType === 'shares');
+      const originalShareCost = shareTrades.length > 0 ? 
+        shareTrades.reduce((sum, trade) => sum + trade.originalCostBasis, 0) / shareTrades.length : 0;
+
+      document.getElementById('totalPremium').textContent = `$${totalPremium.toFixed(2)}`;
+      document.getElementById('avgCostBasis').textContent = `$${avgAdjustedCostBasis.toFixed(2)}`;
+      document.getElementById('totalValue').textContent = `$${totalValue.toFixed(2)}`;
+      document.getElementById('totalAdjustedCostBasis').textContent = `$${totalAdjustedCostBasis.toFixed(2)}`;
+      document.getElementById('originalShareCost').textContent = `$${originalShareCost.toFixed(2)}`;
+      
+      // Update current market price
+      updateCurrentMarketPrice();
+      
+      // Calculate and update profit/loss
+      updateProfitLoss();
+    }
+
+    // Update profit/loss calculation
+    function updateProfitLoss() {
+      if (trades.length === 0) {
+        document.getElementById('profitLoss').textContent = '$0.00';
+        document.getElementById('profitLossLabel').textContent = 'P&L';
+        return;
+      }
+
+      // Get current market price
+      const currentMarketPriceElement = document.getElementById('currentMarketPrice');
+      let currentMarketPrice = 0;
+      
+      if (currentMarketPriceElement) {
+        const priceText = currentMarketPriceElement.textContent.replace('$', '').replace(',', '');
+        currentMarketPrice = parseFloat(priceText) || 0;
+      }
+
+      // Calculate total shares and total adjusted cost basis
+      let totalShares = 0;
+      let totalAdjustedCostBasis = 0;
+      
+      // Group trades by symbol
+      const symbolGroups = {};
+      trades.forEach(trade => {
+        if (!symbolGroups[trade.symbol]) {
+          symbolGroups[trade.symbol] = [];
+        }
+        symbolGroups[trade.symbol].push(trade);
+      });
+
+      // Calculate for each symbol
+      Object.keys(symbolGroups).forEach(symbol => {
+        const symbolTrades = symbolGroups[symbol].sort((a, b) => new Date(a.dateAdded) - new Date(b.dateAdded));
+        
+        // Get share purchases
+        const sharePurchases = symbolTrades.filter(t => t.tradeType === 'shares');
+        const symbolShares = sharePurchases.reduce((sum, t) => sum + t.shares, 0);
+        
+        // Get covered call trades
+        const coveredCalls = symbolTrades.filter(t => t.tradeType === 'covered-call');
+        const totalPremium = coveredCalls.reduce((sum, t) => sum + (t.premium || 0), 0);
+        
+        // Calculate original cost basis
+        const originalCostBasis = sharePurchases.reduce((sum, t) => sum + (t.originalCostBasis * t.shares), 0);
+        
+        // Calculate adjusted cost basis
+        const adjustedCostBasis = originalCostBasis - totalPremium;
+        
+        totalShares += symbolShares;
+        totalAdjustedCostBasis += adjustedCostBasis;
+      });
+
+      if (totalShares === 0 || currentMarketPrice === 0) {
+        document.getElementById('profitLoss').textContent = '$0.00';
+        document.getElementById('profitLossLabel').textContent = 'P&L';
+        return;
+      }
+
+      // Calculate current portfolio value
+      const currentPortfolioValue = totalShares * currentMarketPrice;
+      
+      // Calculate profit/loss
+      const profitLoss = currentPortfolioValue - totalAdjustedCostBasis;
+      const profitLossPercent = (profitLoss / totalAdjustedCostBasis) * 100;
+
+      // Update display
+      const profitLossElement = document.getElementById('profitLoss');
+      const profitLossLabelElement = document.getElementById('profitLossLabel');
+      
+      if (profitLoss >= 0) {
+        profitLossElement.textContent = `+$${profitLoss.toFixed(2)}`;
+        profitLossElement.style.color = '#28a745'; // Green for profit
+        profitLossLabelElement.textContent = `P&L (+${profitLossPercent.toFixed(1)}%)`;
+      } else {
+        profitLossElement.textContent = `-$${Math.abs(profitLoss).toFixed(2)}`;
+        profitLossElement.style.color = '#dc3545'; // Red for loss
+        profitLossLabelElement.textContent = `P&L (${profitLossPercent.toFixed(1)}%)`;
+      }
+    }
+
+    // Update chart
+    async function updateChart() {
+      // Prevent multiple simultaneous chart updates
+      if (isUpdatingChart) {
+        console.log('Chart update already in progress, skipping...');
+        return;
+      }
+      
+      isUpdatingChart = true;
+      
+      try {
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        
+        if (performanceChart) {
+          performanceChart.destroy();
+          performanceChart = null;
+          // Small delay to ensure chart is fully destroyed
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+
+      // Sort trades by date and use dates as labels
+      const sortedTrades = [...trades].sort((a, b) => new Date(a.dateAdded) - new Date(b.dateAdded));
+      const labels = sortedTrades.map(trade => {
+        const date = new Date(trade.dateAdded);
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      });
+      
+      // Create tooltip labels that include symbol
+      const tooltipLabels = sortedTrades.map(trade => {
+        const date = new Date(trade.dateAdded);
+        const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        return `${trade.symbol} - ${dateStr}`;
+      });
+
+      // Fetch historical prices for each trade date (for both bar and line charts)
+      let historicalPrices = [];
+      if (sortedTrades.length > 0) {
+        console.log('Fetching historical prices for', sortedTrades.length, 'trades, chart type:', chartType);
+        
+        // Get unique symbols and dates
+        const uniqueSymbols = [...new Set(sortedTrades.map(trade => trade.symbol))];
+        
+        // Fetch historical prices for each symbol and date combination
+        for (const trade of sortedTrades) {
+          try {
+            const historicalPrice = await fetchHistoricalPrice(trade.symbol, trade.dateAdded);
+            historicalPrices.push(historicalPrice || 0);
+            console.log(`Historical price for ${trade.symbol} on ${trade.dateAdded}:`, historicalPrice);
+          } catch (error) {
+            console.error(`Error fetching historical price for ${trade.symbol}:`, error);
+            historicalPrices.push(0);
+          }
+        }
+        
+        console.log('All historical prices fetched:', historicalPrices);
+      }
+      const premiumData = sortedTrades.map(trade => {
+        // Only show premium per share for covered call trades
+        return trade.tradeType === 'covered-call' ? (trade.premium || 0) / (trade.shares || 1) : 0;
+      });
+      
+      // Calculate adjusted cost basis for each trade (cumulative for covered calls)
+      const costBasisData = sortedTrades.map((trade, index) => {
+        console.log(`Chart - Trade: ${trade.symbol} ${trade.tradeType}, newCostBasis: ${trade.newCostBasis}, originalCostBasis: ${trade.originalCostBasis}`);
+        
+        if (trade.tradeType === 'shares') {
+          console.log(`Chart - Share purchase, returning original cost basis: ${trade.originalCostBasis}`);
+          return trade.originalCostBasis;
+        } else {
+          console.log(`Chart - Covered call trade, calculating cumulative cost basis...`);
+          // For covered calls, calculate cumulative cost basis up to this point
+          const symbolTrades = sortedTrades.filter(t => t.symbol === trade.symbol && new Date(t.dateAdded) <= new Date(trade.dateAdded));
+          console.log(`Chart - Symbol trades for ${trade.symbol}:`, symbolTrades.length);
+          console.log(`Chart - All symbol trades:`, symbolTrades);
+          
+          const sharePurchases = symbolTrades.filter(t => t.tradeType === 'shares');
+          console.log(`Chart - Share purchases found:`, sharePurchases.length, sharePurchases);
+          
+          const totalOriginalCostBasis = sharePurchases
+            .reduce((sum, t) => sum + (t.originalCostBasis * t.shares), 0);
+          const totalPremiumReceived = symbolTrades
+            .filter(t => t.tradeType === 'covered-call')
+            .reduce((sum, t) => sum + t.premium, 0);
+          const totalShares = symbolTrades
+            .filter(t => t.tradeType === 'shares')
+            .reduce((sum, t) => sum + t.shares, 0);
+          
+          console.log(`Chart - Total original cost basis: ${totalOriginalCostBasis}, total premium: ${totalPremiumReceived}, total shares: ${totalShares}`);
+          
+          if (totalShares > 0) {
+            const cumulativeCostBasis = (totalOriginalCostBasis - totalPremiumReceived) / totalShares;
+            console.log(`Chart - Cumulative calculation for ${trade.symbol}: (${totalOriginalCostBasis} - ${totalPremiumReceived}) / ${totalShares} = ${cumulativeCostBasis}`);
+            return cumulativeCostBasis;
+          }
+          console.log(`Chart - No shares found, returning original cost basis: ${trade.originalCostBasis}`);
+          return trade.originalCostBasis;
+        }
+      });
+      
+      console.log('Chart costBasisData:', costBasisData);
+      
+      // Use historical prices for both bar and line charts when available
+      const currentPriceData = (chartType === 'bar' || chartType === 'line') && historicalPrices.length > 0 ? 
+        historicalPrices : sortedTrades.map(trade => {
+          // For share purchases, use cost basis as current price if no current price
+          if (trade.tradeType === 'share-purchase') {
+            return trade.currentPrice || trade.newCostBasis;
+          }
+          return trade.currentPrice || 0;
+        });
+      
+      console.log('Current price data for', chartType, 'chart:', currentPriceData);
+      console.log('Historical prices available:', historicalPrices);
+
+      // Add current day with live market price for both bar and line charts
+      let currentDayData = [...currentPriceData];
+      let currentDayLabels = [...labels];
+      let currentDayTooltipLabels = [...tooltipLabels];
+      
+      if (chartType === 'bar' || chartType === 'line') {
+        // Get the current market price from the widget
+        const currentMarketPriceElement = document.getElementById('currentMarketPrice');
+        let currentMarketPrice = 0;
+        
+        if (currentMarketPriceElement) {
+          const priceText = currentMarketPriceElement.textContent.replace('$', '').replace(',', '');
+          currentMarketPrice = parseFloat(priceText) || 0;
+        }
+        
+        console.log('Current market price element:', currentMarketPriceElement);
+        console.log('Current market price value:', currentMarketPrice);
+        console.log('Chart type:', chartType, 'Sorted trades length:', sortedTrades.length);
+        console.log('Historical prices:', historicalPrices);
+        
+        // Always add current day data, even if price is 0 (will show as 0)
+        const today = new Date();
+        const todayLabel = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        currentDayLabels.push(todayLabel);
+        currentDayTooltipLabels.push(`Current Market Price - ${todayLabel}`);
+        
+        // Add current market price data (0 for premium and cost basis, current price for current price)
+        currentDayData.push(currentMarketPrice);
+        
+        console.log('Added current day data:', {
+          todayLabel,
+          currentMarketPrice,
+          currentDayLabels,
+          currentDayData
+        });
+      }
+
+      // Calculate total cost basis, total adjusted cost basis, and total premium for line chart
+      const totalCostBasisData = sortedTrades.map((trade, index) => {
+        const symbolTrades = sortedTrades.filter(t => t.symbol === trade.symbol && new Date(t.dateAdded) <= new Date(trade.dateAdded));
+        const sharePurchases = symbolTrades.filter(t => t.tradeType === 'shares');
+        return sharePurchases.reduce((sum, t) => sum + (t.originalCostBasis * t.shares), 0);
+      });
+
+      const totalAdjustedCostBasisData = sortedTrades.map((trade, index) => {
+        const symbolTrades = sortedTrades.filter(t => t.symbol === trade.symbol && new Date(t.dateAdded) <= new Date(trade.dateAdded));
+        const sharePurchases = symbolTrades.filter(t => t.tradeType === 'shares');
+        const totalOriginalCostBasis = sharePurchases.reduce((sum, t) => sum + (t.originalCostBasis * t.shares), 0);
+        const totalPremiumReceived = symbolTrades
+          .filter(t => t.tradeType === 'covered-call')
+          .reduce((sum, t) => sum + (t.premium || 0), 0);
+        return totalOriginalCostBasis - totalPremiumReceived;
+      });
+
+      const totalPremiumData = sortedTrades.map((trade, index) => {
+        const symbolTrades = sortedTrades.filter(t => t.symbol === trade.symbol && new Date(t.dateAdded) <= new Date(trade.dateAdded));
+        return symbolTrades
+          .filter(t => t.tradeType === 'covered-call')
+          .reduce((sum, t) => sum + (t.premium || 0), 0);
+      });
+
+      // For line chart, create proper market price data that matches the trade dates
+      let lineMarketPriceData = [];
+      if (chartType === 'line') {
+        // Use historical prices for trade dates, then add current market price
+        lineMarketPriceData = [...currentPriceData];
+        
+        // Add current market price if we have current day data
+        if (currentDayData.length > currentPriceData.length) {
+          lineMarketPriceData.push(currentDayData[currentDayData.length - 1]);
+        }
+      } else {
+        lineMarketPriceData = currentDayData;
+      }
+      console.log('Line chart market price data:', lineMarketPriceData);
+      console.log('Current day data:', currentDayData);
+      console.log('Chart type:', chartType);
+      console.log('Historical prices length:', historicalPrices.length);
+      console.log('Current price data length:', currentPriceData.length);
+      console.log('Historical prices values:', historicalPrices);
+      console.log('Current price data values:', currentPriceData);
+      console.log('Line chart market price data values:', lineMarketPriceData);
+      console.log('Current day data values:', currentDayData);
+
+      // Calculate pie chart data - portfolio breakdown by value
+      const totalPortfolioValue = totalCostBasisData[totalCostBasisData.length - 1] || 0;
+      const totalPremiumEarned = totalPremiumData[totalPremiumData.length - 1] || 0;
+      const totalValue = totalPortfolioValue + totalPremiumEarned;
+      
+      const pieData = totalValue > 0 ? [
+        {
+          label: 'Share Value',
+          value: totalPortfolioValue,
+          percentage: (totalPortfolioValue / totalValue * 100).toFixed(1)
+        },
+        {
+          label: 'Premium Earned',
+          value: totalPremiumEarned,
+          percentage: (totalPremiumEarned / totalValue * 100).toFixed(1)
+        }
+      ] : [
+        {
+          label: 'No Data',
+          value: 1,
+          percentage: '100.0'
+        }
+      ];
+
+      // Prepare data for current day bar chart
+      let barPremiumData = [...premiumData];
+      let barCostBasisData = [...costBasisData];
+      
+      if (chartType === 'bar' && currentDayData.length > premiumData.length) {
+        // Add 0 values for premium and cost basis on current day
+        barPremiumData.push(0);
+        barCostBasisData.push(0);
+      }
+
+      const datasets = chartType === 'bar' ? [
+        {
+          label: 'Premium Received',
+          data: barPremiumData,
+          backgroundColor: 'rgba(102, 126, 234, 0.8)',
+          borderColor: 'rgba(102, 126, 234, 1)',
+          borderWidth: 1,
+          fill: false,
+          tension: 0
+        },
+        {
+          label: 'Adjusted Cost Basis',
+          data: barCostBasisData,
+          backgroundColor: 'rgba(40, 167, 69, 0.8)',
+          borderColor: 'rgba(40, 167, 69, 1)',
+          borderWidth: 1,
+          fill: false,
+          tension: 0
+        },
+        {
+          label: 'Market Price',
+          data: currentDayData,
+          backgroundColor: 'rgba(255, 193, 7, 0.8)',
+          borderColor: 'rgba(255, 193, 7, 1)',
+          borderWidth: 1,
+          fill: false,
+          tension: 0
+        }
+      ] : chartType === 'line' ? [
+        {
+          label: 'Original Cost Basis',
+          data: totalCostBasisData,
+          backgroundColor: 'rgba(0, 123, 255, 1)',
+          borderColor: 'rgba(0, 123, 255, 1)',
+          borderWidth: 3,
+          fill: false,
+          tension: 0.4,
+          pointBackgroundColor: 'rgba(0, 123, 255, 1)',
+          pointBorderColor: 'rgba(0, 123, 255, 1)',
+          pointRadius: 6,
+          pointHoverRadius: 8
+        },
+        {
+          label: 'Total Adjusted Cost Basis',
+          data: totalAdjustedCostBasisData,
+          backgroundColor: 'rgba(40, 167, 69, 1)',
+          borderColor: 'rgba(40, 167, 69, 1)',
+          borderWidth: 3,
+          fill: false,
+          tension: 0.4,
+          pointBackgroundColor: 'rgba(40, 167, 69, 1)',
+          pointBorderColor: 'rgba(40, 167, 69, 1)',
+          pointRadius: 6,
+          pointHoverRadius: 8
+        },
+        {
+          label: 'Total Premium Received',
+          data: totalPremiumData,
+          backgroundColor: 'rgba(255, 99, 132, 1)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 3,
+          fill: false,
+          tension: 0.4,
+          pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+          pointBorderColor: 'rgba(255, 99, 132, 1)',
+          pointRadius: 6,
+          pointHoverRadius: 8
+        },
+      ] : [
+        {
+          label: pieData[0].label,
+          data: [pieData[0].value],
+          backgroundColor: ['rgba(40, 167, 69, 0.8)'],
+          borderColor: ['rgba(40, 167, 69, 1)'],
+          borderWidth: 2
+        },
+        {
+          label: pieData[1].label,
+          data: [pieData[1].value],
+          backgroundColor: ['rgba(255, 99, 132, 0.8)'],
+          borderColor: ['rgba(255, 99, 132, 1)'],
+          borderWidth: 2
+        }
+      ];
+
+      const chartData = chartType === 'pie' ? {
+        labels: pieData.map(item => item.label),
+        datasets: [{
+          data: pieData.map(item => item.value),
+          backgroundColor: [
+            'rgba(40, 167, 69, 0.8)',
+            'rgba(255, 99, 132, 0.8)'
+          ],
+          borderColor: [
+            'rgba(40, 167, 69, 1)',
+            'rgba(255, 99, 132, 1)'
+          ],
+          borderWidth: 2
+        }]
+      } : {
+        labels: (chartType === 'bar' || chartType === 'line') ? currentDayLabels : labels,
+        datasets: datasets
+      };
+
+      performanceChart = new Chart(ctx, {
+        type: chartType,
+        data: chartData,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            tooltip: {
+              callbacks: {
+                title: function(context) {
+                  if (chartType === 'pie') {
+                    return context[0].label;
+                  }
+                  const index = context[0].dataIndex;
+                  return (chartType === 'bar' || chartType === 'line') ? currentDayTooltipLabels[index] : tooltipLabels[index];
+                },
+                label: function(context) {
+                  if (chartType === 'pie') {
+                    const item = pieData[context.dataIndex];
+                    return `${item.label}: $${item.value.toFixed(2)} (${item.percentage}%)`;
+                  }
+                  return `${context.dataset.label}: $${context.parsed.y.toFixed(2)}`;
+                }
+              }
+            }
+          },
+          scales: chartType === 'pie' ? {} : {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return '$' + value.toFixed(2);
+                }
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              onClick: chartType === 'pie' ? function(e, legendItem, legend) {
+                const index = legendItem.datasetIndex;
+                const chart = legend.chart;
+                
+                // Toggle the dataset visibility
+                if (chart.isDatasetVisible(index)) {
+                  chart.hide(index);
+                } else {
+                  chart.show(index);
+                }
+                
+                // Recalculate percentages for visible slices
+                updatePieChartPercentages(chart);
+              } : undefined
+            },
+            title: {
+              display: true,
+              text: chartType === 'pie' ? 'Portfolio Breakdown' : 'Covered Call Performance'
+            }
+          }
+        }
+      });
+      } catch (error) {
+        console.error('Error updating chart:', error);
+      } finally {
+        isUpdatingChart = false;
+      }
+    }
+
+    // Update pie chart percentages when slices are hidden/shown
+    function updatePieChartPercentages(chart) {
+      if (chartType !== 'pie') return;
+      
+      const data = chart.data.datasets[0].data;
+      const labels = chart.data.labels;
+      const visibleData = [];
+      const visibleIndices = [];
+      
+      // Get visible data points
+      for (let i = 0; i < data.length; i++) {
+        if (chart.getDataVisibility(i)) {
+          visibleData.push(data[i]);
+          visibleIndices.push(i);
+        }
+      }
+      
+      // Calculate total of visible data
+      const totalVisible = visibleData.reduce((sum, value) => sum + value, 0);
+      
+      // Update labels with recalculated percentages
+      if (totalVisible > 0) {
+        for (let i = 0; i < labels.length; i++) {
+          if (chart.getDataVisibility(i)) {
+            const percentage = ((data[i] / totalVisible) * 100).toFixed(1);
+            const originalLabel = labels[i].split(' (')[0]; // Remove existing percentage
+            labels[i] = `${originalLabel} (${percentage}%)`;
+          }
+        }
+      }
+      
+      chart.update();
+    }
+
+    // Update table
+    function updateTable() {
+      const tbody = document.getElementById('tradesTableBody');
+      
+      if (trades.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="9" style="text-align: center; color: #666; padding: 2rem;">
+              No trades yet. Add your first trade above!
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = trades.map(trade => `
+        <tr>
+          <td>
+            <span style="padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: bold; 
+                        background: ${trade.tradeType === 'shares' ? '#e3f2fd' : '#f3e5f5'}; 
+                        color: ${trade.tradeType === 'shares' ? '#1976d2' : '#7b1fa2'};">
+              ${trade.tradeType === 'shares' ? 'SHARES' : 'CALL'}
+            </span>
+          </td>
+          <td><strong>${trade.symbol}</strong></td>
+          <td>${trade.shares}</td>
+          <td>${trade.strikePrice ? '$' + trade.strikePrice.toFixed(2) : '-'}</td>
+          <td>${trade.premium ? '$' + (trade.premium / trade.shares).toFixed(2) : '-'}</td>
+          <td>${trade.expirationDate ? new Date(trade.expirationDate).toLocaleDateString() : '-'}</td>
+          <td>$${trade.newCostBasis.toFixed(2)}</td>
+          <td class="${trade.pnl >= 0 ? 'profit' : 'loss'}">
+            ${trade.pnl >= 0 ? '+' : ''}$${trade.pnl.toFixed(2)}
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn btn-danger btn-sm" onclick="deleteTrade(${trade.id})">Delete</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Delete trade
+    async function deleteTrade(id) {
+      if (confirm('Are you sure you want to delete this trade?')) {
+        const trade = trades.find(t => t.id === id);
+        trades = trades.filter(trade => trade.id !== id);
+        localStorage.setItem('coveredCallTrades', JSON.stringify(trades));
+        
+        // Also delete from server if user is logged in, backend is available, and we have a server ID
+        if (isLoggedIn && backendAvailable && trade && trade.serverId) {
+          await deleteTradeFromServer(trade);
+        }
+        
+        loadTrades();
+        updateStats();
+        updateChart();
+        updateTable();
+      }
+    }
+
+     // Clear form
+     function clearForm() {
+       const tradeType = document.getElementById('tradeType').value;
+       const selectedSymbol = document.getElementById('symbolSelect').value;
+       
+       // Reset the form
+       document.getElementById('tradeForm').reset();
+       
+       // If it was a covered call trade, keep it selected and restore the position
+       if (tradeType === 'covered-call' && selectedSymbol) {
+         document.getElementById('tradeType').value = 'covered-call';
+         toggleSymbolFields(); // This will show the covered call fields
+         
+         // Restore the selected position after a short delay to ensure the dropdown is populated
+         setTimeout(() => {
+           document.getElementById('symbolSelect').value = selectedSymbol;
+           loadSelectedPosition();
+         }, 100);
+       } else {
+         // For share purchases, reset to default and set today's date
+         const today = new Date().toISOString().split('T')[0];
+         document.getElementById('tradeDate').value = today;
+       }
+     }
+
+    // Clear all data
+    function clearAllData() {
+      if (confirm('Are you sure you want to delete ALL trades? This cannot be undone.')) {
+        trades = [];
+        localStorage.removeItem('coveredCallTrades');
+        loadTrades();
+        updateStats();
+        updateChart();
+        updateTable();
+      }
+    }
+
+    // Fetch current stock price using Yahoo Finance API
+    async function fetchCurrentPrice() {
+      const symbol = document.getElementById('symbol').value.trim().toUpperCase();
+      const currentPriceInput = document.getElementById('currentPrice');
+      
+      if (!symbol) {
+        alert('Please enter a stock symbol first');
+        return;
+      }
+
+      // Show loading state
+      const button = event.target;
+      const originalText = button.textContent;
+      button.textContent = 'Loading...';
+      button.disabled = true;
+
+      try {
+        const response = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}`);
+        const data = await response.json();
+        
+        if (data.chart && data.chart.result && data.chart.result[0]) {
+          const price = data.chart.result[0].meta.regularMarketPrice;
+          currentPriceInput.value = price.toFixed(2);
+          alert(`Current price for ${symbol}: $${price.toFixed(2)}`);
+        } else {
+          throw new Error('Price data not available');
+        }
+      } catch (error) {
+        console.error('Error fetching stock price:', error);
+        alert(`Unable to fetch current price for ${symbol}. Please enter manually.`);
+      } finally {
+        // Reset button state
+        button.textContent = originalText;
+        button.disabled = false;
+      }
+    }
+
+    // Export data
+    function exportData() {
+      if (trades.length === 0) {
+        alert('No data to export!');
+        return;
+      }
+
+      const csvContent = [
+        ['Symbol', 'Shares', 'Original Cost Basis', 'New Cost Basis', 'Strike Price', 'Premium', 'Current Price', 'P&L', 'Expiration Date', 'Notes', 'Date Added'],
+        ...trades.map(trade => [
+          trade.symbol,
+          trade.shares,
+          trade.originalCostBasis,
+          trade.newCostBasis,
+          trade.strikePrice,
+          trade.premium,
+          trade.currentPrice,
+          trade.pnl,
+          trade.expirationDate,
+          trade.notes,
+          new Date(trade.dateAdded).toLocaleDateString()
+        ])
+      ].map(row => row.join(',')).join('\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'covered-call-trades.csv';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+
+    // Theme toggle functionality
+    const themeToggle = document.createElement('button');
+    themeToggle.innerHTML = '🌙';
+    themeToggle.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      font-size: 1.5rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    `;
+
+    let isDarkTheme = false;
+
+    themeToggle.addEventListener("click", () => {
+      isDarkTheme = !isDarkTheme;
+      if (isDarkTheme) {
+        document.body.classList.add("dark-theme");
+        themeToggle.textContent = "☀️";
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.body.classList.remove("dark-theme");
+        themeToggle.textContent = "🌙";
+        localStorage.setItem("theme", "light");
+      }
+    });
+
+    // Load saved theme on page load
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      isDarkTheme = true;
+      document.body.classList.add("dark-theme");
+      themeToggle.textContent = "☀️";
+    }
+
+    document.body.appendChild(themeToggle);
+
+    // Simple dropdown functionality
+    const toolsBtn = document.getElementById('toolsBtn');
+    const toolsContent = document.getElementById('toolsContent');
+    let isOpen = false;
+
+    toolsBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (isOpen) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      } else {
+        toolsContent.style.display = 'block';
+        setTimeout(() => {
+          toolsContent.classList.add('show');
+        }, 10);
+        isOpen = true;
+      }
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('toolsDropdown').contains(e.target)) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      }
+    });
+
+    // Account System Functions
+    async function apiCall(endpoint, method = 'GET', data = null) {
+      if (!backendAvailable) {
+        throw new Error('Backend not available');
+      }
+      
+      const options = {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include' // Important for session cookies
+      };
+      
+      if (data) {
+        options.body = JSON.stringify(data);
+      }
+      
+      try {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+        const result = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(result.error || 'API call failed');
+        }
+        
+        return result;
+      } catch (error) {
+        console.error('API Error:', error);
+        throw error;
+      }
+    }
+
+    async function checkAuthStatus() {
+      // First check if backend is available
+      try {
+        const response = await fetch(`${API_BASE_URL}/user`, { 
+          method: 'GET',
+          credentials: 'include'
+        });
+        if (response.ok) {
+          backendAvailable = true;
+          const user = await response.json();
+          currentUser = user;
+          isLoggedIn = true;
+          return true;
+        } else {
+          backendAvailable = true;
+          currentUser = null;
+          isLoggedIn = false;
+          return false;
+        }
+      } catch (e) {
+        backendAvailable = false;
+        currentUser = null;
+        isLoggedIn = false;
+        return false;
+      }
+    }
+
+    async function syncTradeToServer(trade) {
+      if (!isLoggedIn || !backendAvailable) return;
+      
+      try {
+        const result = await apiCall('/covered-call-trades', 'POST', {
+          trade_type: trade.tradeType,
+          symbol: trade.symbol,
+          shares: trade.shares,
+          original_cost_basis: trade.originalCostBasis,
+          new_cost_basis: trade.newCostBasis,
+          strike_price: trade.strikePrice,
+          premium: trade.premium,
+          expiration_date: trade.expirationDate,
+          current_price: trade.currentPrice,
+          notes: trade.notes,
+          pnl: trade.pnl,
+          date_added: trade.dateAdded
+        });
+        // Store server ID for future reference
+        trade.serverId = result.id;
+      } catch (error) {
+        console.error('Failed to sync trade to server:', error);
+        // Data is still saved locally, so user can continue working
+      }
+    }
+
+    async function deleteTradeFromServer(trade) {
+      if (!isLoggedIn || !backendAvailable || !trade.serverId) return;
+      
+      try {
+        await apiCall(`/covered-call-trades/${trade.serverId}`, 'DELETE');
+      } catch (error) {
+        console.error('Failed to delete trade from server:', error);
+        // Data is still deleted locally, so user can continue working
+      }
+    }
+
+    async function loadTradesFromServer() {
+      if (!isLoggedIn || !backendAvailable) return;
+      
+      try {
+        const serverTrades = await apiCall('/covered-call-trades');
+        const serverTradesFormatted = serverTrades.map(t => ({
+          id: t.id,
+          tradeType: t.trade_type,
+          symbol: t.symbol,
+          shares: t.shares,
+          originalCostBasis: t.original_cost_basis,
+          newCostBasis: t.new_cost_basis,
+          strikePrice: t.strike_price,
+          premium: t.premium,
+          expirationDate: t.expiration_date,
+          currentPrice: t.current_price,
+          notes: t.notes,
+          pnl: t.pnl,
+          dateAdded: t.date_added,
+          serverId: t.id
+        }));
+        
+        // Merge server data with local data (server data takes precedence)
+        trades = serverTradesFormatted;
+        
+        // Update localStorage with merged data
+        localStorage.setItem('coveredCallTrades', JSON.stringify(trades));
+        
+        // Update display
+        loadTrades();
+        updateStats();
+        updateChart();
+        updateTable();
+        
+      } catch (error) {
+        console.error('Error loading trades from server:', error);
+        // Continue with local data if server fails
+      }
+    }
+
+    // Account System UI Functions
+    function showLoginForm() {
+      document.getElementById('loginForm').style.display = 'block';
+      document.getElementById('registerForm').style.display = 'none';
+      document.getElementById('userDashboard').style.display = 'none';
+    }
+
+    function showRegisterForm() {
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('registerForm').style.display = 'block';
+      document.getElementById('userDashboard').style.display = 'none';
+    }
+
+    function showUserDashboard() {
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('registerForm').style.display = 'none';
+      document.getElementById('userDashboard').style.display = 'block';
+      
+      if (currentUser) {
+        document.getElementById('userDisplayName').textContent = currentUser.username;
+        document.getElementById('userEmail').textContent = currentUser.email || 'Not provided';
+        document.getElementById('userVerified').textContent = currentUser.is_verified ? 'Yes' : 'No';
+        document.getElementById('userNewsletter').textContent = currentUser.newsletter_subscribed ? 'Yes' : 'No';
+      }
+    }
+
+    async function login(username, password) {
+      try {
+        const result = await apiCall('/login', 'POST', { username, password });
+        currentUser = result.user;
+        isLoggedIn = true;
+        showUserDashboard();
+        await loadTradesFromServer();
+        return true;
+      } catch (error) {
+        alert('Login failed: ' + error.message);
+        return false;
+      }
+    }
+
+    async function register(username, email, password, newsletter) {
+      try {
+        const result = await apiCall('/register', 'POST', {
+          username,
+          email: email || null,
+          password,
+          newsletter_subscribed: newsletter
+        });
+        
+        alert('Account created successfully! ' + 
+              (result.email_verification_sent ? 'Please check your email to verify your account.' : ''));
+        
+        showLoginForm();
+        return true;
+      } catch (error) {
+        alert('Registration failed: ' + error.message);
+        return false;
+      }
+    }
+
+    async function logout() {
+      try {
+        if (backendAvailable && isLoggedIn) {
+          await apiCall('/logout', 'POST');
+        }
+        currentUser = null;
+        isLoggedIn = false;
+        showLoginForm();
+        // Don't clear local data - keep it for offline use
+        loadTrades();
+        updateStats();
+        updateChart();
+        updateTable();
+      } catch (error) {
+        console.error('Logout error:', error);
+      }
+    }
+
+    async function syncDataToServer() {
+      if (!isLoggedIn || !backendAvailable) {
+        alert('Backend not available or not logged in. Data is stored locally only.');
+        return;
+      }
+      
+      try {
+        // Sync all trades to server
+        for (const trade of trades) {
+          if (!trade.serverId) {
+            await syncTradeToServer(trade);
+          }
+        }
+        
+        alert('Data synced successfully!');
+      } catch (error) {
+        alert('Sync failed: ' + error.message);
+      }
+    }
+
+    // Account Event Listeners
+    document.getElementById('accountToggle').addEventListener('click', function() {
+      document.getElementById('accountModal').style.display = 'flex';
+      if (!currentUser) {
+        showLoginForm();
+      } else {
+        showUserDashboard();
+      }
+    });
+
+    document.querySelector('.close').addEventListener('click', function() {
+      document.getElementById('accountModal').style.display = 'none';
+    });
+
+    document.getElementById('showRegister').addEventListener('click', function(e) {
+      e.preventDefault();
+      showRegisterForm();
+    });
+
+    document.getElementById('showLogin').addEventListener('click', function(e) {
+      e.preventDefault();
+      showLoginForm();
+    });
+
+    document.getElementById('loginFormElement').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const username = document.getElementById('loginUsername').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      if (await login(username, password)) {
+        document.getElementById('accountModal').style.display = 'none';
+      }
+    });
+
+    document.getElementById('registerFormElement').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const username = document.getElementById('registerUsername').value;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+      const confirmPassword = document.getElementById('registerPasswordConfirm').value;
+      const newsletter = document.getElementById('newsletterSubscribe').checked;
+      
+      if (password !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+      }
+      
+      if (await register(username, email, password, newsletter)) {
+        // Form will be reset by the register function
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      logout();
+      document.getElementById('accountModal').style.display = 'none';
+    });
+
+    document.getElementById('syncDataBtn').addEventListener('click', function() {
+      syncDataToServer();
+    });
+
+    // Close modal when clicking outside
+    document.getElementById('accountModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        this.style.display = 'none';
+      }
+    });
+
+    // Initialize account system
+    checkAuthStatus().then(() => {
+      if (isLoggedIn) {
+        showUserDashboard();
+        loadTradesFromServer();
+      } else {
+        showLoginForm();
+      }
+    });
+  </script>
+</body>
+</html>

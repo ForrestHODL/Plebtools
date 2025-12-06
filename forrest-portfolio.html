@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ForrestHODL Public Portfolio - Plebtools</title>
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
+  <link rel="stylesheet" href="styles.css?v=3">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    /* Modern dropdown styles */
+    #toolsDropdown { position: relative; display: inline-block; }
+    #toolsBtn { background: none; border: none; color: #333; font-weight: 500; font-size: 1rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; }
+    .dark-theme #toolsBtn { color: #e0e0e0 !important; }
+    #toolsBtn:hover { background: rgba(102, 126, 234, 0.1); color: #667eea; }
+    .dropdown-arrow { font-size: 0.8rem; transition: transform 0.3s ease; }
+    #toolsContent { position: absolute; top: 100%; right: 0; background: white; min-width: 220px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); border-radius: 12px; z-index: 1001; padding: 0.75rem 0; border: 1px solid rgba(0, 0, 0, 0.08); backdrop-filter: blur(10px); margin-top: 8px; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; }
+    #toolsContent.show { opacity: 1; transform: translateY(0); }
+    #toolsContent a { display: block; padding: 0.875rem 1.5rem; color: #333; text-decoration: none; transition: all 0.3s ease; font-weight: 500; border-radius: 0; position: relative; }
+    .dark-theme #toolsContent a { color: #e0e0e0 !important; }
+    #toolsContent a:hover { background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); color: #667eea; transform: translateX(8px); }
+    #toolsContent a:first-child { border-radius: 12px 12px 0 0; }
+    #toolsContent a:last-child { border-radius: 0 0 12px 12px; }
+    .dark-theme #toolsContent { background: #2d2d2d !important; border-color: #555 !important; }
+    .dark-theme #toolsContent a:hover { background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%) !important; color: #667eea !important; }
+  </style>
+  
+  <style>
+    /* Public Portfolio Styles */
+    .portfolio-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: white;
+      min-height: 100vh;
+    }
+
+    .portfolio-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 2rem 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .portfolio-title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .portfolio-subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .portfolio-owner {
+      font-size: 1rem;
+      opacity: 0.8;
+      margin-top: 1rem;
+      font-style: italic;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: white;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+    }
+
+    .back-link:hover {
+      background: rgba(255, 255, 255, 0.3);
+      color: white;
+      text-decoration: none;
+      transform: translateY(-2px);
+    }
+
+    .visualization-panel {
+      background: #f8f9fa;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+
+    .chart-controls {
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    
+    .chart-toggle-btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.2s;
+    }
+    
+    .chart-toggle-btn:hover {
+      background: #0056b3;
+    }
+    
+    .chart-container {
+      position: relative;
+      height: 400px;
+      margin-bottom: 2rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #667eea;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .trades-table {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .table th {
+      background: #f8f9fa;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .table tr:hover {
+      background: #f8f9fa;
+    }
+
+    .profit {
+      color: #28a745;
+      font-weight: bold;
+    }
+
+    .loss {
+      color: #dc3545;
+      font-weight: bold;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .portfolio-title {
+        font-size: 2rem;
+      }
+
+      .portfolio-subtitle {
+        font-size: 1rem;
+      }
+
+      .visualization-panel {
+        padding: 1rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Dark theme support */
+    .dark-theme .portfolio-container {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .visualization-panel {
+      background: #3d3d3d !important;
+    }
+
+    .dark-theme .stat-card {
+      background: #4d4d4d;
+    }
+
+    .dark-theme .stat-label {
+      color: #ccc;
+    }
+
+    .dark-theme .visualization-panel h3 {
+      color: #e0e0e0 !important;
+    }
+
+    .dark-theme .trades-table {
+      background: #4d4d4d;
+    }
+
+    .dark-theme .table th {
+      background: #3d3d3d;
+      color: #e0e0e0;
+    }
+
+    .dark-theme .table td {
+      color: #e0e0e0;
+    }
+
+    .dark-theme .table tr:hover {
+      background: #3d3d3d;
+    }
+
+    /* Affiliate Links Section */
+    .features-section {
+      background: #f8f9fa;
+      padding: 4rem 0;
+      margin-top: 2rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .affiliate-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .affiliate-item {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .affiliate-item:hover {
+      transform: translateY(-3px);
+    }
+
+    .affiliate-item h4 {
+      color: #667eea;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .affiliate-link {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    }
+
+    .affiliate-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      color: white;
+      text-decoration: none;
+    }
+
+    .discount-code {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Dark theme for affiliate links */
+    .dark-theme .features-section {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .section-title {
+      color: #e0e0e0;
+    }
+
+    .dark-theme .affiliate-item {
+      background: #3d3d3d;
+      color: #e0e0e0;
+    }
+
+    .dark-theme .affiliate-item h4 {
+      color: #667eea;
+    }
+
+    .dark-theme .discount-code {
+      color: #4CAF50;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="nav-container">
+        <div class="logo-container">
+          <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+            <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+            <h1 class="logo">Plebtools</h1>
+          </a>
+        </div>
+        <div class="nav-links">
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="home">🏠 Home</a>
+              <a href="treasury">📊 Treasury</a>
+              <a href="btc-buy-tracker">💼 Portfolio</a>
+              <a href="compound-interest-calculator">💰 Calculator</a>
+              <a href="btc-loan-ltv">🔒 BTC Loans</a>
+              <a href="financial-planner">📋 Financial Planner</a>
+              <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+              <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
+              <a href="invoice-builder">🧾 Invoice Builder</a>
+              <a href="pleb-release">📰 Pleb Release</a>
+            </div>
+          </div>
+          <a href="account" class="account-link">👤 Account</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="portfolio-container">
+      <div class="portfolio-header">
+        <a href="coveredcall-tracker" class="back-link">
+          ← Back to Covered Call Tracker
+        </a>
+        <h1 class="portfolio-title">ForrestHODL Public Portfolio</h1>
+        <p class="portfolio-subtitle">
+          Real covered call trades and performance data from ForrestHODL. 
+          Track premium income, cost basis adjustments, and overall strategy performance.
+        </p>
+        <div class="portfolio-owner">@ForrestHODL on Twitter</div>
+      </div>
+
+      <div class="visualization-panel">
+        <h3 style="margin-bottom: 2rem; color: #333;">Performance Overview</h3>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="originalCost">$0.00</div>
+            <div class="stat-label">Original Cost</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="totalPremium">$0.00</div>
+            <div class="stat-label">Total Premium Earned</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="totalAdjustedCost">$0.00</div>
+            <div class="stat-label">Total Adjusted Cost</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="avgCostBasis">$0.00</div>
+            <div class="stat-label">Average Cost Basis</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="currentMarketPrice">$0.00</div>
+            <div class="stat-label">Current Market Price</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="originalPnl">$0.00</div>
+            <div class="stat-label" id="originalPnlLabel">Original P&L</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="profitLoss">$0.00</div>
+            <div class="stat-label" id="profitLossLabel">Total P&L</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="totalTrades">0</div>
+            <div class="stat-label">Total Trades</div>
+          </div>
+        </div>
+
+        <div class="chart-controls">
+          <button id="chartToggle" class="chart-toggle-btn">Switch to Line Chart</button>
+          <button id="refreshPriceBtn" class="chart-toggle-btn" style="margin-left: 10px; background-color: #007bff; color: white;">
+            🔄 Refresh Market Price
+          </button>
+        </div>
+        <div class="chart-container">
+          <canvas id="performanceChart"></canvas>
+        </div>
+
+
+        <h4 style="margin-bottom: 1rem; color: #333;">Recent Trades</h4>
+        <div class="trades-table">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Symbol</th>
+                <th>Shares</th>
+                <th>Strike</th>
+                <th>Premium</th>
+                <th>Expiry</th>
+                <th>Cost Basis</th>
+                <th>P&L</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="tradesTableBody">
+              <tr>
+                <td colspan="9" style="text-align: center; color: #666; padding: 2rem;">
+                  Loading portfolio data...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Affiliate Links Section -->
+  <section class="features-section">
+    <div class="container">
+      <h2 class="section-title">Want to buy and secure your Bitcoin?</h2>
+      <div style="text-align: center;">
+        <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
+        <div class="affiliate-links">
+          <div class="affiliate-item">
+            <h4>Where to buy</h4>
+            <a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" class="affiliate-link">Bitcoin Well</a>
+          </div>
+          <div class="affiliate-item">
+            <h4>Where to store</h4>
+            <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a>
+          </div>
+          <div class="affiliate-item">
+            <h4>How to protect</h4>
+            <a href="https://www.stampseed.com/" target="_blank" class="affiliate-link">Stamp Seed</a>
+            <p class="discount-code">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
+          </div>
+          <div class="affiliate-item">
+            <h4>How to validate</h4>
+            <a href="https://store.start9.com/" target="_blank" class="affiliate-link">Start9</a>
+            <p class="discount-code">CODE: BNC5 for 5% off</p>
+          </div>
+          <div class="affiliate-item">
+            <h4>1:1 Coaching</h4>
+            <a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+          </div>
+          <div class="affiliate-item">
+            <h4>Where to learn</h4>
+            <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="support-section">
+    <div class="container support-grid">
+      <div class="support-card">
+        <div class="support-icon">⚡</div>
+        <h2 class="support-title">Support Plebtools</h2>
+        <p class="support-text">
+          Enjoying these tools? You can help keep them free and open source by donating sats.
+          Every contribution fuels more Bitcoin-first development.
+        </p>
+        <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="features-section" style="margin-top: 1rem;">
+    <div class="container" style="text-align: center;">
+      <h2 class="section-title">Open Source</h2>
+      <p>Plebtools is free and open source and can be replicated for anyone to track their own Bitcoin portfolio.</p>
+      <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" class="affiliate-link">View on GitHub</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 Plebtools. Open source Bitcoin tracking tools.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Public portfolio data - this will be populated with real data
+    let publicTrades = [];
+    let performanceChart = null;
+    let chartType = 'bar';
+    let isUpdatingChart = false;
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', async function() {
+      console.log('Page loaded, initializing...');
+      loadPublicTrades();
+      console.log('Public trades loaded:', publicTrades.length);
+      updateStats();
+      await updateChart();
+      updateTable();
+      
+      // Add event listener for manual price refresh
+      document.getElementById('refreshPriceBtn').addEventListener('click', function() {
+        const button = this;
+        const originalText = button.textContent;
+        button.textContent = '🔄 Refreshing...';
+        button.disabled = true;
+        
+        updateCurrentMarketPrice().finally(() => {
+          button.textContent = originalText;
+          button.disabled = false;
+        });
+      });
+
+      // Reinvestment data is controlled from backend - no interactive button needed
+    });
+
+    // Chart toggle
+    document.getElementById('chartToggle').addEventListener('click', async function() {
+      if (chartType === 'bar') {
+        chartType = 'line';
+        this.textContent = 'Switch to Pie Chart';
+      } else if (chartType === 'line') {
+        chartType = 'pie';
+        this.textContent = 'Switch to Bar Chart';
+      } else {
+        chartType = 'bar';
+        this.textContent = 'Switch to Line Chart';
+      }
+      await updateChart();
+    });
+
+    // Load public trades (real data from ForrestHODL)
+    function loadPublicTrades() {
+      // Real MSTR position and covered call data from ForrestHODL
+      publicTrades = [
+        // Initial MSTR position
+        {
+          id: 1,
+          tradeType: 'shares',
+          symbol: 'MSTR',
+          shares: 100,
+          originalCostBasis: 443.90,
+          newCostBasis: 443.90,
+          strikePrice: null,
+          premium: null,
+          expirationDate: null,
+          currentPrice: 0,
+          notes: 'Initial MSTR position - base shares for covered call strategy',
+          pnl: 0,
+          dateAdded: '2025-07-14T00:00:00.000Z'
+        },
+        // Combined Covered Call Trade (all previous calls lumped together)
+        {
+          id: 2,
+          tradeType: 'covered-call',
+          symbol: 'MSTR',
+          shares: 100,
+          originalCostBasis: 443.90,
+          newCostBasis: 412.49, // 443.90 - 31.41 (total premiums excluding latest)
+          strikePrice: 'N/A',
+          premium: 3141.00, // Total of 15 covered calls (excluding the $286 one)
+          expirationDate: 'N/A',
+          currentPrice: 0,
+          notes: 'Combined covered call trades - total premium collected',
+          pnl: 0,
+          dateAdded: '2025-07-15T00:00:00.000Z'
+        },
+        // Latest covered call trade
+        {
+          id: 3,
+          tradeType: 'covered-call',
+          symbol: 'MSTR',
+          shares: 100,
+          originalCostBasis: 409.63,
+          newCostBasis: 406.77, // 409.63 - 2.86
+          strikePrice: 345.00,
+          premium: 286.00, // $2.86 per share × 100 shares
+          expirationDate: '2025-10-09T00:00:00.000Z',
+          currentPrice: 0,
+          notes: 'MSTR Oct9\'25 345 Call',
+          pnl: 0,
+          dateAdded: '2025-10-02T00:00:00.000Z'
+        },
+        // New covered call trade
+        {
+          id: 4,
+          tradeType: 'covered-call',
+          symbol: 'MSTR',
+          shares: 100,
+          originalCostBasis: 406.77,
+          newCostBasis: 404.02, // 406.77 - 2.75
+          strikePrice: 415.00,
+          premium: 275.00, // $2.75 per share × 100 shares
+          expirationDate: '2025-11-14T00:00:00.000Z',
+          currentPrice: 0,
+          notes: 'MSTR Nov14\'25 415 Call',
+          pnl: 0,
+          dateAdded: '2025-10-13T00:00:00.000Z'
+        },
+        // New covered call trade - $2.90 premium
+        {
+          id: 5,
+          tradeType: 'covered-call',
+          symbol: 'MSTR',
+          shares: 100,
+          originalCostBasis: 404.02,
+          newCostBasis: 401.12, // 404.02 - 2.90
+          strikePrice: null, // TBD
+          premium: 290.00, // $2.90 per share × 100 shares
+          expirationDate: '2025-12-01T00:00:00.000Z', // TBD
+          currentPrice: 0,
+          notes: 'MSTR covered call - $2.90 premium',
+          pnl: 0,
+          dateAdded: new Date().toISOString()
+        },
+        // New covered call trade - $6.00 premium
+        {
+          id: 6,
+          tradeType: 'covered-call',
+          symbol: 'MSTR',
+          shares: 100,
+          originalCostBasis: 401.12,
+          newCostBasis: 395.12, // 401.12 - 6.00
+          strikePrice: null, // TBD
+          premium: 600.00, // $6.00 per share × 100 shares
+          expirationDate: '2025-12-15T00:00:00.000Z', // TBD
+          currentPrice: 0,
+          notes: 'MSTR covered call - $6.00 premium',
+          pnl: 0,
+          dateAdded: new Date().toISOString()
+        }
+      ];
+
+    }
+
+    // Update statistics
+    function updateStats() {
+      const totalPremium = publicTrades.reduce((sum, trade) => sum + (trade.premium || 0), 0);
+      
+      // Get the most recent adjusted cost basis from the last trade
+      const lastTrade = publicTrades[publicTrades.length - 1];
+      const adjustedCostBasisPerShare = lastTrade.newCostBasis; // $409.63
+      const totalShares = 100;
+      const totalAdjustedCostBasis = adjustedCostBasisPerShare * totalShares; // $40,963
+      
+      // Original cost basis before covered calls
+      const originalCostBasisPerShare = 443.90;
+      const totalOriginalCostBasis = originalCostBasisPerShare * totalShares; // $44,390
+
+      // Update the display fields
+      document.getElementById('originalCost').textContent = `$${totalOriginalCostBasis.toFixed(2)}`;
+      document.getElementById('totalPremium').textContent = `$${totalPremium.toFixed(2)}`;
+      document.getElementById('totalAdjustedCost').textContent = `$${totalAdjustedCostBasis.toFixed(2)}`;
+      document.getElementById('avgCostBasis').textContent = `$${adjustedCostBasisPerShare.toFixed(2)}`;
+      document.getElementById('totalTrades').textContent = publicTrades.length;
+      
+      // Update profit/loss (without automatic market price fetch)
+      updateProfitLoss();
+      
+    }
+
+
+    // Fetch MSTR market price with multiple fallbacks
+    async function fetchMSTRPrice() {
+      const fallbacks = [
+        // Primary: Yahoo Finance API
+        async () => {
+          try {
+            const proxyUrl = 'https://api.allorigins.win/raw?url=';
+            const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/MSTR`;
+            const response = await fetch(proxyUrl + encodeURIComponent(yahooUrl));
+            const data = await response.json();
+            
+            if (data.chart && data.chart.result && data.chart.result[0]) {
+              const price = data.chart.result[0].meta.regularMarketPrice;
+              if (price && price > 0) {
+                console.log('Yahoo Finance price:', price);
+                return price;
+              }
+            }
+          } catch (error) {
+            console.log('Yahoo Finance failed:', error);
+          }
+          throw new Error('Yahoo Finance failed');
+        },
+
+        // Fallback 1: Alternative Yahoo endpoint
+        async () => {
+          try {
+            const proxyUrl = 'https://api.allorigins.win/raw?url=';
+            const yahooUrl = `https://query2.finance.yahoo.com/v8/finance/chart/MSTR`;
+            const response = await fetch(proxyUrl + encodeURIComponent(yahooUrl));
+            const data = await response.json();
+            
+            if (data.chart && data.chart.result && data.chart.result[0]) {
+              const price = data.chart.result[0].meta.regularMarketPrice;
+              if (price && price > 0) {
+                console.log('Yahoo Finance (alt) price:', price);
+                return price;
+              }
+            }
+          } catch (error) {
+            console.log('Yahoo Finance (alt) failed:', error);
+          }
+          throw new Error('Yahoo Finance (alt) failed');
+        },
+
+        // Fallback 2: Alpha Vantage (if you have API key)
+        async () => {
+          try {
+            // This would require an API key - uncomment if you have one
+            // const apiKey = 'YOUR_ALPHA_VANTAGE_KEY';
+            // const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=MSTR&apikey=${apiKey}`);
+            // const data = await response.json();
+            // if (data['Global Quote'] && data['Global Quote']['05. price']) {
+            //   return parseFloat(data['Global Quote']['05. price']);
+            // }
+          } catch (error) {
+            console.log('Alpha Vantage failed:', error);
+          }
+          throw new Error('Alpha Vantage failed');
+        },
+
+        // Fallback 3: IEX Cloud (if you have API key)
+        async () => {
+          try {
+            // This would require an API key - uncomment if you have one
+            // const apiKey = 'YOUR_IEX_CLOUD_KEY';
+            // const response = await fetch(`https://cloud.iexapis.com/stable/stock/MSTR/quote?token=${apiKey}`);
+            // const data = await response.json();
+            // if (data.latestPrice) {
+            //   return data.latestPrice;
+            // }
+          } catch (error) {
+            console.log('IEX Cloud failed:', error);
+          }
+          throw new Error('IEX Cloud failed');
+        },
+
+        // Fallback 4: Polygon.io (if you have API key)
+        async () => {
+          try {
+            // This would require an API key - uncomment if you have one
+            // const apiKey = 'YOUR_POLYGON_KEY';
+            // const response = await fetch(`https://api.polygon.io/v1/last_quote/stocks/MSTR?apikey=${apiKey}`);
+            // const data = await response.json();
+            // if (data.results && data.results.P) {
+            //   return data.results.P;
+            // }
+          } catch (error) {
+            console.log('Polygon.io failed:', error);
+          }
+          throw new Error('Polygon.io failed');
+        },
+
+        // Final fallback: Use a reasonable estimate based on recent trends
+        async () => {
+          console.log('Using fallback price estimate');
+          // This could be a cached price or reasonable estimate
+          // For now, return null to indicate no price available
+          return null;
+        }
+      ];
+
+      // Try each fallback in sequence
+      for (let i = 0; i < fallbacks.length; i++) {
+        try {
+          const price = await fallbacks[i]();
+          if (price !== null && price > 0) {
+            return price;
+          }
+        } catch (error) {
+          console.log(`Fallback ${i + 1} failed:`, error.message);
+          if (i === fallbacks.length - 1) {
+            // Last fallback failed
+            throw error;
+          }
+        }
+      }
+
+      return null;
+    }
+
+    // Update current market price
+    async function updateCurrentMarketPrice() {
+      try {
+        const price = await fetchMSTRPrice();
+        if (price && price > 0) {
+          document.getElementById('currentMarketPrice').textContent = `$${price.toFixed(2)}`;
+          
+          // Update P&L with real market data
+          updateProfitLossWithMarketPrice(price);
+          
+          // Don't automatically update chart - let user control this manually
+        } else {
+          document.getElementById('currentMarketPrice').textContent = 'N/A';
+        }
+      } catch (error) {
+        console.error('Failed to fetch MSTR price:', error);
+        document.getElementById('currentMarketPrice').textContent = 'N/A';
+      }
+    }
+
+    // Update P&L with real market price
+    function updateProfitLossWithMarketPrice(currentPrice) {
+      if (publicTrades.length === 0) return;
+
+      const lastTrade = publicTrades[publicTrades.length - 1];
+      const adjustedCostBasisPerShare = lastTrade.newCostBasis;
+      const totalShares = 100;
+      const totalAdjustedCostBasis = adjustedCostBasisPerShare * totalShares;
+      
+      // Original cost basis
+      const originalCostBasisPerShare = 443.90;
+      const totalOriginalCostBasis = originalCostBasisPerShare * totalShares;
+      
+      // Current market value
+      const currentMarketValue = currentPrice * totalShares;
+      
+      // Original P&L = Current market value - Original cost basis
+      const originalProfitLoss = currentMarketValue - totalOriginalCostBasis;
+      const originalProfitLossPercent = totalOriginalCostBasis > 0 ? (originalProfitLoss / totalOriginalCostBasis) * 100 : 0;
+
+      // Total P&L = Current market value - Adjusted cost basis (includes premium benefit)
+      const totalProfitLoss = currentMarketValue - totalAdjustedCostBasis;
+      const totalProfitLossPercent = totalAdjustedCostBasis > 0 ? (totalProfitLoss / totalAdjustedCostBasis) * 100 : 0;
+
+      // Update Original P&L
+      const originalPnlElement = document.getElementById('originalPnl');
+      const originalPnlLabelElement = document.getElementById('originalPnlLabel');
+      
+      if (originalProfitLoss >= 0) {
+        originalPnlElement.textContent = `+$${originalProfitLoss.toFixed(2)}`;
+        originalPnlElement.style.color = '#28a745';
+        originalPnlLabelElement.textContent = `Original P&L (+${originalProfitLossPercent.toFixed(1)}%)`;
+      } else {
+        originalPnlElement.textContent = `-$${Math.abs(originalProfitLoss).toFixed(2)}`;
+        originalPnlElement.style.color = '#dc3545';
+        originalPnlLabelElement.textContent = `Original P&L (${originalProfitLossPercent.toFixed(1)}%)`;
+      }
+
+      // Update Total P&L
+      const profitLossElement = document.getElementById('profitLoss');
+      const profitLossLabelElement = document.getElementById('profitLossLabel');
+      
+      if (totalProfitLoss >= 0) {
+        profitLossElement.textContent = `+$${totalProfitLoss.toFixed(2)}`;
+        profitLossElement.style.color = '#28a745';
+        profitLossLabelElement.textContent = `Total P&L (+${totalProfitLossPercent.toFixed(1)}%)`;
+      } else {
+        profitLossElement.textContent = `-$${Math.abs(totalProfitLoss).toFixed(2)}`;
+        profitLossElement.style.color = '#dc3545';
+        profitLossLabelElement.textContent = `Total P&L (${totalProfitLossPercent.toFixed(1)}%)`;
+      }
+    }
+
+    // Update profit/loss calculation
+    function updateProfitLoss() {
+      if (publicTrades.length === 0) {
+        document.getElementById('profitLoss').textContent = '$0.00';
+        document.getElementById('profitLossLabel').textContent = 'Total P&L';
+        document.getElementById('originalPnl').textContent = '$0.00';
+        document.getElementById('originalPnlLabel').textContent = 'Original P&L';
+        return;
+      }
+
+      // Get the most recent adjusted cost basis (from the last covered call trade)
+      const lastTrade = publicTrades[publicTrades.length - 1];
+      const adjustedCostBasisPerShare = lastTrade.newCostBasis; // $406.77
+      const totalShares = 100;
+      const totalAdjustedCostBasis = adjustedCostBasisPerShare * totalShares; // $40,677
+      
+      // Total premium earned
+      const totalPremiumEarned = publicTrades.reduce((sum, trade) => sum + (trade.premium || 0), 0);
+      
+      // Original cost basis
+      const originalCostBasis = 443.90 * totalShares; // $44,390
+      const costBasisReduction = originalCostBasis - totalAdjustedCostBasis; // $3,713
+      const profitLossPercent = (costBasisReduction / originalCostBasis) * 100;
+
+      // Update Original P&L (shows cost basis reduction since no market data)
+      const originalPnlElement = document.getElementById('originalPnl');
+      const originalPnlLabelElement = document.getElementById('originalPnlLabel');
+      originalPnlElement.textContent = `+$${costBasisReduction.toFixed(2)}`;
+      originalPnlElement.style.color = '#28a745';
+      originalPnlLabelElement.textContent = `Original P&L (+${profitLossPercent.toFixed(1)}%)`;
+
+      // Update Total P&L (same as Original P&L when no market data)
+      const profitLossElement = document.getElementById('profitLoss');
+      const profitLossLabelElement = document.getElementById('profitLossLabel');
+      profitLossElement.textContent = `+$${costBasisReduction.toFixed(2)}`;
+      profitLossElement.style.color = '#28a745';
+      profitLossLabelElement.textContent = `Total P&L (+${profitLossPercent.toFixed(1)}%)`;
+    }
+
+    // Update chart
+    async function updateChart() {
+      if (isUpdatingChart) {
+        console.log('Chart update already in progress, skipping...');
+        return;
+      }
+      
+      isUpdatingChart = true;
+      
+      try {
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        
+        if (performanceChart) {
+          performanceChart.destroy();
+          performanceChart = null;
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+
+        // Sort trades by date
+        const sortedTrades = [...publicTrades].sort((a, b) => new Date(a.dateAdded) - new Date(b.dateAdded));
+        const labels = sortedTrades.map(trade => {
+          const date = new Date(trade.dateAdded);
+          return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        });
+
+        const premiumData = sortedTrades.map(trade => {
+          return trade.tradeType === 'covered-call' ? (trade.premium || 0) / (trade.shares || 1) : 0;
+        });
+
+        const costBasisData = sortedTrades.map(trade => trade.newCostBasis);
+        
+        // Calculate total premium for pie chart
+        const totalPremium = publicTrades.reduce((sum, trade) => sum + (trade.premium || 0), 0);
+        
+        // Get current market price from the display element
+        const currentMarketPriceElement = document.getElementById('currentMarketPrice');
+        const currentMarketPriceText = currentMarketPriceElement.textContent;
+        let currentMarketPrice = 0;
+        
+        if (currentMarketPriceText && currentMarketPriceText !== 'N/A' && currentMarketPriceText !== '$0.00') {
+          currentMarketPrice = parseFloat(currentMarketPriceText.replace('$', ''));
+        }
+        
+        const currentPriceData = sortedTrades.map(() => currentMarketPrice);
+
+        const datasets = chartType === 'bar' ? [
+          {
+            label: 'Premium Received',
+            data: premiumData,
+            backgroundColor: 'rgba(102, 126, 234, 0.8)',
+            borderColor: 'rgba(102, 126, 234, 1)',
+            borderWidth: 1,
+            fill: false,
+            tension: 0
+          },
+          {
+            label: 'Cost Basis',
+            data: costBasisData,
+            backgroundColor: 'rgba(40, 167, 69, 0.8)',
+            borderColor: 'rgba(40, 167, 69, 1)',
+            borderWidth: 1,
+            fill: false,
+            tension: 0
+          }
+        ] : chartType === 'line' ? [
+          {
+            label: 'Cost Basis',
+            data: costBasisData,
+            backgroundColor: 'rgba(0, 123, 255, 1)',
+            borderColor: 'rgba(0, 123, 255, 1)',
+            borderWidth: 3,
+            fill: false,
+            tension: 0.4,
+            pointBackgroundColor: 'rgba(0, 123, 255, 1)',
+            pointBorderColor: 'rgba(0, 123, 255, 1)',
+            pointRadius: 6,
+            pointHoverRadius: 8
+          },
+          {
+            label: 'Market Price',
+            data: currentPriceData,
+            backgroundColor: 'rgba(255, 99, 132, 1)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 3,
+            fill: false,
+            tension: 0.4,
+            pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+            pointBorderColor: 'rgba(255, 99, 132, 1)',
+            pointRadius: 6,
+            pointHoverRadius: 8
+          }
+        ] : [
+          {
+            label: 'Portfolio Composition',
+            data: [
+              totalPremium, // Premiums earned
+              currentMarketPrice > 0 ? currentMarketPrice * 100 : 0 // Current market value of 100 shares
+            ],
+            backgroundColor: [
+              'rgba(102, 126, 234, 0.8)', // Premiums - Blue
+              'rgba(40, 167, 69, 0.8)'    // Market value - Green
+            ],
+            borderColor: [
+              'rgba(102, 126, 234, 1)',
+              'rgba(40, 167, 69, 1)'
+            ],
+            borderWidth: 2
+          }
+        ];
+
+        const chartData = chartType === 'pie' ? {
+          labels: [
+            `Premiums Earned ($${totalPremium.toFixed(2)})`,
+            currentMarketPrice > 0 ? `MSTR Market Value (100 shares - $${(currentMarketPrice * 100).toFixed(2)})` : 'Market Value (Refresh for data)'
+          ],
+          datasets: [{
+            data: [
+              totalPremium,
+              currentMarketPrice > 0 ? currentMarketPrice * 100 : 0
+            ],
+            backgroundColor: [
+              'rgba(102, 126, 234, 0.8)', // Premiums - Blue
+              'rgba(40, 167, 69, 0.8)'    // Market value - Green
+            ],
+            borderColor: [
+              'rgba(102, 126, 234, 1)',
+              'rgba(40, 167, 69, 1)'
+            ],
+            borderWidth: 2
+          }]
+        } : {
+          labels: labels,
+          datasets: datasets
+        };
+
+        performanceChart = new Chart(ctx, {
+          type: chartType,
+          data: chartData,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    if (chartType === 'pie') {
+                      const value = context.parsed;
+                      const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                      const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                      return `${context.label}: $${value.toFixed(2)} (${percentage}%)`;
+                    } else {
+                      return `${context.dataset.label}: $${context.parsed.y.toFixed(2)}`;
+                    }
+                  }
+                }
+              },
+              legend: {
+                position: 'top'
+              },
+              title: {
+                display: true,
+                text: chartType === 'pie' ? 'Portfolio Breakdown' : 'ForrestHODL Portfolio Performance'
+              }
+            },
+            scales: chartType === 'pie' ? {} : {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  callback: function(value) {
+                    return '$' + value.toFixed(2);
+                  }
+                }
+              }
+            }
+          }
+        });
+      } catch (error) {
+        console.error('Error updating chart:', error);
+      } finally {
+        isUpdatingChart = false;
+      }
+    }
+
+    // Update table
+    function updateTable() {
+      console.log('Updating table, publicTrades length:', publicTrades.length);
+      const tbody = document.getElementById('tradesTableBody');
+      
+      if (publicTrades.length === 0) {
+        console.log('No trades found, showing placeholder');
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="9" style="text-align: center; color: #666; padding: 2rem;">
+              No trades available yet.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      // Sort trades by date (newest first)
+      const sortedTrades = [...publicTrades].sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+      console.log('Sorted trades:', sortedTrades);
+
+      tbody.innerHTML = sortedTrades.map(trade => `
+        <tr>
+          <td>
+            <span style="padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: bold; 
+                        background: ${trade.tradeType === 'shares' ? '#e3f2fd' : '#f3e5f5'}; 
+                        color: ${trade.tradeType === 'shares' ? '#1976d2' : '#7b1fa2'};">
+              ${trade.tradeType === 'shares' ? 'SHARES' : 'CALL'}
+            </span>
+          </td>
+          <td><strong>${trade.symbol}</strong></td>
+          <td>${trade.shares}</td>
+          <td>${trade.strikePrice === 'N/A' ? 'N/A' : (trade.strikePrice ? '$' + trade.strikePrice.toFixed(2) : '-')}</td>
+          <td>${trade.premium ? '$' + (trade.premium / trade.shares).toFixed(2) : '-'}</td>
+          <td>${trade.expirationDate === 'N/A' ? 'N/A' : (trade.expirationDate ? new Date(trade.expirationDate).toLocaleDateString() : '-')}</td>
+          <td>$${trade.newCostBasis.toFixed(2)}</td>
+          <td class="${trade.pnl >= 0 ? 'profit' : 'loss'}">
+            ${trade.pnl >= 0 ? '+' : ''}$${trade.pnl.toFixed(2)}
+          </td>
+          <td>${new Date(trade.dateAdded).toLocaleDateString()}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Theme toggle functionality
+    const themeToggle = document.createElement('button');
+    themeToggle.innerHTML = '🌙';
+    themeToggle.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      font-size: 1.5rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    `;
+
+    let isDarkTheme = false;
+
+    themeToggle.addEventListener("click", () => {
+      isDarkTheme = !isDarkTheme;
+      if (isDarkTheme) {
+        document.body.classList.add("dark-theme");
+        themeToggle.textContent = "☀️";
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.body.classList.remove("dark-theme");
+        themeToggle.textContent = "🌙";
+        localStorage.setItem("theme", "light");
+      }
+    });
+
+    // Load saved theme on page load
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      isDarkTheme = true;
+      document.body.classList.add("dark-theme");
+      themeToggle.textContent = "☀️";
+    }
+
+    document.body.appendChild(themeToggle);
+
+    // Simple dropdown functionality
+    const toolsBtn = document.getElementById('toolsBtn');
+    const toolsContent = document.getElementById('toolsContent');
+    let isOpen = false;
+
+    toolsBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (isOpen) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      } else {
+        toolsContent.style.display = 'block';
+        setTimeout(() => {
+          toolsContent.classList.add('show');
+        }, 10);
+        isOpen = true;
+      }
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('toolsDropdown').contains(e.target)) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      }
+    });
+  </script>
+</body>
+</html>

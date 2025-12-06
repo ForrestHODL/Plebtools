@@ -1,5 +1,29 @@
 RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
+
+# Handle forrest-portfolio URL
+RewriteRule ^forrest-portfolio/?$ forrest-portfolio.html [L]
+
+# Handle other portfolio URLs
+RewriteRule ^forrest-portfolio\.html$ forrest-portfolio.html [L]
+
+# Optional: Remove .html extension from all files
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^forresthodl$ forresthodl.html [L]
-RewriteRule ^btc-buy-tracker$ btc-buy-tracker.html [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.html [NC,L]
+
+# Security headers
+Header always set X-Content-Type-Options nosniff
+Header always set X-Frame-Options DENY
+Header always set X-XSS-Protection "1; mode=block"
+
+# Cache static files
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg)$">
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+</FilesMatch>
+
+# Cache HTML files for shorter period
+<FilesMatch "\.html$">
+    ExpiresActive On
+    ExpiresDefault "access plus 1 hour"
+</FilesMatch>

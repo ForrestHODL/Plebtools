@@ -1,0 +1,1943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice Builder - Plebtools</title>
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
+  <link rel="stylesheet" href="styles.css?v=4">
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
+      color: #e5e7eb;
+    }
+
+    main {
+      padding: 120px 0 60px;
+    }
+
+    .invoice-section {
+      background: rgba(17, 24, 39, 0.75);
+      backdrop-filter: blur(16px);
+      border-radius: 24px;
+      padding: 2.5rem;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      box-shadow: 0 30px 60px rgba(15, 23, 42, 0.45);
+    }
+
+    .invoice-layout {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+
+    .invoice-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    #theme-toggle-container {
+      display: flex;
+      align-items: center;
+      margin-left: 1.5rem;
+    }
+
+    .theme-toggle-btn {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.25) 0%, rgba(99, 102, 241, 0.4) 100%);
+      border: 2px solid rgba(99, 102, 241, 0.35);
+      border-radius: 999px;
+      padding: 0.55rem 1.1rem;
+      font-size: 0.95rem;
+      color: #dbeafe;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .theme-toggle-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(59, 130, 246, 0.35);
+    }
+
+    .theme-toggle-btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.35);
+    }
+
+    .panel {
+      background: rgba(30, 41, 59, 0.9);
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      padding: 1.8rem;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .panel h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      color: #facc15;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .panel h2 span {
+      font-size: 1.4rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      color: #cbd5f5;
+      letter-spacing: 0.01em;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 12px;
+      padding: 0.75rem 0.9rem;
+      color: #f8fafc;
+      font-size: 0.95rem;
+      transition: border 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .logo-upload {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .logo-preview {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px dashed rgba(148, 163, 184, 0.4);
+      border-radius: 14px;
+      padding: 1.25rem;
+      min-height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(148, 163, 184, 0.7);
+      font-size: 0.9rem;
+    }
+
+    .logo-preview img {
+      max-width: 100%;
+      max-height: 120px;
+      object-fit: contain;
+    }
+
+    .items-list {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .templates-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-height: 240px;
+      overflow-y: auto;
+      padding: 0.75rem;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      background: rgba(15, 23, 42, 0.6);
+    }
+
+    .templates-empty {
+      color: rgba(148, 163, 184, 0.7);
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 0.75rem 0;
+    }
+
+    .template-pill {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(37, 99, 235, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      color: #dbeafe;
+      border-radius: 10px;
+      padding: 0.6rem 0.85rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, border 0.2s ease, background 0.2s ease;
+      font-size: 0.85rem;
+      text-align: left;
+      gap: 0.75rem;
+    }
+
+    .template-pill:hover {
+      transform: translateY(-1px);
+      border-color: rgba(59, 130, 246, 0.45);
+      background: rgba(59, 130, 246, 0.25);
+    }
+
+    .template-pill.active {
+      border-color: rgba(245, 158, 11, 0.6);
+      background: rgba(245, 158, 11, 0.22);
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+    }
+
+    .template-pill-name {
+      font-weight: 600;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .template-pill-meta {
+      font-size: 0.75rem;
+      opacity: 0.7;
+      white-space: nowrap;
+    }
+
+    .invoice-item {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 14px;
+      padding: 1.25rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .invoice-item::after {
+      content: '';
+      position: absolute;
+      bottom: -0.75rem;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0) 0%, rgba(99, 102, 241, 0.35) 50%, rgba(59, 130, 246, 0) 100%);
+      pointer-events: none;
+    }
+
+    .invoice-item:last-child::after {
+      display: none;
+    }
+
+    .item-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .item-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.9rem;
+    }
+
+    .item-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(191, 219, 254, 0.8);
+    }
+
+    .item-row-input {
+      width: 100%;
+      padding: 0.7rem 0.8rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 10px;
+      color: #f8fafc;
+      font-size: 0.9rem;
+    }
+
+    .item-row-input:focus {
+      border-color: #38bdf8;
+      outline: none;
+      box-shadow: none;
+    }
+
+    .item-row-input.number {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      appearance: textfield;
+      -moz-appearance: textfield;
+    }
+
+    .item-row-input.number::-webkit-outer-spin-button,
+    .item-row-input.number::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    body.light-theme {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      color: #111827;
+    }
+
+    body.light-theme header {
+      background: rgba(255, 255, 255, 0.92);
+      border-bottom: 1px solid #e2e8f0;
+      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.08);
+    }
+
+    body.light-theme .nav-links a {
+      color: #1f2937;
+    }
+
+    body.light-theme .nav-links a:hover {
+      color: #2563eb;
+    }
+
+    body.light-theme .dropdown-btn {
+      color: #1f2937;
+    }
+
+    body.light-theme .dropdown-btn:hover {
+      background: rgba(59, 130, 246, 0.15);
+      color: #2563eb;
+    }
+
+    body.light-theme .dropdown-content {
+      background: #ffffff;
+      border-color: #e2e8f0;
+    }
+
+    body.light-theme .dropdown-content a {
+      color: #1f2937;
+    }
+
+    body.light-theme .dropdown-content a:hover {
+      background: rgba(59, 130, 246, 0.1);
+      color: #1d4ed8;
+    }
+
+    body.light-theme .invoice-section {
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: 0 25px 45px rgba(15, 23, 42, 0.12);
+    }
+
+    body.light-theme .panel {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(203, 213, 225, 0.9);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    body.light-theme .panel h2 {
+      color: #2563eb;
+    }
+
+    body.light-theme label,
+    body.light-theme .item-label {
+      color: #334155;
+    }
+
+    body.light-theme input,
+    body.light-theme textarea,
+    body.light-theme select,
+    body.light-theme .item-row-input {
+      background: rgba(248, 250, 252, 0.95);
+      border: 1px solid rgba(203, 213, 225, 0.9);
+      color: #0f172a;
+    }
+
+    body.light-theme .templates-list {
+      background: rgba(248, 250, 252, 0.95);
+      border-color: rgba(203, 213, 225, 0.9);
+    }
+
+    body.light-theme .templates-empty {
+      color: rgba(100, 116, 139, 0.8);
+    }
+
+    body.light-theme .template-pill {
+      background: rgba(59, 130, 246, 0.12);
+      border-color: rgba(148, 163, 184, 0.4);
+      color: #1f2937;
+    }
+
+    body.light-theme .template-pill:hover {
+      border-color: rgba(59, 130, 246, 0.55);
+      background: rgba(59, 130, 246, 0.18);
+    }
+
+    body.light-theme .template-pill.active {
+      border-color: rgba(245, 158, 11, 0.6);
+      background: rgba(245, 158, 11, 0.24);
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15);
+    }
+
+    body.light-theme .template-pill-meta {
+      color: rgba(71, 85, 105, 0.75);
+    }
+
+    body.light-theme input:focus,
+    body.light-theme textarea:focus,
+    body.light-theme select:focus,
+    body.light-theme .item-row-input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+
+    body.light-theme .logo-preview {
+      background: rgba(248, 250, 252, 0.85);
+      color: rgba(71, 85, 105, 0.75);
+      border-color: rgba(203, 213, 225, 0.9);
+    }
+
+    body.light-theme .invoice-item {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    body.light-theme .invoice-item::after {
+      background: linear-gradient(90deg, rgba(59, 130, 246, 0) 0%, rgba(59, 130, 246, 0.3) 50%, rgba(59, 130, 246, 0) 100%);
+    }
+
+    body.light-theme .item-row-input {
+      background: rgba(248, 250, 252, 0.95);
+      border-color: rgba(203, 213, 225, 0.8);
+      color: #0f172a;
+    }
+
+    body.light-theme .helper-text {
+      color: rgba(71, 85, 105, 0.8);
+    }
+
+    body.light-theme .remove-item {
+      background: rgba(254, 226, 226, 0.7);
+      border-color: rgba(252, 165, 165, 0.9);
+      color: #b91c1c;
+    }
+
+    body.light-theme .remove-item:hover {
+      background: rgba(252, 165, 165, 0.8);
+    }
+
+    body.light-theme .invoice-preview-card {
+      background: #ffffff;
+      color: #0f172a;
+      border: 1px solid rgba(203, 213, 225, 0.9);
+      box-shadow: 0 25px 45px rgba(15, 23, 42, 0.15);
+    }
+
+    body.light-theme .preview-table thead {
+      background: #f8fafc;
+    }
+
+    body.light-theme .preview-table th,
+    body.light-theme .preview-table td {
+      color: #273444;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    body.light-theme .totals div span:last-child {
+      color: #1f2937;
+    }
+
+    body.light-theme .notes-box {
+      background: #f1f5f9;
+      color: #273444;
+    }
+
+    body.light-theme footer {
+      background: rgba(255, 255, 255, 0.92);
+      color: #1f2937;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    body.light-theme .theme-toggle-btn {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.12) 0%, rgba(59, 130, 246, 0.22) 100%);
+      border: 2px solid rgba(96, 165, 250, 0.45);
+      color: #1d4ed8;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+    }
+
+    body.light-theme .primary-action {
+      color: #0f172a;
+    }
+
+    body.light-theme .ghost-action {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(37, 99, 235, 0.25) 100%);
+      color: #1d4ed8;
+      border-color: rgba(96, 165, 250, 0.4);
+    }
+
+    body.light-theme .danger-action {
+      background: linear-gradient(135deg, rgba(252, 165, 165, 0.35) 0%, rgba(248, 113, 113, 0.4) 100%);
+      color: #991b1b;
+      border-color: rgba(248, 113, 113, 0.5);
+    }
+    .item-remove-wrapper {
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+    }
+
+    .remove-item {
+      background: rgba(248, 113, 113, 0.15);
+      border: 1px solid rgba(252, 165, 165, 0.4);
+      color: #fecaca;
+      border-radius: 10px;
+      padding: 0.55rem 0.75rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+      width: 100%;
+    }
+
+    .remove-item:hover {
+      background: rgba(248, 113, 113, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .add-item-btn {
+      margin-top: 1.2rem;
+      width: 100%;
+      background: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 0.9rem 1.1rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #0f172a;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .add-item-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 30px rgba(79, 70, 229, 0.35);
+    }
+
+    .affiliate-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .affiliate-item {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+      transition: transform 0.3s ease;
+      box-shadow: 0 12px 24px rgba(15, 23, 42, 0.35);
+    }
+
+    .affiliate-item:hover {
+      transform: translateY(-4px);
+    }
+
+    .affiliate-item h4 {
+      color: #60a5fa;
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .affiliate-link {
+      display: inline-block;
+      background: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
+      color: #0f172a;
+      text-decoration: none;
+      padding: 0.55rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 10px 20px rgba(79, 70, 229, 0.35);
+    }
+
+    .affiliate-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 28px rgba(79, 70, 229, 0.45);
+      color: #0f172a;
+      text-decoration: none;
+    }
+
+    .discount-code {
+      font-size: 0.85rem;
+      color: #fbbf24;
+      font-weight: bold;
+      margin-top: 0.65rem;
+    }
+
+    body.light-theme .affiliate-item {
+      background: rgba(248, 250, 252, 0.95);
+      border-color: rgba(203, 213, 225, 0.9);
+      box-shadow: 0 8px 20px rgba(148, 163, 184, 0.15);
+    }
+
+    body.light-theme .affiliate-item h4 {
+      color: #2563eb;
+    }
+
+    body.light-theme .affiliate-link {
+      color: white;
+      box-shadow: 0 8px 18px rgba(59, 130, 246, 0.25);
+    }
+
+    body.light-theme .discount-code {
+      color: #f97316;
+    }
+
+    @media (max-width: 768px) {
+      .affiliate-links {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .affiliate-item {
+        padding: 1rem;
+      }
+    }
+    .invoice-preview-wrapper {
+      position: sticky;
+      top: 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-self: flex-start;
+    }
+
+    .invoice-preview-card {
+      background: #ffffff;
+      color: #111827;
+      border-radius: 20px;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      padding: 2.5rem;
+      min-height: 700px;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.25);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .invoice-logo img {
+      max-width: 160px;
+      max-height: 120px;
+      object-fit: contain;
+    }
+
+    .invoice-meta {
+      text-align: right;
+    }
+
+    .invoice-meta h1 {
+      font-size: 2rem;
+      letter-spacing: 0.08em;
+      margin: 0 0 0.4rem;
+      color: #111827;
+    }
+
+    .preview-section {
+      margin-bottom: 2rem;
+    }
+
+    .preview-section h3 {
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+      color: #6b7280;
+    }
+
+    .preview-columns {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+
+    .preview-info p {
+      margin: 0.2rem 0;
+      line-height: 1.5;
+      color: #1f2937;
+    }
+
+    .preview-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .preview-table thead {
+      background: #f3f4f6;
+    }
+
+    .preview-table th, .preview-table td {
+      padding: 0.85rem 0.75rem;
+      font-size: 0.9rem;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+      color: #1f2937;
+    }
+
+    .preview-table th:last-child,
+    .preview-table td:last-child,
+    .preview-table th:nth-last-child(2),
+    .preview-table td:nth-last-child(2) {
+      text-align: right;
+    }
+
+    .totals {
+      margin-top: 1.5rem;
+      display: grid;
+      gap: 0.5rem;
+      width: 260px;
+      margin-left: auto;
+    }
+
+    .totals div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.95rem;
+      color: #1f2937;
+    }
+
+    .totals .grand-total {
+      font-size: 1.15rem;
+      font-weight: 700;
+      padding-top: 0.7rem;
+      border-top: 1px solid #d1d5db;
+      margin-top: 0.6rem;
+    }
+
+    .notes-box {
+      background: #f9fafb;
+      border-radius: 12px;
+      padding: 1.2rem;
+      color: #374151;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+
+    .actions-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .primary-action {
+      flex: 1;
+      min-width: 220px;
+      background: linear-gradient(135deg, #f59e0b 0%, #f97316 50%, #ef4444 100%);
+      border: none;
+      color: #0f172a;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 1rem 1.5rem;
+      border-radius: 14px;
+      cursor: pointer;
+      box-shadow: 0 15px 35px rgba(248, 113, 113, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .primary-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 45px rgba(248, 113, 113, 0.5);
+    }
+
+    .primary-action:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .secondary-action,
+    .ghost-action,
+    .danger-action {
+      flex: 1;
+      min-width: 160px;
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+
+    .secondary-action {
+      background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+      color: #022c22;
+      box-shadow: 0 12px 30px rgba(16, 185, 129, 0.35);
+    }
+
+    .secondary-action:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 36px rgba(16, 185, 129, 0.45);
+    }
+
+    .ghost-action {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.25) 100%);
+      color: #bfdbfe;
+      border: 1px solid rgba(96, 165, 250, 0.35);
+      box-shadow: 0 10px 24px rgba(59, 130, 246, 0.18);
+    }
+
+    .ghost-action:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 32px rgba(59, 130, 246, 0.28);
+    }
+
+    .danger-action {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(248, 113, 113, 0.35) 100%);
+      color: #fecaca;
+      border: 1px solid rgba(248, 113, 113, 0.4);
+      box-shadow: 0 10px 26px rgba(239, 68, 68, 0.25);
+    }
+
+    .danger-action:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 15px 34px rgba(239, 68, 68, 0.35);
+    }
+
+    .secondary-action:disabled,
+    .ghost-action:disabled,
+    .danger-action:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+      filter: grayscale(0.2);
+    }
+
+    .save-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .status-banner {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(99, 102, 241, 0.2) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      color: #dbeafe;
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.01em;
+      margin-top: 1rem;
+      transition: opacity 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+
+    .status-banner[data-state="error"] {
+      background: linear-gradient(135deg, rgba(248, 113, 113, 0.15) 0%, rgba(244, 63, 94, 0.25) 100%);
+      border-color: rgba(248, 113, 113, 0.4);
+      color: #fee2e2;
+    }
+
+    .status-banner[data-state="success"] {
+      background: linear-gradient(135deg, rgba(52, 211, 153, 0.15) 0%, rgba(45, 212, 191, 0.25) 100%);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #d1fae5;
+    }
+
+    .status-banner[data-visible="true"] {
+      opacity: 1;
+    }
+
+    select {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 12px;
+      padding: 0.75rem 0.9rem;
+      color: #f8fafc;
+      font-size: 0.95rem;
+      appearance: none;
+      -webkit-appearance: none;
+      transition: border 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+    }
+
+    .helper-text {
+      font-size: 0.8rem;
+      color: rgba(148, 163, 184, 0.7);
+      margin-top: 0.35rem;
+    }
+
+    @media (max-width: 1200px) {
+      .invoice-layout {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+      }
+
+      .invoice-controls {
+        order: 2;
+      }
+
+      .invoice-preview-wrapper {
+        position: static;
+        order: 1;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .invoice-section {
+        padding: 1.5rem;
+      }
+
+      .panel {
+        padding: 1.4rem;
+      }
+
+      .preview-columns {
+        grid-template-columns: 1fr;
+      }
+
+      .invoice-preview-card {
+        padding: 1.8rem;
+      }
+
+      .item-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      .item-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNa5H8oQa+6R8xAi8uKXu95syEHCqB6f+GO6zkRgZNpmjQe7YQDdyCjTiMQuuLHfoalGoV7V6R8P2KyZB9r3nw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-/F7AOt7NmBGG99nmHn7+O+kO5RAwOB1p5MNDoAuCEi0aKBslZx2drXr/7EQo1leChX2NDSSSXTH0gr86z4h3UQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="nav-container">
+        <div class="logo-container">
+          <a href="home" class="logo-link">
+            <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+            <h1 class="logo">Plebtools</h1>
+          </a>
+        </div>
+        <div class="nav-links">
+          <div class="dropdown">
+            <button class="dropdown-btn">Tools <span class="dropdown-arrow">▼</span></button>
+            <div class="dropdown-content">
+              <a href="home">🏠 Home</a>
+              <a href="treasury">📊 Treasury</a>
+              <a href="btc-buy-tracker">💼 Portfolio</a>
+              <a href="coveredcall-tracker">📈 Covered Calls</a>
+              <a href="compound-interest-calculator">💰 Calculator</a>
+              <a href="btc-loan-ltv">🔒 BTC Loans</a>
+              <a href="financial-planner">📋 Financial Planner</a>
+              <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+              <a href="pleb-release">📰 Pleb Release</a>
+              <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
+              <a href="invoice-builder" class="active">🧾 Invoice Builder</a>
+            </div>
+          </div>
+          <a href="account" class="account-link">👤 Account</a>
+          <div id="theme-toggle-container"></div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="invoice-section container">
+      <div class="invoice-layout">
+        <div class="invoice-controls">
+          <div class="panel">
+            <h2><span>🧑‍💼</span>Business Details</h2>
+            <div class="field-group">
+              <label for="business-name">Business / Sender Name</label>
+              <input id="business-name" type="text">
+            </div>
+            <div class="field-group">
+              <label for="business-email">Email</label>
+              <input id="business-email" type="email">
+            </div>
+            <div class="field-group">
+              <label for="business-phone">Phone</label>
+              <input id="business-phone" type="text">
+            </div>
+            <div class="field-group">
+              <label for="business-address">Address</label>
+              <textarea id="business-address"></textarea>
+            </div>
+            <div class="logo-upload">
+              <div>
+                <label for="logo-upload">Company Logo</label>
+                <input id="logo-upload" type="file" accept="image/*">
+                <p class="helper-text">PNG, JPG or SVG — up to 5 MB</p>
+              </div>
+              <div class="logo-preview" id="logo-preview">Upload your logo to personalise the invoice</div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2><span>📨</span>Client & Invoice</h2>
+            <div class="field-group">
+              <label for="client-name">Client Name</label>
+              <input id="client-name" type="text">
+            </div>
+            <div class="field-group">
+              <label for="client-email">Client Email</label>
+              <input id="client-email" type="email">
+            </div>
+            <div class="field-group">
+              <label for="client-address">Client Address</label>
+              <textarea id="client-address"></textarea>
+            </div>
+            <div class="field-grid">
+              <div>
+                <label for="invoice-number">Invoice #</label>
+                <input id="invoice-number" type="text">
+              </div>
+              <div>
+                <label for="invoice-date">Invoice Date</label>
+                <input id="invoice-date" type="date">
+              </div>
+              <div>
+                <label for="due-date">Due Date</label>
+                <input id="due-date" type="date">
+              </div>
+              <div>
+                <label for="currency">Currency</label>
+                <select id="currency">
+                  <option value="USD">USD - US Dollar</option>
+                  <option value="EUR">EUR - Euro</option>
+                  <option value="GBP">GBP - British Pound</option>
+                  <option value="CAD">CAD - Canadian Dollar</option>
+                  <option value="AUD">AUD - Australian Dollar</option>
+                  <option value="BTC">BTC - Bitcoin</option>
+                  <option value="SAT">SAT - Satoshis</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-group">
+              <label for="invoice-notes">Notes</label>
+              <textarea id="invoice-notes"></textarea>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2><span>🧾</span>Invoice Items</h2>
+            <div class="helper-text">Add services or products, and use negative values for discounts or credits. Taxes are per-line if needed.</div>
+            <div class="items-list" id="items-body"></div>
+            <button type="button" class="add-item-btn" id="add-item">+ Add line item</button>
+          </div>
+
+          <div class="panel">
+            <h2><span>💾</span>Saved Templates</h2>
+            <div class="field-group">
+              <label for="save-name">Template Name</label>
+              <input id="save-name" type="text">
+              <p class="helper-text">Templates save directly to this browser so you can reuse them later.</p>
+            </div>
+            <div class="field-group">
+              <label>Your Templates</label>
+              <div id="templates-list" class="templates-list">
+                <p class="templates-empty">No templates saved yet</p>
+              </div>
+            </div>
+            <div class="save-actions">
+              <button type="button" id="save-invoice" class="secondary-action">Save New Template</button>
+              <button type="button" id="update-invoice" class="ghost-action" disabled>Save Changes</button>
+            </div>
+            <div class="save-actions">
+              <button type="button" id="load-invoice" class="secondary-action" disabled>Load Selected</button>
+              <button type="button" id="delete-invoice" class="danger-action" disabled>Delete Selected</button>
+            </div>
+            <div id="save-status" class="status-banner" role="status" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <div class="invoice-preview-wrapper">
+          <div class="invoice-preview-card" id="invoice-preview">
+            <div class="invoice-header">
+              <div class="invoice-logo" id="preview-logo"></div>
+              <div class="invoice-meta">
+                <h1>INVOICE</h1>
+                <p id="preview-number">Invoice #: —</p>
+                <p id="preview-date">Date: —</p>
+                <p id="preview-due">Due: —</p>
+              </div>
+            </div>
+
+            <div class="preview-section">
+              <div class="preview-columns">
+                <div>
+                  <h3>Bill From</h3>
+                  <div class="preview-info" id="preview-from"></div>
+                </div>
+                <div>
+                  <h3>Bill To</h3>
+                  <div class="preview-info" id="preview-to"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="preview-section">
+              <table class="preview-table" id="preview-items">
+                <thead>
+                  <tr>
+                    <th>Description</th>
+                    <th>Qty</th>
+                    <th>Rate</th>
+                    <th>Tax</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+              <div class="totals" id="preview-totals"></div>
+            </div>
+
+            <div class="preview-section">
+              <h3>Notes</h3>
+              <div class="notes-box" id="preview-notes">Add optional notes or payment instructions.</div>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button type="button" id="download-pdf" class="primary-action" disabled>Download Invoice PDF</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+      <section class="features-section">
+        <div class="container">
+          <h2 class="section-title">Want to buy and secure your Bitcoin?</h2>
+          <p style="text-align:center; font-size:0.9rem; color:#94a3b8; margin-bottom:1.5rem;">These are affiliate/discount links</p>
+          <div class="affiliate-links">
+            <div class="affiliate-item">
+              <h4>Where to buy</h4>
+              <a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" class="affiliate-link">Bitcoin Well</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>Where to store</h4>
+              <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>How to protect</h4>
+              <a href="https://www.stampseed.com/" target="_blank" class="affiliate-link">Stamp Seed</a>
+              <p class="discount-code">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
+            </div>
+            <div class="affiliate-item">
+              <h4>How to validate</h4>
+              <a href="https://store.start9.com/" target="_blank" class="affiliate-link">Start9</a>
+              <p class="discount-code">CODE: BNC5 for 5% off</p>
+            </div>
+            <div class="affiliate-item">
+              <h4>1:1 Coaching</h4>
+              <a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>Where to learn</h4>
+              <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="support-section">
+        <div class="container support-grid">
+          <div class="support-card">
+            <div class="support-icon">⚡</div>
+            <h2 class="support-title">Support Plebtools</h2>
+            <p class="support-text">
+              Enjoying these tools? You can help keep them free and open source by donating sats.
+              Every contribution fuels more Bitcoin-first development.
+            </p>
+            <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="features-section" style="margin-top: 2rem;">
+        <div class="container" style="text-align: center;">
+          <h2 class="section-title">Open Source</h2>
+          <p style="color:#94a3b8; margin-bottom: 1.5rem;">
+            Invoice Builder and every tool on Plebtools are completely open source. Fork it, self-host it, or contribute.
+          </p>
+          <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" class="affiliate-link" style="display:inline-block;">
+            View on GitHub
+          </a>
+        </div>
+      </section>
+
+      <footer>
+        <p>&copy; <span id="footer-year"></span> Plebtools.</p>
+      </footer>
+
+  <script>
+    (() => {
+      const { jsPDF } = window.jspdf || {};
+
+      const currencySymbols = {
+        USD: '$',
+        EUR: '€',
+        GBP: '£',
+        CAD: '$',
+        AUD: '$',
+        BTC: '₿',
+        SAT: '⚡'
+      };
+
+      const controls = {
+        businessName: document.getElementById('business-name'),
+        businessEmail: document.getElementById('business-email'),
+        businessPhone: document.getElementById('business-phone'),
+        businessAddress: document.getElementById('business-address'),
+        clientName: document.getElementById('client-name'),
+        clientEmail: document.getElementById('client-email'),
+        clientAddress: document.getElementById('client-address'),
+        invoiceNumber: document.getElementById('invoice-number'),
+        invoiceDate: document.getElementById('invoice-date'),
+        dueDate: document.getElementById('due-date'),
+        currency: document.getElementById('currency'),
+        notes: document.getElementById('invoice-notes')
+      };
+
+      const preview = {
+        logo: document.getElementById('preview-logo'),
+        number: document.getElementById('preview-number'),
+        date: document.getElementById('preview-date'),
+        due: document.getElementById('preview-due'),
+        from: document.getElementById('preview-from'),
+        to: document.getElementById('preview-to'),
+        itemsTable: document.querySelector('#preview-items tbody'),
+        totals: document.getElementById('preview-totals'),
+        notes: document.getElementById('preview-notes')
+      };
+
+      const logoUpload = document.getElementById('logo-upload');
+      const logoPreview = document.getElementById('logo-preview');
+      const itemsBody = document.getElementById('items-body');
+      const addItemBtn = document.getElementById('add-item');
+      const downloadBtn = document.getElementById('download-pdf');
+      const saveNameInput = document.getElementById('save-name');
+      const templatesList = document.getElementById('templates-list');
+      const saveNewBtn = document.getElementById('save-invoice');
+      const updateBtn = document.getElementById('update-invoice');
+      const loadBtn = document.getElementById('load-invoice');
+      const deleteBtn = document.getElementById('delete-invoice');
+      const statusBanner = document.getElementById('save-status');
+
+      const footerYear = document.getElementById('footer-year');
+      footerYear.textContent = new Date().getFullYear();
+
+      let logoDataUrl = '';
+      let statusTimeout;
+      let storageAvailable = true;
+      const STORAGE_KEY = 'plebtools.invoice.templates.v1';
+      let savedTemplates = [];
+      let activeTemplateId = '';
+
+      const escapeHTML = (value = '') => value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+
+      const escapeAttribute = value => {
+        if (value === undefined || value === null) return '';
+        return String(value).replace(/"/g, '&quot;');
+      };
+
+      const showStatus = (message = '', type = 'info', duration = 4000) => {
+        if (!statusBanner) return;
+        clearTimeout(statusTimeout);
+
+        if (!message) {
+          statusBanner.textContent = '';
+          statusBanner.dataset.visible = 'false';
+          statusBanner.removeAttribute('data-state');
+          return;
+        }
+
+        statusBanner.textContent = message;
+        statusBanner.dataset.state = type;
+        statusBanner.dataset.visible = 'true';
+
+        if (duration > 0) {
+          statusTimeout = setTimeout(() => {
+            statusBanner.dataset.visible = 'false';
+          }, duration);
+        }
+      };
+
+      const readFromStorage = () => {
+        if (!storageAvailable) {
+          return { entries: [], activeId: '' };
+        }
+
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) {
+            return { entries: [], activeId: '' };
+          }
+          const parsed = JSON.parse(raw);
+          if (!parsed || typeof parsed !== 'object') {
+            return { entries: [], activeId: '' };
+          }
+          const entries = Array.isArray(parsed.entries) ? parsed.entries : [];
+          const activeId = typeof parsed.activeId === 'string' ? parsed.activeId : '';
+          return { entries, activeId };
+        } catch (error) {
+          console.error('Failed to read invoice templates from storage', error);
+          storageAvailable = false;
+          showStatus('Browser storage is unavailable. Templates will not persist.', 'error', 6000);
+          return { entries: [], activeId: '' };
+        }
+      };
+
+      const persistTemplates = () => {
+        if (!storageAvailable) return;
+        try {
+          const payload = JSON.stringify({ entries: savedTemplates, activeId: activeTemplateId });
+          localStorage.setItem(STORAGE_KEY, payload);
+        } catch (error) {
+          console.error('Failed to persist invoice templates', error);
+          storageAvailable = false;
+          showStatus('Unable to save templates in this browser. Check storage settings.', 'error', 6000);
+        }
+      };
+
+      const formatTimestamp = value => {
+        if (!value) return '';
+        try {
+          return new Intl.DateTimeFormat(undefined, {
+            dateStyle: 'medium',
+            timeStyle: 'short'
+          }).format(value);
+        } catch {
+          return new Date(value).toLocaleString();
+        }
+      };
+
+      const syncTemplateControls = () => {
+        const hasActive = savedTemplates.some(item => item.id === activeTemplateId);
+        updateBtn.disabled = !hasActive;
+        loadBtn.disabled = !hasActive;
+        deleteBtn.disabled = !hasActive;
+      };
+
+      const renderTemplatesList = () => {
+        if (!templatesList) return;
+        templatesList.innerHTML = '';
+
+        if (!savedTemplates.length) {
+          const empty = document.createElement('p');
+          empty.className = 'templates-empty';
+          empty.textContent = 'No templates saved yet';
+          templatesList.appendChild(empty);
+          syncTemplateControls();
+          return;
+        }
+
+        savedTemplates.forEach(entry => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = `template-pill${entry.id === activeTemplateId ? ' active' : ''}`;
+          button.dataset.templateId = entry.id;
+          button.innerHTML = `
+            <span class="template-pill-name">${escapeHTML(entry.name)}</span>
+            <span class="template-pill-meta">${formatTimestamp(entry.updatedAt)}</span>
+          `;
+          button.addEventListener('click', () => {
+            setActiveTemplate(entry.id, { apply: true, message: `Loaded template: ${entry.name}` });
+          });
+          templatesList.appendChild(button);
+        });
+
+        syncTemplateControls();
+      };
+
+      const setActiveTemplate = (id, options = {}) => {
+        const entry = savedTemplates.find(item => item.id === id);
+        if (!entry) return;
+
+        activeTemplateId = entry.id;
+        if (saveNameInput) {
+          saveNameInput.value = entry.name;
+        }
+
+        if (options.apply) {
+          applyState(entry.data);
+        }
+
+        renderTemplatesList();
+        persistTemplates();
+
+        if (options.message) {
+          showStatus(options.message, options.type || 'success');
+        }
+      };
+
+      let themeToggle;
+
+      const applyTheme = mode => {
+        document.body.classList.remove('dark-theme', 'light-theme');
+        if (mode === 'dark') {
+          document.body.classList.add('dark-theme');
+          if (themeToggle) {
+            themeToggle.textContent = '☀️  Light';
+          }
+        } else {
+          document.body.classList.add('light-theme');
+          if (themeToggle) {
+            themeToggle.textContent = '🌙  Dark';
+          }
+        }
+        localStorage.setItem('theme', mode);
+      };
+
+      const themeToggleContainer = document.getElementById('theme-toggle-container');
+
+      if (themeToggleContainer) {
+        themeToggle = document.createElement('button');
+        themeToggle.id = 'themeToggle';
+        themeToggle.className = 'theme-toggle-btn';
+        themeToggle.type = 'button';
+
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        applyTheme(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+          const current = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+          const next = current === 'dark' ? 'light' : 'dark';
+          applyTheme(next);
+        });
+
+        themeToggleContainer.appendChild(themeToggle);
+      } else {
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        applyTheme(savedTheme);
+      }
+
+      const formatCurrency = (amount, currency) => {
+        if (currency === 'SAT') {
+          return `${amount.toLocaleString(undefined, { maximumFractionDigits: 0 })} ⚡`;
+        }
+        const symbol = currencySymbols[currency] || '';
+        return `${symbol}${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      };
+
+      const updateNotes = () => {
+        const text = controls.notes.value.trim();
+        preview.notes.textContent = text || 'Add optional notes or payment instructions.';
+      };
+
+      const updateMeta = () => {
+        const invoiceNo = controls.invoiceNumber.value.trim();
+        const invoiceDate = controls.invoiceDate.value;
+        const dueDate = controls.dueDate.value;
+
+        preview.number.textContent = `Invoice #: ${invoiceNo || '—'}`;
+        preview.date.textContent = `Date: ${invoiceDate || '—'}`;
+        preview.due.textContent = `Due: ${dueDate || '—'}`;
+
+        downloadBtn.disabled = !invoiceNo;
+      };
+
+      const updateAddressBlocks = () => {
+        const from = [
+          controls.businessName.value,
+          controls.businessEmail.value,
+          controls.businessPhone.value,
+          controls.businessAddress.value
+        ].map(line => line.trim()).filter(Boolean).map(escapeHTML);
+
+        const to = [
+          controls.clientName.value,
+          controls.clientEmail.value,
+          controls.clientAddress.value
+        ].map(line => line.trim()).filter(Boolean).map(escapeHTML);
+
+        preview.from.innerHTML = from.length ? from.map(line => `<p>${line}</p>`).join('') : '<p>—</p>';
+        preview.to.innerHTML = to.length ? to.map(line => `<p>${line}</p>`).join('') : '<p>—</p>';
+      };
+
+      const parseNumericInput = (rawValue, fallback = 0) => {
+        if (rawValue === undefined || rawValue === null) return fallback;
+        const trimmed = String(rawValue).trim();
+        if (trimmed === '') return fallback;
+        const parsed = parseFloat(trimmed);
+        return Number.isNaN(parsed) ? fallback : parsed;
+      };
+
+      const getItems = () => Array.from(itemsBody.querySelectorAll('.invoice-item')).map(row => {
+        const description = row.querySelector('.item-desc').value.trim();
+        const qtyValue = row.querySelector('.item-qty').value;
+        const priceValue = row.querySelector('.item-price').value;
+        const taxValue = row.querySelector('.item-tax').value;
+
+        const price = parseNumericInput(priceValue, 0);
+        const tax = parseNumericInput(taxValue, 0);
+        const quantityDefault = description || priceValue.trim() !== '' || taxValue.trim() !== '' ? 1 : 0;
+        const quantity = parseNumericInput(qtyValue, quantityDefault);
+
+        return { description, quantity, price, tax };
+      }).filter(item =>
+        item.description !== '' ||
+        item.price !== 0 ||
+        item.tax !== 0 ||
+        (item.quantity !== 0 && !Number.isNaN(item.quantity))
+      );
+
+      const updateItemsPreview = () => {
+        const currency = controls.currency.value;
+        const items = getItems();
+        preview.itemsTable.innerHTML = '';
+
+        if (!items.length) {
+          preview.itemsTable.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#9ca3af; padding:1.5rem;">Add line items to build your invoice.</td></tr>';
+          preview.totals.innerHTML = '';
+          return;
+        }
+
+        let subtotal = 0;
+        let totalTax = 0;
+
+        items.forEach(item => {
+          const lineAmount = item.quantity * item.price;
+          const taxAmount = lineAmount * (item.tax / 100);
+          subtotal += lineAmount;
+          totalTax += taxAmount;
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${escapeHTML(item.description || '—')}</td>
+            <td>${item.quantity || 0}</td>
+            <td>${formatCurrency(item.price || 0, currency)}</td>
+            <td>${item.tax ? item.tax.toFixed(2) + '%' : '—'}</td>
+            <td>${formatCurrency(lineAmount + taxAmount, currency)}</td>
+          `;
+          preview.itemsTable.appendChild(tr);
+        });
+
+        const total = subtotal + totalTax;
+        preview.totals.innerHTML = `
+          <div><span>Subtotal</span><strong>${formatCurrency(subtotal, currency)}</strong></div>
+          <div><span>Taxes</span><strong>${formatCurrency(totalTax, currency)}</strong></div>
+          <div class="grand-total"><span>Total Due</span><span>${formatCurrency(total, currency)}</span></div>
+        `;
+      };
+
+      const addItemRow = (item = {}) => {
+        const row = document.createElement('div');
+        row.className = 'invoice-item';
+        row.innerHTML = `
+          <div class="item-field">
+            <label class="item-label">Description</label>
+            <input type="text" class="item-row-input item-desc" value="${escapeAttribute(item.description)}">
+          </div>
+          <div class="item-row">
+            <div class="item-field">
+              <label class="item-label">Quantity</label>
+              <input type="number" step="0.01" class="item-row-input number item-qty" value="${escapeAttribute(item.quantity ?? '')}">
+            </div>
+            <div class="item-field">
+              <label class="item-label">Rate</label>
+              <input type="number" step="0.01" class="item-row-input number item-price" value="${escapeAttribute(item.price ?? '')}">
+            </div>
+            <div class="item-field">
+              <label class="item-label">Tax %</label>
+              <input type="number" step="0.01" class="item-row-input number item-tax" value="${escapeAttribute(item.tax ?? '')}">
+            </div>
+          </div>
+          <div class="item-remove-wrapper">
+            <button type="button" class="remove-item">Remove</button>
+          </div>
+        `;
+
+        row.addEventListener('input', () => updateItemsPreview());
+        row.querySelector('.remove-item').addEventListener('click', () => {
+          row.remove();
+          updateItemsPreview();
+        });
+
+        itemsBody.appendChild(row);
+        updateItemsPreview();
+      };
+
+      const handleLogoUpload = file => {
+        if (!file) {
+          logoDataUrl = '';
+          logoPreview.innerHTML = 'Upload your logo to personalise the invoice';
+          preview.logo.innerHTML = '';
+          return;
+        }
+
+        if (!file.type.startsWith('image/')) {
+          logoPreview.textContent = 'Please upload a valid image file.';
+          return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+          logoPreview.textContent = 'File is too large. Please select an image under 5 MB.';
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = e => {
+          logoDataUrl = e.target.result;
+          logoPreview.innerHTML = `<img src="${logoDataUrl}" alt="Logo Preview">`;
+          preview.logo.innerHTML = `<img src="${logoDataUrl}" alt="Company Logo">`;
+        };
+        reader.readAsDataURL(file);
+      };
+
+      const setLogoFromState = dataUrl => {
+        if (!dataUrl) {
+          logoDataUrl = '';
+          logoPreview.innerHTML = 'Upload your logo to personalise the invoice';
+          preview.logo.innerHTML = '';
+          return;
+        }
+        logoDataUrl = dataUrl;
+        logoPreview.innerHTML = `<img src="${logoDataUrl}" alt="Logo Preview">`;
+        preview.logo.innerHTML = `<img src="${logoDataUrl}" alt="Company Logo">`;
+      };
+
+      const collectState = () => ({
+        business: {
+          name: controls.businessName.value,
+          email: controls.businessEmail.value,
+          phone: controls.businessPhone.value,
+          address: controls.businessAddress.value
+        },
+        client: {
+          name: controls.clientName.value,
+          email: controls.clientEmail.value,
+          address: controls.clientAddress.value
+        },
+        invoice: {
+          number: controls.invoiceNumber.value,
+          date: controls.invoiceDate.value,
+          due: controls.dueDate.value,
+          currency: controls.currency.value,
+          notes: controls.notes.value
+        },
+        items: getItems(),
+        logo: logoDataUrl
+      });
+
+      const applyState = state => {
+        const data = state || {};
+        const business = data.business || {};
+        const client = data.client || {};
+        const invoice = data.invoice || {};
+
+        controls.businessName.value = business.name || '';
+        controls.businessEmail.value = business.email || '';
+        controls.businessPhone.value = business.phone || '';
+        controls.businessAddress.value = business.address || '';
+
+        controls.clientName.value = client.name || '';
+        controls.clientEmail.value = client.email || '';
+        controls.clientAddress.value = client.address || '';
+
+        controls.invoiceNumber.value = invoice.number || '';
+        controls.invoiceDate.value = invoice.date || '';
+        controls.dueDate.value = invoice.due || '';
+        controls.currency.value = invoice.currency || controls.currency.options[0]?.value || 'USD';
+        controls.notes.value = invoice.notes || '';
+
+        itemsBody.innerHTML = '';
+        if (Array.isArray(data.items) && data.items.length) {
+          data.items.forEach(item => addItemRow(item));
+        } else {
+          updateItemsPreview();
+        }
+
+        setLogoFromState(data.logo);
+
+        updateMeta();
+        updateAddressBlocks();
+        updateNotes();
+        updateItemsPreview();
+      };
+
+      const createTemplateEntry = (name, state) => ({
+        id: (window.crypto && window.crypto.randomUUID ? window.crypto.randomUUID() : `tpl-${Date.now()}-${Math.random().toString(16).slice(2)}`),
+        name,
+        data: state,
+        updatedAt: Date.now()
+      });
+
+      const updateTemplateEntry = (entry, name, state) => {
+        entry.name = name;
+        entry.data = state;
+        entry.updatedAt = Date.now();
+      };
+
+      const handleSaveNewTemplate = () => {
+        if (!storageAvailable) {
+          showStatus('Browser storage is disabled, cannot save template.', 'error', 6000);
+          return;
+        }
+
+        const name = (saveNameInput?.value || '').trim();
+        if (!name) {
+          showStatus('Name your template before saving.', 'error');
+          return;
+        }
+
+        const state = collectState();
+        const entry = createTemplateEntry(name, state);
+        savedTemplates = [entry, ...savedTemplates];
+        setActiveTemplate(entry.id, { apply: false });
+        showStatus('Template saved to this browser.', 'success');
+      };
+
+      const handleUpdateTemplate = () => {
+        if (!storageAvailable) {
+          showStatus('Browser storage is disabled, cannot update template.', 'error', 6000);
+          return;
+        }
+
+        if (!activeTemplateId) {
+          showStatus('Select a template to update.', 'error');
+          return;
+        }
+
+        const entry = savedTemplates.find(item => item.id === activeTemplateId);
+        if (!entry) {
+          showStatus('Template not found. Try saving as new.', 'error');
+          return;
+        }
+
+        const name = (saveNameInput?.value || '').trim();
+        if (!name) {
+          showStatus('Template name cannot be empty.', 'error');
+          return;
+        }
+
+        updateTemplateEntry(entry, name, collectState());
+        savedTemplates = savedTemplates
+          .filter(item => item.id !== entry.id);
+        savedTemplates.unshift(entry);
+        setActiveTemplate(entry.id, { apply: false });
+        showStatus('Template updated.', 'success');
+      };
+
+      const handleLoadTemplate = () => {
+        if (!activeTemplateId) {
+          showStatus('Choose a template to load.', 'error');
+          return;
+        }
+
+        const entry = savedTemplates.find(item => item.id === activeTemplateId);
+        if (!entry) {
+          showStatus('Template could not be loaded.', 'error');
+          return;
+        }
+
+        setActiveTemplate(entry.id, { apply: true, message: `Loaded template: ${entry.name}`, type: 'success' });
+      };
+
+      const handleDeleteTemplate = () => {
+        if (!activeTemplateId) {
+          showStatus('Select a template to delete.', 'error');
+          return;
+        }
+
+        const entry = savedTemplates.find(item => item.id === activeTemplateId);
+        if (!entry) {
+          showStatus('Template already removed.', 'error');
+          return;
+        }
+
+        const confirmed = window.confirm(`Delete template "${entry.name}"?`);
+        if (!confirmed) {
+          return;
+        }
+
+        savedTemplates = savedTemplates.filter(item => item.id !== activeTemplateId);
+        if (!savedTemplates.length) {
+          activeTemplateId = '';
+          if (saveNameInput) saveNameInput.value = '';
+          renderTemplatesList();
+          persistTemplates();
+          showStatus('No templates stored yet. Create one to get started.', 'info');
+          return;
+        }
+
+        activeTemplateId = savedTemplates[0].id;
+        renderTemplatesList();
+        persistTemplates();
+        if (saveNameInput) saveNameInput.value = savedTemplates[0].name;
+        showStatus('Template removed.', 'success');
+      };
+
+      const ensureDefaultDates = () => {
+        const today = new Date().toISOString().split('T')[0];
+        if (!controls.invoiceDate.value) {
+          controls.invoiceDate.value = today;
+        }
+        if (!controls.dueDate.value) {
+          controls.dueDate.value = today;
+        }
+      };
+
+      const initializeTemplates = () => {
+        const stored = readFromStorage();
+        savedTemplates = stored.entries || [];
+        activeTemplateId = stored.activeId || '';
+
+        let applied = false;
+        if (savedTemplates.length) {
+          const initial = savedTemplates.find(item => item.id === activeTemplateId) || savedTemplates[0];
+          setActiveTemplate(initial.id, { apply: true });
+          applied = true;
+        } else {
+          renderTemplatesList();
+        }
+
+        if (!applied) {
+          itemsBody.innerHTML = '';
+          addItemRow({ description: 'Consulting Services', quantity: 1, price: 250, tax: 0 });
+        }
+
+        ensureDefaultDates();
+        updateMeta();
+        updateAddressBlocks();
+        updateNotes();
+        updateItemsPreview();
+      };
+
+      const downloadInvoice = async () => {
+        if (!jsPDF) {
+          alert('PDF library failed to load. Please refresh the page.');
+          return;
+        }
+
+        const invoiceNo = controls.invoiceNumber.value.trim() || 'draft';
+        const previewCard = document.getElementById('invoice-preview');
+
+        downloadBtn.disabled = true;
+        downloadBtn.textContent = 'Preparing PDF…';
+
+        try {
+          const canvas = await html2canvas(previewCard, {
+            scale: 2,
+            backgroundColor: '#ffffff',
+            useCORS: true
+          });
+
+          const imgData = canvas.toDataURL('image/png');
+          const pdf = new jsPDF('p', 'pt', 'a4');
+          const pageWidth = pdf.internal.pageSize.getWidth();
+          const pageHeight = pdf.internal.pageSize.getHeight();
+
+          const imgProps = pdf.getImageProperties(imgData);
+          const pdfWidth = pageWidth - 60;
+          const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+          let position = 30;
+          if (pdfHeight > pageHeight - 60) {
+            const pages = Math.ceil(pdfHeight / (pageHeight - 60));
+            for (let i = 0; i < pages; i++) {
+              if (i > 0) pdf.addPage();
+              const offsetY = -i * (pageHeight - 60);
+              pdf.addImage(imgData, 'PNG', 30, position + offsetY, pdfWidth, pdfHeight);
+            }
+          } else {
+            pdf.addImage(imgData, 'PNG', 30, position, pdfWidth, pdfHeight);
+          }
+
+          pdf.save(`Invoice-${invoiceNo}.pdf`);
+        } catch (error) {
+          console.error(error);
+          alert('Something went wrong while generating the PDF. Please try again.');
+        } finally {
+          downloadBtn.disabled = !controls.invoiceNumber.value.trim();
+          downloadBtn.textContent = 'Download Invoice PDF';
+        }
+      };
+
+      addItemBtn.addEventListener('click', () => addItemRow());
+      logoUpload.addEventListener('change', event => handleLogoUpload(event.target.files[0]));
+      downloadBtn.addEventListener('click', downloadInvoice);
+
+      if (saveNewBtn) saveNewBtn.addEventListener('click', handleSaveNewTemplate);
+      if (updateBtn) updateBtn.addEventListener('click', handleUpdateTemplate);
+      if (loadBtn) loadBtn.addEventListener('click', handleLoadTemplate);
+      if (deleteBtn) deleteBtn.addEventListener('click', handleDeleteTemplate);
+
+      Object.values(controls).forEach(control => {
+        control.addEventListener('input', () => {
+          updateMeta();
+          updateAddressBlocks();
+          updateNotes();
+          updateItemsPreview();
+        });
+
+        control.addEventListener('change', () => {
+          updateMeta();
+          updateAddressBlocks();
+          updateNotes();
+          updateItemsPreview();
+        });
+      });
+
+      controls.currency.addEventListener('change', updateItemsPreview);
+
+      initializeTemplates();
+    })();
+  </script>
+</body>
+</html>
+

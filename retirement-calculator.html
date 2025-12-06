@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Retirement Calculator - Plebtools</title>
+    <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
+    <link rel="stylesheet" href="styles.css?v=3">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            color: #111;
+        }
+
+        .dark-theme {
+            color: #e5e7eb;
+        }
+
+        .calculator-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #333;
+            position: relative;
+        }
+
+        .calculator-title {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            background: -webkit-linear-gradient(45deg, #f59e0b, #fbbf24, #fde68a);
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
+        }
+
+        .calculator-subtitle {
+            font-size: 1.2rem;
+            color: #ffffff;
+            margin-bottom: 2rem;
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+        }
+
+        .results-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-card {
+            background: #22c55e;
+            color: #ffffff;
+            padding: 1.1rem 1.25rem;
+            border-radius: 10px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            justify-content: center;
+        }
+
+        .summary-card h3 {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #ffffff;
+        }
+
+        .summary-card .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+            color: #ffffff;
+        }
+
+        .input-help {
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .dark-theme .input-help {
+            color: #bbbbbb;
+        }
+
+        .dark-theme .summary-card {
+            background: #16a34a;
+            color: #ffffff !important;
+            padding: 1.1rem 1.25rem;
+        }
+
+        .dark-theme .summary-card h3,
+        .dark-theme .summary-card .value {
+            color: #ffffff !important;
+        }
+
+        .table-container {
+            margin-top: 2rem;
+            overflow-x: auto;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .results-table th,
+        .results-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .results-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .results-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .chart-container {
+            margin-top: 2rem;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
+        }
+
+        .chart-description {
+            margin-top: 1rem;
+            color: #333;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .dark-theme .chart-description {
+            color: #bbbbbb;
+        }
+
+        .affiliate-note {
+            font-size: 0.9rem;
+            color: #1f1f1f;
+            margin-bottom: 1.5rem;
+        }
+
+        .dark-theme .affiliate-note {
+            color: #cbd5f5;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .calculator-container {
+                padding: 1rem;
+            }
+            
+            .input-section,
+            .results-section,
+            .chart-container {
+                padding: 1.5rem;
+            }
+            
+            .summary-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Keep logo purple */
+        .logo {
+            color: #667eea !important;
+        }
+
+        #toolsBtn {
+            color: white !important;
+        }
+
+        /* Dark theme support */
+        .dark-theme .input-section,
+        .dark-theme .results-section,
+        .dark-theme .chart-container {
+            background: #3d3d3d;
+            border-color: #555;
+        }
+
+        .dark-theme .calculator-header {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+        }
+
+        /* Dark theme for affiliate and Open Source sections */
+        .dark-theme div[style*="background: white"] {
+            background: #3d3d3d !important;
+            border-color: #555 !important;
+        }
+
+        .dark-theme h3 {
+            color: #fff !important;
+        }
+
+        .dark-theme h4 {
+            color: #fff !important;
+        }
+
+        .dark-theme p {
+            color: #ccc !important;
+        }
+
+        .support-section {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(30, 41, 59, 0.98) 100%);
+        }
+
+        .support-grid {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .support-card {
+            background: rgba(30, 41, 59, 0.92);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 18px;
+            padding: 2.25rem;
+            text-align: center;
+            box-shadow: 0 28px 60px -30px rgba(15, 23, 42, 0.6);
+            color: #e2e8f0;
+        }
+
+        .support-icon {
+            font-size: 2.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .support-title {
+            font-size: 1.6rem;
+            color: #f8fafc;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .support-text {
+            color: #cbd5f5;
+            font-size: 1rem;
+            margin: 1rem 0 2rem;
+            line-height: 1.6;
+        }
+
+        .support-btn {
+            display: inline-block;
+            padding: 0.75rem 2.4rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 18px 48px -24px rgba(34, 197, 94, 0.65);
+        }
+
+        .support-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 28px 60px -30px rgba(34, 197, 94, 0.65);
+        }
+
+        .dark-theme .input-label {
+            color: #e0e0e0;
+        }
+
+        .dark-theme .input-field {
+            background: #4d4d4d;
+            border-color: #555;
+            color: #e0e0e0;
+        }
+
+        .dark-theme .input-field:focus {
+            border-color: #667eea;
+        }
+
+        .dark-theme .results-table th {
+            background: #4d4d4d;
+            color: #e0e0e0;
+        }
+
+        .dark-theme .results-table td {
+            color: #e0e0e0;
+        }
+
+        .dark-theme .results-table tr:hover {
+            background: #4d4d4d;
+        }
+
+        .dark-theme .calculator-title {
+            color: #e0e0e0;
+        }
+
+        .dark-theme .calculator-subtitle {
+            color: #ccc;
+        }
+
+        /* Dropdown styles */
+        #toolsDropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        #toolsBtn {
+            background: none;
+            border: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .dark-theme #toolsBtn {
+            color: #e0e0e0 !important;
+        }
+        
+        #toolsBtn:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+        
+        .dropdown-arrow {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+        
+        #toolsContent {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 200px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        #toolsContent.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        #toolsContent a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.2s ease;
+        }
+        
+        #toolsContent a:hover {
+            background-color: #f8f9fa;
+            color: #667eea;
+        }
+        
+        .dark-theme #toolsContent {
+            background: #3d3d3d;
+            border-color: #555;
+        }
+        
+        .dark-theme #toolsContent a {
+            color: #e0e0e0;
+        }
+        
+        .dark-theme #toolsContent a:hover {
+            background-color: #4d4d4d;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <div class="logo-container">
+                    <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+                        <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+                        <h1 class="logo">Plebtools</h1>
+                    </a>
+                </div>
+                <div class="nav-links">
+                    <div class="dropdown" id="toolsDropdown">
+                        <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+                        <div class="dropdown-content" id="toolsContent" style="display: none;">
+                            <a href="home">🏠 Home</a>
+                            <a href="treasury">📊 Treasury</a>
+                            <a href="btc-buy-tracker">💼 Portfolio</a>
+                            <a href="coveredcall-tracker">📈 Covered Calls</a>
+                            <a href="compound-interest-calculator">💰 Calculator</a>
+                            <a href="retirement-calculator">🏖️ Retirement</a>
+                            <a href="btc-loan-ltv">🔒 BTC Loans</a>
+                            <a href="financial-planner">📋 Financial Planner</a>
+                            <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+              <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
+              <a href="invoice-builder">🧾 Invoice Builder</a>
+                            <a href="pleb-release">📰 Pleb Release</a>
+                        </div>
+                    </div>
+                    <a href="account" class="account-link">👤 Account</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="calculator-container">
+            <div class="calculator-header">
+                <h1 class="calculator-title">Bitcoin Retirement Calculator</h1>
+                <p class="calculator-subtitle">
+                    Calculate how much Bitcoin you need to retire based on your expenses, 
+                    inflation, and Bitcoin appreciation assumptions, and how much Bitcoin you want to pass on to your heirs.
+                </p>
+            </div>
+
+            <div class="calculator-grid">
+                <div class="input-section">
+                    <h2>Input Parameters</h2>
+                    
+                    <div class="input-group">
+                        <label class="input-label" for="years">Number of Years (default: 25)</label>
+                        <input type="number" id="years" class="input-field" value="25" min="1" max="50">
+                        <small class="input-help">How long you expect your retirement withdrawals to last</small>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label" for="annualSpend">Annual Spend ($)</label>
+                        <input type="number" id="annualSpend" class="input-field" value="60000" min="0">
+                        <small class="input-help">Total dollars you plan to spend each year in retirement</small>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label" for="inflation">Inflation Rate (%)</label>
+                        <input type="number" id="inflation" class="input-field" value="7" min="0" max="20" step="0.1">
+                        <small class="input-help">Yearly cost-of-living increase caused by fiat debasement</small>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label" for="appreciation">Bitcoin Appreciation Rate (%)</label>
+                        <input type="number" id="appreciation" class="input-field" value="15" min="0" max="50" step="0.1">
+                        <small class="input-help">Expected annual percentage gain in Bitcoin’s USD price</small>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label" for="btcPrice">Bitcoin Price at retirement ($)</label>
+                        <input type="number" id="btcPrice" class="input-field" value="623197" min="0">
+                        <small class="input-help">Spot price of Bitcoin when you begin retirement withdrawals</small>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label" for="startYear">Starting Year</label>
+                        <input type="number" id="startYear" class="input-field" value="2026" min="2024" max="2100">
+                        <small class="input-help">Calendar year when this retirement plan starts</small>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label" for="remainingBtc">BTC to Pass on</label>
+                        <input type="number" id="remainingBtc" class="input-field" value="0" min="0" step="0.001">
+                        <small class="input-help">Bitcoin you want to still hold at the end of the plan</small>
+                    </div>
+
+                    <button class="calculate-btn" onclick="calculateRetirement()">
+                        Calculate Retirement Plan
+                    </button>
+                </div>
+
+                <div class="results-section">
+                    <h2>Results</h2>
+                    <div id="loading" class="loading" style="display: none;">
+                        Calculating your Bitcoin retirement plan...
+                    </div>
+                    <div id="error" class="error-message" style="display: none;"></div>
+                    <div id="results" style="display: none;">
+                        <div class="summary-cards" id="summaryCards"></div>
+                        <div class="table-container">
+                            <table class="results-table" id="resultsTable"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h2>Financial Progression Chart</h2>
+                <canvas id="chart" width="400" height="200"></canvas>
+                <p class="chart-description">
+                    Each year begins by increasing the Bitcoin price by the appreciation rate and raising your planned dollar expenses by the inflation rate. Immediately afterward, the required cash for the year is raised by selling Bitcoin at that year’s adjusted price, which reduces the Bitcoin stack shown in orange. The remaining BTC then compounds for the following year.
+                </p>
+            </div>
+        </div>
+
+        <!-- Affiliate Links Section -->
+        <div style="margin: 3rem 0; padding: 2rem; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid #e0e0e0;">
+            <h3 style="text-align: center;">Want to buy and secure your Bitcoin?</h3>
+            <div style="text-align: center;">
+                <p class="affiliate-note">These are affiliate/discount links</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                    <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                        <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">Where to buy</h4>
+                        <a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Bitcoin Well</a>
+                    </div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                        <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">Where to store</h4>
+                        <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Blockstream Jade</a>
+                    </div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                        <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">How to protect</h4>
+                        <a href="https://www.stampseed.com/" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Stamp Seed</a>
+                        <p style="font-size: 0.8rem; color: #4CAF50; margin-top: 0.5rem; font-weight: 500;">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
+                    </div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                        <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">How to validate</h4>
+                        <a href="https://store.start9.com/" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Start9</a>
+                        <p style="font-size: 0.8rem; color: #4CAF50; margin-top: 0.5rem; font-weight: 500;">CODE: BNC5 for 5% off</p>
+                    </div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                        <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">1:1 Coaching</h4>
+                        <a href="https://pathtobitcoin.xyz" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Bitcoin 1:1</a>
+                    </div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                        <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">Where to learn</h4>
+                        <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">YouTube</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="support-section">
+            <div class="container support-grid">
+                <div class="support-card">
+                    <div class="support-icon">⚡</div>
+                    <h2 class="support-title">Support Plebtools</h2>
+                    <p class="support-text">
+                        Enjoying these tools? You can help keep them free and open source by donating sats.
+                        Every contribution fuels more Bitcoin-first development.
+                    </p>
+                    <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Open Source Section -->
+        <div style="margin: 3rem 0; padding: 2rem; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid #e0e0e0;">
+            <h3 style="text-align: center; color: #000;">Open Source</h3>
+            <div style="text-align: center;">
+                <p style="margin-bottom: 1rem; color: #000;">This Bitcoin retirement calculator is free and open source and can be replicated for anyone to plan their Bitcoin-based retirement.</p>
+                <p style="margin-bottom: 1.5rem; color: #000; font-weight: 600;">Open source contributors: TotesNpro and ForrestHODL</p>
+                <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" style="background: #28a745; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; display: inline-block; font-weight: bold; transition: all 0.3s ease;">View on GitHub</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Plebtools. Open source Bitcoin tracking tools.</p>
+        </div>
+    </footer>
+
+    <script>
+        let chart = null;
+
+        // Fetch current Bitcoin price
+        async function fetchBitcoinPrice() {
+            try {
+                const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+                const data = await response.json();
+                return data.bitcoin.usd;
+            } catch (error) {
+                console.error('Error fetching Bitcoin price:', error);
+                return 623197; // Fallback price
+            }
+        }
+
+        // Simulate retirement using annual beginning-of-year adjustments
+        function simulateRemainingBtc(assets, years, annualExpenses, inflationRate, appreciationRate, btcPrice, remainingBtc) {
+            let btcBalance = assets;
+            let currentBtcPrice = btcPrice;
+            let expensesForYear = annualExpenses;
+            
+            for (let year = 1; year <= years; year++) {
+                if (year > 1) {
+                    expensesForYear *= (1 + inflationRate);
+                    currentBtcPrice *= (1 + appreciationRate);
+                }
+                
+                if (currentBtcPrice <= 0) {
+                    throw new Error(`Invalid BTC price encountered during simulation: $${currentBtcPrice}.`);
+                }
+                
+                const expensesInBtc = expensesForYear / currentBtcPrice;
+                btcBalance -= expensesInBtc;
+                
+                if (btcBalance < -1e-8) {
+                    // Early exit: we already dipped below zero BTC
+                    return btcBalance - remainingBtc;
+                }
+            }
+            
+            return btcBalance - remainingBtc;
+        }
+
+        // Find required assets using binary search
+        function findRequiredAssets(years, annualExpenses, inflationRate, appreciationRate, btcPrice, remainingBtc) {
+            let low = 0.01;
+            let high = 1000;
+            const tolerance = 0.0001; // More precise tolerance
+            
+            // Expand search range if needed
+            while (simulateRemainingBtc(low, years, annualExpenses, inflationRate, appreciationRate, btcPrice, remainingBtc) * 
+                   simulateRemainingBtc(high, years, annualExpenses, inflationRate, appreciationRate, btcPrice, remainingBtc) > 0) {
+                low /= 2;
+                high *= 2;
+                if (low < 1e-8 || high > 1e8) {
+                    throw new Error("Could not find a valid bracket containing the root.");
+                }
+            }
+            
+            // Binary search
+            while (high - low > tolerance) {
+                const mid = (low + high) / 2;
+                const balanceDifference = simulateRemainingBtc(mid, years, annualExpenses, inflationRate, appreciationRate, btcPrice, remainingBtc);
+                
+                if (balanceDifference > 0) {
+                    high = mid;
+                } else {
+                    low = mid;
+                }
+            }
+            
+            return high;
+        }
+
+        // Build detailed retirement plan data
+        function generateRetirementPlan(requiredAssets, years, annualExpenses, inflationRate, appreciationRate, btcPrice, startYear) {
+            const tableData = [];
+            let btcBalance = requiredAssets;
+            let currentBtcPrice = btcPrice;
+            let expensesForYear = annualExpenses;
+            let totalExpenses = 0;
+            let totalAppreciation = 0;
+            
+            for (let year = 1; year <= years; year++) {
+                if (year > 1) {
+                    expensesForYear *= (1 + inflationRate);
+                    currentBtcPrice *= (1 + appreciationRate);
+                }
+                
+                if (currentBtcPrice <= 0) {
+                    throw new Error(`Invalid BTC price: $${currentBtcPrice}. This should not happen.`);
+                }
+                
+                const currentYearExpenses = expensesForYear;
+                const startingBtc = btcBalance;
+                const previousPrice = year === 1 ? currentBtcPrice : currentBtcPrice / (1 + appreciationRate);
+                const balanceBeforeAppreciation = startingBtc * previousPrice;
+                const startingBalance = startingBtc * currentBtcPrice;
+                const yearlyAppreciation = startingBalance - balanceBeforeAppreciation;
+                const expensesInBtc = currentYearExpenses / currentBtcPrice;
+                const endingBtcBalance = startingBtc - expensesInBtc;
+                
+                if (endingBtcBalance < -1e-6) {
+                    throw new Error(`BTC balance would go negative in year ${startYear + year - 1}. This suggests the required assets calculation is insufficient.`);
+                }
+                
+                const sanitizedEndingBtc = endingBtcBalance < 0 ? 0 : endingBtcBalance;
+                const endingBalance = sanitizedEndingBtc * currentBtcPrice;
+                
+                tableData.push({
+                    year: startYear + year - 1,
+                    startingBalance: startingBalance,
+                    startingBtc: startingBtc,
+                    currentBtcPrice: currentBtcPrice,
+                    appreciationRate: (appreciationRate * 100).toFixed(1) + '%',
+                    appreciationValue: yearlyAppreciation,
+                    subtotal: startingBalance,
+                    livingExpenses: currentYearExpenses,
+                    expensesInBtc: expensesInBtc,
+                    endingBalance: endingBalance,
+                    endingBtc: sanitizedEndingBtc
+                });
+                
+                btcBalance = endingBtcBalance;
+                totalExpenses += currentYearExpenses;
+                totalAppreciation += yearlyAppreciation;
+            }
+            
+            tableData.push({
+                year: 'Total',
+                startingBalance: '-',
+                startingBtc: '-',
+                currentBtcPrice: '-',
+                appreciationRate: '-',
+                appreciationValue: totalAppreciation,
+                subtotal: '-',
+                livingExpenses: totalExpenses,
+                expensesInBtc: '-',
+                endingBalance: '-',
+                endingBtc: '-'
+            });
+            
+            return {
+                tableData,
+                totalExpenses,
+                totalAppreciation,
+                endingBtcBalance: btcBalance,
+                finalBtcPrice: currentBtcPrice
+            };
+        }
+
+        async function calculateRetirement() {
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const results = document.getElementById('results');
+            
+            // Show loading
+            loading.style.display = 'block';
+            error.style.display = 'none';
+            results.style.display = 'none';
+            
+            try {
+                // Get input values
+                const years = parseInt(document.getElementById('years').value);
+                const annualSpend = parseFloat(document.getElementById('annualSpend').value);
+                const inflation = parseFloat(document.getElementById('inflation').value) / 100;
+                const appreciation = parseFloat(document.getElementById('appreciation').value) / 100;
+                const btcPrice = parseFloat(document.getElementById('btcPrice').value);
+                const startYear = parseInt(document.getElementById('startYear').value);
+                const remainingBtc = parseFloat(document.getElementById('remainingBtc').value);
+                
+                // Validate inputs
+                if (isNaN(years) || years < 1 || years > 50) {
+                    throw new Error('Years must be a number between 1 and 50');
+                }
+                if (isNaN(annualSpend) || annualSpend < 0) {
+                    throw new Error('Annual spend must be a non-negative number');
+                }
+                if (isNaN(inflation) || inflation < 0 || inflation > 0.2) {
+                    throw new Error('Inflation rate must be a number between 0% and 20%');
+                }
+                if (isNaN(appreciation) || appreciation < 0 || appreciation > 0.5) {
+                    throw new Error('Appreciation rate must be a number between 0% and 50%');
+                }
+                if (isNaN(btcPrice) || btcPrice <= 0) {
+                    throw new Error('Bitcoin price must be a positive number');
+                }
+                if (isNaN(startYear) || startYear < 2024 || startYear > 2100) {
+                    throw new Error('Starting year must be a number between 2024 and 2100');
+                }
+                if (isNaN(remainingBtc) || remainingBtc < 0) {
+                    throw new Error('Remaining Bitcoin must be a non-negative number');
+                }
+                
+                const annualExpenses = annualSpend;
+                
+                // Calculate required assets
+                const requiredAssets = findRequiredAssets(years, annualExpenses, inflation, appreciation, btcPrice, remainingBtc);
+                const totalCost = requiredAssets * btcPrice;
+                
+                // Generate detailed plan
+                const plan = generateRetirementPlan(requiredAssets, years, annualExpenses, inflation, appreciation, btcPrice, startYear);
+                const tableData = plan.tableData;
+                const finalBtcPrice = plan.finalBtcPrice;
+                const finalDifferenceBtc = plan.endingBtcBalance - remainingBtc;
+                const finalBalanceUsd = finalDifferenceBtc * finalBtcPrice;
+                
+                if (finalBalanceUsd < -100) {
+                    throw new Error(`Calculation error! Final balance is significantly negative ($${finalBalanceUsd.toLocaleString()}). This should not happen with the binary search algorithm.`);
+                }
+                
+                const displayFinalBalance = finalBalanceUsd < 0 ? 0 : finalBalanceUsd;
+                
+                // Update summary cards
+                const summaryCards = document.getElementById('summaryCards');
+                summaryCards.innerHTML = `
+                    <div class="summary-card">
+                        <h3>Assets Required</h3>
+                        <p class="value">${requiredAssets.toFixed(2)} BTC</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3>BTC Price at Retirement</h3>
+                        <p class="value">$${btcPrice.toLocaleString()}</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Total Cost</h3>
+                        <p class="value">$${totalCost.toLocaleString()}</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3>BTC to Pass on</h3>
+                        <p class="value">${remainingBtc.toFixed(8)} BTC</p>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Final Balance</h3>
+                        <p class="value">$${displayFinalBalance.toLocaleString()}</p>
+                    </div>
+                `;
+                
+                // Update table
+                const table = document.getElementById('resultsTable');
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Year</th>
+                            <th>Starting BTC</th>
+                            <th>BTC Price ($)</th>
+                            <th>Appreciation Rate</th>
+                            <th>Appreciation Value ($)</th>
+                            <th>Subtotal ($)</th>
+                            <th>Living Expenses ($)</th>
+                            <th>Expenses (BTC)</th>
+                            <th>Year-End Balance ($)</th>
+                            <th>Ending BTC</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableData.map(row => `
+                            <tr>
+                                <td>${row.year}</td>
+                                <td>${typeof row.startingBtc === 'number' ? row.startingBtc.toFixed(8) : row.startingBtc}</td>
+                                <td>${typeof row.currentBtcPrice === 'number' ? '$' + row.currentBtcPrice.toLocaleString() : row.currentBtcPrice}</td>
+                                <td>${row.appreciationRate}</td>
+                                <td>${typeof row.appreciationValue === 'number' ? '$' + row.appreciationValue.toLocaleString() : row.appreciationValue}</td>
+                                <td>${typeof row.subtotal === 'number' ? '$' + row.subtotal.toLocaleString() : row.subtotal}</td>
+                                <td>${typeof row.livingExpenses === 'number' ? '$' + row.livingExpenses.toLocaleString() : row.livingExpenses}</td>
+                                <td>${typeof row.expensesInBtc === 'number' ? row.expensesInBtc.toFixed(8) : row.expensesInBtc}</td>
+                                <td>${typeof row.endingBalance === 'number' ? '$' + row.endingBalance.toLocaleString() : row.endingBalance}</td>
+                                <td>${typeof row.endingBtc === 'number' ? row.endingBtc.toFixed(8) : row.endingBtc}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                `;
+                
+                // Update chart
+                updateChart(tableData.slice(0, -1)); // Exclude totals row
+                
+                // Show results
+                loading.style.display = 'none';
+                results.style.display = 'block';
+                
+            } catch (err) {
+                loading.style.display = 'none';
+                error.style.display = 'block';
+                error.textContent = err.message;
+            }
+        }
+
+        function updateChart(data) {
+            const ctx = document.getElementById('chart').getContext('2d');
+            
+            if (chart) {
+                chart.destroy();
+            }
+            
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(row => row.year),
+                    datasets: [{
+                        label: 'Year-End Balance',
+                        data: data.map(row => row.endingBalance),
+                        borderColor: '#764ba2',
+                        backgroundColor: 'rgba(118, 75, 162, 0.1)',
+                        tension: 0.4,
+                        yAxisID: 'y'
+                    }, {
+                        label: 'Ending BTC',
+                        data: data.map(row => row.endingBtc),
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.15)',
+                        tension: 0.4,
+                        yAxisID: 'y1'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Financial Progression Over Time'
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#333'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        },
+                        y1: {
+                            position: 'right',
+                            beginAtZero: false,
+                            grid: {
+                                drawOnChartArea: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(2) + ' BTC';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            applyChartTheme();
+        }
+
+        function applyChartTheme() {
+            if (!chart) return;
+            const isDark = document.body.classList.contains('dark-theme');
+            const legendColor = isDark ? '#bbbbbb' : '#333';
+            const titleColor = legendColor;
+            chart.options.plugins.legend.labels.color = legendColor;
+            if (chart.options.plugins.title) {
+                chart.options.plugins.title.color = titleColor;
+            }
+            
+            if (chart.options.scales.x && chart.options.scales.x.ticks) {
+                chart.options.scales.x.ticks.color = legendColor;
+            }
+            if (chart.options.scales.y && chart.options.scales.y.ticks) {
+                chart.options.scales.y.ticks.color = legendColor;
+            }
+            if (chart.options.scales.y1 && chart.options.scales.y1.ticks) {
+                chart.options.scales.y1.ticks.color = legendColor;
+            }
+            
+            chart.update('none');
+        }
+
+        // Load current Bitcoin price on page load
+        window.addEventListener('load', async () => {
+            try {
+                const currentPrice = await fetchBitcoinPrice();
+                document.getElementById('btcPrice').value = currentPrice;
+            } catch (error) {
+                console.error('Failed to load current Bitcoin price:', error);
+            }
+        });
+
+        // --- Dropdown Functionality ---
+        const toolsBtn = document.getElementById('toolsBtn');
+        const toolsContent = document.getElementById('toolsContent');
+        let isOpen = false;
+
+        toolsBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (isOpen) {
+                toolsContent.classList.remove('show');
+                setTimeout(() => {
+                    toolsContent.style.display = 'none';
+                }, 300);
+                isOpen = false;
+            } else {
+                toolsContent.style.display = 'block';
+                setTimeout(() => {
+                    toolsContent.classList.add('show');
+                }, 10);
+                isOpen = true;
+            }
+        });
+
+        // Close when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!document.getElementById('toolsDropdown').contains(e.target)) {
+                toolsContent.classList.remove('show');
+                setTimeout(() => {
+                    toolsContent.style.display = 'none';
+                }, 300);
+                isOpen = false;
+            }
+        });
+
+        // Theme toggle functionality
+        const themeToggle = document.createElement('button');
+        themeToggle.innerHTML = '🌙';
+        themeToggle.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 1.5rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        `;
+
+        let isDarkTheme = false;
+
+        themeToggle.addEventListener("click", () => {
+            isDarkTheme = !isDarkTheme;
+            if (isDarkTheme) {
+                document.body.classList.add("dark-theme");
+                themeToggle.textContent = "☀️";
+                localStorage.setItem("theme", "dark");
+            } else {
+                document.body.classList.remove("dark-theme");
+                themeToggle.textContent = "🌙";
+                localStorage.setItem("theme", "light");
+            }
+            applyChartTheme();
+        });
+
+        // Load saved theme on page load
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "dark") {
+            isDarkTheme = true;
+            document.body.classList.add("dark-theme");
+            themeToggle.textContent = "☀️";
+        }
+
+        document.body.appendChild(themeToggle);
+        applyChartTheme();
+    </script>
+</body>
+</html>

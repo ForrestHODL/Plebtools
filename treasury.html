@@ -1,0 +1,2175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Plebtools Treasury</title>
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
+  <link rel="stylesheet" href="styles.css?v=5">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    /* Bitcoin Storage Theme for Header */
+    .gradient-text {
+      background: -webkit-linear-gradient(45deg, #f59e0b, #fbbf24, #fde68a);
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
+    }
+
+    .storage-section {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+      border: 1px solid #333;
+      position: relative;
+    }
+
+    /* Dark Theme for Body Background */
+    body {
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+      min-height: 100vh;
+    }
+
+    /* Light Theme */
+    body.light-theme {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+
+    body.light-theme .tracker-container {
+      background: transparent;
+    }
+
+    body.light-theme .storage-section {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      border: 1px solid #dee2e6;
+    }
+
+    body.light-theme .storage-section p {
+      color: #6c757d;
+    }
+
+    /* Light Theme Text Colors */
+    body.light-theme h1,
+    body.light-theme h2,
+    body.light-theme h3,
+    body.light-theme h4,
+    body.light-theme h5,
+    body.light-theme h6,
+    body.light-theme p,
+    body.light-theme span,
+    body.light-theme div,
+    body.light-theme td,
+    body.light-theme th,
+    body.light-theme li,
+    body.light-theme label {
+      color: #212529 !important;
+    }
+
+    body.light-theme .totals-section,
+    body.light-theme .table-section,
+    body.light-theme .chart-section,
+    body.light-theme .tracker-form,
+    body.light-theme .proof-of-reserves-section {
+      background: #ffffff;
+      border: 1px solid #dee2e6;
+      color: #212529;
+    }
+
+    body.light-theme .tracker-table td {
+      color: #212529 !important;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    body.light-theme .totals-display,
+    body.light-theme .empty-state {
+      color: #212529 !important;
+    }
+
+    body.light-theme .form-group input {
+      background: #ffffff;
+      border: 2px solid #dee2e6;
+      color: #212529;
+    }
+
+    body.light-theme .wallet-item {
+      background: #ffffff;
+      border: 1px solid #dee2e6;
+    }
+
+    body.light-theme .wallet-address {
+      color: #495057 !important;
+    }
+
+    body.light-theme .affiliate-item {
+      background: #ffffff;
+      border: 1px solid #dee2e6;
+    }
+  </style>
+  
+  <style>
+    /* Modern dropdown styles */
+    #toolsDropdown {
+      position: relative;
+      display: inline-block;
+    }
+    
+    #toolsBtn {
+      background: none;
+      border: none;
+      color: black;
+      font-weight: 500;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .dropdown-arrow {
+      font-size: 0.8rem;
+      transition: transform 0.3s ease;
+      color: inherit;
+    }
+    
+    .dark-theme #toolsBtn {
+      color: white;
+    }
+    
+    #toolsBtn:hover {
+      background: rgba(102, 126, 234, 0.1);
+    }
+    
+    #toolsContent {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white !important;
+      min-width: 220px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      z-index: 1001;
+      padding: 0.75rem 0;
+      border: 1px solid rgba(0, 0, 0, 0.08) !important;
+      backdrop-filter: blur(10px);
+      margin-top: 8px;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+    }
+    
+    #toolsContent.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    #toolsContent a {
+      display: block;
+      padding: 0.875rem 1.5rem;
+      color: #333 !important;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      border-radius: 0;
+      position: relative;
+    }
+    
+    .dark-theme #toolsContent a {
+      color: #333 !important;
+    }
+    
+    #toolsContent a:hover {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      color: #667eea !important;
+      transform: translateX(8px);
+    }
+    
+    #toolsContent a:first-child {
+      border-radius: 12px 12px 0 0;
+    }
+    
+    #toolsContent a:last-child {
+      border-radius: 0 0 12px 12px;
+    }
+    
+    .dark-theme #toolsContent {
+      background: white !important;
+      border-color: rgba(0, 0, 0, 0.08) !important;
+    }
+    
+    .dark-theme #toolsContent a:hover {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%) !important;
+      color: #667eea !important;
+    }
+
+    .account-link {
+      color: white;
+      text-decoration: none;
+    }
+
+    .account-link:hover {
+      color: white;
+      opacity: 0.8;
+    }
+
+    .dark-theme .account-link {
+      color: white !important;
+    }
+
+    .dark-theme .account-link:hover {
+      color: white !important;
+    }
+  </style>
+  
+  <style>
+    /* Tracker-specific styles */
+    .tracker-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 120px 20px 80px;
+      background: transparent;
+      min-height: 100vh;
+    }
+
+    .tracker-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3rem 2rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+      position: relative;
+    }
+
+    .tracker-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: white;
+    }
+
+    .tracker-header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin-bottom: 0;
+    }
+
+    .tracker-form {
+      background: #f8f9fa;
+      padding: 2rem;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+    }
+
+    .totals-section {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border-left: 5px solid #667eea;
+    }
+
+    .totals-section h3 {
+      color: #667eea;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .totals-display {
+      font-size: 1.1rem;
+      color: #333;
+      line-height: 1.8;
+    }
+
+    .totals-highlight {
+      color: #667eea;
+      font-weight: bold;
+    }
+
+    .table-section {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .table-section h3 {
+      color: #667eea;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+
+    .tracker-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .tracker-table th {
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: #1a1a1a !important;
+      padding: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .tracker-table td {
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid #e9ecef;
+      color: #212529;
+    }
+
+    .tracker-table tbody tr:hover {
+      background: #f8f9fa;
+    }
+
+    .chart-section {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .chart-section h3 {
+      color: #667eea;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 400px;
+      margin-top: 1rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #666;
+    }
+
+    .empty-state h3 {
+      color: #667eea;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .tracker-container {
+        padding: 100px 15px 60px;
+      }
+
+      .tracker-header h1 {
+        font-size: 2rem;
+      }
+
+      .form-row {
+        flex-direction: column;
+      }
+
+      .form-group {
+        min-width: 100%;
+      }
+
+      .tracker-table {
+        font-size: 0.9rem;
+      }
+
+      .tracker-table th,
+      .tracker-table td {
+        padding: 10px 5px;
+      }
+
+      .chart-container {
+        height: 300px;
+      }
+    }
+
+    /* Proof of Reserves Section */
+    .proof-of-reserves-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: #f8f9fa;
+      border-radius: 15px;
+      border: 1px solid #e9ecef;
+    }
+
+    .proof-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .wallet-addresses {
+      margin-top: 1rem;
+    }
+
+    .wallet-list {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .wallet-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      background: white;
+      border: 1px solid #e9ecef;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .wallet-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .wallet-info {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .wallet-address {
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      color: #495057;
+      word-break: break-all;
+    }
+
+    .wallet-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .view-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #28a745;
+      color: white;
+    }
+
+    .view-btn:hover {
+      background: #218838;
+      transform: translateY(-1px);
+    }
+
+    /* Mobile responsiveness for Proof of Reserves */
+    @media (max-width: 768px) {
+      .proof-of-reserves-section {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .wallet-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .wallet-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      .wallet-actions {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* Affiliate Links Section */
+    .affiliate-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .affiliate-item {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .affiliate-item:hover {
+      transform: translateY(-3px);
+    }
+
+    .affiliate-item h4 {
+      color: #667eea;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .affiliate-link {
+      display: inline-block;
+      padding: 0.6rem 1.4rem;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 999px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.25);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .affiliate-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(59, 130, 246, 0.35);
+    }
+
+    .discount-code {
+      font-size: 0.8rem;
+      color: #28a745;
+      font-weight: bold;
+      margin: 0.5rem 0 0 0;
+    }
+
+    /* Mobile responsiveness for affiliate links */
+    @media (max-width: 768px) {
+      .affiliate-links {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .affiliate-item {
+        padding: 1rem;
+      }
+      
+      .affiliate-link {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+      }
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      font-size: 1.5rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    .theme-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+    }
+
+    /* Dark Theme */
+    .dark-theme {
+      background: #1a1a1a;
+      color: #e0e0e0;
+    }
+
+    .dark-theme .tracker-container {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .totals-section,
+    .dark-theme .table-section,
+    .dark-theme .chart-section {
+      background: #2d2d2d;
+      color: #e0e0e0;
+    }
+
+    .dark-theme .totals-section h3,
+    .dark-theme .table-section h3,
+    .dark-theme .chart-section h3 {
+      color: #e0e0e0;
+    }
+
+    .dark-theme .tracker-table {
+      background: #2d2d2d;
+      color: #e0e0e0;
+    }
+
+    .dark-theme .tracker-table th {
+      background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+      color: #1a1a1a !important;
+    }
+
+    .dark-theme .tracker-table td {
+      border-bottom: 1px solid #444;
+      color: #ffffff !important;
+    }
+
+    .dark-theme .tracker-table tbody tr:hover {
+      background: #3d3d3d;
+    }
+
+    .dark-theme .proof-of-reserves-section {
+      background: #2d2d2d;
+      border-color: #404040;
+    }
+
+    .dark-theme .proof-description p {
+      color: #b0b0b0;
+    }
+
+    .dark-theme .wallet-item {
+      background: #3d3d3d;
+      border-color: #555;
+    }
+
+    .dark-theme .wallet-address {
+      color: #e0e0e0;
+    }
+
+    .dark-theme .affiliate-item {
+      background: #3d3d3d;
+      color: #e0e0e0;
+    }
+
+    .dark-theme .affiliate-item h4 {
+      color: #667eea;
+    }
+
+    .dark-theme .discount-code {
+      color: #4CAF50;
+    }
+
+    .dark-theme .empty-state h3 {
+      color: #e0e0e0;
+    }
+
+    .dark-theme .empty-state p {
+      color: #999;
+    }
+
+    /* Dark theme text colors - make all black text white */
+    .dark-theme h1,
+    .dark-theme h2,
+    .dark-theme h3,
+    .dark-theme h4,
+    .dark-theme h5,
+    .dark-theme h6 {
+      color: #e0e0e0 !important;
+    }
+
+    /* Override logo color in dark theme to maintain brand color */
+    .dark-theme .logo {
+      color: #667eea !important;
+    }
+
+    .dark-theme p,
+    .dark-theme span,
+    .dark-theme div,
+    .dark-theme td,
+    .dark-theme th,
+    .dark-theme li {
+      color: #e0e0e0 !important;
+    }
+
+    .dark-theme .price-info {
+      color: #e0e0e0 !important;
+    }
+
+    .dark-theme .refresh-btn {
+      background: #4a9eff;
+      color: white;
+    }
+
+    .dark-theme .refresh-btn:hover {
+      background: #66b3ff;
+    }
+
+    .dark-theme .discount-code {
+      color: #888 !important;
+    }
+
+    /* Mobile responsiveness for theme toggle */
+    @media (max-width: 768px) {
+      .theme-toggle-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+        margin-left: 0.5rem;
+      }
+    }
+
+    /* Light theme - make Tools and Account text black */
+    body.light-theme .dropdown-btn {
+      color: #212529 !important;
+    }
+
+    body.light-theme .dropdown-btn:hover {
+      color: #212529 !important;
+    }
+
+    body.light-theme .dropdown-arrow {
+      color: #212529 !important;
+    }
+
+    body.light-theme .account-link {
+      color: #212529 !important;
+    }
+
+    body.light-theme .account-link:hover {
+      color: #212529 !important;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="nav-container">
+        <div class="logo-container">
+          <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+            <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+            <h1 class="logo">Plebtools</h1>
+          </a>
+        </div>
+        <div class="nav-links">
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="home">🏠 Home</a>
+              <a href="btc-buy-tracker">💼 Portfolio</a>
+              <a href="coveredcall-tracker">📈 Covered Calls</a>
+              <a href="compound-interest-calculator">💰 Calculator</a>
+              <a href="btc-loan-ltv">🔒 BTC Loans</a>
+              <a href="financial-planner">📋 Financial Planner</a>
+              <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+              <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
+              <a href="invoice-builder">🧾 Invoice Builder</a>
+              <a href="pleb-release">📰 Pleb Release</a>
+            </div>
+          </div>
+          <a href="account" class="account-link">👤 Account</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="tracker-container">
+      <section class="storage-section">
+        <h1 class="gradient-text" style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">Plebtools Treasury</h1>
+        <p style="text-align: center; font-size: 1.2rem; color: #ccc; max-width: 800px; margin: 0 auto;">
+          Bitcoin Treasury Holdings
+        </p>
+        <button id="themeToggle" class="theme-toggle-btn" style="position: absolute; top: 20px; right: 20px;">🌙</button>
+      </section>
+
+      <div class="totals-section">
+        <h3>Portfolio Summary</h3>
+        <div id="totals" class="totals-display">
+          <div class="empty-state">
+            <h3>No purchases yet</h3>
+            <p>Add your first Bitcoin purchase to start tracking your portfolio!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="totals-section">
+        <h3>Adjusted Portfolio Summary (Including Donations)</h3>
+        <div id="adjustedTotals" class="totals-display">
+          <div class="empty-state">
+            <h3>No Bitcoin holdings yet</h3>
+            <p>Add purchases or donations to see your adjusted portfolio!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-section">
+        <h3>Bitcoin Price & Purchase Timeline</h3>
+        <div class="chart-container">
+          <canvas id="priceChart"></canvas>
+        </div>
+        <div style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">
+          Orange circles mark your Bitcoin purchase dates
+        </div>
+      </div>
+
+      <div class="chart-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <h3>Portfolio Visualization</h3>
+          <button id="refreshPriceBtn" class="submit-btn" style="background: #17a2b8; padding: 8px 16px; font-size: 0.9rem;">
+            🔄 Refresh Price
+          </button>
+        </div>
+        <div class="chart-container">
+          <canvas id="btcChart"></canvas>
+        </div>
+        <div id="priceInfo" style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;"></div>
+      </div>
+
+      <div class="table-section">
+        <h3>Purchase History</h3>
+        <table class="tracker-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>BTC Amount (Sats)</th>
+              <th>Price (CAD)</th>
+              <th>CAD Spent</th>
+            </tr>
+          </thead>
+          <tbody id="buysTable">
+            <tr>
+              <td colspan="4" class="empty-state">
+                <p>No purchases recorded yet</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="totals-section">
+        <!-- Proof of Reserves Section -->
+        <div class="proof-of-reserves-section">
+          <h3 style="text-align: center;">Proof of Reserves</h3>
+          <div class="proof-container">
+            <div class="proof-description">
+              <p style="text-align: center; color: #666; margin-bottom: 1.5rem;">
+                Verify our Bitcoin holdings on-chain. Treasury wallet addresses are managed by the backend.
+              </p>
+            </div>
+            <div class="wallet-addresses">
+              <div id="walletList" class="wallet-list">
+                <!-- Wallet addresses will be loaded from backend -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-section">
+          <h3>Donations Timeline</h3>
+          <div class="chart-container">
+            <canvas id="donationsChart"></canvas>
+          </div>
+          <div style="text-align: center; margin-top: 1rem; color: #666; font-size: 0.9rem;">
+            Track donations received over time
+          </div>
+        </div>
+
+        <h3 style="text-align: center;">Want to buy and secure your Bitcoin?</h3>
+        <div class="totals-display">
+          <div style="text-align: center;">
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
+            <div class="affiliate-links">
+              <div class="affiliate-item">
+                <h4>Where to buy</h4>
+                <a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" class="affiliate-link">Bitcoin Well</a>
+              </div>
+              <div class="affiliate-item">
+                <h4>Where to store</h4>
+                <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a>
+              </div>
+              <div class="affiliate-item">
+                <h4>How to protect</h4>
+                <a href="https://www.stampseed.com/" target="_blank" class="affiliate-link">Stamp Seed</a>
+                <p class="discount-code">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
+              </div>
+              <div class="affiliate-item">
+                <h4>How to validate</h4>
+                <a href="https://store.start9.com/" target="_blank" class="affiliate-link">Start9</a>
+                <p class="discount-code">CODE: BNC5 for 5% off</p>
+              </div>
+               <div class="affiliate-item">
+                 <h4>1:1 Coaching</h4>
+                 <a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+               </div>
+               <div class="affiliate-item">
+                 <h4>Where to learn</h4>
+                 <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
+               </div>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <section class="support-section">
+    <div class="container support-grid">
+      <div class="support-card">
+        <div class="support-icon">⚡</div>
+        <h2 class="support-title">Support Plebtools</h2>
+        <p class="support-text">
+          Enjoying these tools? You can help keep them free and open source by donating sats.
+          Every contribution fuels more Bitcoin-first development.
+        </p>
+        <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="features-section" style="padding: 4rem 0;">
+    <div class="container" style="text-align: center;">
+      <h2 class="section-title">Open Source</h2>
+      <p style="max-width: 640px; margin: 1.5rem auto; color: #475569;">
+        This Bitcoin treasury dashboard is free and open source and can be replicated for any organization's treasury tracking.
+      </p>
+      <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" class="submit-btn" style="background: #28a745; display: inline-block; margin-top: 0;">
+        View on GitHub
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 Plebtools. Open source Bitcoin treasury management.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Bitcoin Well transaction data (pre-loaded)
+    const bitcoinWellData = [
+      {
+        date: "2025-11-03",
+        btcAmount: 0.00065055, // 65,055 sats converted to BTC
+        priceUsd: 153714.00,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
+      {
+        date: "2025-10-27",
+        btcAmount: 0.00061323, // 61,323 sats converted to BTC
+        priceUsd: 163068.99,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
+      {
+        date: "2025-10-20",
+        btcAmount: 0.00066852, // 66,852 sats converted to BTC
+        priceUsd: 149582.26,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
+      {
+        date: "2025-10-13",
+        btcAmount: 0.00061321, // 61,321 sats converted to BTC
+        priceUsd: 163074.00,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
+      {
+        date: "2025-10-06",
+        btcAmount: 0.00056672, // 56,672 sats converted to BTC
+        priceUsd: 176451.00,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
+      {
+        date: "2025-09-29",
+        btcAmount: 0.00064612, // 64,612 sats converted to BTC
+        priceUsd: 154770.01,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
+      {
+        date: "2025-09-22",
+        btcAmount: 0.00063222, // 63,222 sats converted to BTC
+        priceUsd: 158172.17,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
+      {
+        date: "2025-09-15",
+        btcAmount: 0.00062286,
+        priceUsd: 160549.44,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
+      {
+        date: "2025-09-08",
+        btcAmount: 0.00063497,
+        priceUsd: 157487.22,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
+      {
+        date: "2025-09-01",
+        btcAmount: 0.00065779,
+        priceUsd: 152024.50,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
+      {
+        date: "2025-08-25", 
+        btcAmount: 0.00063676,
+        priceUsd: 157044.69,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
+      {
+        date: "2025-08-19",
+        btcAmount: 0.00062724,
+        priceUsd: 159429.72,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      }
+    ];
+
+    // Current Bitcoin price data
+    let currentBtcPrice = null;
+    let currentBtcPriceCAD = null;
+    let priceHistory = [];
+
+    // Donations data from CSV
+    const donationsData = [
+      {
+        date: "2025-10-10",
+        amount: 0.00014686, // 14,686 sats converted to BTC
+        description: "Lightning donation - 14,686 sats"
+      },
+      {
+        date: "2025-10-09",
+        amount: 0.00005555, // 5,555 sats converted to BTC
+        description: "Lightning donation from Headvoice - 5,555 sats"
+      },
+      {
+        date: "2025-10-06",
+        amount: 0.00500000, // 500,000 sats converted to BTC
+        description: "Lightning donation - 500,000 sats"
+      }
+    ];
+
+    // Clear any existing data and force reload with latest Bitcoin Well data
+    localStorage.removeItem("buys");
+    
+    // Always initialize with the latest Bitcoin Well data (including new purchase)
+    let buys = bitcoinWellData.map(transaction => ({
+      date: transaction.date,
+      btcAmount: transaction.btcAmount,
+      priceUsd: transaction.priceUsd,
+      fiatAmount: transaction.fiatAmount
+    }));
+    console.log('Loaded buys from bitcoinWellData:', buys);
+    localStorage.setItem("buys", JSON.stringify(buys));
+
+    const table = document.getElementById("buysTable");
+    const totalsDiv = document.getElementById("totals");
+    const adjustedTotalsDiv = document.getElementById("adjustedTotals");
+    const ctx = document.getElementById("btcChart");
+    const priceCtx = document.getElementById("priceChart");
+    const donationsCtx = document.getElementById("donationsChart");
+
+    let chart;
+    let priceChart;
+    let donationsChart;
+
+    // Fetch current Bitcoin price in USD and CAD
+    async function fetchCurrentBtcPrice() {
+      try {
+        // Try multiple APIs for better reliability
+        const apis = [
+          'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,cad&include_24hr_change=true',
+          'https://api.coinbase.com/v2/exchange-rates?currency=BTC',
+          'https://blockchain.info/ticker',
+          'https://cors-anywhere.herokuapp.com/https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,cad&include_24hr_change=true'
+        ];
+        
+        for (let i = 0; i < apis.length; i++) {
+          try {
+            const response = await fetch(apis[i]);
+            if (!response.ok) continue;
+            
+            const data = await response.json();
+            
+            if (i === 0 || i === 3) {
+              // CoinGecko format (including CORS proxy)
+              currentBtcPrice = data.bitcoin.usd;
+              currentBtcPriceCAD = data.bitcoin.cad;
+              break;
+            } else if (i === 1) {
+              // Coinbase format
+              const rates = data.data.rates;
+              currentBtcPrice = parseFloat(rates.USD);
+              currentBtcPriceCAD = parseFloat(rates.CAD);
+              break;
+            } else if (i === 2) {
+              // Blockchain.info format
+              currentBtcPrice = data.USD.last;
+              currentBtcPriceCAD = data.CAD.last;
+              break;
+            }
+          } catch (apiError) {
+            console.log(`API ${i + 1} failed, trying next...`);
+            continue;
+          }
+        }
+        
+        if (currentBtcPrice && currentBtcPriceCAD) {
+          console.log('Bitcoin price fetched successfully:', { USD: currentBtcPrice, CAD: currentBtcPriceCAD });
+          return currentBtcPriceCAD; // Return CAD price for treasury
+        } else {
+          throw new Error('All price APIs failed');
+        }
+      } catch (error) {
+        console.error('Error fetching Bitcoin price:', error);
+        
+        // Try one more approach using a different method
+        try {
+          const fallbackResponse = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
+          if (fallbackResponse.ok) {
+            const fallbackData = await fallbackResponse.json();
+            currentBtcPrice = parseFloat(fallbackData.price);
+            // Get real CAD conversion rate
+            const cadResponse = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+            if (cadResponse.ok) {
+              const cadData = await cadResponse.json();
+              const usdToCadRate = cadData.rates.CAD;
+              currentBtcPriceCAD = currentBtcPrice * usdToCadRate;
+              console.log('Using Binance + real CAD rate:', { USD: currentBtcPrice, CAD: currentBtcPriceCAD });
+              return currentBtcPriceCAD;
+            }
+          }
+        } catch (fallbackError) {
+          console.log('Fallback API also failed');
+        }
+        
+        // No fallback pricing - return null if all APIs fail
+        console.log('All price APIs failed');
+        return null;
+      }
+    }
+
+    // Fetch historical Bitcoin prices for a date range
+    async function fetchHistoricalBtcPrices(startDate, endDate) {
+      try {
+        const startTimestamp = Math.floor(new Date(startDate).getTime() / 1000);
+        const endTimestamp = Math.floor(new Date(endDate).getTime() / 1000);
+        
+        // Try multiple APIs for better reliability
+        const apis = [
+          {
+            name: 'CoinGecko',
+            url: `https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range?vs_currency=cad&from=${startTimestamp}&to=${endTimestamp}`,
+            parser: (data) => {
+              const priceHistory = {};
+              if (data.prices && data.prices.length > 0) {
+                data.prices.forEach(([timestamp, price]) => {
+                  const date = new Date(timestamp).toISOString().split('T')[0];
+                  priceHistory[date] = price;
+                });
+              }
+              return priceHistory;
+            }
+          },
+          {
+            name: 'CoinGecko CORS Proxy',
+            url: `https://cors-anywhere.herokuapp.com/https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range?vs_currency=cad&from=${startTimestamp}&to=${endTimestamp}`,
+            parser: (data) => {
+              const priceHistory = {};
+              if (data.prices && data.prices.length > 0) {
+                data.prices.forEach(([timestamp, price]) => {
+                  const date = new Date(timestamp).toISOString().split('T')[0];
+                  priceHistory[date] = price;
+                });
+              }
+              return priceHistory;
+            }
+          },
+          {
+            name: 'CoinCap',
+            url: `https://api.coincap.io/v2/assets/bitcoin/history?interval=d1&start=${startTimestamp * 1000}&end=${endTimestamp * 1000}`,
+            parser: (data) => {
+              const priceHistory = {};
+              if (data.data && data.data.length > 0) {
+                data.data.forEach(item => {
+                  const date = new Date(item.time).toISOString().split('T')[0];
+                  // Convert USD to CAD using current rate or approximate 1.35
+                  const cadRate = currentBtcPriceCAD && currentBtcPrice ? (currentBtcPriceCAD / currentBtcPrice) : 1.35;
+                  priceHistory[date] = parseFloat(item.priceUsd) * cadRate;
+                });
+              }
+              return priceHistory;
+            }
+          },
+          {
+            name: 'CryptoCompare',
+            url: `https://min-api.cryptocompare.com/data/v2/histoday?fsym=BTC&tsym=CAD&limit=365&toTs=${endTimestamp}`,
+            parser: (data) => {
+              const priceHistory = {};
+              if (data.Data && data.Data.Data && data.Data.Data.length > 0) {
+                data.Data.Data.forEach(item => {
+                  const date = new Date(item.time * 1000).toISOString().split('T')[0];
+                  priceHistory[date] = item.close;
+                });
+              }
+              return priceHistory;
+            }
+          }
+        ];
+        
+        for (let i = 0; i < apis.length; i++) {
+          try {
+            console.log(`Trying ${apis[i].name} API...`);
+            const response = await fetch(apis[i].url);
+            if (!response.ok) {
+              console.log(`${apis[i].name} API returned ${response.status}`);
+              continue;
+            }
+            
+            const data = await response.json();
+            const priceHistory = apis[i].parser(data);
+            
+            if (Object.keys(priceHistory).length > 0) {
+              console.log(`Historical prices loaded from ${apis[i].name}:`, Object.keys(priceHistory).length, 'days');
+              return priceHistory;
+            } else {
+              console.log(`${apis[i].name} returned empty data`);
+            }
+          } catch (apiError) {
+            console.log(`${apis[i].name} API failed:`, apiError.message);
+            continue;
+          }
+        }
+        
+        throw new Error('All historical price APIs failed');
+      } catch (error) {
+        console.error('Error fetching historical Bitcoin prices:', error);
+        // Return empty object - the calling code will handle fallback
+        return {};
+      }
+    }
+
+    // Generate daily portfolio value history using historical Bitcoin prices
+    async function generatePortfolioValueHistory() {
+      const portfolioHistory = [];
+      
+      if (buys.length === 0) return portfolioHistory;
+      
+      // Get all purchase dates
+      const purchaseDates = buys.map(buy => buy.date).sort();
+      const startDate = purchaseDates[0];
+      const endDate = new Date().toISOString().split('T')[0];
+      
+      // Fetch historical Bitcoin prices
+      let historicalPrices = {};
+      try {
+        historicalPrices = await fetchHistoricalBtcPrices(startDate, endDate);
+        console.log('Historical prices for portfolio chart:', Object.keys(historicalPrices).length, 'days');
+        console.log('October 17 price available:', historicalPrices['2025-10-17'] ? 'YES' : 'NO');
+      } catch (error) {
+        console.log('Historical price API failed');
+        historicalPrices = {};
+      }
+      
+      // Generate daily data points
+      const currentDate = new Date(startDate);
+      const endDateObj = new Date(endDate);
+      
+      while (currentDate <= endDateObj) {
+        const dateStr = currentDate.toISOString().split('T')[0];
+        
+        // Calculate how much BTC you had at this date
+        let btcAtThisDate = 0;
+        buys.forEach(buy => {
+          if (buy.date <= dateStr) {
+            btcAtThisDate += buy.btcAmount;
+          }
+        });
+        
+        if (btcAtThisDate > 0) {
+          // Get the Bitcoin price for this specific date
+          let priceForThisDate;
+          if (dateStr === endDate && currentBtcPriceCAD) {
+            priceForThisDate = currentBtcPriceCAD;
+          } else if (historicalPrices[dateStr]) {
+            priceForThisDate = historicalPrices[dateStr];
+          } else {
+            // Skip dates without price data
+            currentDate.setDate(currentDate.getDate() + 1);
+            continue;
+          }
+          
+          // Calculate portfolio value: BTC amount × historical price for this date
+          portfolioHistory.push({
+            date: dateStr,
+            value: btcAtThisDate * priceForThisDate
+          });
+        }
+        
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+      
+      return portfolioHistory;
+    }
+
+    // Generate Bitcoin price chart with purchase markers
+    async function generatePriceChart() {
+      // Always generate price chart, even without purchases
+
+      const purchaseDates = buys.map(buy => buy.date).sort();
+      const startDate = purchaseDates.length > 0 ? purchaseDates[0] : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // Default to 30 days ago if no purchases
+      
+      // Extend end date to include latest purchase plus a few days buffer
+      const latestPurchaseDate = purchaseDates.length > 0 ? purchaseDates[purchaseDates.length - 1] : new Date().toISOString().split('T')[0];
+      const today = new Date().toISOString().split('T')[0];
+      const endDate = latestPurchaseDate > today ? latestPurchaseDate : today;
+      
+      // Add a few days buffer to ensure purchase markers are visible
+      const endDateObj = new Date(endDate);
+      endDateObj.setDate(endDateObj.getDate() + 3); // Add 3 days buffer
+      const endDateWithBuffer = endDateObj.toISOString().split('T')[0];
+
+      // Fetch historical Bitcoin prices (use buffered end date to ensure we get recent data)
+      let historicalPrices = {};
+      try {
+        historicalPrices = await fetchHistoricalBtcPrices(startDate, endDateWithBuffer);
+        console.log('Historical prices fetched:', Object.keys(historicalPrices).length, 'days');
+      } catch (error) {
+        console.log('Historical price API failed for price chart');
+        historicalPrices = {};
+      }
+
+      // Generate daily price data
+      const priceData = [];
+      const currentDate = new Date(startDate);
+      const endDateObjForLoop = new Date(endDateWithBuffer);
+      let hasAnyPriceData = false;
+
+      while (currentDate <= endDateObjForLoop) {
+        const dateStr = currentDate.toISOString().split('T')[0];
+        
+        let priceForThisDate;
+        if (dateStr === today && currentBtcPriceCAD) {
+          priceForThisDate = currentBtcPriceCAD;
+          hasAnyPriceData = true;
+        } else if (historicalPrices[dateStr]) {
+          priceForThisDate = historicalPrices[dateStr];
+          hasAnyPriceData = true;
+        } else {
+          // For future dates or dates without price data, use the latest available price or current price
+          if (dateStr > today && currentBtcPriceCAD) {
+            priceForThisDate = currentBtcPriceCAD;
+            hasAnyPriceData = true;
+          } else {
+            // Skip dates without price data
+            currentDate.setDate(currentDate.getDate() + 1);
+            continue;
+          }
+        }
+
+        priceData.push({
+          date: dateStr,
+          price: priceForThisDate
+        });
+
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+
+      // Ensure all purchase dates are included in priceData (add missing dates with purchase price)
+      buys.forEach(buy => {
+        const hasDate = priceData.find(p => p.date === buy.date);
+        if (!hasDate) {
+          // Add the purchase date even if we don't have historical price data for it
+          // Use the purchase price from the transaction
+          priceData.push({
+            date: buy.date,
+            price: buy.priceUsd
+          });
+        }
+      });
+
+      // Sort priceData by date to ensure proper ordering
+      priceData.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      // Create purchase markers - position them on the actual Bitcoin price line for that date
+      const purchaseMarkers = [];
+      buys.forEach(buy => {
+        // Find the actual Bitcoin price on the purchase date
+        let actualPriceOnPurchaseDate;
+        
+        // Check if we have price data for this date in our priceData array (most reliable)
+        const priceDataPoint = priceData.find(p => p.date === buy.date);
+        if (priceDataPoint) {
+          actualPriceOnPurchaseDate = priceDataPoint.price;
+        } else if (historicalPrices[buy.date]) {
+          actualPriceOnPurchaseDate = historicalPrices[buy.date];
+        } else if (buy.date === today && currentBtcPriceCAD) {
+          // For today's purchase, use current price
+          actualPriceOnPurchaseDate = currentBtcPriceCAD;
+        } else {
+          // Fallback to purchase price from transaction data
+          actualPriceOnPurchaseDate = buy.priceUsd;
+        }
+        
+        purchaseMarkers.push({
+          date: buy.date,
+          price: actualPriceOnPurchaseDate,
+          purchasePrice: buy.priceUsd // Keep original purchase price for tooltip
+        });
+      });
+
+      console.log('Generated price data:', priceData.length, 'points');
+      return { priceData, purchaseMarkers };
+    }
+
+    // Generate donations chart - group by day
+    function generateDonationsChart() {
+      if (donationsData.length === 0) {
+        return null;
+      }
+
+      // Group donations by date
+      const donationsByDate = {};
+      
+      donationsData.forEach(donation => {
+        if (!donationsByDate[donation.date]) {
+          donationsByDate[donation.date] = {
+            date: donation.date,
+            amount: 0,
+            count: 0,
+            description: `Lightning donations - ${donation.date}`
+          };
+        }
+        donationsByDate[donation.date].amount += donation.amount;
+        donationsByDate[donation.date].count += 1;
+      });
+
+      // Sort by date and calculate cumulative
+      const sortedDates = Object.keys(donationsByDate).sort((a, b) => new Date(a) - new Date(b));
+      const cumulativeData = [];
+      let cumulativeAmount = 0;
+      
+      sortedDates.forEach(date => {
+        const dayTotal = donationsByDate[date];
+        cumulativeAmount += dayTotal.amount;
+        const sats = Math.round(dayTotal.amount * 100000000);
+        cumulativeData.push({
+          date: date,
+          amount: dayTotal.amount,
+          count: dayTotal.count,
+          cumulative: cumulativeAmount,
+          description: `${dayTotal.count} donation(s) - ${sats.toLocaleString()} sats total`
+        });
+      });
+
+      return cumulativeData;
+    }
+
+    async function updateDisplay() {
+      // Update table
+      table.innerHTML = "";
+      let totalBtc = 0, totalCad = 0;
+      
+      if (buys.length === 0) {
+        table.innerHTML = `<tr><td colspan="4" class="empty-state"><p>No purchases recorded yet</p></td></tr>`;
+        totalsDiv.innerHTML = `
+          <div class="empty-state">
+            <h3>No purchases yet</h3>
+            <p>Add your first Bitcoin purchase to start tracking your portfolio!</p>
+          </div>
+        `;
+        if (chart) chart.destroy();
+        return;
+      }
+
+      buys.forEach(buy => {
+        totalBtc += buy.btcAmount;
+        totalCad += buy.fiatAmount || (buy.btcAmount * buy.priceUsd); // Use fiatAmount if available
+        const sats = Math.round(buy.btcAmount * 100000000);
+        const row = `<tr>
+          <td>${buy.date}</td>
+          <td>${buy.btcAmount.toFixed(8)}<br><small style="color: #666;">(${sats.toLocaleString()} sats)</small></td>
+          <td>$${buy.priceUsd.toFixed(2)}</td>
+          <td>$${(buy.fiatAmount || (buy.btcAmount * buy.priceUsd)).toFixed(2)}</td>
+        </tr>`;
+        table.innerHTML += row;
+      });
+      
+      const avgPrice = totalBtc ? (totalCad / totalBtc) : 0;
+      const totalSats = Math.round(totalBtc * 100000000); // Convert BTC to sats
+      const currentCadValue = currentBtcPriceCAD ? totalBtc * currentBtcPriceCAD : null;
+      const currentCadValueDisplay = currentCadValue ? `$${currentCadValue.toFixed(2)}` : 'N/A';
+      totalsDiv.innerHTML = `
+        <div class="totals-display">
+          <div><span class="totals-highlight">Total BTC:</span> ${totalBtc.toFixed(8)} (${totalSats.toLocaleString()} sats)</div>
+          <div><span class="totals-highlight">Total CAD Invested:</span> $${totalCad.toFixed(2)}</div>
+          <div><span class="totals-highlight">Current CAD Value:</span> ${currentCadValueDisplay}</div>
+          <div><span class="totals-highlight">Average Buy Price:</span> $${avgPrice.toFixed(2)}</div>
+        </div>
+      `;
+
+      // Calculate adjusted portfolio including donations
+      const totalDonations = donationsData.reduce((sum, donation) => sum + donation.amount, 0);
+      const totalBtcWithDonations = totalBtc + totalDonations;
+      const totalSatsWithDonations = Math.round(totalBtcWithDonations * 100000000);
+      const currentCadValueWithDonations = currentBtcPriceCAD ? totalBtcWithDonations * currentBtcPriceCAD : null;
+      const currentCadValueWithDonationsDisplay = currentCadValueWithDonations ? `$${currentCadValueWithDonations.toFixed(2)}` : 'N/A';
+      
+      // Calculate profit/loss (donations count as $0 cost)
+      const profitLoss = currentCadValueWithDonations ? currentCadValueWithDonations - totalCad : null;
+      const profitLossDisplay = profitLoss !== null ? (profitLoss >= 0 ? `+$${profitLoss.toFixed(2)}` : `-$${Math.abs(profitLoss).toFixed(2)}`) : 'N/A';
+      const profitLossColor = profitLoss !== null ? (profitLoss >= 0 ? '#28a745' : '#dc3545') : '#666';
+      
+      // Calculate average cost including donations at $0
+      const avgPriceWithDonations = totalBtcWithDonations ? (totalCad / totalBtcWithDonations) : 0;
+
+      if (totalBtcWithDonations === 0) {
+        adjustedTotalsDiv.innerHTML = `
+          <div class="empty-state">
+            <h3>No Bitcoin holdings yet</h3>
+            <p>Add purchases or donations to see your adjusted portfolio!</p>
+          </div>
+        `;
+      } else {
+        adjustedTotalsDiv.innerHTML = `
+          <div class="totals-display">
+            <div><span class="totals-highlight">Total BTC (Purchased + Donated):</span> ${totalBtcWithDonations.toFixed(8)} (${totalSatsWithDonations.toLocaleString()} sats)</div>
+            <div><span class="totals-highlight">Purchased BTC:</span> ${totalBtc.toFixed(8)} BTC</div>
+            <div><span class="totals-highlight">Donated BTC:</span> ${totalDonations.toFixed(8)} BTC</div>
+            <div><span class="totals-highlight">Total CAD Invested:</span> $${totalCad.toFixed(2)} (purchases only)</div>
+            <div><span class="totals-highlight">Current CAD Value:</span> ${currentCadValueWithDonationsDisplay}</div>
+            <div><span class="totals-highlight">Profit/Loss:</span> <span style="color: ${profitLossColor}; font-weight: bold;">${profitLossDisplay}</span></div>
+            <div><span class="totals-highlight">Average Cost (including donations at $0):</span> $${avgPriceWithDonations.toFixed(2)}</div>
+          </div>
+        `;
+      }
+
+      // Update chart
+      const portfolioHistory = await generatePortfolioValueHistory();
+      const chartLabels = portfolioHistory.map(p => p.date);
+      const portfolioValues = portfolioHistory.map(p => p.value);
+      
+      // Generate BTC totals that match the portfolio history dates
+      const btcTotals = [];
+      let cumulativeBtc = 0;
+      const sortedBuys = [...buys].sort((a, b) => new Date(a.date) - new Date(b.date));
+      
+      for (let i = 0; i < chartLabels.length; i++) {
+        const currentDate = chartLabels[i];
+        // Find the BTC amount at this date
+        let btcAtThisDate = 0;
+        for (let j = 0; j < sortedBuys.length; j++) {
+          if (sortedBuys[j].date <= currentDate) {
+            btcAtThisDate += sortedBuys[j].btcAmount;
+          }
+        }
+        btcTotals.push(btcAtThisDate);
+      }
+
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: chartLabels,
+          datasets: [
+            { 
+              label: "Cumulative BTC (Sats)", 
+              data: btcTotals, 
+              borderColor: "#667eea", 
+              backgroundColor: "rgba(102, 126, 234, 0.1)",
+              fill: true,
+              tension: 0,
+              stepped: true,
+              yAxisID: "y1" 
+            },
+            { 
+              label: "Portfolio Value (CAD)", 
+              data: portfolioValues, 
+              borderColor: "#ffd700", 
+              backgroundColor: "rgba(255, 215, 0, 0.1)",
+              fill: true,
+              tension: 0.4,
+              yAxisID: "y2" 
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: 'Bitcoin Portfolio Growth'
+            },
+            tooltip: {
+              enabled: true,
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleColor: '#fff',
+              bodyColor: '#fff',
+              borderColor: '#667eea',
+              borderWidth: 1,
+              cornerRadius: 8,
+              displayColors: true,
+              callbacks: {
+                title: function(context) {
+                  const dataIndex = context[0].dataIndex;
+                  const date = chartLabels[dataIndex];
+                  return new Date(date).toLocaleDateString('en-CA', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  });
+                },
+                label: function(context) {
+                  if (context.datasetIndex === 0) {
+                    const btcValue = context.parsed.y;
+                    const sats = Math.round(btcValue * 100000000);
+                    return `Cumulative BTC: ${btcValue.toFixed(8)} (${sats.toLocaleString()} sats)`;
+                  } else {
+                    return `Portfolio Value: $${context.parsed.y.toFixed(2)} CAD`;
+                  }
+                }
+              }
+            }
+          },
+          scales: {
+            y1: { 
+              type: "linear", 
+              position: "left", 
+              title: { display: true, text: "BTC Total (Sats)" },
+              ticks: {
+                callback: function(value) {
+                  const sats = Math.round(value * 100000000);
+                  return value.toFixed(8) + ' BTC\n(' + sats.toLocaleString() + ' sats)';
+                }
+              },
+              grid: { color: 'rgba(0,0,0,0.1)' }
+            },
+            y2: { 
+              type: "linear", 
+              position: "right", 
+              title: { display: true, text: "Portfolio Value (CAD)" }, 
+              grid: { drawOnChartArea: false },
+              ticks: {
+                callback: function(value) {
+                  return '$' + value.toFixed(2);
+                }
+              }
+            },
+            x: {
+              grid: { color: 'rgba(0,0,0,0.1)' }
+            }
+          }
+        }
+      });
+
+      // Update price chart
+      console.log('Generating price chart...');
+      const priceChartData = await generatePriceChart();
+      console.log('Price chart data:', priceChartData);
+      
+      if (priceChartData && priceChartData.priceData && priceChartData.priceData.length > 0) {
+        const priceLabels = priceChartData.priceData.map(p => p.date);
+        const prices = priceChartData.priceData.map(p => p.price);
+        const purchaseDates = priceChartData.purchaseMarkers.map(p => p.date);
+        const purchasePrices = priceChartData.purchaseMarkers.map(p => p.price);
+        
+        console.log('Price labels:', priceLabels.length, 'Price values:', prices.length);
+        console.log('Sample prices:', prices.slice(0, 5));
+
+        if (priceChart) priceChart.destroy();
+        priceChart = new Chart(priceCtx, {
+          type: "line",
+          data: {
+            labels: priceLabels,
+            datasets: [
+              {
+                label: "Bitcoin Price (CAD)",
+                data: prices,
+                borderColor: "#667eea",
+                backgroundColor: "rgba(102, 126, 234, 0.1)",
+                fill: true,
+                tension: 0.4,
+                pointRadius: 0,
+                pointHoverRadius: 6,
+                pointHoverBackgroundColor: "#667eea",
+                pointHoverBorderColor: "#667eea",
+                pointHoverBorderWidth: 2
+              },
+               {
+                 label: "Your Purchases",
+                 data: priceChartData.purchaseMarkers.map(marker => ({
+                   x: marker.date,
+                   y: marker.price
+                 })),
+                 borderColor: "#ff8c00",
+                 backgroundColor: "#ff8c00",
+                 pointRadius: 15,
+                 pointHoverRadius: 20,
+                 showLine: false,
+                 pointStyle: 'circle'
+               }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+              intersect: false,
+              mode: 'index'
+            },
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Bitcoin Price History with Purchase Points'
+              },
+              tooltip: {
+                enabled: true,
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                borderColor: '#667eea',
+                borderWidth: 1,
+                cornerRadius: 8,
+                displayColors: true,
+                callbacks: {
+                  title: function(context) {
+                    const dataIndex = context[0].dataIndex;
+                    const date = priceLabels[dataIndex];
+                    return new Date(date).toLocaleDateString('en-CA', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    });
+                  },
+                  label: function(context) {
+                    if (context.datasetIndex === 0) {
+                      return `Bitcoin Price: $${context.parsed.y.toFixed(2)} CAD`;
+                    } else {
+                      const marker = priceChartData.purchaseMarkers[context.dataIndex];
+                      return [
+                        `Market Price: $${context.parsed.y.toFixed(2)} CAD`,
+                        `Your Purchase: $${marker.purchasePrice.toFixed(2)} CAD`
+                      ];
+                    }
+                  }
+                }
+              }
+            },
+            scales: {
+              y: {
+                title: {
+                  display: true,
+                  text: "Price (CAD)"
+                },
+                ticks: {
+                  callback: function(value) {
+                    return '$' + value.toFixed(2);
+                  }
+                },
+                grid: { color: 'rgba(0,0,0,0.1)' }
+              },
+              x: {
+                grid: { color: 'rgba(0,0,0,0.1)' }
+              }
+            }
+          }
+        });
+      } else {
+        console.log('No price data available for chart');
+        // Show a message in the chart container
+        const chartContainer = document.querySelector('#priceChart').parentElement;
+        chartContainer.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: center; height: 400px; color: #666; text-align: center;">
+            <div>
+              <h3>Unable to load Bitcoin price data</h3>
+              <p>Please check your internet connection and try refreshing the page.</p>
+              <button onclick="location.reload()" style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px;">
+                Refresh Page
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      // Update donations chart (works independently of Bitcoin price API)
+      console.log('Generating donations chart...');
+      const donationsChartData = generateDonationsChart();
+      console.log('Donations chart data:', donationsChartData);
+      if (donationsChartData) {
+        const donationLabels = donationsChartData.map(d => d.date);
+        const donationAmounts = donationsChartData.map(d => d.amount);
+        const cumulativeAmounts = donationsChartData.map(d => d.cumulative);
+
+        if (donationsChart) donationsChart.destroy();
+        donationsChart = new Chart(donationsCtx, {
+          type: "line",
+          data: {
+            labels: donationLabels,
+            datasets: [
+              {
+                label: "Daily Donations (BTC)",
+                data: donationAmounts,
+                borderColor: "#28a745",
+                backgroundColor: "rgba(40, 167, 69, 0.1)",
+                fill: false,
+                tension: 0.4,
+                pointRadius: 6,
+                pointHoverRadius: 10,
+                pointHoverBackgroundColor: "#28a745",
+                pointHoverBorderColor: "#28a745",
+                pointHoverBorderWidth: 2,
+                yAxisID: "y"
+              },
+              {
+                label: "Cumulative Donations (BTC)",
+                data: cumulativeAmounts,
+                borderColor: "#17a2b8",
+                backgroundColor: "rgba(23, 162, 184, 0.1)",
+                fill: true,
+                tension: 0.4,
+                pointRadius: 6,
+                pointHoverRadius: 10,
+                pointHoverBackgroundColor: "#17a2b8",
+                pointHoverBorderColor: "#17a2b8",
+                pointHoverBorderWidth: 2,
+                yAxisID: "y"
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+              intersect: false,
+              mode: 'index'
+            },
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Donations Received Over Time'
+              },
+              tooltip: {
+                enabled: true,
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                borderColor: '#28a745',
+                borderWidth: 1,
+                cornerRadius: 8,
+                displayColors: true,
+                callbacks: {
+                  title: function(context) {
+                    const dataIndex = context[0].dataIndex;
+                    const date = donationLabels[dataIndex];
+                    return new Date(date).toLocaleDateString('en-CA', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    });
+                  },
+                  label: function(context) {
+                    if (context.datasetIndex === 0) {
+                      const donation = donationsChartData[context.dataIndex];
+                      const sats = Math.round(donation.amount * 100000000);
+                      return [
+                        `Daily Total: ${donation.amount.toFixed(8)} BTC`,
+                        `${donation.count} donation(s) - ${sats.toLocaleString()} sats`
+                      ];
+                    } else {
+                      const cumulative = context.parsed.y;
+                      const sats = Math.round(cumulative * 100000000);
+                      return `Cumulative: ${cumulative.toFixed(8)} BTC (${sats.toLocaleString()} sats)`;
+                    }
+                  }
+                }
+              }
+            },
+            scales: {
+              y: {
+                type: "linear",
+                title: {
+                  display: true,
+                  text: "Donations (BTC)"
+                },
+                ticks: {
+                  callback: function(value) {
+                    return value.toFixed(8) + ' BTC';
+                  }
+                },
+                grid: { color: 'rgba(0,0,0,0.1)' }
+              },
+              x: {
+                grid: { color: 'rgba(0,0,0,0.1)' }
+              }
+            }
+          }
+        });
+      } else {
+        // Show empty state for donations chart
+        if (donationsChart) donationsChart.destroy();
+        donationsChart = null;
+      }
+    }
+
+    
+    // Update price info display
+    function updatePriceInfo() {
+      const priceInfo = document.getElementById("priceInfo");
+      if (currentBtcPriceCAD && currentBtcPriceCAD > 0) {
+        const lastUpdate = new Date().toLocaleTimeString();
+        priceInfo.innerHTML = `Current Bitcoin Price: $${currentBtcPriceCAD.toFixed(2)} CAD (Updated: ${lastUpdate})`;
+      } else {
+        priceInfo.innerHTML = `
+          <div style="color: #dc3545;">
+            ⚠️ Unable to fetch current price. 
+            <button onclick="retryPriceFetch()" style="background: #667eea; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; margin-left: 8px;">
+              Retry
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    // Retry price fetch function
+    async function retryPriceFetch() {
+      const priceInfo = document.getElementById("priceInfo");
+      priceInfo.innerHTML = "🔄 Fetching price...";
+      
+      await fetchCurrentBtcPrice();
+      updatePriceInfo();
+      await updateDisplay();
+    }
+
+    // Refresh price button
+    const refreshPriceBtn = document.getElementById("refreshPriceBtn");
+    refreshPriceBtn.addEventListener("click", async () => {
+      refreshPriceBtn.disabled = true;
+      refreshPriceBtn.innerHTML = "🔄 Updating...";
+      
+      await fetchCurrentBtcPrice();
+      await updateDisplay();
+      updatePriceInfo();
+      
+      refreshPriceBtn.disabled = false;
+      refreshPriceBtn.innerHTML = "🔄 Refresh Price";
+    });
+
+    // Theme toggle functionality
+    const themeToggle = document.getElementById("themeToggle");
+    let isDarkTheme = false;
+
+    themeToggle.addEventListener("click", () => {
+      isDarkTheme = !isDarkTheme;
+      if (isDarkTheme) {
+        document.body.classList.add("dark-theme");
+        themeToggle.textContent = "☀️";
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.body.classList.remove("dark-theme");
+        themeToggle.textContent = "🌙";
+        localStorage.setItem("theme", "light");
+      }
+    });
+
+    // Load saved theme on page load
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      isDarkTheme = true;
+      document.body.classList.add("dark-theme");
+      themeToggle.textContent = "☀️";
+    }
+
+    // Simple dropdown functionality
+    const toolsBtn = document.getElementById('toolsBtn');
+    const toolsContent = document.getElementById('toolsContent');
+    let isOpen = false;
+
+    toolsBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (isOpen) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      } else {
+        toolsContent.style.display = 'block';
+        setTimeout(() => {
+          toolsContent.classList.add('show');
+        }, 10);
+        isOpen = true;
+      }
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('toolsDropdown').contains(e.target)) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      }
+    });
+
+    // Proof of Reserves - Treasury wallet will be added later
+    function renderTreasuryWallets() {
+      const walletList = document.getElementById('walletList');
+      
+      walletList.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">Treasury wallet information will be added soon</p>';
+    }
+
+    // Initialize Proof of Reserves when page loads
+    function initializeProofOfReserves() {
+      renderTreasuryWallets();
+    }
+
+    // Initialize the tracker
+    async function initializeTracker() {
+      console.log('Initializing tracker...');
+      await fetchCurrentBtcPrice();
+      console.log('Current BTC price:', currentBtcPriceCAD);
+      await updateDisplay();
+      updatePriceInfo();
+      console.log('Tracker initialization complete');
+    }
+    
+    // Initialize everything when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeTracker();
+      initializeProofOfReserves();
+    });
+
+    // Brave browser detection and affiliate link handling
+    function isBraveBrowser() {
+        return (navigator.brave && typeof navigator.brave.isBrave === 'function') ||
+               (window.chrome && window.chrome.runtime && window.chrome.runtime.onConnect);
+    }
+
+    // Removed - showBraveInstructions function no longer needed
+    // function showBraveInstructions() {
+    //     const instructions = document.getElementById('brave-instructions');
+    //     instructions.style.display = instructions.style.display === 'none' ? 'block' : 'none';
+    // }
+
+    // Show Brave warning if detected (removed - warning element no longer exists)
+    // if (isBraveBrowser()) {
+    //     document.getElementById('brave-warning').style.display = 'block';
+    // }
+
+    // Add click handlers to affiliate links for better UX
+    document.addEventListener('DOMContentLoaded', function() {
+        const affiliateLinks = document.querySelectorAll('.affiliate-link');
+        affiliateLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Add a small delay to show the user what's happening
+                this.style.opacity = '0.7';
+                setTimeout(() => {
+                    this.style.opacity = '1';
+                }, 200);
+            });
+        });
+    });
+
+    // Theme Toggle
+    function toggleTheme() {
+      document.body.classList.toggle('light-theme');
+      const isLight = document.body.classList.contains('light-theme');
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      document.getElementById('themeToggle').textContent = isLight ? '☀️' : '🌙';
+    }
+
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'light') {
+      document.body.classList.add('light-theme');
+      document.getElementById('themeToggle').textContent = '☀️';
+    }
+
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+  </script>
+</body>
+</html>
+
+

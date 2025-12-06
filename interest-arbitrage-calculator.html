@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interest Rate Arbitrage Calculator</title>
+  <style>
+    :root {
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      font-size: 16px;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--color-bg);
+      color: var(--color-text);
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    body.light-theme {
+      color-scheme: light;
+      --color-bg: #f5f6fb;
+      --color-text: #14203b;
+      --color-heading: #0d1e54;
+      --color-description: #3b4664;
+      --color-section-title: #132351;
+      --card-bg: #ffffff;
+      --card-border: rgba(20, 38, 97, 0.08);
+      --card-shadow: 0 22px 44px -28px rgba(20, 38, 97, 0.42), 0 10px 28px -18px rgba(20, 38, 97, 0.32);
+      --label-color: #112152;
+      --input-bg: #f9fbff;
+      --input-border: #d6deef;
+      --input-text: #14203b;
+      --input-focus-border: #5d7bff;
+      --input-focus-shadow: 0 0 0 3px rgba(93, 123, 255, 0.18);
+      --hint-color: #59617f;
+      --summary-text: #36466e;
+      --summary-list: #4a567a;
+      --metric-bg: #f8faff;
+      --metric-border: #e0e6f6;
+      --metric-label: #546181;
+      --metric-value: #172657;
+      --metric-subtext: #6d7697;
+      --error-bg: #ffe9eb;
+      --error-border: #ffb7be;
+      --error-text: #8f1f2e;
+      --secondary-btn-bg: #eef1ff;
+      --secondary-btn-text: #2d3760;
+      --chart-hint-text: #40507c;
+      --toggle-bg: linear-gradient(135deg, rgba(56, 189, 248, 0.25) 0%, rgba(99, 102, 241, 0.35) 100%);
+      --toggle-border: rgba(99, 102, 241, 0.35);
+      --toggle-text: #1e293b;
+      --toggle-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
+      --toggle-hover-shadow: 0 12px 28px rgba(59, 130, 246, 0.3);
+      --nav-bg: rgba(255, 255, 255, 0.9);
+      --nav-border: rgba(15, 23, 42, 0.08);
+      --nav-link: #3b4664;
+      --nav-link-active: #0f172a;
+    }
+
+    body.dark-theme {
+      color-scheme: dark;
+      --color-bg: linear-gradient(135deg, #0f172a 0%, #111827 100%);
+      --color-text: #e5e7eb;
+      --color-heading: #facc15;
+      --color-description: #cbd5f5;
+      --color-section-title: #facc15;
+      --card-bg: rgba(17, 24, 39, 0.9);
+      --card-border: rgba(148, 163, 184, 0.2);
+      --card-shadow: 0 30px 60px rgba(15, 23, 42, 0.55);
+      --label-color: #cbd5f5;
+      --input-bg: rgba(15, 23, 42, 0.85);
+      --input-border: rgba(148, 163, 184, 0.35);
+      --input-text: #f8fafc;
+      --input-focus-border: #38bdf8;
+      --input-focus-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+      --hint-color: #94a3b8;
+      --summary-text: #cbd5f5;
+      --summary-list: #9ca3af;
+      --metric-bg: rgba(30, 41, 59, 0.92);
+      --metric-border: rgba(148, 163, 184, 0.25);
+      --metric-label: #a5b4fc;
+      --metric-value: #f8fafc;
+      --metric-subtext: #cbd5f5;
+      --error-bg: rgba(185, 28, 28, 0.2);
+      --error-border: rgba(248, 113, 113, 0.45);
+      --error-text: #fecaca;
+      --secondary-btn-bg: rgba(51, 65, 85, 0.65);
+      --secondary-btn-text: #e2e8f0;
+      --chart-hint-text: #cbd5f5;
+      --toggle-bg: linear-gradient(135deg, rgba(59, 130, 246, 0.35) 0%, rgba(129, 140, 248, 0.55) 100%);
+      --toggle-border: rgba(129, 140, 248, 0.45);
+      --toggle-text: #e2e8f0;
+      --toggle-shadow: 0 8px 20px rgba(59, 130, 246, 0.35);
+      --toggle-hover-shadow: 0 12px 28px rgba(99, 102, 241, 0.45);
+      --nav-bg: rgba(15, 23, 42, 0.85);
+      --nav-border: rgba(148, 163, 184, 0.2);
+      --nav-link: #a5b4fc;
+      --nav-link-active: #facc15;
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 52px 24px 72px;
+    }
+
+    h1 {
+      font-size: 2.55rem;
+      margin-bottom: 0.75rem;
+      color: var(--color-heading);
+    }
+
+    .page-header {
+      max-width: 960px;
+      margin: 0 auto 2.4rem;
+      padding: 0 24px;
+    }
+
+    p.lead {
+      max-width: 760px;
+      font-size: 1.03rem;
+      color: var(--color-description);
+      margin-bottom: 2.4rem;
+    }
+
+    .theme-toggle-btn {
+      background: var(--toggle-bg);
+      border: 1px solid var(--toggle-border);
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 0.9rem;
+      color: var(--toggle-text);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--toggle-hover-shadow);
+    }
+
+    .theme-toggle-btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+    }
+
+    .main-header {
+      background: var(--nav-bg);
+      border-bottom: 1px solid var(--nav-border);
+      box-shadow: 0 18px 40px -26px rgba(15, 23, 42, 0.45);
+    }
+
+    .main-nav {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 18px 24px;
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .logo-link {
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-heading);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-link img {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 1px solid var(--card-border);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--nav-link);
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a[aria-current="page"] {
+      color: var(--nav-link-active);
+    }
+
+    .account-link {
+      text-decoration: none;
+      color: var(--nav-link);
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .account-link:hover {
+      color: var(--nav-link-active);
+    }
+
+    .nav-links .dropdown {
+      position: relative;
+    }
+
+    .nav-links .dropdown-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      padding: 8px 14px;
+      border-radius: 999px;
+      color: var(--nav-link);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease;
+    }
+
+    .nav-links .dropdown-btn:hover {
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--nav-link-active);
+      border-color: rgba(59, 130, 246, 0.25);
+    }
+
+    .dropdown-content {
+      position: absolute;
+      top: 120%;
+      right: 0;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      box-shadow: 0 18px 40px -24px rgba(15, 23, 42, 0.55);
+      padding: 10px 0;
+      display: none;
+      min-width: 240px;
+      z-index: 10;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+      animation: fadeIn 0.15s ease;
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      color: var(--nav-link);
+      text-decoration: none;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .dropdown-content a:hover {
+      background: rgba(59, 130, 246, 0.12);
+      color: var(--nav-link-active);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      box-shadow: var(--card-shadow);
+      padding: 32px 34px 38px;
+      margin-bottom: 34px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px 24px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .field label {
+      font-weight: 600;
+      color: var(--label-color);
+      margin-bottom: 6px;
+    }
+
+    .field input,
+    .field select {
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+      font-size: 0.95rem;
+      color: var(--input-text);
+      transition: border 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border: 1px solid var(--input-focus-border);
+      box-shadow: var(--input-focus-shadow);
+      background: var(--card-bg);
+    }
+
+    .field small {
+      margin-top: 6px;
+      font-size: 0.82rem;
+      color: var(--hint-color);
+    }
+
+    .hint {
+      font-size: 0.85rem;
+      color: var(--hint-color);
+    }
+
+    .hint ul {
+      margin: 8px 0 0 18px;
+      padding: 0;
+      list-style: disc;
+    }
+
+    #resultsChartHint {
+      margin-top: 12px;
+    }
+
+    #resultsChartHint li {
+      margin-bottom: 4px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    button {
+      padding: 12px 20px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.94rem;
+      transition: transform 0.16s ease, box-shadow 0.22s ease;
+    }
+
+    button.primary {
+      background: linear-gradient(135deg, #3bc47f, #2f9e68);
+      color: #ffffff;
+      box-shadow: 0 18px 30px -20px rgba(43, 162, 108, 0.5);
+    }
+
+    button.secondary {
+      background: var(--secondary-btn-bg);
+      color: var(--secondary-btn-text);
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .error {
+      display: none;
+      background: var(--error-bg);
+      border: 1px solid var(--error-border);
+      color: var(--error-text);
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: 500;
+      margin-top: 20px;
+    }
+
+    .results {
+      display: none;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .metric-card {
+      flex: 1 1 240px;
+      background: var(--metric-bg);
+      border-radius: 14px;
+      border: 1px solid var(--metric-border);
+      padding: 18px 20px 22px;
+    }
+
+    .metric-label {
+      font-size: 0.82rem;
+      color: var(--metric-label);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .metric-value {
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: var(--metric-value);
+    }
+
+    .metric-subtext {
+      font-size: 0.85rem;
+      color: var(--metric-subtext);
+      margin-top: 6px;
+    }
+
+    .summary {
+      margin-top: 28px;
+      font-size: 0.95rem;
+      color: var(--summary-text);
+    }
+
+    .summary ul {
+      margin: 12px 0 0;
+      padding-left: 22px;
+      color: var(--summary-list);
+    }
+
+    .summary li {
+      margin-bottom: 6px;
+    }
+
+    .chart-wrapper {
+      flex: 1 1 100%;
+      margin-top: 18px;
+      background: var(--metric-bg);
+      border: 1px solid var(--metric-border);
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .chart-wrapper canvas {
+      width: 100%;
+      height: 320px;
+    }
+
+    #resultsChartHint {
+      margin-top: 12px;
+    }
+
+    #resultsChartHint li {
+      margin-bottom: 4px;
+    }
+
+    .features-section {
+      padding: 80px 0;
+      background: #ffffff;
+    }
+
+    .dark-theme .features-section {
+      background: #2d2d2d;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    .affiliate-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .affiliate-item {
+      background: #f7f9ff;
+      border: 1px solid #e1e7ff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: 0 24px 50px -30px rgba(66, 78, 132, 0.3);
+    }
+
+    .dark-theme .affiliate-item {
+      background: #3d3d3d;
+      border-color: rgba(148, 163, 184, 0.25);
+      box-shadow: 0 24px 50px -28px rgba(15, 23, 42, 0.55);
+    }
+
+    .affiliate-item:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 28px 60px -32px rgba(66, 78, 132, 0.35);
+    }
+
+    .affiliate-item h4 {
+      margin-bottom: 0.9rem;
+      font-weight: 700;
+      color: #2c3a6d;
+      font-size: 1rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .dark-theme .affiliate-item h4 {
+      color: #667eea;
+    }
+
+    .affiliate-link {
+      display: inline-block;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: #ffffff;
+      padding: 0.6rem 1.4rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 16px 40px -22px rgba(59, 130, 246, 0.55);
+    }
+
+    .affiliate-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 50px -24px rgba(59, 130, 246, 0.65);
+    }
+
+    .discount-code {
+      margin-top: 0.7rem;
+      font-size: 0.82rem;
+      color: #64748b;
+      letter-spacing: 0.05em;
+    }
+
+    .dark-theme .discount-code {
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    .support-section {
+      padding: 4rem 0;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(30, 41, 59, 0.98) 100%);
+    }
+
+    .support-grid {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .support-card {
+      background: rgba(30, 41, 59, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 18px;
+      padding: 2.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      text-align: center;
+      box-shadow: 0 28px 60px -30px rgba(15, 23, 42, 0.6);
+      color: #e2e8f0;
+    }
+
+    .support-icon {
+      font-size: 2.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .support-title {
+      font-size: 1.6rem;
+      color: #f8fafc;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+
+    .support-text {
+      color: #cbd5f5;
+      font-size: 1rem;
+      margin: 0;
+      max-width: 420px;
+      line-height: 1.6;
+    }
+
+    .support-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem 2.6rem;
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at top left, rgba(251, 191, 36, 0.35), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.25), transparent 60%),
+        linear-gradient(135deg, #f97316 0%, #fb923c 55%, #f59e0b 100%);
+      border: 1px solid rgba(251, 191, 36, 0.38);
+      color: #0f172a;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      box-shadow:
+        0 20px 45px -22px rgba(251, 191, 36, 0.65),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    }
+
+    .support-btn:hover {
+      transform: translateY(-3px);
+      box-shadow:
+        0 26px 55px -24px rgba(251, 191, 36, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
+      background:
+        radial-gradient(circle at top left, rgba(251, 191, 36, 0.45), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(96, 165, 250, 0.25), transparent 60%),
+        linear-gradient(135deg, #fb923c 0%, #f97316 65%, #f59e0b 100%);
+      color: #0f172a;
+    }
+
+    .cta-section {
+      background: #f8f9fa;
+      padding: 80px 0;
+      text-align: center;
+    }
+
+    .cta-content {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .cta-title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+
+    .cta-description {
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 2.5rem;
+      line-height: 1.6;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      padding: 1rem 2rem;
+      background: rgba(255, 255, 255, 0.9);
+      color: #1f2937;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.28);
+      color: #1f2937;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 18px;
+      }
+
+      .affiliate-links {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .cta-title {
+        font-size: 2rem;
+      }
+
+      .cta-description {
+        font-size: 1.05rem;
+      }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js" defer></script>
+</head>
+<body class="dark-theme">
+  <main class="page">
+    <header class="page-header">
+      <nav class="main-nav">
+        <div class="nav-container">
+          <a href="home" class="logo-link">
+            <img src="images/plub tools image.jpeg" alt="Plebtools">
+            <span>Plebtools</span>
+          </a>
+          <div class="nav-links">
+            <div class="dropdown">
+              <button class="dropdown-btn">Tools ▾</button>
+              <div class="dropdown-content">
+                <a href="home">🏠 Home</a>
+                <a href="treasury">📊 Treasury</a>
+                <a href="btc-buy-tracker">💼 Portfolio</a>
+                <a href="coveredcall-tracker">📈 Covered Calls</a>
+                <a href="compound-interest-calculator">💰 Calculator</a>
+                <a href="btc-loan-ltv">🔒 BTC Loans</a>
+                <a href="financial-planner">📋 Financial Planner</a>
+                <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+                <a href="pleb-release">📰 Pleb Release</a>
+              <a href="interest-arbitrage-calculator" aria-current="page">💹 Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
+                <a href="invoice-builder">🧾 Invoice Builder</a>
+              </div>
+            </div>
+            <a href="account" class="account-link">👤 Account</a>
+            <div id="theme-toggle-container"></div>
+          </div>
+        </div>
+      </nav>
+      <div class="page-header">
+        <h1>Interest Rate Arbitrage Calculator</h1>
+      </div>
+      <p class="lead">
+        Explore the carry trade between borrowed capital and an income-producing asset. Enter the cost of funds,
+        asset yield, compounding assumptions, and time horizon to quantify spread, annual carry, and cumulative
+        profit under different servicing strategies.
+      </p>
+    </header>
+
+    <section class="card" aria-labelledby="inputs-title">
+      <h2 id="inputs-title" class="section-title">Inputs</h2>
+      <div class="grid">
+        <div class="field">
+          <label for="principal">Borrowed amount</label>
+          <input id="principal" type="text" placeholder="Example: 100000" autocomplete="off" />
+          <small>Size of the debt-financed position (base currency).</small>
+        </div>
+
+        <div class="field">
+          <label for="debtRate">Debt interest rate</label>
+        <input id="debtRate" type="text" placeholder="Example: 5%" autocomplete="off" />
+          <small>Nominal annual rate charged on the borrowed amount.</small>
+        </div>
+
+        <div class="field">
+          <label for="debtFrequency">Debt compounding</label>
+          <select id="debtFrequency">
+          <option value="0">None (simple interest)</option>
+          <option value="12" selected>Monthly (12)</option>
+            <option value="4">Quarterly (4)</option>
+            <option value="2">Semi-annual (2)</option>
+          <option value="1">Annual (1)</option>
+            <option value="365">Daily (365)</option>
+          </select>
+          <small>How often the lender accrues interest.</small>
+        </div>
+
+        <div class="field">
+          <label for="assetRate">Asset yield</label>
+        <input id="assetRate" type="text" placeholder="Example: 10%" autocomplete="off" />
+          <small>Nominal annual return produced by the asset.</small>
+        </div>
+
+        <div class="field">
+          <label for="assetFrequency">Asset compounding</label>
+          <select id="assetFrequency">
+          <option value="0">None (simple interest)</option>
+            <option value="12" selected>Monthly (12)</option>
+            <option value="4">Quarterly (4)</option>
+            <option value="2">Semi-annual (2)</option>
+            <option value="1">Annual (1)</option>
+            <option value="365">Daily (365)</option>
+          </select>
+          <small>How often the asset's yield is reinvested.</small>
+        </div>
+
+        <div class="field">
+          <label for="horizon">Time horizon (years)</label>
+          <input id="horizon" type="number" min="0" step="0.5" placeholder="Example: 5" />
+          <small>Length of the trade, used to project cumulative outcome.</small>
+        </div>
+
+        <div class="field">
+          <label for="servicing">Debt servicing style</label>
+          <select id="servicing">
+            <option value="serviced" selected>Interest serviced (interest-only)</option>
+            <option value="capitalized">Capitalized (pay interest at the end)</option>
+          </select>
+          <small>
+            Interest-only: periodic carry is realized. Capitalized: interest rolls into the balance and is repaid at exit.
+          </small>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="primary" id="calculateBtn" type="button">Calculate Carry</button>
+        <button class="secondary" id="resetBtn" type="button">Reset</button>
+      </div>
+
+      <div class="error" id="errorBox" role="alert"></div>
+    </section>
+
+    <section class="card" aria-labelledby="results-title">
+      <h2 id="results-title" class="section-title">Results</h2>
+      <div class="results" id="results">
+        <div class="metric-card">
+          <div class="metric-label">Net Spread (EAR)</div>
+          <div class="metric-value" id="spreadValue">—</div>
+          <div class="metric-subtext">How much more the asset earns each year (effective rate) than the loan costs you.</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label" id="debtInterestLabel">Debt Interest Paid</div>
+          <div class="metric-value" id="debtInterestValue">—</div>
+          <div class="metric-subtext" id="debtInterestSubtext">Every dollar of interest the lender collects over the full holding period.</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Monthly Debt Service</div>
+          <div class="metric-value" id="monthlyDebtValue">—</div>
+          <div class="metric-subtext">Typical monthly interest check you have to send to keep the loan current.</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Asset Value (reinvested carry)</div>
+          <div class="metric-value" id="reinvestAssetValue">—</div>
+          <div class="metric-subtext">What the asset balance grows to if you recycle each month’s leftover cash back into it.</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Net After Debt (reinvested)</div>
+          <div class="metric-value" id="reinvestNetValue">—</div>
+          <div class="metric-subtext">Your equity after the horizon if you pay off the loan and kept reinvesting the carry.</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label" id="carryLabel">Annual Carry</div>
+          <div class="metric-value" id="carryValue">—</div>
+          <div class="metric-subtext" id="carrySubtext">Cash profit you keep in a single year while covering the lender’s interest bill.</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label" id="profitLabel">Profit Without Asset Compounding</div>
+          <div class="metric-value" id="profitValue">—</div>
+          <div class="metric-subtext" id="profitSubtext">Total carry you keep after paying the loan’s interest bill each year (principal stays outstanding; no reinvestment).</div>
+        </div>
+      </div>
+
+      <div class="chart-wrapper" id="resultsChartWrapper" hidden>
+        <canvas id="resultsChart" aria-label="Asset vs debt projection chart" role="img" height="320"></canvas>
+      </div>
+      <div class="hint chart-legend" id="resultsChartHint" hidden>
+        <strong>Chart guide:</strong>
+        <ul>
+          <li><strong>Asset Value (blue)</strong> – base asset path without reinvesting profits.</li>
+          <li><strong>Debt Balance (red)</strong> – outstanding loan principal (flat if you service interest).</li>
+          <li><strong>Net Position (green)</strong> – cumulative cash carry when you skim profits instead of compounding them.</li>
+          <li><strong>Asset with Reinvested Carry (orange)</strong> – appears when the asset compounds and you reinvest each month’s carry.</li>
+          <li><strong>Net (with reinvested carry) (purple)</strong> – reinvested asset value after subtracting the payoff amount.</li>
+          <li><strong>Borrowed Principal (gray dashed)</strong> – original loan amount for reference.</li>
+        </ul>
+      </div>
+
+      <div class="summary">
+        <strong>How to read these numbers</strong>
+        <ul>
+          <li><strong>Net spread</strong> is the heartbeat of the trade: it’s the effective yearly edge the asset has over the loan. Positive spread means the carry trade works.</li>
+          <li><strong>Debt interest</strong> and <strong>monthly debt service</strong> show what the lender collects overall and the typical monthly check you have to write.</li>
+          <li><strong>Annual</strong> and <strong>cumulative carry</strong> (when interest is serviced) are the pure cash profits you skim off without reinvesting.</li>
+          <li><strong>Reinvested asset value</strong> & <strong>net after debt</strong> assume every leftover dollar is plowed back into the asset, illustrating how the position compounds while the loan stays in place.</li>
+          <li>The chart mirrors all of this: blue vs. red lines are asset and debt, green is net spread, orange and purple plot what happens when you keep recycling the carry.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <section class="affiliates-section">
+    <div class="container">
+      <h2 class="section-title">Want to buy and secure your Bitcoin?</h2>
+      <div style="text-align: center;">
+        <p style="font-size: 0.9rem; margin-bottom: 1.5rem; color: var(--hint-color);">These are affiliate/discount links</p>
+        <div class="affiliate-links">
+          <div class="affiliate-item">
+            <h4>Where to buy</h4>
+            <a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" class="affiliate-link">Bitcoin Well</a>
+          </div>
+          <div class="affiliate-item">
+            <h4>Where to store</h4>
+            <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a>
+          </div>
+          <div class="affiliate-item">
+            <h4>How to protect</h4>
+            <a href="https://www.stampseed.com/" target="_blank" class="affiliate-link">Stamp Seed</a>
+            <p class="discount-code">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
+          </div>
+          <div class="affiliate-item">
+            <h4>How to validate</h4>
+            <a href="https://store.start9.com/" target="_blank" class="affiliate-link">Start9</a>
+            <p class="discount-code">CODE: BNC5 for 5% off</p>
+          </div>
+          <div class="affiliate-item">
+            <h4>1:1 Coaching</h4>
+            <a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+          </div>
+          <div class="affiliate-item">
+            <h4>Where to learn</h4>
+            <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="support-section">
+    <div class="container support-grid">
+      <div class="support-card">
+        <div class="support-icon">⚡</div>
+        <h2 class="support-title">Support Plebtools</h2>
+        <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+        <p class="support-text">
+          Enjoying these tools? You can help keep them free and open source by donating sats. Every contribution fuels more Bitcoin-first development.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2 class="cta-title">Open Source & Community Built</h2>
+      <p class="cta-description">
+        Dive into the codebase, submit issues, or help ship features. Plebtools thrives because of contributors like you.
+      </p>
+      <div class="cta-buttons">
+        <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" class="cta-btn">View on GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const principalInput = document.getElementById("principal");
+    const debtRateInput = document.getElementById("debtRate");
+    const debtFrequencySelect = document.getElementById("debtFrequency");
+    const assetRateInput = document.getElementById("assetRate");
+    const assetFrequencySelect = document.getElementById("assetFrequency");
+    const horizonInput = document.getElementById("horizon");
+    const servicingSelect = document.getElementById("servicing");
+
+    const calculateBtn = document.getElementById("calculateBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const errorBox = document.getElementById("errorBox");
+
+    const resultsSection = document.getElementById("results");
+    const spreadValue = document.getElementById("spreadValue");
+    const debtInterestLabel = document.getElementById("debtInterestLabel");
+    const debtInterestValue = document.getElementById("debtInterestValue");
+    const debtInterestSubtext = document.getElementById("debtInterestSubtext");
+    const monthlyDebtValue = document.getElementById("monthlyDebtValue");
+    const carryLabel = document.getElementById("carryLabel");
+    const carryValue = document.getElementById("carryValue");
+    const carrySubtext = document.getElementById("carrySubtext");
+    const profitLabel = document.getElementById("profitLabel");
+    const profitValue = document.getElementById("profitValue");
+    const profitSubtext = document.getElementById("profitSubtext");
+    const reinvestAssetValue = document.getElementById("reinvestAssetValue");
+    const reinvestNetValue = document.getElementById("reinvestNetValue");
+    const resultsChartWrapper = document.getElementById("resultsChartWrapper");
+    const resultsChartHint = document.getElementById("resultsChartHint");
+    const resultsChartCanvas = document.getElementById("resultsChart");
+    const resultsChartCtx = resultsChartCanvas ? resultsChartCanvas.getContext("2d") : null;
+    const themeToggleContainer = document.getElementById("theme-toggle-container");
+    let themeToggleBtn = null;
+
+    let resultsChart = null;
+
+    const applyTheme = (mode) => {
+      const isDark = mode === "dark";
+      document.body.classList.toggle("dark-theme", isDark);
+      document.body.classList.toggle("light-theme", !isDark);
+      if (themeToggleBtn) {
+        themeToggleBtn.textContent = isDark ? "☀️ Light" : "🌙 Dark";
+      }
+      localStorage.setItem("plebtools-theme", mode);
+      if (resultsSection && resultsSection.style.display === "flex") {
+        requestAnimationFrame(() => calculate());
+      }
+    };
+
+    const savedTheme = localStorage.getItem("plebtools-theme") || "dark";
+
+    if (themeToggleContainer) {
+      themeToggleBtn = document.createElement("button");
+      themeToggleBtn.type = "button";
+      themeToggleBtn.className = "theme-toggle-btn";
+      themeToggleContainer.appendChild(themeToggleBtn);
+      themeToggleBtn.addEventListener("click", () => {
+        const nextMode = document.body.classList.contains("dark-theme") ? "light" : "dark";
+        applyTheme(nextMode);
+      });
+    }
+
+    applyTheme(savedTheme);
+
+    const formatCurrency = (value) => {
+      return Number.isFinite(value)
+        ? value.toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 2 })
+        : "—";
+    };
+
+    const renderResultsChart = ({
+      principal,
+      assetEAR,
+      debtEAR,
+      horizonYears,
+      servicing,
+      assetMonthlyRate,
+      monthlyCarry,
+      annualCarry,
+      showReinvest,
+    }) => {
+      if (!resultsChartCtx || typeof Chart === "undefined") {
+        return;
+      }
+
+      const totalYears = Math.max(horizonYears, 0.1);
+      const totalMonths = Math.max(0, Math.round(totalYears * 12));
+      const points = Math.max(2, Math.min(200, Math.round(totalYears * 48) + 1));
+      const step = totalYears / (points - 1);
+
+      const labels = [];
+      const assetSeries = [];
+      const debtSeries = [];
+      const baselineSeries = [];
+      const netSeries = [];
+      const monthlySeries =
+        showReinvest && servicing === "serviced" && Math.abs(monthlyCarry) > 1e-9 ? [] : null;
+      const reinvestedNetSeries = monthlySeries ? [] : null;
+      const baselineValue = principal;
+      let monthlyBalance = null;
+
+      if (monthlySeries) {
+        monthlyBalance = new Array(totalMonths + 1).fill(0);
+        let value = principal;
+        monthlyBalance[0] = value;
+        for (let m = 1; m <= totalMonths; m += 1) {
+          value = value * (1 + assetMonthlyRate) + monthlyCarry;
+          monthlyBalance[m] = value;
+        }
+      }
+
+      const styles = getComputedStyle(document.body);
+      const axisColor =
+        (styles.getPropertyValue("--metric-label") || styles.getPropertyValue("--color-text") || "#4b5563").trim() ||
+        "#4b5563";
+      const gridColor =
+        (styles.getPropertyValue("--metric-border") || "rgba(148, 163, 184, 0.3)").trim() ||
+        "rgba(148, 163, 184, 0.3)";
+
+      for (let i = 0; i < points; i += 1) {
+        const t = i * step;
+        const years = Math.min(totalYears, t);
+        let assetValue;
+        let debtValue;
+        let netValue;
+
+        if (servicing === "serviced") {
+          assetValue = principal;
+          debtValue = principal;
+          netValue = annualCarry * years;
+        } else {
+          assetValue = principal * Math.pow(1 + assetEAR, years);
+          debtValue = principal * Math.pow(1 + debtEAR, years);
+          netValue = assetValue - debtValue;
+        }
+
+        const label = years === 0
+          ? "0"
+          : years >= 10
+          ? years.toFixed(1)
+          : years.toFixed(years % 1 === 0 ? 0 : 2);
+
+        labels.push(label);
+        assetSeries.push(assetValue);
+        debtSeries.push(debtValue);
+        netSeries.push(netValue);
+        baselineSeries.push(baselineValue);
+
+        if (monthlySeries) {
+          const months = Math.min(
+            Math.round(years * 12),
+            monthlyBalance.length - 1,
+          );
+          const reinvestedAssetValue = monthlyBalance[months];
+          monthlySeries.push(reinvestedAssetValue);
+          reinvestedNetSeries.push(reinvestedAssetValue - debtValue);
+        }
+      }
+
+      if (resultsChart) {
+        resultsChart.destroy();
+      }
+
+      const datasets = [
+        {
+          label: "Asset Value",
+          data: assetSeries,
+          borderColor: "rgba(83, 96, 232, 1)",
+          backgroundColor: "rgba(83, 96, 232, 0)",
+          tension: 0.25,
+          borderWidth: 2,
+          fill: false,
+        },
+        {
+          label: "Debt Balance",
+          data: debtSeries,
+          borderColor: "rgba(226, 78, 94, 1)",
+          backgroundColor: "rgba(226, 78, 94, 0)",
+          tension: 0.25,
+          borderWidth: 2,
+          fill: false,
+        },
+        {
+          label: "Net Position",
+          data: netSeries,
+          borderColor: "rgba(28, 160, 119, 1)",
+          backgroundColor: "rgba(28, 160, 119, 0)",
+          tension: 0.25,
+          borderWidth: 2,
+          fill: false,
+        },
+        {
+          label: "Borrowed Principal",
+          data: baselineSeries,
+          borderColor: "rgba(116, 124, 150, 0.9)",
+          borderDash: [6, 6],
+          pointRadius: 0,
+          borderWidth: 1.5,
+          fill: false,
+        },
+      ];
+
+      if (monthlySeries) {
+        datasets.push({
+          label: "Asset with Reinvested Carry",
+          data: monthlySeries,
+          borderColor: "rgba(237, 139, 0, 1)",
+          backgroundColor: "rgba(237, 139, 0, 0)",
+          tension: 0.25,
+          borderWidth: 2,
+          fill: false,
+        });
+        datasets.push({
+          label: "Net (with reinvested carry)",
+          data: reinvestedNetSeries,
+          borderColor: "rgba(169, 119, 255, 1)",
+          backgroundColor: "rgba(169, 119, 255, 0)",
+          tension: 0.25,
+          borderWidth: 2,
+          fill: false,
+        });
+      }
+
+      resultsChart = new Chart(resultsChartCtx, {
+        type: "line",
+        data: {
+          labels,
+          datasets,
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: "index", intersect: false },
+          scales: {
+            x: {
+              title: { display: true, text: "Years", color: axisColor },
+              ticks: { color: axisColor },
+              grid: { color: gridColor, drawBorder: false },
+            },
+            y: {
+              title: { display: true, text: "Value (USD)", color: axisColor },
+              ticks: {
+                color: axisColor,
+                callback: (value) => formatCurrency(value),
+              },
+              grid: { color: gridColor, drawBorder: false },
+            },
+          },
+          plugins: {
+            legend: { position: "bottom", labels: { color: axisColor } },
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const label = context.dataset.label || "";
+                  const value = context.parsed.y;
+                  return `${label}: ${formatCurrency(value)}`;
+                },
+              },
+            },
+          },
+        },
+      });
+    };
+
+    const formatPercent = (value) => {
+      return Number.isFinite(value) ? `${(value * 100).toFixed(2)}%` : "—";
+    };
+
+    const formatNumber = (value) => {
+      return Number.isFinite(value) ? value.toFixed(2) : "—";
+    };
+
+    const parsePercentLike = (input) => {
+      const trimmed = (input || "").trim();
+      if (!trimmed) {
+        return NaN;
+      }
+
+      const normalized = trimmed.replace(/%/g, "");
+      const numeric = Number(normalized);
+
+      if (!Number.isFinite(numeric)) {
+        return NaN;
+      }
+
+      return numeric / 100;
+    };
+
+    const parseCurrencyLike = (input) => {
+      const trimmed = (input || "").trim().replace(/[$,]/g, "");
+      if (!trimmed) {
+        return NaN;
+      }
+      const numeric = Number(trimmed);
+      return Number.isFinite(numeric) ? numeric : NaN;
+    };
+
+    const effectiveAnnualRate = (nominalRate, frequency) => {
+      if (!Number.isFinite(frequency) || frequency <= 0) {
+        return nominalRate;
+      }
+      return Math.pow(1 + nominalRate / frequency, frequency) - 1;
+    };
+
+    const futureValueWithMonthlyReinvest = (principal, months, monthlyRate, contribution) => {
+      let value = principal;
+      if (!Number.isFinite(months) || months <= 0) {
+        return value;
+      }
+      for (let i = 0; i < months; i += 1) {
+        value = value * (1 + monthlyRate) + contribution;
+      }
+      return value;
+    };
+
+    const validateInputs = () => {
+      const principal = parseCurrencyLike(principalInput.value);
+      if (Number.isNaN(principal) || principal <= 0) {
+        return { error: "Borrowed amount must be a positive number.", values: null };
+      }
+
+      const debtNominal = parsePercentLike(debtRateInput.value);
+      if (Number.isNaN(debtNominal)) {
+        return { error: "Debt interest rate must be numeric (e.g., 5%).", values: null };
+      }
+      if (debtNominal <= 0 || debtNominal > 1) {
+        return { error: "Debt interest rate must be greater than 0% and at most 100%.", values: null };
+      }
+
+      const assetNominal = parsePercentLike(assetRateInput.value);
+      if (Number.isNaN(assetNominal)) {
+        return { error: "Asset yield must be numeric (e.g., 10%).", values: null };
+      }
+      if (assetNominal <= 0 || assetNominal > 1) {
+        return { error: "Asset yield must be greater than 0% and at most 100%.", values: null };
+      }
+
+      const horizon = Number(horizonInput.value);
+      if (horizonInput.value && (!Number.isFinite(horizon) || horizon <= 0)) {
+        return { error: "Time horizon must be a positive number of years.", values: null };
+      }
+
+      return {
+        error: null,
+        values: {
+          principal,
+          debtNominal,
+          debtFrequency: Number(debtFrequencySelect.value),
+          assetNominal,
+          assetFrequency: Number(assetFrequencySelect.value),
+          horizon: horizonInput.value ? horizon : null,
+          servicing: servicingSelect.value,
+        },
+      };
+    };
+
+    const calculate = () => {
+      const { error, values } = validateInputs();
+      if (error) {
+        errorBox.textContent = error;
+        errorBox.style.display = "block";
+        resultsSection.style.display = "none";
+        return;
+      }
+
+      errorBox.textContent = "";
+      errorBox.style.display = "none";
+
+      const {
+        principal,
+        debtNominal,
+        debtFrequency,
+        assetNominal,
+        assetFrequency,
+        horizon,
+        servicing,
+      } = values;
+
+      const debtEAR = effectiveAnnualRate(debtNominal, debtFrequency);
+      const assetEAR = effectiveAnnualRate(assetNominal, assetFrequency);
+      const spread = assetEAR - debtEAR;
+      const horizonYears = horizon ?? 1;
+      const assetMonthlyRate =
+        assetFrequency > 0 ? Math.pow(1 + assetEAR, 1 / 12) - 1 : assetNominal / 12;
+      const debtMonthlyRate =
+        debtFrequency > 0 ? Math.pow(1 + debtEAR, 1 / 12) - 1 : debtNominal / 12;
+      const monthlyDebt = principal * debtMonthlyRate;
+      const monthlyCarry =
+        servicing === "serviced" ? principal * (assetMonthlyRate - debtMonthlyRate) : 0;
+      const showReinvest =
+        servicing === "serviced" && assetFrequency > 0 && Math.abs(monthlyCarry) > 1e-9;
+      const totalMonths = Math.max(0, Math.round(horizonYears * 12));
+
+      spreadValue.textContent = formatPercent(spread);
+
+      resultsSection.style.display = "flex";
+      const annualCarry = principal * spread;
+      const cumulativeCarry = annualCarry * horizonYears;
+      const payoffAmount =
+        servicing === "serviced"
+          ? principal
+          : principal * Math.pow(1 + debtEAR, horizonYears);
+      const assetFuture = principal * Math.pow(1 + assetEAR, horizonYears);
+      const reinvestedAsset = showReinvest
+        ? futureValueWithMonthlyReinvest(
+            principal,
+            totalMonths,
+            assetMonthlyRate,
+            monthlyCarry,
+          )
+        : null;
+      const reinvestedNet = showReinvest ? reinvestedAsset - payoffAmount : null;
+
+      if (servicing === "serviced") {
+        const annualDebtInterest = principal * debtEAR;
+        debtInterestLabel.textContent = "Debt Interest Paid";
+        debtInterestValue.textContent = formatCurrency(annualDebtInterest * horizonYears);
+        debtInterestSubtext.textContent = horizon
+          ? `Total interest payments to the lender over ${formatNumber(horizonYears)} years.`
+          : "Total interest paid over 1 year. Add a horizon for multi-year projections.";
+        monthlyDebtValue.textContent = formatCurrency(monthlyDebt);
+
+        carryLabel.textContent = "Annual Carry";
+        carrySubtext.textContent = "Cash profit you keep in a single year while covering the lender’s interest bill.";
+        carryValue.textContent = formatCurrency(annualCarry);
+
+        profitLabel.textContent = "Profit Without Asset Compounding";
+        profitSubtext.textContent = horizon
+          ? `Cash kept after paying the loan’s interest bill for ${formatNumber(horizonYears)} years (principal stays outstanding; no reinvestment).`
+          : "Cash kept after one year of paying the loan’s interest (principal stays outstanding; no reinvestment).";
+        profitValue.textContent = formatCurrency(cumulativeCarry);
+      } else {
+        const debtInterestAccrued = payoffAmount - principal;
+        debtInterestLabel.textContent = "Accrued Debt Interest";
+        debtInterestValue.textContent = formatCurrency(debtInterestAccrued);
+        debtInterestSubtext.textContent = `Interest added to the balance over ${formatNumber(horizonYears)} years.`;
+        monthlyDebtValue.textContent = "—";
+
+        carryLabel.textContent = "Debt Payoff (EAR)";
+        carrySubtext.textContent = "Effective annual cost of capital including compounding.";
+        carryValue.textContent = formatPercent(debtEAR);
+
+        const profit = assetFuture - payoffAmount;
+        profitLabel.textContent = "Exit Profit";
+        profitSubtext.textContent = `Asset value less payoff after ${formatNumber(horizonYears)} years.`;
+        profitValue.textContent = formatCurrency(profit);
+      }
+
+      reinvestAssetValue.textContent = showReinvest
+        ? formatCurrency(reinvestedAsset)
+        : "—";
+      reinvestNetValue.textContent = showReinvest ? formatCurrency(reinvestedNet) : "—";
+
+      if (resultsChartWrapper) {
+        resultsChartWrapper.hidden = false;
+      }
+      if (resultsChartHint) {
+        resultsChartHint.hidden = false;
+      }
+
+      renderResultsChart({
+        principal,
+        assetEAR,
+        debtEAR,
+        horizonYears,
+        servicing,
+        assetMonthlyRate,
+        monthlyCarry,
+        annualCarry,
+        showReinvest,
+      });
+    };
+
+    calculateBtn.addEventListener("click", calculate);
+
+    resetBtn.addEventListener("click", () => {
+      principalInput.value = "";
+      debtRateInput.value = "";
+      debtFrequencySelect.value = "12";
+      assetRateInput.value = "";
+      assetFrequencySelect.value = "12";
+      horizonInput.value = "";
+      servicingSelect.value = "serviced";
+      errorBox.style.display = "none";
+      resultsSection.style.display = "none";
+      monthlyDebtValue.textContent = "—";
+      reinvestAssetValue.textContent = "—";
+      reinvestNetValue.textContent = "—";
+      if (resultsChartWrapper) {
+        resultsChartWrapper.hidden = true;
+      }
+      if (resultsChartHint) {
+        resultsChartHint.hidden = true;
+      }
+      if (resultsChart) {
+        resultsChart.destroy();
+        resultsChart = null;
+      }
+      if (resultsChartCtx) {
+        resultsChartCtx.clearRect(0, 0, resultsChartCanvas.width, resultsChartCanvas.height);
+      }
+      principalInput.focus();
+    });
+
+  </script>
+</body>
+</html>
+

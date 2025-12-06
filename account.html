@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account - Plebtools</title>
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
+  <link rel="stylesheet" href="styles.css?v=4">
+  
+  <style>
+    /* Modern dropdown styles */
+    #toolsDropdown { position: relative; display: inline-block; }
+    #toolsBtn { background: none; border: none; color: #333; font-weight: 500; font-size: 1rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; }
+    .dark-theme #toolsBtn { color: #e0e0e0 !important; }
+    #toolsBtn:hover { background: rgba(102, 126, 234, 0.1); color: #667eea; }
+    .dropdown-arrow { font-size: 0.8rem; transition: transform 0.3s ease; }
+    #toolsContent { position: absolute; top: 100%; right: 0; background: white; min-width: 220px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); border-radius: 12px; z-index: 1001; padding: 0.75rem 0; border: 1px solid rgba(0, 0, 0, 0.08); backdrop-filter: blur(10px); margin-top: 8px; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; }
+    #toolsContent.show { opacity: 1; transform: translateY(0); }
+    #toolsContent a { display: block; padding: 0.875rem 1.5rem; color: #333; text-decoration: none; transition: all 0.3s ease; font-weight: 500; border-radius: 0; position: relative; }
+    .dark-theme #toolsContent a { color: #e0e0e0 !important; }
+    #toolsContent a:hover { background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); color: #667eea; transform: translateX(8px); }
+    #toolsContent a:first-child { border-radius: 12px 12px 0 0; }
+    #toolsContent a:last-child { border-radius: 0 0 12px 12px; }
+    .dark-theme #toolsContent { background: #2d2d2d !important; border-color: #555 !important; }
+    .dark-theme #toolsContent a:hover { background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%) !important; color: #667eea !important; }
+  </style>
+  
+  <style>
+    /* Coming Soon Banner */
+    .coming-soon-banner {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+      margin: 0 0 2rem 0;
+      box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+      animation: pulse 2s infinite;
+      border-radius: 15px;
+      border: 3px solid #fff;
+      position: relative;
+      z-index: 10;
+    }
+
+    .coming-soon-content h2 {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .coming-soon-content p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin: 0;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
+    /* Account Page Styles */
+    .account-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: white;
+      min-height: 100vh;
+    }
+
+    .account-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding: 2rem 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .account-title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .account-description {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .account-content {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .account-section {
+      background: #f8f9fa;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .account-section h3 {
+      color: #667eea;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+
+
+    /* Dark theme styles */
+    .dark-theme .coming-soon-banner {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+      border-color: #fff;
+      /* Keep the same bright colors for visibility */
+    }
+
+    .dark-theme .account-container {
+      background: #2d2d2d;
+    }
+
+    .dark-theme .account-section {
+      background: #3d3d3d;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="nav-container">
+        <div class="logo-container">
+          <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+            <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+            <h1 class="logo">Plebtools</h1>
+          </a>
+        </div>
+        <div class="nav-links">
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="home">🏠 Home</a>
+              <a href="treasury">📊 Treasury</a>
+              <a href="btc-buy-tracker">💼 Portfolio</a>
+              <a href="coveredcall-tracker">📈 Covered Calls</a>
+              <a href="compound-interest-calculator">💰 Calculator</a>
+              <a href="btc-loan-ltv">🔒 BTC Loans</a>
+              <a href="financial-planner">📋 Financial Planner</a>
+              <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+              <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
+              <a href="invoice-builder">🧾 Invoice Builder</a>
+              <a href="pleb-release">📰 Pleb Release</a>
+            </div>
+          </div>
+          <a href="account" class="account-link active">👤 Account</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="account-container">
+      <div class="account-header">
+        <h1 class="account-title">Account & Profile</h1>
+        <p class="account-description">
+          Manage your account, sync your data, and access your information across all devices.
+        </p>
+        <div id="theme-toggle-container" style="position: absolute; top: 20px; right: 20px;"></div>
+      </div>
+
+      <div class="account-content">
+        <!-- Coming Soon Banner -->
+        <div class="coming-soon-banner">
+          <div class="coming-soon-content">
+            <h2>🚧 ACCOUNT SYSTEM COMING SOON 🚧</h2>
+            <p><strong>Account creation and login are currently disabled.</strong><br>
+            We're working hard to bring you the best account management experience. Stay tuned!</p>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Affiliate Section -->
+  <section class="affiliate-section">
+    <div class="container">
+      <h3 style="text-align: center;">Want to buy and secure your Bitcoin?</h3>
+      <div class="totals-display">
+        <div style="text-align: center;">
+          <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
+          <div id="brave-warning" class="brave-warning">
+              <strong>⚠️ Brave Browser Detected:</strong> Some affiliate links may be blocked. 
+              <button onclick="showBraveInstructions()">Show Instructions</button>
+          </div>
+          <div id="brave-instructions" class="brave-instructions">
+              <strong>How to enable affiliate links in Brave:</strong><br>
+              1. Click the Brave shield icon (🛡️) in your address bar<br>
+              2. Toggle "Shields" to "Down" for this site<br>
+              3. Refresh the page<br>
+              <em>Or right-click any link and select "Open in new tab"</em>
+          </div>
+          <div class="affiliate-links">
+            <div class="affiliate-item">
+              <h4>Where to buy</h4>
+              <a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" class="affiliate-link">Bitcoin Well</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>Where to store</h4>
+              <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>How to protect</h4>
+              <a href="https://www.stampseed.com/" target="_blank" class="affiliate-link">Stamp Seed</a>
+              <p class="discount-code">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
+            </div>
+            <div class="affiliate-item">
+              <h4>How to validate</h4>
+              <a href="https://store.start9.com/" target="_blank" class="affiliate-link">Start9</a>
+              <p class="discount-code">CODE: BNC5 for 5% off</p>
+            </div>
+            <div class="affiliate-item">
+              <h4>1:1 Coaching</h4>
+              <a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>Where to learn</h4>
+              <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="support-section">
+    <div class="container support-grid">
+      <div class="support-card">
+        <div class="support-icon">⚡</div>
+        <h2 class="support-title">Support Plebtools</h2>
+        <p class="support-text">
+          Enjoying these tools? You can help keep them free and open source by donating sats.
+          Every contribution fuels more Bitcoin-first development.
+        </p>
+        <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="features-section" style="margin-top: 1.5rem;">
+    <div class="container" style="text-align: center;">
+      <h2 class="section-title">Open Source</h2>
+      <p style="max-width: 600px; margin: 1rem auto; color: #475569;">
+        This Bitcoin account system is free and open source so anyone can adapt it for their own treasury workflows.
+      </p>
+      <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" class="affiliate-link" style="display: inline-block;">
+        View on GitHub
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 Plebtools. Open source Bitcoin tracking tools.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Account System Variables
+    let currentUser = null;
+    const API_BASE_URL = '/api'; // Production URL for cPanel deployment
+    let backendAvailable = false;
+    let isLoggedIn = false;
+    
+    // Local testing mode - set to true when testing without backend
+    const LOCAL_TESTING_MODE = true;
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      checkAuthStatus();
+      setupEventListeners();
+    });
+
+    // Account System Functions
+    async function apiCall(endpoint, method = 'GET', data = null) {
+      console.log(`API Call: ${method} ${API_BASE_URL}${endpoint}`, data);
+      
+      if (!backendAvailable) {
+        console.log('Backend not available, throwing error');
+        throw new Error('Backend not available');
+      }
+      
+      const options = {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      };
+      
+      if (data) {
+        options.body = JSON.stringify(data);
+      }
+      
+      try {
+        console.log('Making fetch request...');
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+        console.log('Response status:', response.status);
+        
+        const result = await response.json();
+        console.log('Response data:', result);
+        
+        if (!response.ok) {
+          throw new Error(result.error || 'API call failed');
+        }
+        
+        return result;
+      } catch (error) {
+        console.error('API Error:', error);
+        throw error;
+      }
+    }
+
+    async function checkAuthStatus() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/user`, { 
+          method: 'GET',
+          credentials: 'include'
+        });
+        if (response.ok) {
+          backendAvailable = true;
+          const user = await response.json();
+          currentUser = user;
+          isLoggedIn = true;
+          return true;
+        } else {
+          backendAvailable = true;
+          currentUser = null;
+          isLoggedIn = false;
+          return false;
+        }
+      } catch (e) {
+        backendAvailable = false;
+        currentUser = null;
+        isLoggedIn = false;
+        return false;
+      }
+    }
+
+
+
+
+
+    function setupEventListeners() {
+      // No event listeners needed since login forms are removed
+    }
+
+    // Theme toggle functionality
+    const themeToggle = document.createElement('button');
+    themeToggle.innerHTML = '🌙';
+    themeToggle.style.cssText = `
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+    `;
+    
+    // Add hover effect
+    themeToggle.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-2px)';
+      this.style.boxShadow = '0 5px 15px rgba(102, 126, 234, 0.4)';
+    });
+    
+    themeToggle.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0)';
+      this.style.boxShadow = '0 3px 10px rgba(102, 126, 234, 0.3)';
+    });
+
+    let isDarkTheme = false;
+
+    themeToggle.addEventListener("click", () => {
+      isDarkTheme = !isDarkTheme;
+      if (isDarkTheme) {
+        document.body.classList.add("dark-theme");
+        themeToggle.textContent = "☀️";
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.body.classList.remove("dark-theme");
+        themeToggle.textContent = "🌙";
+        localStorage.setItem("theme", "light");
+      }
+    });
+
+    // Load saved theme on page load
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      isDarkTheme = true;
+      document.body.classList.add("dark-theme");
+      themeToggle.textContent = "☀️";
+    }
+
+    document.getElementById('theme-toggle-container').appendChild(themeToggle);
+
+    // Simple dropdown functionality
+    const toolsBtn = document.getElementById('toolsBtn');
+    const toolsContent = document.getElementById('toolsContent');
+    let isOpen = false;
+
+    toolsBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (isOpen) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      } else {
+        toolsContent.style.display = 'block';
+        setTimeout(() => {
+          toolsContent.classList.add('show');
+        }, 10);
+        isOpen = true;
+      }
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('toolsDropdown').contains(e.target)) {
+        toolsContent.classList.remove('show');
+        setTimeout(() => {
+          toolsContent.style.display = 'none';
+        }, 300);
+        isOpen = false;
+      }
+    });
+
+    // Brave browser detection and affiliate link handling
+    function isBraveBrowser() {
+        return (navigator.brave && typeof navigator.brave.isBrave === 'function') ||
+               (window.chrome && window.chrome.runtime && window.chrome.runtime.onConnect);
+    }
+
+    function showBraveInstructions() {
+        const instructions = document.getElementById('brave-instructions');
+        instructions.style.display = instructions.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Show Brave warning if detected
+    if (isBraveBrowser()) {
+        document.getElementById('brave-warning').style.display = 'block';
+    }
+
+    // Add click handlers to affiliate links for better UX
+    document.addEventListener('DOMContentLoaded', function() {
+        const affiliateLinks = document.querySelectorAll('.affiliate-link');
+        affiliateLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Add a small delay to show the user what's happening
+                this.style.opacity = '0.7';
+                setTimeout(() => {
+                    this.style.opacity = '1';
+                }, 200);
+            });
+        });
+    });
+  </script>
+</body>
+</html>

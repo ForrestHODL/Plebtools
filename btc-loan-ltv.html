@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Loan LTV Calculator - Plebtools</title>
+    <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
+    <link rel="stylesheet" href="styles.css?v=4">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* Modern dropdown styles */
+        #toolsDropdown { position: relative; display: inline-block; }
+        #toolsBtn { background: none; border: none; color: #333; font-weight: 500; font-size: 1rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; }
+        .dark-theme #toolsBtn { color: #e0e0e0 !important; }
+        #toolsBtn:hover { background: rgba(102, 126, 234, 0.1); color: #667eea; }
+        .dropdown-arrow { font-size: 0.8rem; transition: transform 0.3s ease; }
+        #toolsContent { position: absolute; top: 100%; right: 0; background: white; min-width: 220px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); border-radius: 12px; z-index: 1001; padding: 0.75rem 0; border: 1px solid rgba(0, 0, 0, 0.08); backdrop-filter: blur(10px); margin-top: 8px; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; }
+        #toolsContent.show { opacity: 1; transform: translateY(0); }
+        #toolsContent a { display: block; padding: 0.875rem 1.5rem; color: #333; text-decoration: none; transition: all 0.3s ease; font-weight: 500; border-radius: 0; position: relative; }
+        .dark-theme #toolsContent a { color: #e0e0e0 !important; }
+        #toolsContent a:hover { background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); color: #667eea; transform: translateX(8px); }
+        #toolsContent a:first-child { border-radius: 12px 12px 0 0; }
+        #toolsContent a:last-child { border-radius: 0 0 12px 12px; }
+        .dark-theme #toolsContent { background: #2d2d2d !important; border-color: #555 !important; }
+        .dark-theme #toolsContent a:hover { background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%) !important; color: #667eea !important; }
+    </style>
+    
+    <style>
+        /* Calculator specific styles */
+        .calculator-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .calculator-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #333;
+            position: relative;
+        }
+
+        .calculator-title {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            background: -webkit-linear-gradient(45deg, #f59e0b, #fbbf24, #fde68a);
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
+        }
+
+        .calculator-description {
+            font-size: 1.2rem;
+            color: #ccc;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .calculator-interface {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .controls-panel {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .control-group {
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            height: 4.5rem;
+        }
+
+        .control-label {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+            height: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .control-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            height: 2.5rem;
+            box-sizing: border-box;
+        }
+
+        .control-input:focus {
+            outline: none;
+            border-color: #f7931a;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f7931a 0%, #ff6b35 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(247, 147, 26, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-success:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .visualization-panel {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 2rem;
+        }
+
+
+
+        .results-table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 0.9rem;
+            color: #000;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+            position: sticky;
+            top: 0;
+        }
+
+        .table tr:hover {
+            background: #f8f9fa;
+        }
+
+
+        .guidelines-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #007bff;
+        }
+
+        .guidelines-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 1rem;
+        }
+
+        .guideline-item {
+            margin-bottom: 0.8rem;
+            padding-left: 1rem;
+        }
+
+        .guideline-label {
+            font-weight: bold;
+            color: #000;
+        }
+
+        .guideline-text {
+            color: #000;
+            font-style: italic;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .calculator-interface {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .calculator-title {
+                font-size: 2rem;
+            }
+
+            .calculator-description {
+                font-size: 1rem;
+            }
+
+            .controls-panel,
+            .visualization-panel {
+                padding: 1rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .calculator-header > div {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .calculator-header > div > div {
+                margin-left: 0;
+            }
+        }
+
+        /* Keep logo purple */
+        .logo {
+            color: #667eea !important;
+        }
+
+        #toolsBtn {
+            color: white !important;
+        }
+
+        /* Dark theme support */
+        .dark-theme .calculator-container {
+            background: #2d2d2d;
+        }
+
+        .dark-theme .calculator-header {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+        }
+
+        /* Force affiliate styling to work */
+        .features-section .affiliate-links {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+            gap: 1.5rem !important;
+            margin-top: 1rem !important;
+        }
+
+        .features-section .affiliate-item {
+            background: white !important;
+            padding: 1.5rem !important;
+            border-radius: 10px !important;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1) !important;
+            text-align: center !important;
+            transition: transform 0.3s ease !important;
+        }
+
+        .features-section .affiliate-item:hover {
+            transform: translateY(-3px) !important;
+        }
+
+        .features-section .affiliate-item h4 {
+            color: #333 !important;
+            margin-bottom: 0.5rem !important;
+            font-size: 1rem !important;
+            font-weight: bold !important;
+        }
+
+        .features-section .affiliate-link {
+            display: inline-block !important;
+            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%) !important;
+            color: white !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 5px !important;
+            text-decoration: none !important;
+            font-weight: 500 !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .features-section .affiliate-link:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4) !important;
+        }
+
+        .features-section .discount-code {
+            font-size: 0.8rem !important;
+            color: #4CAF50 !important;
+            margin-top: 0.5rem !important;
+            font-weight: 500 !important;
+        }
+
+        /* Dark theme for affiliate links */
+        .dark-theme .features-section .affiliate-item {
+            background: #2d2d2d !important;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3) !important;
+        }
+
+        .dark-theme .features-section .affiliate-item h4 {
+            color: #e0e0e0 !important;
+        }
+
+        .dark-theme .features-section .discount-code {
+            color: #4CAF50 !important;
+        }
+
+        .dark-theme .controls-panel,
+        .dark-theme .visualization-panel {
+            background: #3d3d3d !important;
+        }
+
+        .dark-theme .control-label {
+            color: #e0e0e0;
+        }
+
+        .dark-theme .control-input {
+            background: #4d4d4d;
+            border-color: #555;
+            color: #e0e0e0;
+        }
+
+
+        .dark-theme .controls-panel h3,
+        .dark-theme .visualization-panel h3 {
+            color: #e0e0e0 !important;
+        }
+
+        .dark-theme .controls-panel h4 {
+            color: #e0e0e0 !important;
+        }
+
+        .dark-theme .results-table {
+            background: #4d4d4d;
+        }
+
+        .dark-theme .table th {
+            background: #3d3d3d;
+            color: #e0e0e0;
+        }
+
+        .dark-theme .table td {
+            color: #e0e0e0;
+        }
+
+        .dark-theme .table tr:hover {
+            background: #3d3d3d;
+        }
+
+
+        .dark-theme .guidelines-section {
+            background: #4d4d4d;
+        }
+
+        .dark-theme .guidelines-title {
+            color: #e0e0e0;
+        }
+
+        .dark-theme .guideline-label {
+            color: #e0e0e0;
+        }
+
+        .dark-theme .guideline-text {
+            color: #ccc;
+        }
+
+        /* Open Source section dark theme */
+        .dark-theme .totals-section h3 {
+            color: #e0e0e0 !important;
+        }
+
+        .dark-theme .totals-section p {
+            color: white !important;
+        }
+
+
+        .control-input[readonly] {
+            background-color: #f8f9fa;
+            color: #6c757d;
+        }
+
+        .dark-theme .control-input[readonly] {
+            background-color: #4d4d4d;
+            color: #999;
+        }
+
+        /* Chart section styling */
+        .chart-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+
+        .dark-theme .chart-section {
+            background: #4d4d4d;
+        }
+
+        .raw-data-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .dark-theme .raw-data-section {
+            background: #4d4d4d;
+        }
+
+
+        /* Results Overview text colors */
+        .visualization-panel h3,
+        .chart-section h3,
+        .raw-data-section h3 {
+            color: #000;
+        }
+
+        .visualization-panel p,
+        .chart-section p,
+        .raw-data-section p {
+            color: #000;
+        }
+
+        /* Light theme - make all headings black */
+        .controls-panel h3,
+        .controls-panel h4 {
+            color: #000 !important;
+        }
+
+        /* Dark theme overrides */
+        .dark-theme .visualization-panel h3,
+        .dark-theme .chart-section h3,
+        .dark-theme .raw-data-section h3 {
+            color: #e0e0e0 !important;
+        }
+
+        .dark-theme .visualization-panel p,
+        .dark-theme .chart-section p,
+        .dark-theme .raw-data-section p {
+            color: #ccc !important;
+        }
+
+        /* Dark theme overrides for controls panel */
+        .dark-theme .controls-panel h3,
+        .dark-theme .controls-panel h4 {
+            color: #e0e0e0 !important;
+        }
+
+        .support-section {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(30, 41, 59, 0.98) 100%);
+        }
+
+        .support-grid {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .support-card {
+            background: rgba(30, 41, 59, 0.92);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 18px;
+            padding: 2.25rem;
+            text-align: center;
+            box-shadow: 0 28px 60px -30px rgba(15, 23, 42, 0.6);
+            color: #e2e8f0;
+        }
+
+        .support-icon {
+            font-size: 2.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .support-title {
+            font-size: 1.6rem;
+            color: #f8fafc;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .support-text {
+            color: #cbd5f5;
+            font-size: 1rem;
+            margin: 1rem 0 2rem;
+            line-height: 1.6;
+        }
+
+        .support-btn {
+            display: inline-block;
+            padding: 0.9rem 2.2rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+            color: #f8fafc;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 18px 35px -18px rgba(249, 115, 22, 0.55);
+        }
+
+        .support-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 22px 45px -20px rgba(249, 115, 22, 0.65);
+            color: #f8fafc;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <div class="logo-container">
+                    <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+                        <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+                        <h1 class="logo">Plebtools</h1>
+                    </a>
+                </div>
+                <div class="nav-links">
+                <div class="dropdown" id="toolsDropdown">
+                    <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+                    <div class="dropdown-content" id="toolsContent" style="display: none;">
+                        <a href="home">🏠 Home</a>
+                        <a href="treasury">📊 Treasury</a>
+                        <a href="btc-buy-tracker">💼 Portfolio</a>
+                        <a href="coveredcall-tracker">📈 Covered Calls</a>
+                        <a href="compound-interest-calculator">🧮 Calculator</a>
+                        <a href="financial-planner">📋 Financial Planner</a>
+                        <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+              <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
+              <a href="invoice-builder">🧾 Invoice Builder</a>
+                        <a href="pleb-release">📰 Pleb Release</a>
+                    </div>
+                </div>
+                    <a href="account" class="account-link">👤 Account</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="calculator-container">
+            <div class="calculator-header">
+                <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 1rem; position: relative;">
+                    <h1 class="calculator-title" style="margin: 0;">Bitcoin Loan LTV Calculator</h1>
+                    <div id="theme-toggle-container" style="position: absolute; right: 0;"></div>
+                </div>
+                <p class="calculator-description">
+                    Compare different strategies for managing Bitcoin-backed loans. Analyze loan-to-value ratios, 
+                    liquidation risks, and dividend strategies to optimize your Bitcoin collateral.
+                </p>
+            </div>
+
+            <div class="calculator-interface">
+                <div class="controls-panel">
+                    <h3 style="margin-bottom: 2rem; color: #333;">Loan Parameters</h3>
+                    
+                    <form id="loanForm">
+                        <!-- Loan Settings -->
+                        <h4 style="margin-bottom: 1rem; color: #333; border-bottom: 2px solid #f7931a; padding-bottom: 0.5rem;">Loan Settings</h4>
+                        <div class="form-row">
+                            <div class="control-group">
+                                <label class="control-label" for="btcCollateral">Bitcoin Collateral (BTC)</label>
+                                <input type="number" id="btcCollateral" class="control-input" placeholder="1.0" value="1.0" step="0.01" title="Amount of Bitcoin used as collateral">
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="btcPrice">Bitcoin Price ($)</label>
+                                <input type="number" id="btcPrice" class="control-input" placeholder="100000" value="100000" step="1000" title="Current Bitcoin price">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="control-group">
+                                <label class="control-label" for="loanAmount">Loan Amount ($)</label>
+                                <input type="number" id="loanAmount" class="control-input" placeholder="50000" value="50000" step="1000" title="Amount of loan taken against Bitcoin">
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="ltv">LTV (%)</label>
+                                <input type="number" id="ltv" class="control-input" placeholder="50" value="50" step="0.1" title="Loan-to-Value ratio">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="control-group">
+                                <label class="control-label" for="interestRate">Interest Rate (%)</label>
+                                <input type="number" id="interestRate" class="control-input" placeholder="12.9" value="12.9" step="0.1" title="Annual interest rate on the loan">
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="loanDuration">Loan Duration (months)</label>
+                                <input type="number" id="loanDuration" class="control-input" placeholder="36" value="36" step="1" min="1" max="120" title="Duration of the loan in months">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="control-group">
+                                <label class="control-label" for="btcGrowthRate">Bitcoin Growth Rate (%)</label>
+                                <input type="number" id="btcGrowthRate" class="control-input" placeholder="25" value="25" step="0.1" title="Expected annual Bitcoin price growth">
+                            </div>
+                            <div class="control-group">
+                                <!-- Empty div to maintain grid layout -->
+                            </div>
+                        </div>
+
+                        <!-- Risk Settings -->
+                        <h4 style="margin-bottom: 1rem; color: #333; border-bottom: 2px solid #dc3545; padding-bottom: 0.5rem; margin-top: 2rem;">Risk Settings</h4>
+                        <div class="form-row">
+                            <div class="control-group">
+                                <label class="control-label" for="liquidationPercent">Liquidation %</label>
+                                <input type="number" id="liquidationPercent" class="control-input" placeholder="80" value="80" step="1" title="Liquidation threshold percentage">
+                            </div>
+                            <div class="control-group">
+                                <!-- Empty div to maintain grid layout -->
+                            </div>
+                        </div>
+
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Calculate</button>
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+                            <button type="button" class="btn btn-danger" onclick="clearAll()">Clear All</button>
+                            <button type="button" class="btn btn-success" onclick="exportToCSV()" id="exportBtn" disabled>Export CSV</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="visualization-panel">
+                    <h3 style="margin-bottom: 2rem;">Results Overview</h3>
+
+                    <!-- Chart Section -->
+                    <div class="chart-section">
+                        <h3 style="margin-bottom: 1rem; color: #000;">Loan Analysis Chart</h3>
+                        <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: #000;">
+                            Track your loan amount growth, LTV ratio, and liquidation risk over time
+                        </p>
+
+
+                        <!-- Chart Container -->
+                        <div class="chart-container">
+                            <canvas id="loanChart"></canvas>
+                        </div>
+                        
+                        <!-- Raw Data Section -->
+                        <div class="raw-data-section">
+                            <h3 style="margin-bottom: 1rem;">Raw Data Table</h3>
+                            <p style="margin-bottom: 1.5rem; font-size: 0.9rem;">
+                                Detailed monthly breakdown of all calculated values
+                            </p>
+                            <div class="results-table">
+                                <table class="table" id="rawDataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Month</th>
+                                            <th>Bitcoin Price ($)</th>
+                                            <th>Collateral Value ($)</th>
+                                            <th>Loan Balance ($)</th>
+                                            <th>LTV (%)</th>
+                                            <th>Liquidation Price ($)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="rawDataTableBody">
+                                        <tr>
+                                            <td colspan="6" style="text-align: center; color: #666; font-style: italic;">
+                                                Enter your parameters and click Calculate to see data
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="guidelines-section">
+                        <h4 class="guidelines-title">General Risk Management for Loans</h4>
+                        <div class="guideline-item">
+                            <span class="guideline-text">None of this should constitute financial advice, these are just generalizations.</span>
+                        </div>
+                        <div class="guideline-item">
+                            <span class="guideline-text">Loans and leverage inherently add risk into one's portfolio, and it is generally seen as good practice to avoid excessive leverage due to risk of loss.</span>
+                        </div>
+                        <div class="guideline-item">
+                            <span class="guideline-text">Bitcoin is volatile, this tool shows a steady growth of Bitcoin's price based on inputs but in reality it will fluctuate day to day and your LTV and liquidation price will be affected by those price swings.</span>
+                        </div>
+                    </div>
+
+                    <!-- Affiliate Links Section -->
+                    <div class="features-section">
+                        <h2 class="section-title">Want to buy and secure your Bitcoin?</h2>
+                        <div style="text-align: center;">
+                            <p style="font-size: 0.9rem; color: #666; margin-bottom: 1.5rem;">These are affiliate/discount links</p>
+                            <div class="affiliate-links">
+                                    <div class="affiliate-item">
+                                        <h4>Where to buy</h4>
+                                        <a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" class="affiliate-link">Bitcoin Well</a>
+                                    </div>
+                                    <div class="affiliate-item">
+                                        <h4>Where to store</h4>
+                                        <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a>
+                                    </div>
+                                    <div class="affiliate-item">
+                                        <h4>How to protect</h4>
+                                        <a href="https://www.stampseed.com/" target="_blank" class="affiliate-link">Stamp Seed</a>
+                                        <p class="discount-code">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
+                                    </div>
+                                    <div class="affiliate-item">
+                                        <h4>How to validate</h4>
+                                        <a href="https://store.start9.com/" target="_blank" class="affiliate-link">Start9</a>
+                                        <p class="discount-code">CODE: BNC5 for 5% off</p>
+                                    </div>
+                                    <div class="affiliate-item">
+                                        <h4>1:1 Coaching</h4>
+                                        <a href="https://pathtobitcoin.xyz" target="_blank" class="affiliate-link">Bitcoin 1:1</a>
+                                    </div>
+                                    <div class="affiliate-item">
+                                        <h4>Where to learn</h4>
+                                        <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="support-section">
+                <div class="container support-grid">
+                    <div class="support-card">
+                        <div class="support-icon">⚡</div>
+                        <h2 class="support-title">Support Plebtools</h2>
+                        <p class="support-text">
+                            Enjoying these tools? You can help keep them free and open source by donating sats.
+                            Every contribution fuels more Bitcoin-first development.
+                        </p>
+                        <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Open Source Section -->
+            <div class="totals-section">
+                <h3 style="text-align: center; color: #000;">Open Source</h3>
+                <div class="totals-display">
+                    <div style="text-align: center;">
+                        <p style="color: #000;">This Bitcoin loan LTV calculator is free and open source and can be replicated for anyone to analyze their own Bitcoin-backed loans.</p>
+                        <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" style="background: #28a745; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; display: inline-block; font-weight: bold; transition: all 0.3s ease; margin-top: 1rem;">View on GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Plebtools. Open source Bitcoin tracking tools.</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                <strong>Open Source Contributors:</strong> ForrestHODL & Rajat Soni
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Global variables
+        let calculationResults = [];
+        let loanChart = null;
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up form submission
+            document.getElementById('loanForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                calculateResults();
+            });
+
+
+            // Load default calculation
+            calculateResults();
+        });
+
+
+        // Calculate loan LTV results
+        function calculateResults() {
+            const btcCollateral = parseFloat(document.getElementById('btcCollateral').value) || 1.0;
+            const btcPrice = parseFloat(document.getElementById('btcPrice').value) || 100000;
+            const loanAmount = parseFloat(document.getElementById('loanAmount').value) || 50000;
+            const ltv = parseFloat(document.getElementById('ltv').value) || 50;
+            const liquidationPercent = parseFloat(document.getElementById('liquidationPercent').value) || 80;
+            const interestRate = parseFloat(document.getElementById('interestRate').value) || 12.9;
+            const loanDuration = parseInt(document.getElementById('loanDuration').value) || 36;
+            const btcGrowthRate = parseFloat(document.getElementById('btcGrowthRate').value) || 25;
+            const months = loanDuration; // Use loan duration for chart calculation
+            
+            // Set default strategy parameters (simplified)
+            const strategyType = 'bitcoin'; // Default to bitcoin strategy
+            const monthlyDividend = 0;
+            const btcPurchaseAmount = 0;
+            const btcPurchasePrice = 0;
+
+            // Calculate derived values
+            const collateralValue = btcCollateral * btcPrice;
+            const currentLTV = (loanAmount / collateralValue) * 100;
+            const liquidationPrice = (loanAmount / (liquidationPercent / 100)) / btcCollateral;
+            const monthlyInterestRate = interestRate / 100 / 12;
+            const monthlyBtcGrowth = Math.pow(1 + btcGrowthRate / 100, 1/12) - 1;
+
+
+
+            // Calculate chart data
+            calculateChartData(btcCollateral, btcPrice, loanAmount, liquidationPercent, monthlyInterestRate, monthlyBtcGrowth, months, strategyType, monthlyDividend, btcPurchaseAmount, btcPurchasePrice);
+            
+            // Update chart
+            updateChart();
+            
+            // Update raw data table
+            updateRawDataTable();
+            
+            // Enable export button
+            document.getElementById('exportBtn').disabled = false;
+        }
+
+
+
+
+
+        // Calculate chart data for all loan parameters
+        function calculateChartData(btcCollateral, btcPrice, loanAmount, liquidationPercent, monthlyInterestRate, monthlyBtcGrowth, months, strategyType, monthlyDividend, btcPurchaseAmount, btcPurchasePrice) {
+            calculationResults = [];
+            
+            // Initialize running totals
+            let loanBalance = loanAmount;
+            let totalInterestPaid = 0;
+            let btcBalance = btcCollateral;
+            
+            for (let month = 0; month <= months; month++) {
+                const currentBtcPrice = btcPrice * Math.pow(1 + monthlyBtcGrowth, month);
+                
+                // Calculate collateral value based on current Bitcoin price and balance
+                const collateralValue = btcBalance * currentBtcPrice;
+                
+                // Calculate LTV: Loan Balance / Collateral Value
+                const ltv = (loanBalance / collateralValue) * 100;
+                
+                // Calculate dynamic liquidation price based on current loan balance and Bitcoin collateral
+                const currentLiquidationPrice = (loanBalance / btcBalance) / (liquidationPercent / 100);
+                
+                calculationResults.push({
+                    month: month,
+                    btcPrice: currentBtcPrice,
+                    collateralValue: collateralValue,
+                    loanBalance: loanBalance,
+                    ltv: ltv,
+                    liquidationPrice: currentLiquidationPrice,
+                    totalInterestPaid: totalInterestPaid,
+                    btcBalance: btcBalance
+                });
+                
+                // Update for next month (only if not the last month)
+                if (month < months) {
+                    // Add interest to loan balance (common to both strategies)
+                    const interestPayment = loanBalance * monthlyInterestRate;
+                    loanBalance += interestPayment;
+                    totalInterestPaid += interestPayment;
+                    
+                    if (strategyType === 'bitcoin') {
+                        // Bitcoin strategy - no additional Bitcoin purchases, just interest accumulation
+                        // The loan is taken as cash, not used to buy more Bitcoin
+                    } else {
+                        // Dividend strategy - pay down loan with dividends
+                        const principalPayment = Math.min(monthlyDividend, loanBalance);
+                        if (principalPayment > 0) {
+                            loanBalance -= principalPayment;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Update chart with comprehensive loan analysis
+        function updateChart() {
+            const ctx = document.getElementById('loanChart').getContext('2d');
+            
+            if (loanChart) {
+                loanChart.destroy();
+            }
+            
+            const labels = calculationResults.map(result => `Month ${result.month}`);
+            
+            // Debug: check liquidation price values
+            console.log('Liquidation prices:', calculationResults.map(result => result.liquidationPrice).slice(0, 5));
+            console.log('Bitcoin prices:', calculationResults.map(result => result.btcPrice).slice(0, 5));
+            console.log('Loan balances:', calculationResults.map(result => result.loanBalance).slice(0, 5));
+            
+            // Create comprehensive chart with all loan parameters
+            const chartData = {
+                labels: labels,
+                datasets: [{
+                    label: 'Loan Amount ($)',
+                    data: calculationResults.map(result => result.loanBalance),
+                    borderColor: '#dc3545',
+                    backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                    tension: 0.4,
+                    fill: false,
+                    yAxisID: 'y'
+                }, {
+                    label: 'LTV (%)',
+                    data: calculationResults.map(result => result.ltv),
+                    borderColor: '#f7931a',
+                    backgroundColor: 'rgba(247, 147, 26, 0.1)',
+                    tension: 0.4,
+                    fill: false,
+                    yAxisID: 'y1'
+                }, {
+                    label: 'Bitcoin Price ($)',
+                    data: calculationResults.map(result => result.btcPrice),
+                    borderColor: '#28a745',
+                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                    tension: 0.4,
+                    fill: false,
+                    yAxisID: 'y'
+                }, {
+                    label: 'Liquidation Price ($)',
+                    data: calculationResults.map(result => result.liquidationPrice),
+                    borderColor: '#007bff',
+                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                    tension: 0.4,
+                    fill: false,
+                    yAxisID: 'y',
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            };
+            
+            loanChart = new Chart(ctx, {
+                type: 'line',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Comprehensive Loan Analysis: Amount, LTV, Prices & Liquidation Risk',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            color: document.body.classList.contains('dark-theme') ? '#e0e0e0' : '#000'
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: document.body.classList.contains('dark-theme') ? '#e0e0e0' : '#000'
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.datasetIndex === 1) { // LTV
+                                        label += context.parsed.y.toFixed(2) + '%';
+                                    } else { // Dollar amounts
+                                        if (context.parsed.y >= 1000000) {
+                                            label += '$' + (context.parsed.y / 1000000).toFixed(1) + 'M';
+                                        } else if (context.parsed.y >= 1000) {
+                                            label += '$' + (context.parsed.y / 1000).toFixed(0) + 'K';
+                                        } else {
+                                            label += '$' + context.parsed.y.toFixed(0);
+                                        }
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Dollar Amount ($)',
+                                color: document.body.classList.contains('dark-theme') ? '#e0e0e0' : '#000'
+                            },
+                            ticks: {
+                                color: document.body.classList.contains('dark-theme') ? '#e0e0e0' : '#000',
+                                callback: function(value) {
+                                    if (value >= 1000000) {
+                                        return '$' + (value / 1000000).toFixed(1) + 'M';
+                                    } else if (value >= 1000) {
+                                        return '$' + (value / 1000).toFixed(0) + 'K';
+                                    } else {
+                                        return '$' + value.toFixed(0);
+                                    }
+                                }
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'LTV (%)',
+                                color: document.body.classList.contains('dark-theme') ? '#e0e0e0' : '#000'
+                            },
+                            grid: {
+                                drawOnChartArea: false,
+                            },
+                            ticks: {
+                                color: document.body.classList.contains('dark-theme') ? '#e0e0e0' : '#000',
+                                callback: function(value) {
+                                    return value.toFixed(1) + '%';
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Time (Months)',
+                                color: document.body.classList.contains('dark-theme') ? '#e0e0e0' : '#000'
+                            },
+                            ticks: {
+                                color: document.body.classList.contains('dark-theme') ? '#e0e0e0' : '#000'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update raw data table
+        function updateRawDataTable() {
+            const tableBody = document.getElementById('rawDataTableBody');
+            
+            if (!calculationResults || calculationResults.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #666; font-style: italic;">Enter your parameters and click Calculate to see data</td></tr>';
+                return;
+            }
+            
+            let tableHTML = '';
+            
+            calculationResults.forEach((result, index) => {
+                const collateralValue = result.btcBalance * result.btcPrice;
+                
+                tableHTML += `
+                    <tr>
+                        <td>${result.month}</td>
+                        <td>$${result.btcPrice.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</td>
+                        <td>$${collateralValue.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</td>
+                        <td>$${result.loanBalance.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</td>
+                        <td>${result.ltv.toFixed(2)}%</td>
+                        <td>$${result.liquidationPrice.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</td>
+                    </tr>
+                `;
+            });
+            
+            tableBody.innerHTML = tableHTML;
+        }
+
+        // Reset form to default values
+        function resetForm() {
+            document.getElementById('btcCollateral').value = 1.0;
+            document.getElementById('btcPrice').value = 100000;
+            document.getElementById('loanAmount').value = 50000;
+            document.getElementById('ltv').value = 50;
+            document.getElementById('liquidationPercent').value = 80;
+            document.getElementById('interestRate').value = 12.9;
+            document.getElementById('loanDuration').value = 36;
+            document.getElementById('btcGrowthRate').value = 25;
+            calculateResults();
+        }
+
+        // Clear all form values to zero
+        function clearAll() {
+            document.getElementById('btcCollateral').value = 0;
+            document.getElementById('btcPrice').value = 0;
+            document.getElementById('loanAmount').value = 0;
+            document.getElementById('ltv').value = 0;
+            document.getElementById('liquidationPercent').value = 0;
+            document.getElementById('interestRate').value = 0;
+            document.getElementById('loanDuration').value = 0;
+            document.getElementById('btcGrowthRate').value = 0;
+            
+            
+            // Clear the raw data table
+            updateRawDataTable();
+            
+            // Disable export button
+            document.getElementById('exportBtn').disabled = true;
+        }
+
+        // Theme toggle functionality
+        const themeToggle = document.createElement('button');
+        themeToggle.innerHTML = '🌙';
+        themeToggle.style.cssText = `
+            background: linear-gradient(135deg, #f7931a 0%, #ff6b35 100%);
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            margin-left: 1rem;
+            box-shadow: 0 3px 10px rgba(247, 147, 26, 0.3);
+        `;
+        
+        // Add hover effect
+        themeToggle.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.boxShadow = '0 5px 15px rgba(247, 147, 26, 0.4)';
+        });
+        
+        themeToggle.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '0 3px 10px rgba(247, 147, 26, 0.3)';
+        });
+
+        let isDarkTheme = false;
+
+        themeToggle.addEventListener("click", () => {
+            isDarkTheme = !isDarkTheme;
+            if (isDarkTheme) {
+                document.body.classList.add("dark-theme");
+                themeToggle.textContent = "☀️";
+                localStorage.setItem("theme", "dark");
+            } else {
+                document.body.classList.remove("dark-theme");
+                themeToggle.textContent = "🌙";
+                localStorage.setItem("theme", "light");
+            }
+            // Re-draw chart with new theme colors
+            if (calculationResults && calculationResults.length > 0) {
+                updateChart();
+            }
+        });
+
+        // Load saved theme on page load
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "dark") {
+            isDarkTheme = true;
+            document.body.classList.add("dark-theme");
+            themeToggle.textContent = "☀️";
+        }
+
+        document.getElementById('theme-toggle-container').appendChild(themeToggle);
+
+        // Simple dropdown functionality
+        const toolsBtn = document.getElementById('toolsBtn');
+        const toolsContent = document.getElementById('toolsContent');
+        let isOpen = false;
+
+        toolsBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (isOpen) {
+                toolsContent.classList.remove('show');
+                setTimeout(() => {
+                    toolsContent.style.display = 'none';
+                }, 300);
+                isOpen = false;
+            } else {
+                toolsContent.style.display = 'block';
+                setTimeout(() => {
+                    toolsContent.classList.add('show');
+                }, 10);
+                isOpen = true;
+            }
+        });
+
+        // Close when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!document.getElementById('toolsDropdown').contains(e.target)) {
+                toolsContent.classList.remove('show');
+                setTimeout(() => {
+                    toolsContent.style.display = 'none';
+                }, 300);
+                isOpen = false;
+            }
+        });
+
+        // Export function
+        function exportToCSV() {
+            if (!calculationResults || calculationResults.length === 0) {
+                alert('No data to export. Please calculate results first.');
+                return;
+            }
+
+            // Create CSV content
+            let csvContent = "Month,Bitcoin Price ($),Collateral Value ($),Loan Balance ($),LTV (%),Liquidation Price ($)\n";
+            
+            calculationResults.forEach((result) => {
+                const collateralValue = result.btcBalance * result.btcPrice;
+                csvContent += `${result.month},${result.btcPrice.toFixed(2)},${collateralValue.toFixed(2)},${result.loanBalance.toFixed(2)},${result.ltv.toFixed(2)},${result.liquidationPrice.toFixed(2)}\n`;
+            });
+
+            // Create and download file
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            
+            // Generate filename with current date and parameters
+            const btcCollateral = document.getElementById('btcCollateral').value;
+            const btcPrice = document.getElementById('btcPrice').value;
+            const loanAmount = document.getElementById('loanAmount').value;
+            const ltv = document.getElementById('ltv').value;
+            const date = new Date().toISOString().split('T')[0];
+            const filename = `bitcoin-loan-ltv-${date}-${btcCollateral}BTC-${loanAmount}USD-${ltv}LTV.csv`;
+            
+            link.setAttribute("download", filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
