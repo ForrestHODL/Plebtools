@@ -222,10 +222,10 @@
     </footer>
 
     <script>
-        // Restore theme before paint
+        // Restore theme before paint (default: dark)
         (function() {
             var saved = localStorage.getItem('strategyPageTheme');
-            if (saved === 'dark') document.body.classList.add('dark-theme');
+            if (saved !== 'light') document.body.classList.add('dark-theme');
         })();
 
         // Optional: set to a URL that returns JSON array of [ [dateStr, totalBtc], ... ]. Leave '' to use only static data.
