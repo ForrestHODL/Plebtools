@@ -702,9 +702,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      position: absolute;
-      top: 20px;
-      right: 20px;
     }
 
     .theme-toggle-btn:hover {
@@ -901,14 +898,8 @@
       background: #5a6fd8;
     }
 
-    /* Mobile responsiveness for theme toggle */
     @media (max-width: 768px) {
-      .theme-toggle-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
-        margin-left: 0.5rem;
-      }
+      .storage-currency-wrap { position: static !important; margin-top: 1rem; display: flex; justify-content: center; }
     }
 
     /* Support Section Styles */
@@ -997,6 +988,7 @@
               <a href="pleb-release"> Pleb Release</a>
             </div>
           </div>
+          <span class="nav-theme-wrap"><button id="themeToggle" class="theme-toggle-btn"></button></span>
         </div>
       </div>
     </nav>
@@ -1007,11 +999,8 @@
       <section class="storage-section">
         <h1 class="gradient-text" style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">Plebtools BTC Tracker</h1>
         <p style="text-align: center; font-size: 1.2rem; color: #ccc; max-width: 800px; margin: 0 auto;">Track your Bitcoin purchases and portfolio performance</p>
-        <div style="position: absolute; top: 20px; left: 120px;">
+        <div class="storage-currency-wrap" style="position: absolute; top: 20px; left: 20px;">
           <button id="currencyToggle" class="theme-toggle-btn" style="background: rgba(255, 255, 255, 0.2); border: 2px solid rgba(255, 255, 255, 0.3); color: white; font-size: 1rem; width: 80px; height: 50px; border-radius: 10px; cursor: pointer; transition: all 0.3s ease;">USD</button>
-        </div>
-        <div style="position: absolute; top: 20px; right: 20px;">
-          <button id="themeToggle" class="theme-toggle-btn"></button>
         </div>
       </section>
 
@@ -2012,11 +2001,11 @@
       isDarkTheme = !isDarkTheme;
       if (isDarkTheme) {
         document.body.classList.add("dark-theme");
-        themeToggle.textContent = "️";
+        themeToggle.textContent = "☀️";
         localStorage.setItem("theme", "dark");
       } else {
         document.body.classList.remove("dark-theme");
-        themeToggle.textContent = "";
+        themeToggle.textContent = "🌙";
         localStorage.setItem("theme", "light");
       }
     });
@@ -2026,7 +2015,7 @@
     if (savedTheme === "dark") {
       isDarkTheme = true;
       document.body.classList.add("dark-theme");
-      themeToggle.textContent = "️";
+      themeToggle.textContent = "☀️";
     }
 
     // Simple dropdown functionality

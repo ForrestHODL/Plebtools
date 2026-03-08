@@ -752,6 +752,7 @@
               <a href="invoice-builder">Invoice Builder</a>
             </div>
           </div>
+          <div id="theme-toggle-container" class="nav-theme-wrap"></div>
         </div>
       </div>
     </nav>
@@ -1031,13 +1032,13 @@
   </footer>
 
   <script>
-    // Theme toggle functionality
+    // Theme toggle functionality (in nav)
+    const themeToggleContainer = document.getElementById('theme-toggle-container');
     const themeToggle = document.createElement('button');
+    themeToggle.className = 'theme-toggle-btn';
+    themeToggle.setAttribute('aria-label', 'Toggle dark/light theme');
     themeToggle.innerHTML = '';
     themeToggle.style.cssText = `
-      position: absolute;
-      top: 140px;
-      right: 40px;
       background: rgba(255, 255, 255, 0.2);
       border: 2px solid rgba(255, 255, 255, 0.3);
       color: white;
@@ -1050,7 +1051,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 1000;
     `;
 
     let isDarkTheme = false;
@@ -1059,11 +1059,11 @@
       isDarkTheme = !isDarkTheme;
       if (isDarkTheme) {
         document.body.classList.add("dark-theme");
-        themeToggle.textContent = "️";
+        themeToggle.textContent = "☀️";
         localStorage.setItem("theme", "dark");
       } else {
         document.body.classList.remove("dark-theme");
-        themeToggle.textContent = "";
+        themeToggle.textContent = "🌙";
         localStorage.setItem("theme", "light");
       }
     });
@@ -1073,10 +1073,10 @@
     if (savedTheme === "dark") {
       isDarkTheme = true;
       document.body.classList.add("dark-theme");
-      themeToggle.textContent = "️";
+      themeToggle.textContent = "☀️";
     }
 
-    document.body.appendChild(themeToggle);
+    if (themeToggleContainer) themeToggleContainer.appendChild(themeToggle);
 
     // Simple dropdown functionality
     const toolsBtn = document.getElementById('toolsBtn');

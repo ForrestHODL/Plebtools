@@ -538,6 +538,7 @@
               <a href="invoice-builder"> Invoice Builder</a>
             </div>
           </div>
+          <div id="theme-toggle-container" class="nav-theme-wrap"></div>
         </div>
       </div>
     </nav>
@@ -1205,13 +1206,13 @@
       });
     }
 
-    // Theme toggle button
+    // Theme toggle button (in nav)
+    const themeToggleContainer = document.getElementById("theme-toggle-container");
     const themeToggle = document.createElement("button");
-    themeToggle.innerHTML = "️";
+    themeToggle.className = "theme-toggle-btn";
+    themeToggle.setAttribute("aria-label", "Toggle dark/light theme");
+    themeToggle.innerHTML = "☀️";
     themeToggle.style.cssText = `
-      position: fixed;
-      bottom: 32px;
-      right: 32px;
       background: rgba(15, 23, 42, 0.85);
       border: 1px solid rgba(148, 163, 184, 0.35);
       color: #e5e7eb;
@@ -1224,7 +1225,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 1000;
       box-shadow: 0 18px 40px -28px rgba(15, 23, 42, 0.9);
     `;
 
@@ -1239,14 +1239,14 @@
     });
 
     let isDarkTheme = true;
-    document.body.appendChild(themeToggle);
+    if (themeToggleContainer) themeToggleContainer.appendChild(themeToggle);
 
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "light") {
       isDarkTheme = false;
       document.body.classList.remove("dark-theme");
       document.body.classList.add("light-theme");
-      themeToggle.textContent = "";
+      themeToggle.textContent = "🌙";
     } else {
       document.body.classList.add("dark-theme");
       document.body.classList.remove("light-theme");
@@ -1263,7 +1263,7 @@
       } else {
         document.body.classList.remove("dark-theme");
         document.body.classList.add("light-theme");
-        themeToggle.textContent = "";
+        themeToggle.textContent = "🌙";
         localStorage.setItem("theme", "light");
       }
     });

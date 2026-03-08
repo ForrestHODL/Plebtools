@@ -545,7 +545,7 @@
       background: #3d3d3d;
     }
 
-    /* Theme Toggle Button */
+    /* Theme Toggle Button (in nav: position overridden by styles.css) */
     .theme-toggle-btn {
       background: rgba(255, 255, 255, 0.2);
       border: 2px solid rgba(255, 255, 255, 0.3);
@@ -559,9 +559,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      position: absolute;
-      top: 20px;
-      right: 20px;
     }
 
     .theme-toggle-btn:hover {
@@ -765,6 +762,7 @@
               <a href="pleb-release"> Pleb Release</a>
             </div>
           </div>
+          <span class="nav-theme-wrap"><button id="themeToggle" class="theme-toggle-btn"></button></span>
         </div>
       </div>
     </nav>
@@ -775,9 +773,6 @@
       <div class="planner-header">
         <h1>Financial Planner</h1>
         <p>Track your income, expenses, and investment growth with comprehensive financial planning tools</p>
-        <div style="position: absolute; top: 20px; right: 20px;">
-          <button id="themeToggle" class="theme-toggle-btn"></button>
-        </div>
       </div>
 
       <!-- Income vs Expenses Section -->
@@ -1323,11 +1318,11 @@
       isDarkTheme = !isDarkTheme;
       if (isDarkTheme) {
         document.body.classList.add("dark-theme");
-        themeToggle.textContent = "️";
+        themeToggle.textContent = "☀️";
         localStorage.setItem("theme", "dark");
       } else {
         document.body.classList.remove("dark-theme");
-        themeToggle.textContent = "";
+        themeToggle.textContent = "🌙";
         localStorage.setItem("theme", "light");
       }
     });
@@ -1337,7 +1332,7 @@
     if (savedTheme === "dark") {
       isDarkTheme = true;
       document.body.classList.add("dark-theme");
-      themeToggle.textContent = "️";
+      themeToggle.textContent = "☀️";
     }
 
     // Simple dropdown functionality

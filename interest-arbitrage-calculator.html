@@ -997,7 +997,7 @@
       document.body.classList.toggle("dark-theme", isDark);
       document.body.classList.toggle("light-theme", !isDark);
       if (themeToggleBtn) {
-        themeToggleBtn.textContent = isDark ? "Light" : "Dark";
+        themeToggleBtn.textContent = isDark ? "☀️ Light" : "🌙 Dark";
       }
       localStorage.setItem("plebtools-theme", mode);
       if (resultsSection && resultsSection.style.display === "flex") {

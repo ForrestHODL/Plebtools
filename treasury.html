@@ -606,7 +606,7 @@
       }
     }
 
-    /* Theme Toggle Button */
+    /* Theme Toggle Button (in nav: position overridden by styles.css) */
     .theme-toggle-btn {
       background: rgba(255, 255, 255, 0.2);
       border: 2px solid rgba(255, 255, 255, 0.3);
@@ -620,9 +620,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      position: absolute;
-      top: 20px;
-      right: 20px;
     }
 
     .theme-toggle-btn:hover {
@@ -752,15 +749,7 @@
       color: #888 !important;
     }
 
-    /* Mobile responsiveness for theme toggle */
-    @media (max-width: 768px) {
-      .theme-toggle-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
-        margin-left: 0.5rem;
-      }
-    }
+    /* Mobile theme toggle size handled by styles.css */
 
     /* Light theme - make Tools text black */
     body.light-theme .dropdown-btn {
@@ -805,6 +794,7 @@
               <a href="pleb-release"> Pleb Release</a>
             </div>
           </div>
+          <span class="nav-theme-wrap"><button id="themeToggle" class="theme-toggle-btn"></button></span>
         </div>
       </div>
     </nav>
@@ -817,7 +807,6 @@
         <p style="text-align: center; font-size: 1.2rem; color: #ccc; max-width: 800px; margin: 0 auto;">
           Bitcoin Treasury Holdings
         </p>
-        <button id="themeToggle" class="theme-toggle-btn" style="position: absolute; top: 20px; right: 20px;"></button>
       </section>
 
       <div class="totals-section">
@@ -2210,13 +2199,13 @@
       document.body.classList.toggle('light-theme');
       const isLight = document.body.classList.contains('light-theme');
       localStorage.setItem('theme', isLight ? 'light' : 'dark');
-      document.getElementById('themeToggle').textContent = isLight ? 'Light' : 'Dark';
+      document.getElementById('themeToggle').textContent = isLight ? '☀️' : '🌙';
     }
 
     // Load saved theme
     if (localStorage.getItem('theme') === 'light') {
       document.body.classList.add('light-theme');
-      document.getElementById('themeToggle').textContent = 'Light';
+      document.getElementById('themeToggle').textContent = '☀️';
     }
 
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);

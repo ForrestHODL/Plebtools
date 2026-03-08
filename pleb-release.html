@@ -422,6 +422,7 @@
               <a href="pleb-release"> Pleb Release</a>
             </div>
           </div>
+          <div id="theme-toggle-container" class="nav-theme-wrap"></div>
         </div>
       </div>
     </nav>
@@ -435,7 +436,6 @@
           Create professional press release images by adding custom text to your images. 
           Upload an image, customize the text, and download your finished press release.
         </p>
-        <div id="theme-toggle-container" style="position: absolute; top: 20px; right: 20px;"></div>
       </div>
 
       <div class="tool-interface">
@@ -905,11 +905,11 @@ Now Holds</textarea>
       isDarkTheme = !isDarkTheme;
       if (isDarkTheme) {
         document.body.classList.add("dark-theme");
-        themeToggle.textContent = "️";
+        themeToggle.textContent = "☀️";
         localStorage.setItem("theme", "dark");
       } else {
         document.body.classList.remove("dark-theme");
-        themeToggle.textContent = "";
+        themeToggle.textContent = "🌙";
         localStorage.setItem("theme", "light");
       }
     });
@@ -919,7 +919,7 @@ Now Holds</textarea>
     if (savedTheme === "dark") {
       isDarkTheme = true;
       document.body.classList.add("dark-theme");
-      themeToggle.textContent = "️";
+      themeToggle.textContent = "☀️";
     }
 
     document.getElementById('theme-toggle-container').appendChild(themeToggle);

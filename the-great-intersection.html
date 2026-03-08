@@ -126,6 +126,7 @@
                             <a href="pleb-release"> Pleb Release</a>
                         </div>
                     </div>
+                    <div id="theme-toggle-container" class="nav-theme-wrap"></div>
                 </div>
             </div>
         </nav>
@@ -722,19 +723,21 @@
             });
         }
 
-        // Theme toggle (light = current look, dark = dark theme)
+        // Theme toggle in nav
+        var themeToggleEl = document.getElementById('theme-toggle-container');
         var themeToggle = document.createElement('button');
+        themeToggle.className = 'theme-toggle-btn';
         themeToggle.setAttribute('aria-label', 'Toggle dark/light theme');
-        themeToggle.innerHTML = document.body.classList.contains('dark-theme') ? 'Dark' : 'Light';
-        themeToggle.style.cssText = 'position:fixed;top:20px;right:20px;width:50px;height:50px;border-radius:50%;border:2px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.2);color:white;font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1000;transition:all 0.3s ease;';
+        themeToggle.innerHTML = document.body.classList.contains('dark-theme') ? '☀️' : '🌙';
+        themeToggle.style.cssText = 'width:50px;height:50px;border-radius:50%;border:2px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.2);color:white;font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s ease;';
         themeToggle.addEventListener('click', function() {
             document.body.classList.toggle('dark-theme');
             var isDark = document.body.classList.contains('dark-theme');
-            themeToggle.textContent = isDark ? 'Dark' : 'Light';
+            themeToggle.textContent = isDark ? '☀️' : '🌙';
             localStorage.setItem('strategyPageTheme', isDark ? 'dark' : 'light');
             applyChartTheme();
         });
-        document.body.appendChild(themeToggle);
+        if (themeToggleEl) themeToggleEl.appendChild(themeToggle);
     </script>
 </body>
 </html>

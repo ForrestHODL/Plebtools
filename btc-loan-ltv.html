@@ -623,6 +623,7 @@
                         <a href="pleb-release"> Pleb Release</a>
                     </div>
                 </div>
+                <div id="theme-toggle-container" class="nav-theme-wrap"></div>
                 </div>
             </div>
         </nav>
@@ -631,9 +632,8 @@
     <main>
         <div class="calculator-container">
             <div class="calculator-header">
-                <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 1rem; position: relative;">
+                <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 1rem;">
                     <h1 class="calculator-title" style="margin: 0;">Bitcoin Loan LTV Calculator</h1>
-                    <div id="theme-toggle-container" style="position: absolute; right: 0;"></div>
                 </div>
                 <p class="calculator-description">
                     Compare different strategies for managing Bitcoin-backed loans. Analyze loan-to-value ratios, 
@@ -1230,11 +1230,11 @@
             isDarkTheme = !isDarkTheme;
             if (isDarkTheme) {
                 document.body.classList.add("dark-theme");
-                themeToggle.textContent = "️";
+                themeToggle.textContent = "☀️";
                 localStorage.setItem("theme", "dark");
             } else {
                 document.body.classList.remove("dark-theme");
-                themeToggle.textContent = "";
+                themeToggle.textContent = "🌙";
                 localStorage.setItem("theme", "light");
             }
             // Re-draw chart with new theme colors
@@ -1248,7 +1248,7 @@
         if (savedTheme === "dark") {
             isDarkTheme = true;
             document.body.classList.add("dark-theme");
-            themeToggle.textContent = "️";
+            themeToggle.textContent = "☀️";
         }
 
         document.getElementById('theme-toggle-container').appendChild(themeToggle);

@@ -434,7 +434,10 @@
         // Theme toggle functionality
         function toggleTheme() {
             document.body.classList.toggle('dark-theme');
-            localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            const btn = document.querySelector('.theme-toggle');
+            if (btn) btn.innerHTML = isDark ? '☀️' : '🌙';
         }
 
         // Load saved theme
@@ -446,7 +449,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const nav = document.querySelector('.nav-container');
             const themeToggle = document.createElement('button');
-            themeToggle.innerHTML = '';
+            themeToggle.innerHTML = document.body.classList.contains('dark-theme') ? '☀️' : '🌙';
             themeToggle.className = 'theme-toggle';
             themeToggle.style.cssText = `
                 background: none;
