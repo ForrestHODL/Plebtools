@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Strategy's Bitcoin treasury holdings vs Bitcoin left to be mined. The Great Intersection - Plebtools." />
+    <meta property="og:title" content="The Great Intersection - Plebtools" />
+    <meta property="og:description" content="Strategy's Bitcoin treasury vs Bitcoin left to be mined. Open-source chart and data." />
+    <meta property="og:type" content="website" />
     <title>The Great Intersection - Plebtools</title>
     <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
     <link rel="stylesheet" href="styles.css?v=3">
@@ -104,25 +108,24 @@
                 </div>
                 <div class="nav-links">
                     <div class="dropdown" id="toolsDropdown">
-                        <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+                        <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow"></span></button>
                         <div class="dropdown-content" id="toolsContent" style="display: none;">
-                            <a href="home">🏠 Home</a>
-                            <a href="treasury">📊 Treasury</a>
-                            <a href="btc-buy-tracker">💼 Portfolio</a>
-                            <a href="coveredcall-tracker">📈 Covered Calls</a>
-                            <a href="compound-interest-calculator">💰 Calculator</a>
-                            <a href="retirement-calculator">🏖️ Retirement</a>
-                            <a href="the-great-intersection">📉 The Great Intersection</a>
-                            <a href="btc-loan-ltv">🔒 BTC Loans</a>
-                            <a href="financial-planner">📋 Financial Planner</a>
-                            <a href="bitcoin-security">🛡️ Bitcoin Security</a>
-                            <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
-                            <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
-                            <a href="invoice-builder">🧾 Invoice Builder</a>
-                            <a href="pleb-release">📰 Pleb Release</a>
+                            <a href="home"> Home</a>
+                            <a href="treasury"> Treasury</a>
+                            <a href="btc-buy-tracker"> Portfolio</a>
+                            <a href="coveredcall-tracker"> Covered Calls</a>
+                            <a href="compound-interest-calculator"> Calculator</a>
+                            <a href="retirement-calculator">️ Retirement</a>
+                            <a href="the-great-intersection"> The Great Intersection</a>
+                            <a href="btc-loan-ltv"> BTC Loans</a>
+                            <a href="financial-planner"> Financial Planner</a>
+                            <a href="bitcoin-security">️ Bitcoin Security</a>
+                            <a href="interest-arbitrage-calculator"> Yield Arbitrage</a>
+                            <a href="step-by-step-to-self-custody"> Self Custody Guide</a>
+                            <a href="invoice-builder"> Invoice Builder</a>
+                            <a href="pleb-release"> Pleb Release</a>
                         </div>
                     </div>
-                    <a href="account" class="account-link">👤 Account</a>
                 </div>
             </div>
         </nav>
@@ -191,13 +194,13 @@
             <section class="support-section">
                 <div class="container support-grid">
                     <div class="support-card">
-                        <div class="support-icon">⚡</div>
+                        <div class="support-icon"></div>
                         <h2 class="support-title">Support Plebtools</h2>
                         <p class="support-text">
                             Enjoying these tools? You can help keep them free and open source by donating sats.
                             Every contribution fuels more Bitcoin-first development.
                         </p>
-                        <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+                        <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate </a>
                     </div>
                 </div>
             </section>
@@ -217,7 +220,7 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2024 Plebtools. Open source Bitcoin tracking tools.</p>
+            <p>&copy; 2025 Plebtools. Open source Bitcoin tracking tools.</p>
         </div>
     </footer>
 
@@ -722,12 +725,12 @@
         // Theme toggle (light = current look, dark = dark theme)
         var themeToggle = document.createElement('button');
         themeToggle.setAttribute('aria-label', 'Toggle dark/light theme');
-        themeToggle.innerHTML = document.body.classList.contains('dark-theme') ? '☀️' : '🌙';
+        themeToggle.innerHTML = document.body.classList.contains('dark-theme') ? 'Dark' : 'Light';
         themeToggle.style.cssText = 'position:fixed;top:20px;right:20px;width:50px;height:50px;border-radius:50%;border:2px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.2);color:white;font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1000;transition:all 0.3s ease;';
         themeToggle.addEventListener('click', function() {
             document.body.classList.toggle('dark-theme');
             var isDark = document.body.classList.contains('dark-theme');
-            themeToggle.textContent = isDark ? '☀️' : '🌙';
+            themeToggle.textContent = isDark ? 'Dark' : 'Light';
             localStorage.setItem('strategyPageTheme', isDark ? 'dark' : 'light');
             applyChartTheme();
         });

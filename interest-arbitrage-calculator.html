@@ -205,17 +205,6 @@
       color: var(--nav-link-active);
     }
 
-    .account-link {
-      text-decoration: none;
-      color: var(--nav-link);
-      font-weight: 600;
-      transition: color 0.2s ease;
-    }
-
-    .account-link:hover {
-      color: var(--nav-link-active);
-    }
-
     .nav-links .dropdown {
       position: relative;
     }
@@ -720,22 +709,21 @@
             <div class="dropdown">
               <button class="dropdown-btn">Tools ▾</button>
               <div class="dropdown-content">
-                <a href="home">🏠 Home</a>
-                <a href="treasury">📊 Treasury</a>
-                <a href="btc-buy-tracker">💼 Portfolio</a>
-                <a href="coveredcall-tracker">📈 Covered Calls</a>
-                <a href="compound-interest-calculator">💰 Calculator</a>
-                <a href="the-great-intersection">📉 The Great Intersection</a>
-                <a href="btc-loan-ltv">🔒 BTC Loans</a>
-                <a href="financial-planner">📋 Financial Planner</a>
-                <a href="bitcoin-security">🛡️ Bitcoin Security</a>
-                <a href="pleb-release">📰 Pleb Release</a>
-              <a href="interest-arbitrage-calculator" aria-current="page">💹 Yield Arbitrage</a>
-              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
-                <a href="invoice-builder">🧾 Invoice Builder</a>
+                <a href="home"> Home</a>
+                <a href="treasury"> Treasury</a>
+                <a href="btc-buy-tracker"> Portfolio</a>
+                <a href="coveredcall-tracker"> Covered Calls</a>
+                <a href="compound-interest-calculator"> Calculator</a>
+                <a href="the-great-intersection"> The Great Intersection</a>
+                <a href="btc-loan-ltv"> BTC Loans</a>
+                <a href="financial-planner"> Financial Planner</a>
+                <a href="bitcoin-security">️ Bitcoin Security</a>
+                <a href="pleb-release"> Pleb Release</a>
+              <a href="interest-arbitrage-calculator" aria-current="page"> Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody"> Self Custody Guide</a>
+                <a href="invoice-builder"> Invoice Builder</a>
               </div>
             </div>
-            <a href="account" class="account-link">👤 Account</a>
             <div id="theme-toggle-container"></div>
           </div>
         </div>
@@ -828,43 +816,43 @@
       <div class="results" id="results">
         <div class="metric-card">
           <div class="metric-label">Net Spread (EAR)</div>
-          <div class="metric-value" id="spreadValue">—</div>
+          <div class="metric-value" id="spreadValue">-</div>
           <div class="metric-subtext">How much more the asset earns each year (effective rate) than the loan costs you.</div>
         </div>
 
         <div class="metric-card">
           <div class="metric-label" id="debtInterestLabel">Debt Interest Paid</div>
-          <div class="metric-value" id="debtInterestValue">—</div>
+          <div class="metric-value" id="debtInterestValue">-</div>
           <div class="metric-subtext" id="debtInterestSubtext">Every dollar of interest the lender collects over the full holding period.</div>
         </div>
 
         <div class="metric-card">
           <div class="metric-label">Monthly Debt Service</div>
-          <div class="metric-value" id="monthlyDebtValue">—</div>
+          <div class="metric-value" id="monthlyDebtValue">-</div>
           <div class="metric-subtext">Typical monthly interest check you have to send to keep the loan current.</div>
         </div>
 
         <div class="metric-card">
           <div class="metric-label">Asset Value (reinvested carry)</div>
-          <div class="metric-value" id="reinvestAssetValue">—</div>
+          <div class="metric-value" id="reinvestAssetValue">-</div>
           <div class="metric-subtext">What the asset balance grows to if you recycle each month’s leftover cash back into it.</div>
         </div>
 
         <div class="metric-card">
           <div class="metric-label">Net After Debt (reinvested)</div>
-          <div class="metric-value" id="reinvestNetValue">—</div>
+          <div class="metric-value" id="reinvestNetValue">-</div>
           <div class="metric-subtext">Your equity after the horizon if you pay off the loan and kept reinvesting the carry.</div>
         </div>
 
         <div class="metric-card">
           <div class="metric-label" id="carryLabel">Annual Carry</div>
-          <div class="metric-value" id="carryValue">—</div>
+          <div class="metric-value" id="carryValue">-</div>
           <div class="metric-subtext" id="carrySubtext">Cash profit you keep in a single year while covering the lender’s interest bill.</div>
         </div>
 
         <div class="metric-card">
           <div class="metric-label" id="profitLabel">Profit Without Asset Compounding</div>
-          <div class="metric-value" id="profitValue">—</div>
+          <div class="metric-value" id="profitValue">-</div>
           <div class="metric-subtext" id="profitSubtext">Total carry you keep after paying the loan’s interest bill each year (principal stays outstanding; no reinvestment).</div>
         </div>
       </div>
@@ -946,9 +934,9 @@
   <section class="support-section">
     <div class="container support-grid">
       <div class="support-card">
-        <div class="support-icon">⚡</div>
+        <div class="support-icon"></div>
         <h2 class="support-title">Support Plebtools</h2>
-        <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+        <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate </a>
         <p class="support-text">
           Enjoying these tools? You can help keep them free and open source by donating sats. Every contribution fuels more Bitcoin-first development.
         </p>
@@ -1009,7 +997,7 @@
       document.body.classList.toggle("dark-theme", isDark);
       document.body.classList.toggle("light-theme", !isDark);
       if (themeToggleBtn) {
-        themeToggleBtn.textContent = isDark ? "☀️ Light" : "🌙 Dark";
+        themeToggleBtn.textContent = isDark ? "Light" : "Dark";
       }
       localStorage.setItem("plebtools-theme", mode);
       if (resultsSection && resultsSection.style.display === "flex") {
@@ -1035,7 +1023,7 @@
     const formatCurrency = (value) => {
       return Number.isFinite(value)
         ? value.toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 2 })
-        : "—";
+        : "-";
     };
 
     const renderResultsChart = ({
@@ -1233,11 +1221,11 @@
     };
 
     const formatPercent = (value) => {
-      return Number.isFinite(value) ? `${(value * 100).toFixed(2)}%` : "—";
+      return Number.isFinite(value) ? `${(value * 100).toFixed(2)}%` : "-";
     };
 
     const formatNumber = (value) => {
-      return Number.isFinite(value) ? value.toFixed(2) : "—";
+      return Number.isFinite(value) ? value.toFixed(2) : "-";
     };
 
     const parsePercentLike = (input) => {
@@ -1404,7 +1392,7 @@
         debtInterestLabel.textContent = "Accrued Debt Interest";
         debtInterestValue.textContent = formatCurrency(debtInterestAccrued);
         debtInterestSubtext.textContent = `Interest added to the balance over ${formatNumber(horizonYears)} years.`;
-        monthlyDebtValue.textContent = "—";
+        monthlyDebtValue.textContent = "-";
 
         carryLabel.textContent = "Debt Payoff (EAR)";
         carrySubtext.textContent = "Effective annual cost of capital including compounding.";
@@ -1418,8 +1406,8 @@
 
       reinvestAssetValue.textContent = showReinvest
         ? formatCurrency(reinvestedAsset)
-        : "—";
-      reinvestNetValue.textContent = showReinvest ? formatCurrency(reinvestedNet) : "—";
+        : "-";
+      reinvestNetValue.textContent = showReinvest ? formatCurrency(reinvestedNet) : "-";
 
       if (resultsChartWrapper) {
         resultsChartWrapper.hidden = false;
@@ -1453,9 +1441,9 @@
       servicingSelect.value = "serviced";
       errorBox.style.display = "none";
       resultsSection.style.display = "none";
-      monthlyDebtValue.textContent = "—";
-      reinvestAssetValue.textContent = "—";
-      reinvestNetValue.textContent = "—";
+      monthlyDebtValue.textContent = "-";
+      reinvestAssetValue.textContent = "-";
+      reinvestNetValue.textContent = "-";
       if (resultsChartWrapper) {
         resultsChartWrapper.hidden = true;
       }

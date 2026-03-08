@@ -209,23 +209,6 @@
       color: #667eea !important;
     }
 
-    .account-link {
-      color: white;
-      text-decoration: none;
-    }
-
-    .account-link:hover {
-      color: white;
-      opacity: 0.8;
-    }
-
-    .dark-theme .account-link {
-      color: white !important;
-    }
-
-    .dark-theme .account-link:hover {
-      color: white !important;
-    }
   </style>
   
   <style>
@@ -779,7 +762,7 @@
       }
     }
 
-    /* Light theme - make Tools and Account text black */
+    /* Light theme - make Tools text black */
     body.light-theme .dropdown-btn {
       color: #212529 !important;
     }
@@ -792,13 +775,6 @@
       color: #212529 !important;
     }
 
-    body.light-theme .account-link {
-      color: #212529 !important;
-    }
-
-    body.light-theme .account-link:hover {
-      color: #212529 !important;
-    }
   </style>
 </head>
 <body>
@@ -813,23 +789,22 @@
         </div>
         <div class="nav-links">
           <div class="dropdown" id="toolsDropdown">
-            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow"></span></button>
             <div class="dropdown-content" id="toolsContent" style="display: none;">
-              <a href="home">🏠 Home</a>
-              <a href="btc-buy-tracker">💼 Portfolio</a>
-              <a href="coveredcall-tracker">📈 Covered Calls</a>
-              <a href="compound-interest-calculator">💰 Calculator</a>
-              <a href="the-great-intersection">📉 The Great Intersection</a>
-              <a href="btc-loan-ltv">🔒 BTC Loans</a>
-              <a href="financial-planner">📋 Financial Planner</a>
-              <a href="bitcoin-security">🛡️ Bitcoin Security</a>
-              <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
-              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
-              <a href="invoice-builder">🧾 Invoice Builder</a>
-              <a href="pleb-release">📰 Pleb Release</a>
+              <a href="home"> Home</a>
+              <a href="btc-buy-tracker"> Portfolio</a>
+              <a href="coveredcall-tracker"> Covered Calls</a>
+              <a href="compound-interest-calculator"> Calculator</a>
+              <a href="the-great-intersection"> The Great Intersection</a>
+              <a href="btc-loan-ltv"> BTC Loans</a>
+              <a href="financial-planner"> Financial Planner</a>
+              <a href="bitcoin-security">️ Bitcoin Security</a>
+              <a href="interest-arbitrage-calculator"> Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody"> Self Custody Guide</a>
+              <a href="invoice-builder"> Invoice Builder</a>
+              <a href="pleb-release"> Pleb Release</a>
             </div>
           </div>
-          <a href="account" class="account-link">👤 Account</a>
         </div>
       </div>
     </nav>
@@ -842,7 +817,7 @@
         <p style="text-align: center; font-size: 1.2rem; color: #ccc; max-width: 800px; margin: 0 auto;">
           Bitcoin Treasury Holdings
         </p>
-        <button id="themeToggle" class="theme-toggle-btn" style="position: absolute; top: 20px; right: 20px;">🌙</button>
+        <button id="themeToggle" class="theme-toggle-btn" style="position: absolute; top: 20px; right: 20px;"></button>
       </section>
 
       <div class="totals-section">
@@ -879,7 +854,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
           <h3>Portfolio Visualization</h3>
           <button id="refreshPriceBtn" class="submit-btn" style="background: #17a2b8; padding: 8px 16px; font-size: 0.9rem;">
-            🔄 Refresh Price
+             Refresh Price
           </button>
         </div>
         <div class="chart-container">
@@ -987,13 +962,13 @@
   <section class="support-section">
     <div class="container support-grid">
       <div class="support-card">
-        <div class="support-icon">⚡</div>
+        <div class="support-icon"></div>
         <h2 class="support-title">Support Plebtools</h2>
         <p class="support-text">
           Enjoying these tools? You can help keep them free and open source by donating sats.
           Every contribution fuels more Bitcoin-first development.
         </p>
-        <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+        <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate </a>
       </div>
     </div>
   </section>
@@ -1012,11 +987,12 @@
 
   <footer>
     <div class="container">
-      <p>&copy; 2024 Plebtools. Open source Bitcoin treasury management.</p>
+      <p>&copy; 2025 Plebtools. Open source Bitcoin treasury management.</p>
     </div>
   </footer>
 
   <script>
+    (function(){ try { if (typeof window !== 'undefined' && !window.PLEBTOOLS_DEBUG) console.log = function(){}; } catch(e) {} })();
     // Bitcoin Well transaction data (pre-loaded)
     const bitcoinWellData = [
       {
@@ -2077,7 +2053,7 @@
       } else {
         priceInfo.innerHTML = `
           <div style="color: #dc3545;">
-            ⚠️ Unable to fetch current price. 
+            ️ Unable to fetch current price. 
             <button onclick="retryPriceFetch()" style="background: #667eea; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; margin-left: 8px;">
               Retry
             </button>
@@ -2089,7 +2065,7 @@
     // Retry price fetch function
     async function retryPriceFetch() {
       const priceInfo = document.getElementById("priceInfo");
-      priceInfo.innerHTML = "🔄 Fetching price...";
+      priceInfo.innerHTML = " Fetching price...";
       
       await fetchCurrentBtcPrice();
       updatePriceInfo();
@@ -2100,14 +2076,14 @@
     const refreshPriceBtn = document.getElementById("refreshPriceBtn");
     refreshPriceBtn.addEventListener("click", async () => {
       refreshPriceBtn.disabled = true;
-      refreshPriceBtn.innerHTML = "🔄 Updating...";
+      refreshPriceBtn.innerHTML = " Updating...";
       
       await fetchCurrentBtcPrice();
       await updateDisplay();
       updatePriceInfo();
       
       refreshPriceBtn.disabled = false;
-      refreshPriceBtn.innerHTML = "🔄 Refresh Price";
+      refreshPriceBtn.innerHTML = " Refresh Price";
     });
 
     // Theme toggle functionality
@@ -2118,11 +2094,11 @@
       isDarkTheme = !isDarkTheme;
       if (isDarkTheme) {
         document.body.classList.add("dark-theme");
-        themeToggle.textContent = "☀️";
+        themeToggle.textContent = "️";
         localStorage.setItem("theme", "dark");
       } else {
         document.body.classList.remove("dark-theme");
-        themeToggle.textContent = "🌙";
+        themeToggle.textContent = "";
         localStorage.setItem("theme", "light");
       }
     });
@@ -2132,7 +2108,7 @@
     if (savedTheme === "dark") {
       isDarkTheme = true;
       document.body.classList.add("dark-theme");
-      themeToggle.textContent = "☀️";
+      themeToggle.textContent = "️";
     }
 
     // Simple dropdown functionality
@@ -2234,13 +2210,13 @@
       document.body.classList.toggle('light-theme');
       const isLight = document.body.classList.contains('light-theme');
       localStorage.setItem('theme', isLight ? 'light' : 'dark');
-      document.getElementById('themeToggle').textContent = isLight ? '☀️' : '🌙';
+      document.getElementById('themeToggle').textContent = isLight ? 'Light' : 'Dark';
     }
 
     // Load saved theme
     if (localStorage.getItem('theme') === 'light') {
       document.body.classList.add('light-theme');
-      document.getElementById('themeToggle').textContent = '☀️';
+      document.getElementById('themeToggle').textContent = 'Light';
     }
 
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);

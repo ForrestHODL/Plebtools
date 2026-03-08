@@ -396,23 +396,22 @@
         </div>
         <div class="nav-links">
           <div class="dropdown" id="toolsDropdown">
-            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow"></span></button>
             <div class="dropdown-content" id="toolsContent" style="display: none;">
-              <a href="home">🏠 Home</a>
-              <a href="treasury">📊 Treasury</a>
-              <a href="btc-buy-tracker">💼 Portfolio</a>
-              <a href="compound-interest-calculator">💰 Calculator</a>
-              <a href="the-great-intersection">📉 The Great Intersection</a>
-              <a href="btc-loan-ltv">🔒 BTC Loans</a>
-              <a href="financial-planner">📋 Financial Planner</a>
-              <a href="bitcoin-security">🛡️ Bitcoin Security</a>
-              <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
-              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
-              <a href="invoice-builder">🧾 Invoice Builder</a>
-              <a href="pleb-release">📰 Pleb Release</a>
+              <a href="home"> Home</a>
+              <a href="treasury"> Treasury</a>
+              <a href="btc-buy-tracker"> Portfolio</a>
+              <a href="compound-interest-calculator"> Calculator</a>
+              <a href="the-great-intersection"> The Great Intersection</a>
+              <a href="btc-loan-ltv"> BTC Loans</a>
+              <a href="financial-planner"> Financial Planner</a>
+              <a href="bitcoin-security">️ Bitcoin Security</a>
+              <a href="interest-arbitrage-calculator"> Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody"> Self Custody Guide</a>
+              <a href="invoice-builder"> Invoice Builder</a>
+              <a href="pleb-release"> Pleb Release</a>
             </div>
           </div>
-          <a href="account" class="account-link">👤 Account</a>
         </div>
       </div>
     </nav>
@@ -471,14 +470,14 @@
         </div>
 
         <div class="csv-controls">
-          <button id="downloadCSVBtn" class="csv-btn">📥 Download CSV</button>
-          <button id="uploadCSVBtn" class="csv-btn upload">📤 Upload CSV</button>
+          <button id="downloadCSVBtn" class="csv-btn"> Download CSV</button>
+          <button id="uploadCSVBtn" class="csv-btn upload"> Upload CSV</button>
           <input type="file" id="csvFileInput" accept=".csv" />
         </div>
         <div class="chart-controls">
           <button id="chartToggle" class="chart-toggle-btn">Switch to Line Chart</button>
           <button id="refreshPriceBtn" class="chart-toggle-btn" style="margin-left: 10px; background-color: #007bff; color: white;">
-            🔄 Refresh Market Price
+             Refresh Market Price
           </button>
         </div>
         <div class="chart-container">
@@ -565,13 +564,13 @@
   <section class="support-section">
     <div class="container support-grid">
       <div class="support-card">
-        <div class="support-icon">⚡</div>
+        <div class="support-icon"></div>
         <h2 class="support-title">Support Plebtools</h2>
         <p class="support-text">
           Enjoying these tools? You can help keep them free and open source by donating sats.
           Every contribution fuels more Bitcoin-first development.
         </p>
-        <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+        <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate </a>
       </div>
     </div>
   </section>
@@ -586,11 +585,12 @@
 
   <footer>
     <div class="container">
-      <p>&copy; 2024 Plebtools. Open source Bitcoin tracking tools.</p>
+      <p>&copy; 2025 Plebtools. Open source Bitcoin tracking tools.</p>
     </div>
   </footer>
 
   <script>
+    (function(){ try { if (typeof window !== 'undefined' && !window.PLEBTOOLS_DEBUG) console.log = function(){}; } catch(e) {} })();
     // Public portfolio data - this will be populated with real data
     let publicTrades = [];
     let performanceChart = null;
@@ -610,7 +610,7 @@
       document.getElementById('refreshPriceBtn').addEventListener('click', function() {
         const button = this;
         const originalText = button.textContent;
-        button.textContent = '🔄 Refreshing...';
+        button.textContent = ' Refreshing...';
         button.disabled = true;
         
         updateCurrentMarketPrice().finally(() => {
@@ -1453,7 +1453,7 @@
 
     // Theme toggle functionality
     const themeToggle = document.createElement('button');
-    themeToggle.innerHTML = '🌙';
+    themeToggle.innerHTML = '';
     themeToggle.style.cssText = `
       position: fixed;
       top: 20px;
@@ -1479,11 +1479,11 @@
       isDarkTheme = !isDarkTheme;
       if (isDarkTheme) {
         document.body.classList.add("dark-theme");
-        themeToggle.textContent = "☀️";
+        themeToggle.textContent = "️";
         localStorage.setItem("theme", "dark");
       } else {
         document.body.classList.remove("dark-theme");
-        themeToggle.textContent = "🌙";
+        themeToggle.textContent = "";
         localStorage.setItem("theme", "light");
       }
     });
@@ -1493,7 +1493,7 @@
     if (savedTheme === "dark") {
       isDarkTheme = true;
       document.body.classList.add("dark-theme");
-      themeToggle.textContent = "☀️";
+      themeToggle.textContent = "️";
     }
 
     document.body.appendChild(themeToggle);
