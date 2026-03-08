@@ -819,6 +819,7 @@
               <a href="btc-buy-tracker">💼 Portfolio</a>
               <a href="coveredcall-tracker">📈 Covered Calls</a>
               <a href="compound-interest-calculator">💰 Calculator</a>
+              <a href="the-great-intersection">📉 The Great Intersection</a>
               <a href="btc-loan-ltv">🔒 BTC Loans</a>
               <a href="financial-planner">📋 Financial Planner</a>
               <a href="bitcoin-security">🛡️ Bitcoin Security</a>
@@ -947,7 +948,7 @@
               </div>
               <div class="affiliate-item">
                 <h4>Where to store</h4>
-                <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a>
+                <a href="https://store.coinkite.com/promo/169FA71FECC4928F725D" target="_blank" class="affiliate-link">Coldcard</a>
               </div>
               <div class="affiliate-item">
                 <h4>How to protect</h4>
@@ -965,7 +966,16 @@
                </div>
                <div class="affiliate-item">
                  <h4>Where to learn</h4>
-                 <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
+                 <a href="https://www.youtube.com/channel/UC2aM2gVVEHTu0pfE1ZyA0BQ" target="_blank" class="affiliate-link">YouTube</a>
+               </div>
+               <div class="affiliate-item">
+                 <h4>Privacy devices</h4>
+                 <a href="https://www.mark37.com/ref/BNC/" target="_blank" class="affiliate-link">Mark37</a>
+                 <p style="font-size: 0.8rem; color: #4CAF50; margin-top: 0.5rem; font-weight: 500;">5% off using code: BNC</p>
+               </div>
+               <div class="affiliate-item">
+                 <h4>BTC learning community</h4>
+                 <a href="https://www.skool.com/the-bitcoin-masters-4115" target="_blank" class="affiliate-link">The Bitcoin Masters</a>
                </div>
              </div>
           </div>
@@ -1009,6 +1019,27 @@
   <script>
     // Bitcoin Well transaction data (pre-loaded)
     const bitcoinWellData = [
+      {
+        date: "2025-11-24",
+        btcAmount: 0.00026571, // 26,571 sats converted to BTC
+        priceUsd: 125848.00,
+        fiatAmount: 33.44,
+        fiatCode: "CAD"
+      },
+      {
+        date: "2025-11-17",
+        btcAmount: 0.00149573, // 149,573 sats converted to BTC
+        priceUsd: 134444.00,
+        fiatAmount: 200,
+        fiatCode: "CAD"
+      },
+      {
+        date: "2025-11-10",
+        btcAmount: 0.00066840, // 66,840 sats converted to BTC
+        priceUsd: 149608.00,
+        fiatAmount: 100,
+        fiatCode: "CAD"
+      },
       {
         date: "2025-11-03",
         btcAmount: 0.00065055, // 65,055 sats converted to BTC
@@ -1130,6 +1161,8 @@
       fiatAmount: transaction.fiatAmount
     }));
     console.log('Loaded buys from bitcoinWellData:', buys);
+    console.log('Total purchases:', buys.length);
+    console.log('Latest purchase date:', buys.length > 0 ? buys.map(b => b.date).sort().reverse()[0] : 'none');
     localStorage.setItem("buys", JSON.stringify(buys));
 
     const table = document.getElementById("buysTable");
@@ -1328,7 +1361,10 @@
       // Get all purchase dates
       const purchaseDates = buys.map(buy => buy.date).sort();
       const startDate = purchaseDates[0];
-      const endDate = new Date().toISOString().split('T')[0];
+      const today = new Date().toISOString().split('T')[0];
+      const latestPurchaseDate = purchaseDates[purchaseDates.length - 1];
+      // Extend end date to include latest purchase date if it's in the future
+      const endDate = latestPurchaseDate > today ? latestPurchaseDate : today;
       
       // Fetch historical Bitcoin prices
       let historicalPrices = {};
@@ -1359,14 +1395,36 @@
         if (btcAtThisDate > 0) {
           // Get the Bitcoin price for this specific date
           let priceForThisDate;
-          if (dateStr === endDate && currentBtcPriceCAD) {
+          if (dateStr === today && currentBtcPriceCAD) {
+            // Use current price for today
             priceForThisDate = currentBtcPriceCAD;
+          } else if (dateStr > today) {
+            // For future dates, use current price or purchase price if available
+            if (currentBtcPriceCAD) {
+              priceForThisDate = currentBtcPriceCAD;
+            } else {
+              // Try to find purchase price for this date
+              const purchaseOnThisDate = buys.find(buy => buy.date === dateStr);
+              if (purchaseOnThisDate) {
+                priceForThisDate = purchaseOnThisDate.priceUsd;
+              } else {
+                // Skip if no price available
+                currentDate.setDate(currentDate.getDate() + 1);
+                continue;
+              }
+            }
           } else if (historicalPrices[dateStr]) {
             priceForThisDate = historicalPrices[dateStr];
           } else {
-            // Skip dates without price data
-            currentDate.setDate(currentDate.getDate() + 1);
-            continue;
+            // For past dates without historical data, try to use purchase price
+            const purchaseOnThisDate = buys.find(buy => buy.date === dateStr);
+            if (purchaseOnThisDate) {
+              priceForThisDate = purchaseOnThisDate.priceUsd;
+            } else {
+              // Skip dates without price data
+              currentDate.setDate(currentDate.getDate() + 1);
+              continue;
+            }
           }
           
           // Calculate portfolio value: BTC amount × historical price for this date
@@ -1426,14 +1484,32 @@
           priceForThisDate = historicalPrices[dateStr];
           hasAnyPriceData = true;
         } else {
-          // For future dates or dates without price data, use the latest available price or current price
-          if (dateStr > today && currentBtcPriceCAD) {
-            priceForThisDate = currentBtcPriceCAD;
-            hasAnyPriceData = true;
+          // For future dates or dates without price data, try purchase price first, then current price
+          if (dateStr > today) {
+            // Check if there's a purchase on this date
+            const purchaseOnThisDate = buys.find(buy => buy.date === dateStr);
+            if (purchaseOnThisDate) {
+              priceForThisDate = purchaseOnThisDate.priceUsd;
+              hasAnyPriceData = true;
+            } else if (currentBtcPriceCAD) {
+              priceForThisDate = currentBtcPriceCAD;
+              hasAnyPriceData = true;
+            } else {
+              // Skip if no price available
+              currentDate.setDate(currentDate.getDate() + 1);
+              continue;
+            }
           } else {
-            // Skip dates without price data
-            currentDate.setDate(currentDate.getDate() + 1);
-            continue;
+            // For past dates without historical data, try purchase price
+            const purchaseOnThisDate = buys.find(buy => buy.date === dateStr);
+            if (purchaseOnThisDate) {
+              priceForThisDate = purchaseOnThisDate.priceUsd;
+              hasAnyPriceData = true;
+            } else {
+              // Skip dates without price data
+              currentDate.setDate(currentDate.getDate() + 1);
+              continue;
+            }
           }
         }
 

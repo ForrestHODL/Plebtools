@@ -264,6 +264,42 @@
       background: #0056b3;
     }
     
+    .csv-controls {
+      margin-bottom: 1rem;
+      text-align: center;
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .csv-btn {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.2s;
+    }
+    
+    .csv-btn:hover {
+      background: #218838;
+    }
+    
+    .csv-btn.upload {
+      background: #17a2b8;
+    }
+    
+    .csv-btn.upload:hover {
+      background: #138496;
+    }
+    
+    #csvFileInput {
+      display: none;
+    }
+    
     .chart-container {
       position: relative;
       height: 400px;
@@ -525,6 +561,11 @@
 
     .dark-theme .discount-code {
       color: #4CAF50;
+    }
+
+    /* Dark theme for CSV buttons */
+    .dark-theme .csv-btn {
+      color: white;
     }
 
     .dark-theme .trades-table {
@@ -801,6 +842,7 @@
               <a href="treasury">📊 Treasury</a>
               <a href="btc-buy-tracker">💼 Portfolio</a>
               <a href="compound-interest-calculator">💰 Calculator</a>
+              <a href="the-great-intersection">📉 The Great Intersection</a>
               <a href="btc-loan-ltv">🔒 BTC Loans</a>
               <a href="financial-planner">📋 Financial Planner</a>
               <a href="bitcoin-security">🛡️ Bitcoin Security</a>
@@ -942,6 +984,11 @@
         </div>
           </div>
 
+        <div class="csv-controls">
+          <button id="downloadCSVBtn" class="csv-btn">📥 Download CSV</button>
+          <button id="uploadCSVBtn" class="csv-btn upload">📤 Upload CSV</button>
+          <input type="file" id="csvFileInput" accept=".csv" />
+        </div>
         <div class="chart-controls">
           <button id="chartToggle" class="chart-toggle-btn">Switch to Line Chart</button>
         </div>
@@ -993,7 +1040,7 @@
           </div>
           <div class="affiliate-item">
             <h4>Where to store</h4>
-            <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a>
+            <a href="https://store.coinkite.com/promo/169FA71FECC4928F725D" target="_blank" class="affiliate-link">Coldcard</a>
           </div>
           <div class="affiliate-item">
             <h4>How to protect</h4>
@@ -1011,7 +1058,16 @@
           </div>
           <div class="affiliate-item">
             <h4>Where to learn</h4>
-            <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
+            <a href="https://www.youtube.com/channel/UC2aM2gVVEHTu0pfE1ZyA0BQ" target="_blank" class="affiliate-link">YouTube</a>
+          </div>
+          <div class="affiliate-item">
+            <h4>Privacy devices</h4>
+            <a href="https://www.mark37.com/ref/BNC/" target="_blank" class="affiliate-link">Mark37</a>
+            <p style="font-size: 0.8rem; color: #4CAF50; margin-top: 0.5rem; font-weight: 500;">5% off using code: BNC</p>
+          </div>
+          <div class="affiliate-item">
+            <h4>BTC learning community</h4>
+            <a href="https://www.skool.com/the-bitcoin-masters-4115" target="_blank" class="affiliate-link">The Bitcoin Masters</a>
           </div>
         </div>
       </div>
@@ -1072,6 +1128,17 @@
       updateStats();
       await updateChart();
       updateTable();
+      
+      // CSV download button
+      document.getElementById('downloadCSVBtn').addEventListener('click', downloadCSV);
+      
+      // CSV upload button
+      document.getElementById('uploadCSVBtn').addEventListener('click', function() {
+        document.getElementById('csvFileInput').click();
+      });
+      
+      // CSV file input change handler
+      document.getElementById('csvFileInput').addEventListener('change', handleCSVUpload);
       
       // Update market price every 30 seconds
       setInterval(updateCurrentMarketPrice, 30000);
@@ -2022,12 +2089,12 @@
           </td>
           <td><strong>${trade.symbol}</strong></td>
           <td>${trade.shares}</td>
-          <td>${trade.strikePrice ? '$' + trade.strikePrice.toFixed(2) : '-'}</td>
-          <td>${trade.premium ? '$' + (trade.premium / trade.shares).toFixed(2) : '-'}</td>
+          <td>${trade.strikePrice != null && !isNaN(trade.strikePrice) ? '$' + parseFloat(trade.strikePrice).toFixed(2) : '-'}</td>
+          <td>${trade.premium != null && !isNaN(trade.premium) && trade.shares ? '$' + (parseFloat(trade.premium) / trade.shares).toFixed(2) : '-'}</td>
           <td>${trade.expirationDate ? new Date(trade.expirationDate).toLocaleDateString() : '-'}</td>
-          <td>$${trade.newCostBasis.toFixed(2)}</td>
+          <td>$${(trade.newCostBasis != null && !isNaN(trade.newCostBasis) ? parseFloat(trade.newCostBasis) : 0).toFixed(2)}</td>
           <td class="${trade.pnl >= 0 ? 'profit' : 'loss'}">
-            ${trade.pnl >= 0 ? '+' : ''}$${trade.pnl.toFixed(2)}
+            ${trade.pnl != null && !isNaN(trade.pnl) ? (trade.pnl >= 0 ? '+' : '') + '$' + parseFloat(trade.pnl).toFixed(2) : '$0.00'}
           </td>
           <td>
             <div class="action-buttons">
@@ -2131,37 +2198,228 @@
       }
     }
 
-    // Export data
-    function exportData() {
+    // Download CSV function
+    function downloadCSV() {
       if (trades.length === 0) {
-        alert('No data to export!');
+        alert('No trades to export');
         return;
       }
 
-      const csvContent = [
-        ['Symbol', 'Shares', 'Original Cost Basis', 'New Cost Basis', 'Strike Price', 'Premium', 'Current Price', 'P&L', 'Expiration Date', 'Notes', 'Date Added'],
-        ...trades.map(trade => [
-          trade.symbol,
-          trade.shares,
-          trade.originalCostBasis,
-          trade.newCostBasis,
-          trade.strikePrice,
-          trade.premium,
-          trade.currentPrice,
-          trade.pnl,
-          trade.expirationDate,
-          trade.notes,
-          new Date(trade.dateAdded).toLocaleDateString()
-        ])
-      ].map(row => row.join(',')).join('\n');
+      // Define CSV headers
+      const headers = [
+        'id',
+        'tradeType',
+        'symbol',
+        'shares',
+        'originalCostBasis',
+        'newCostBasis',
+        'strikePrice',
+        'premium',
+        'expirationDate',
+        'currentPrice',
+        'notes',
+        'pnl',
+        'dateAdded'
+      ];
 
-      const blob = new Blob([csvContent], { type: 'text/csv' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'covered-call-trades.csv';
-      a.click();
-      window.URL.revokeObjectURL(url);
+      // Convert trades to CSV rows
+      const csvRows = [headers.join(',')];
+
+      trades.forEach(trade => {
+        const row = headers.map(header => {
+          let value = trade[header];
+          
+          // Handle null/undefined values
+          if (value === null || value === undefined) {
+            value = '';
+          }
+          // Handle 'N/A' string values
+          else if (value === 'N/A') {
+            value = 'N/A';
+          }
+          // Handle dates
+          else if (header === 'dateAdded' || header === 'expirationDate') {
+            value = value === 'N/A' ? 'N/A' : new Date(value).toISOString();
+          }
+          // Convert to string
+          else {
+            value = String(value);
+          }
+          
+          // Quote values that contain commas, quotes, or newlines
+          if (value.includes(',') || value.includes('"') || value.includes('\n') || value.includes('\r')) {
+            value = `"${value.replace(/"/g, '""')}"`;
+          }
+          
+          return value;
+        });
+        csvRows.push(row.join(','));
+      });
+
+      // Create CSV content
+      const csvContent = csvRows.join('\n');
+
+      // Create blob and download
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', `covered-call-trades_${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Handle CSV upload
+    function handleCSVUpload(event) {
+      const file = event.target.files[0];
+      if (!file) {
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const text = e.target.result;
+          const lines = text.split('\n').filter(line => line.trim() !== '');
+          
+          if (lines.length < 2) {
+            alert('CSV file must have at least a header row and one data row');
+            return;
+          }
+
+          // Parse header using the same CSV line parser
+          const headerValues = parseCSVLine(lines[0]);
+          const headers = headerValues.map(h => h.trim().replace(/^"|"$/g, ''));
+          
+          // Parse data rows
+          const importedTrades = [];
+          for (let i = 1; i < lines.length; i++) {
+            const line = lines[i];
+            const values = parseCSVLine(line);
+            
+            if (values.length !== headers.length) {
+              console.warn(`Row ${i + 1} has ${values.length} columns but expected ${headers.length}, skipping`);
+              continue;
+            }
+
+            const trade = {};
+            headers.forEach((header, index) => {
+              let value = values[index].trim();
+              
+              // Remove quotes if present
+              if (value.startsWith('"') && value.endsWith('"')) {
+                value = value.slice(1, -1).replace(/""/g, '"');
+              }
+              
+              // Convert to appropriate type
+              if (value === '' || value === 'null' || value === 'undefined') {
+                trade[header] = null;
+              } else if (value === 'N/A') {
+                // For numeric fields, set to null instead of 'N/A' string
+                if (header === 'strikePrice' || header === 'premium' || 
+                    header === 'currentPrice' || header === 'pnl') {
+                  trade[header] = null;
+                } else {
+                  trade[header] = 'N/A';
+                }
+              } else if (header === 'id' || header === 'shares') {
+                trade[header] = parseInt(value) || 0;
+              } else if (header === 'originalCostBasis' || header === 'newCostBasis') {
+                trade[header] = parseFloat(value) || 0;
+              } else if (header === 'strikePrice' || header === 'premium' || 
+                         header === 'currentPrice' || header === 'pnl') {
+                const numValue = parseFloat(value);
+                trade[header] = isNaN(numValue) ? null : numValue;
+              } else if (header === 'dateAdded' || header === 'expirationDate') {
+                trade[header] = value === 'N/A' ? null : value;
+              } else {
+                trade[header] = value;
+              }
+            });
+            
+            // Ensure id is unique if not provided or if it conflicts
+            if (!trade.id || trades.find(t => t.id === trade.id)) {
+              trade.id = Date.now() + Math.random();
+            }
+            
+            importedTrades.push(trade);
+          }
+
+          if (importedTrades.length === 0) {
+            alert('No valid trades found in CSV file');
+            return;
+          }
+
+          // Confirm before replacing data
+          if (confirm(`Import ${importedTrades.length} trade(s)? This will replace your current portfolio data.`)) {
+            trades = importedTrades;
+            localStorage.setItem('coveredCallTrades', JSON.stringify(trades));
+            
+            // Update UI
+            loadTrades();
+            updateStats();
+            updateTable();
+            updateChart();
+            
+            alert(`Successfully imported ${importedTrades.length} trade(s)`);
+          }
+        } catch (error) {
+          console.error('Error parsing CSV:', error);
+          alert('Error parsing CSV file: ' + error.message);
+        }
+      };
+
+      reader.onerror = function() {
+        alert('Error reading file');
+      };
+
+      reader.readAsText(file);
+      
+      // Reset file input
+      event.target.value = '';
+    }
+
+    // Helper function to parse CSV line (handles quoted values with commas)
+    function parseCSVLine(line) {
+      const values = [];
+      let current = '';
+      let inQuotes = false;
+      
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        const nextChar = line[i + 1];
+        
+        if (char === '"') {
+          if (inQuotes && nextChar === '"') {
+            // Escaped quote
+            current += '"';
+            i++; // Skip next quote
+          } else {
+            // Toggle quote state
+            inQuotes = !inQuotes;
+          }
+        } else if (char === ',' && !inQuotes) {
+          // End of value
+          values.push(current);
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      
+      // Add last value
+      values.push(current);
+      
+      return values;
+    }
+
+    // Export data (kept for backward compatibility with existing button)
+    function exportData() {
+      downloadCSV();
     }
 
     // Theme toggle functionality

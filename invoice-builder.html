@@ -951,8 +951,8 @@
     }
   </style>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNa5H8oQa+6R8xAi8uKXu95syEHCqB6f+GO6zkRgZNpmjQe7YQDdyCjTiMQuuLHfoalGoV7V6R8P2KyZB9r3nw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-/F7AOt7NmBGG99nmHn7+O+kO5RAwOB1p5MNDoAuCEi0aKBslZx2drXr/7EQo1leChX2NDSSSXTH0gr86z4h3UQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
   <header>
@@ -973,6 +973,7 @@
               <a href="btc-buy-tracker">💼 Portfolio</a>
               <a href="coveredcall-tracker">📈 Covered Calls</a>
               <a href="compound-interest-calculator">💰 Calculator</a>
+              <a href="the-great-intersection">📉 The Great Intersection</a>
               <a href="btc-loan-ltv">🔒 BTC Loans</a>
               <a href="financial-planner">📋 Financial Planner</a>
               <a href="bitcoin-security">🛡️ Bitcoin Security</a>
@@ -1165,7 +1166,7 @@
             </div>
             <div class="affiliate-item">
               <h4>Where to store</h4>
-              <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a>
+              <a href="https://store.coinkite.com/promo/169FA71FECC4928F725D" target="_blank" class="affiliate-link">Coldcard</a>
             </div>
             <div class="affiliate-item">
               <h4>How to protect</h4>
@@ -1183,7 +1184,16 @@
             </div>
             <div class="affiliate-item">
               <h4>Where to learn</h4>
-              <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
+              <a href="https://www.youtube.com/channel/UC2aM2gVVEHTu0pfE1ZyA0BQ" target="_blank" class="affiliate-link">YouTube</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>Privacy devices</h4>
+              <a href="https://www.mark37.com/ref/BNC/" target="_blank" class="affiliate-link">Mark37</a>
+              <p style="font-size: 0.8rem; color: #4CAF50; margin-top: 0.5rem; font-weight: 500;">5% off using code: BNC</p>
+            </div>
+            <div class="affiliate-item">
+              <h4>BTC learning community</h4>
+              <a href="https://www.skool.com/the-bitcoin-masters-4115" target="_blank" class="affiliate-link">The Bitcoin Masters</a>
             </div>
           </div>
         </div>
@@ -1221,7 +1231,52 @@
 
   <script>
     (() => {
-      const { jsPDF } = window.jspdf || {};
+      let html2CanvasFallbackPromise = null;
+      let jsPdfFallbackPromise = null;
+
+      const ensureHtml2Canvas = async () => {
+        if (window.html2canvas) {
+          return window.html2canvas;
+        }
+
+        if (!html2CanvasFallbackPromise) {
+          html2CanvasFallbackPromise = new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+            script.async = true;
+            script.onload = () => resolve(window.html2canvas || null);
+            script.onerror = () => reject(new Error('Failed to load html2canvas fallback'));
+            document.head.appendChild(script);
+          }).catch(error => {
+            console.error(error);
+            return null;
+          });
+        }
+
+        return html2CanvasFallbackPromise;
+      };
+
+      const ensureJsPdf = async () => {
+        if (window.jspdf?.jsPDF) {
+          return window.jspdf.jsPDF;
+        }
+
+        if (!jsPdfFallbackPromise) {
+          jsPdfFallbackPromise = new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';
+            script.async = true;
+            script.onload = () => resolve(window.jspdf?.jsPDF || null);
+            script.onerror = () => reject(new Error('Failed to load jsPDF fallback'));
+            document.head.appendChild(script);
+          }).catch(error => {
+            console.error(error);
+            return null;
+          });
+        }
+
+        return jsPdfFallbackPromise;
+      };
 
       const currencySymbols = {
         USD: '$',
@@ -1859,6 +1914,13 @@
       };
 
       const downloadInvoice = async () => {
+        const html2canvasLib = await ensureHtml2Canvas();
+        if (!html2canvasLib) {
+          alert('Unable to load the rendering library. Please refresh the page.');
+          return;
+        }
+
+        const jsPDF = await ensureJsPdf();
         if (!jsPDF) {
           alert('PDF library failed to load. Please refresh the page.');
           return;
@@ -1871,7 +1933,7 @@
         downloadBtn.textContent = 'Preparing PDF…';
 
         try {
-          const canvas = await html2canvas(previewCard, {
+          const canvas = await html2canvasLib(previewCard, {
             scale: 2,
             backgroundColor: '#ffffff',
             useCORS: true
@@ -1935,6 +1997,8 @@
 
       controls.currency.addEventListener('change', updateItemsPreview);
 
+      ensureHtml2Canvas().catch(() => {});
+      ensureJsPdf().catch(() => {});
       initializeTemplates();
     })();
   </script>
