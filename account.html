@@ -133,6 +133,196 @@
       background: #3d3d3d;
     }
 
+    /* Nostr Login Styles */
+    .hidden {
+      display: none !important;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 5px 0;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: #48bb78;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #38a169;
+      transform: translateY(-2px);
+    }
+
+    .btn-danger {
+      background: #f56565;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #e53e3e;
+      transform: translateY(-2px);
+    }
+
+    .error-message {
+      margin-top: 15px;
+      padding: 12px;
+      background: #fed7d7;
+      border-left: 4px solid #f56565;
+      border-radius: 4px;
+      color: #742a2a;
+    }
+
+    .success-message {
+      margin-top: 15px;
+      padding: 12px;
+      background: #c6f6d5;
+      border-left: 4px solid #48bb78;
+      border-radius: 4px;
+      color: #22543d;
+    }
+
+    .user-info {
+      margin: 20px 0;
+    }
+
+    .info-item {
+      margin-bottom: 15px;
+      padding: 10px;
+      background: #f7fafc;
+      border-radius: 6px;
+    }
+
+    .dark-theme .info-item {
+      background: #4d4d4d;
+    }
+
+    .info-item label {
+      font-weight: 600;
+      color: #4a5568;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .dark-theme .info-item label {
+      color: #e0e0e0;
+    }
+
+    .public-key {
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+      color: #2d3748;
+      word-break: break-all;
+      padding: 8px;
+      background: white;
+      border-radius: 4px;
+    }
+
+    .dark-theme .public-key {
+      background: #2d2d2d;
+      color: #e0e0e0;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: #48bb78;
+      color: white;
+      border-radius: 12px;
+      font-size: 0.9em;
+      font-weight: 600;
+    }
+
+    .status-success {
+      background: #48bb78 !important;
+    }
+
+    .status-warning {
+      background: #ed8936 !important;
+    }
+
+    .status-error {
+      background: #f56565 !important;
+    }
+
+    .relay-item {
+      padding: 6px 10px;
+      margin: 5px 0;
+      background: white;
+      border-radius: 4px;
+      font-size: 0.9em;
+      font-family: 'Courier New', monospace;
+    }
+
+    .dark-theme .relay-item {
+      background: #4d4d4d;
+      color: #e0e0e0;
+    }
+
+    .sign-result {
+      margin-top: 20px;
+    }
+
+    .sign-result pre {
+      background: #2d3748;
+      color: #e2e8f0;
+      padding: 15px;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin-top: 10px;
+      font-size: 0.85em;
+    }
+
+    .wallet-details {
+      margin-top: 15px;
+      padding: 15px;
+      background: #f0fff4;
+      border-left: 4px solid #48bb78;
+      border-radius: 6px;
+    }
+
+    .dark-theme .wallet-details {
+      background: #1a3a1a;
+      border-left-color: #48bb78;
+    }
+
+    .wallet-info-item {
+      margin-bottom: 15px;
+      padding: 10px;
+      background: #f7fafc;
+      border-radius: 6px;
+    }
+
+    .dark-theme .wallet-info-item {
+      background: #4d4d4d;
+    }
+
+    .wallet-info-item label {
+      font-weight: 600;
+      color: #4a5568;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .dark-theme .wallet-info-item label {
+      color: #e0e0e0;
+    }
+
   </style>
 </head>
 <body>
@@ -154,6 +344,7 @@
               <a href="btc-buy-tracker">💼 Portfolio</a>
               <a href="coveredcall-tracker">📈 Covered Calls</a>
               <a href="compound-interest-calculator">💰 Calculator</a>
+              <a href="the-great-intersection">📉 The Great Intersection</a>
               <a href="btc-loan-ltv">🔒 BTC Loans</a>
               <a href="financial-planner">📋 Financial Planner</a>
               <a href="bitcoin-security">🛡️ Bitcoin Security</a>
@@ -180,15 +371,117 @@
       </div>
 
       <div class="account-content">
-        <!-- Coming Soon Banner -->
+        <!-- Under Construction Banner -->
         <div class="coming-soon-banner">
           <div class="coming-soon-content">
-            <h2>🚧 ACCOUNT SYSTEM COMING SOON 🚧</h2>
-            <p><strong>Account creation and login are currently disabled.</strong><br>
-            We're working hard to bring you the best account management experience. Stay tuned!</p>
+            <h2>🚧 UNDER CONSTRUCTION 🚧</h2>
+            <p><strong>Account system is currently being built.</strong><br>
+            Nostr login is available for testing, but full account features are still in development!</p>
           </div>
         </div>
 
+        <!-- Nostr Login Section -->
+        <div class="account-section" id="login-section">
+          <h3>🔐 Login with Nostr</h3>
+          <p>Connect using a NIP-07 compatible browser extension (Alby, nos2x, Nostrame, etc.)</p>
+          <button id="login-btn" class="btn btn-primary" style="margin-top: 1rem;">Login with Nostr Extension</button>
+          <div id="error-message" class="error-message" style="display: none;"></div>
+          <div style="margin-top: 1rem; padding: 0.5rem; background: #f0f0f0; border-radius: 4px; font-size: 0.9rem;">
+            <strong>Debug Info:</strong><br>
+            <span id="debug-info">Loading...</span>
+          </div>
+        </div>
+
+        <!-- User Dashboard -->
+        <div class="account-section hidden" id="dashboard">
+          <h3>Welcome!</h3>
+          <div class="user-info">
+            <div class="info-item">
+              <label>Public Key:</label>
+              <div class="public-key" id="public-key"></div>
+            </div>
+            <div class="info-item">
+              <label>Relays:</label>
+              <div id="relays"></div>
+            </div>
+            <div class="info-item">
+              <label>Account Status:</label>
+              <span class="status-badge" id="account-status">Active</span>
+            </div>
+          </div>
+          <div class="actions" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
+            <button id="test-sign-btn" class="btn btn-secondary">Test Event Signing</button>
+            <button id="logout-btn" class="btn btn-danger">Logout</button>
+          </div>
+          <div id="sign-result" class="sign-result" style="margin-top: 1.5rem;"></div>
+        </div>
+
+        <!-- Relay Configuration Section -->
+        <div class="account-section" id="relay-section">
+          <h3>📡 Configure Relays</h3>
+          <p>Relays are servers that store and forward Nostr events. Configure relays to enable zapable events and full Nostr functionality.</p>
+          <div style="margin: 1.5rem 0; padding: 1rem; background: #f0f7ff; border-left: 4px solid #4299e1; border-radius: 4px;">
+            <strong>💡 Popular Public Relays:</strong>
+            <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+              <li><code>wss://relay.damus.io</code> - Damus relay (recommended)</li>
+              <li><code>wss://nos.lol</code> - Nostr relay</li>
+              <li><code>wss://relay.snort.social</code> - Snort relay</li>
+              <li><code>wss://relay.nostr.band</code> - Nostr Band relay</li>
+            </ul>
+            <p style="margin: 0.5rem 0 0 0; font-size: 0.9em; color: #666;">You can add multiple relays for redundancy. Just paste one URL at a time.</p>
+          </div>
+          <div style="margin: 1.5rem 0;">
+            <div class="info-item">
+              <label>Current Relays:</label>
+              <div id="current-relays" style="margin-top: 0.5rem;">
+                <p style="color: #666;">No relays configured. Using default relay for zaps.</p>
+              </div>
+            </div>
+            <div style="margin-top: 1rem;">
+              <label for="relay-input" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Add Relay (wss://...):</label>
+              <input type="text" id="relay-input" placeholder="wss://relay.damus.io" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; font-family: monospace;">
+              <button id="add-relay-btn" class="btn btn-secondary" style="margin-top: 0.5rem;">Add Relay</button>
+            </div>
+          </div>
+          <div id="relay-result" style="margin-top: 1rem;"></div>
+        </div>
+
+        <!-- Zap Section -->
+        <div class="account-section" id="zap-section">
+          <h3>⚡ Send Zap</h3>
+          <p>Send a Lightning payment (zap) to the site owner. Requires wallet connection.</p>
+          <div style="margin: 1.5rem 0;">
+            <div style="margin-bottom: 1rem;">
+              <label for="zap-amount" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Amount (sats):</label>
+              <input type="number" id="zap-amount" value="100" min="1" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <div style="margin-bottom: 1rem;">
+              <label for="zap-message" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Message (optional):</label>
+              <textarea id="zap-message" placeholder="Thanks for the great tools!" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; min-height: 80px;"></textarea>
+            </div>
+            <button id="send-zap-btn" class="btn btn-primary">⚡ Send Zap</button>
+          </div>
+          <div id="zap-result" style="margin-top: 1rem;"></div>
+        </div>
+
+        <!-- Wallet Connection Section -->
+        <div class="account-section" id="wallet-section">
+          <h3>💳 Connect Nostr Wallet</h3>
+          <p>Connect your Nostr wallet to enable payment features and wallet interactions.</p>
+          <div id="wallet-status" style="margin: 1.5rem 0;">
+            <div class="info-item">
+              <label>Wallet Status:</label>
+              <span class="status-badge" id="wallet-status-badge">Not Connected</span>
+            </div>
+            <div id="wallet-details" class="wallet-details hidden" style="margin-top: 1rem; padding: 1rem; background: #f0fff4; border-left: 4px solid #48bb78; border-radius: 6px;"></div>
+          </div>
+          <div class="wallet-actions" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
+            <button id="connect-wallet-btn" class="btn btn-primary">Connect Wallet</button>
+            <button id="check-wallet-btn" class="btn btn-secondary">Check Wallet Status</button>
+            <button id="disconnect-wallet-btn" class="btn btn-danger hidden">Disconnect Wallet</button>
+          </div>
+          <div id="wallet-result" style="margin-top: 1.5rem;"></div>
+        </div>
 
       </div>
     </div>
@@ -219,7 +512,7 @@
             </div>
             <div class="affiliate-item">
               <h4>Where to store</h4>
-              <a href="https://store.blockstream.com/?code=DTzyNKA5Q8Sz" target="_blank" class="affiliate-link">Blockstream Jade</a>
+              <a href="https://store.coinkite.com/promo/169FA71FECC4928F725D" target="_blank" class="affiliate-link">Coldcard</a>
             </div>
             <div class="affiliate-item">
               <h4>How to protect</h4>
@@ -237,7 +530,16 @@
             </div>
             <div class="affiliate-item">
               <h4>Where to learn</h4>
-              <a href="https://www.youtube.com/@bitcoinnotcrypto" target="_blank" class="affiliate-link">YouTube</a>
+              <a href="https://www.youtube.com/channel/UC2aM2gVVEHTu0pfE1ZyA0BQ" target="_blank" class="affiliate-link">YouTube</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>Privacy devices</h4>
+              <a href="https://www.mark37.com/ref/BNC/" target="_blank" class="affiliate-link">Mark37</a>
+              <p style="font-size: 0.8rem; color: #4CAF50; margin-top: 0.5rem; font-weight: 500;">5% off using code: BNC</p>
+            </div>
+            <div class="affiliate-item">
+              <h4>BTC learning community</h4>
+              <a href="https://www.skool.com/the-bitcoin-masters-4115" target="_blank" class="affiliate-link">The Bitcoin Masters</a>
             </div>
           </div>
         </div>
@@ -277,6 +579,23 @@
     </div>
   </footer>
 
+  <!-- nostr-tools for NIP-04 encryption and relay connections -->
+  <script src="https://unpkg.com/nostr-tools@1.15.0/lib/nostr.bundle.js"></script>
+  <script src="nostr login/relay-zap-helper.js"></script>
+  
+  <script>
+    // Debug: Check if extension is available
+    window.addEventListener('load', function() {
+      console.log('Page loaded, checking for Nostr extension...');
+      if (typeof window.nostr !== 'undefined') {
+        console.log('✅ Nostr extension detected:', window.nostr);
+      } else {
+        console.log('⚠️ No Nostr extension found');
+      }
+    });
+  
+  </script>
+  
   <script>
     // Account System Variables
     let currentUser = null;
@@ -291,6 +610,187 @@
     document.addEventListener('DOMContentLoaded', function() {
       checkAuthStatus();
       setupEventListeners();
+      
+      // Load Nostr login script - try multiple paths
+      const scriptPaths = [
+        'nostr-login.js',  // Try root directory first (easiest)
+        'nostr login/nostr-login.js',
+        'nostr%20login/nostr-login.js',
+        './nostr login/nostr-login.js',
+        '/nostr login/nostr-login.js'
+      ];
+      
+      let scriptIndex = 0;
+      function tryLoadScript() {
+        if (scriptIndex >= scriptPaths.length) {
+          console.error('❌ Failed to load nostr-login.js from all paths');
+          const errorDiv = document.getElementById('error-message');
+          if (errorDiv) {
+            errorDiv.textContent = '❌ Failed to load Nostr login script. Please check the file path.';
+            errorDiv.style.display = 'block';
+          }
+          return;
+        }
+        
+        const script = document.createElement('script');
+        script.src = scriptPaths[scriptIndex];
+        script.onload = function() {
+          console.log('✅ Nostr login script loaded from:', scriptPaths[scriptIndex]);
+          
+          // FORCE INITIALIZATION - Don't wait, just do it
+          setTimeout(function() {
+            console.log('🔴 FORCING NostrAuth initialization...');
+            
+            if (window.nostrAuth) {
+              console.log('✅ NostrAuth already exists');
+            } else if (typeof NostrAuth !== 'undefined') {
+              try {
+                console.log('🔴 Creating NostrAuth instance NOW...');
+                window.nostrAuth = new NostrAuth();
+                console.log('🔴 NostrAuth created:', window.nostrAuth);
+              } catch (error) {
+                console.error('🔴 ERROR creating NostrAuth:', error);
+              }
+            } else {
+              console.error('🔴 ERROR: NostrAuth class not defined!');
+            }
+            
+            // Setup button handlers - ALWAYS attach, even if NostrAuth isn't ready
+            const loginBtn = document.getElementById('login-btn');
+            if (loginBtn) {
+              loginBtn.onclick = async function() {
+                console.log('🔴 Login button clicked - Direct handler');
+                
+                // Try using NostrAuth if available
+                if (window.nostrAuth && window.nostrAuth.login) {
+                  console.log('Using NostrAuth.login()');
+                  window.nostrAuth.login();
+                  return;
+                }
+                
+                // Fallback: Direct extension call
+                console.log('Using direct extension call');
+                if (typeof window.nostr === 'undefined') {
+                  alert('No Nostr extension found! Please install nos2x, Alby, or another NIP-07 extension.');
+                  return;
+                }
+                
+                try {
+                  const publicKey = await window.nostr.getPublicKey();
+                  console.log('Got public key:', publicKey);
+                  localStorage.setItem('nostr_public_key', publicKey);
+                  alert('Login successful! Public key: ' + publicKey.substring(0, 16) + '...');
+                  location.reload();
+                } catch (error) {
+                  console.error('Login error:', error);
+                  alert('Login failed: ' + error.message);
+                }
+              };
+              console.log('✅ Login button handler attached (with fallback)');
+            }
+            
+            // Setup relay button handler - keep retrying until NostrAuth is ready
+            function setupRelayButton() {
+              const addRelayBtn = document.getElementById('add-relay-btn');
+              console.log('setupRelayButton called, button:', addRelayBtn, 'nostrAuth:', window.nostrAuth);
+              
+              if (addRelayBtn && window.nostrAuth) {
+                // Check if addRelay exists (it should be a method on the class)
+                const hasAddRelay = 'addRelay' in window.nostrAuth && typeof window.nostrAuth.addRelay === 'function';
+                const methods = Object.getOwnPropertyNames(Object.getPrototypeOf(window.nostrAuth));
+                console.log('All methods:', methods);
+                console.log('Has addRelay in methods?', methods.includes('addRelay'));
+                console.log('addRelay check:', hasAddRelay, 'type:', typeof window.nostrAuth.addRelay, 'in object:', 'addRelay' in window.nostrAuth);
+                
+                // Try to access the method directly
+                if (methods.includes('addRelay')) {
+                  console.log('✅ Found addRelay in methods list, attaching handler...');
+                  // Remove any existing onclick
+                  addRelayBtn.onclick = null;
+                  
+                  // Add new handler - bind to the instance
+                  const authInstance = window.nostrAuth;
+                  addRelayBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('🔴🔴🔴 Add relay button clicked!');
+                    console.log('authInstance:', authInstance);
+                    console.log('authInstance.addRelay:', authInstance.addRelay);
+                    
+                    // Try calling it directly
+                    try {
+                      if (authInstance && typeof authInstance.addRelay === 'function') {
+                        console.log('Calling addRelay()...');
+                        authInstance.addRelay();
+                      } else if (authInstance && authInstance.addRelay) {
+                        // Try calling it anyway
+                        console.log('addRelay exists but not as function, trying to call...');
+                        authInstance.addRelay();
+                      } else {
+                        console.error('addRelay not available on instance');
+                        // Try to call it from the prototype
+                        const proto = Object.getPrototypeOf(authInstance);
+                        if (proto && proto.addRelay) {
+                          console.log('Found addRelay on prototype, calling...');
+                          proto.addRelay.call(authInstance);
+                        } else {
+                          alert('NostrAuth not ready. Please refresh the page.');
+                        }
+                      }
+                    } catch (err) {
+                      console.error('Error calling addRelay:', err);
+                      alert('Error: ' + err.message);
+                    }
+                    return false;
+                  });
+                  console.log('✅✅✅ Add relay button handler attached successfully!');
+                  return true;
+                } else {
+                  console.log('addRelay is not in methods list, will retry...');
+                }
+              } else {
+                console.log('Button or NostrAuth not ready yet');
+              }
+              return false;
+            }
+            
+            // Try multiple times with delays
+            console.log('Setting up relay button handler...');
+            if (!setupRelayButton()) {
+              console.log('First attempt failed, will retry...');
+              setTimeout(function() {
+                console.log('Retry 1...');
+                if (!setupRelayButton()) {
+                  setTimeout(function() {
+                    console.log('Retry 2...');
+                    if (!setupRelayButton()) {
+                      setTimeout(function() {
+                        console.log('Retry 3...');
+                        setupRelayButton();
+                      }, 2000);
+                    }
+                  }, 2000);
+                }
+              }, 2000);
+            }
+            
+            const debugInfo = document.getElementById('debug-info');
+            if (debugInfo) {
+              debugInfo.innerHTML = window.nostrAuth ? 
+                '✅ NostrAuth loaded | Extension: ' + (typeof window.nostr !== 'undefined' ? 'Detected' : 'Not found') :
+                '❌ NostrAuth failed to initialize';
+            }
+          }, 1000);
+        };
+        script.onerror = function() {
+          console.log('❌ Failed to load from:', scriptPaths[scriptIndex]);
+          scriptIndex++;
+          tryLoadScript();
+        };
+        document.head.appendChild(script);
+      }
+      
+      tryLoadScript();
     });
 
     // Account System Functions

@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Great Intersection - Plebtools</title>
+    <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
+    <link rel="stylesheet" href="styles.css?v=3">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { color: #111; background: #f5f5f5; }
+        .page-container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        body.dark-theme { background: #1a1a2e; color: #e5e7eb; }
+        body.dark-theme main { background: #1a1a2e; }
+        body.dark-theme .page-container { color: #e5e7eb; }
+        body.dark-theme footer { color: #9ca3af; }
+        body.dark-theme footer .container { color: #9ca3af; }
+        .chart-container {
+            max-width: 1100px;
+            margin: 0 auto 2rem;
+            padding: 1.5rem;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e0e0e0;
+        }
+        .chart-header { text-align: center; margin-bottom: 1.5rem; }
+        .chart-header .page-title { font-size: 2.25rem; color: #1a1a2e; margin-bottom: 0.5rem; font-weight: 700; }
+        .chart-header h1 { font-size: 1.75rem; color: #1a1a2e; margin-bottom: 0.25rem; font-weight: 600; }
+        .chart-header p { color: #666; font-size: 0.95rem; }
+        .dark-theme .chart-header .page-title { color: #e5e7eb; }
+        .intersection-note {
+            margin-top: 1.25rem;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 1rem 1.25rem;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 8px;
+            font-weight: 500;
+            color: #92400e;
+            line-height: 1.6;
+            max-width: 36em;
+            text-align: center;
+        }
+        .intersection-note .stat { font-weight: 700; }
+        .intersection-note .converge { margin-top: 0.5rem; }
+        .intersection-note .rates { margin-top: 0.5rem; font-size: 0.95rem; }
+        .intersection-note .supply-line { margin-top: 0.5rem; font-size: 0.95rem; }
+        .intersection-note .intersect { margin-top: 0.35rem; font-size: 0.95rem; }
+        .chart-wrapper { position: relative; height: 420px; }
+        .source-note { margin-top: 1rem; font-size: 0.8rem; color: #888; }
+        .affiliate-note { font-size: 0.9rem; color: #1f1f1f; margin-bottom: 1.5rem; }
+        #toolsDropdown { position: relative; display: inline-block; }
+        #toolsBtn { background: none; border: none; color: #e5e7eb; font-weight: 500; font-size: 1rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; }
+        .dark-theme #toolsBtn { color: #e5e7eb !important; }
+        #toolsBtn:hover { background: rgba(102, 126, 234, 0.1); color: #667eea; }
+        .dropdown-arrow { font-size: 0.8rem; transition: transform 0.3s ease; }
+        #toolsContent { position: absolute; top: 100%; right: 0; background: white; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 200px; z-index: 1000; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; }
+        #toolsContent.show { opacity: 1; transform: translateY(0); }
+        #toolsContent a { display: block; padding: 0.75rem 1rem; color: #333; text-decoration: none; transition: background-color 0.2s ease; }
+        #toolsContent a:hover { background-color: #f8f9fa; color: #667eea; }
+        .dark-theme #toolsContent { background: #3d3d3d; border-color: #555; }
+        .dark-theme #toolsContent a { color: #e0e0e0; }
+        .dark-theme #toolsContent a:hover { background-color: #4d4d4d; color: #667eea; }
+        .dark-theme .chart-container { background: #3d3d3d; border-color: #555; }
+        .dark-theme .chart-header h1 { color: #e5e7eb; }
+        .dark-theme .source-note { color: #9ca3af; }
+        .dark-theme .source-note a { color: #93c5fd; }
+        .dark-theme div[style*="background: white"] { background: #3d3d3d !important; border-color: #555 !important; }
+        .dark-theme .affiliate-note { color: #cbd5f5; }
+        .dark-theme h3, .dark-theme h4 { color: #fff !important; }
+        .support-section { padding: 4rem 0; background: transparent !important; border: none !important; box-shadow: none !important; margin: 0 !important; }
+        .support-grid { max-width: 720px; margin: 0 auto; }
+        .support-card { background: #ffffff !important; border: 1px solid #e0e0e0 !important; border-radius: 15px; padding: 2.25rem; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: #1f2937; }
+        .support-icon { font-size: 2.4rem; margin-bottom: 1rem; }
+        .support-title { font-size: 1.6rem; color: #1f2937; letter-spacing: 0.05em; margin-bottom: 1rem; }
+        .support-text { color: #4b5563; font-size: 1rem; margin: 1rem 0 2rem; line-height: 1.6; }
+        .support-btn { display: inline-block; padding: 0.75rem 2.4rem; border-radius: 999px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: #fff; font-weight: 600; text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 18px 48px -24px rgba(34, 197, 94, 0.65); }
+        .support-btn:hover { transform: translateY(-2px); box-shadow: 0 28px 60px -30px rgba(34, 197, 94, 0.65); color: #fff; }
+        .dark-theme .support-card { background: #3d3d3d !important; border-color: #555; color: #e5e7eb; }
+        .dark-theme .support-title { color: #f8fafc; }
+        .dark-theme .support-text { color: #cbd5e1; }
+        body.dark-theme .page-container p { color: #cbd5e1 !important; }
+        body.dark-theme .page-container a { color: #93c5fd; }
+        body.dark-theme .intersection-note,
+        body.dark-theme .intersection-note p,
+        body.dark-theme .intersection-note .stat,
+        body.dark-theme .intersection-note .converge,
+        body.dark-theme .intersection-note .rates,
+        body.dark-theme .intersection-note .intersect,
+        body.dark-theme .intersection-note .supply-line,
+        body.dark-theme .intersection-note strong { color: #92400e !important; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <div class="logo-container">
+                    <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+                        <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+                        <h1 class="logo">Plebtools</h1>
+                    </a>
+                </div>
+                <div class="nav-links">
+                    <div class="dropdown" id="toolsDropdown">
+                        <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+                        <div class="dropdown-content" id="toolsContent" style="display: none;">
+                            <a href="home">🏠 Home</a>
+                            <a href="treasury">📊 Treasury</a>
+                            <a href="btc-buy-tracker">💼 Portfolio</a>
+                            <a href="coveredcall-tracker">📈 Covered Calls</a>
+                            <a href="compound-interest-calculator">💰 Calculator</a>
+                            <a href="retirement-calculator">🏖️ Retirement</a>
+                            <a href="the-great-intersection">📉 The Great Intersection</a>
+                            <a href="btc-loan-ltv">🔒 BTC Loans</a>
+                            <a href="financial-planner">📋 Financial Planner</a>
+                            <a href="bitcoin-security">🛡️ Bitcoin Security</a>
+                            <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
+                            <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
+                            <a href="invoice-builder">🧾 Invoice Builder</a>
+                            <a href="pleb-release">📰 Pleb Release</a>
+                        </div>
+                    </div>
+                    <a href="account" class="account-link">👤 Account</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="page-container">
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h2 class="page-title">The Great Intersection</h2>
+                    <h1>Strategy&rsquo;s Bitcoin treasury holdings vs Bitcoin left to be mined</h1>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="supplyChart"></canvas>
+                </div>
+                <div id="intersectionNote" class="intersection-note"></div>
+                <p class="source-note" id="sourceNote">Strategy holdings: updated from <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001050446&type=8-K" target="_blank" rel="noopener">SEC EDGAR 8-K filings</a> (MicroStrategy/Strategy) when available; otherwise <a href="https://www.strategy.com/purchases" target="_blank" rel="noopener">Strategy.com Purchases</a>. Bitcoin left to mine: 21M minus cumulative mined from live block height (<a href="https://blockstream.info/" target="_blank" rel="noopener">Blockstream</a>) and standard halving schedule.</p>
+                <p class="source-note" id="liveNote" style="display: none; margin-top: 0.5rem;"></p>
+            </div>
+
+            <!-- Affiliate Links Section -->
+            <div style="margin: 3rem 0; padding: 2rem; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid #e0e0e0;">
+                <h3 style="text-align: center;">Want to buy and secure your Bitcoin?</h3>
+                <div style="text-align: center;">
+                    <p class="affiliate-note">These are affiliate/discount links</p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                            <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">Where to buy</h4>
+                            <a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Bitcoin Well</a>
+                        </div>
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                            <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">Where to store</h4>
+                            <a href="https://store.coinkite.com/promo/169FA71FECC4928F725D" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Coldcard</a>
+                        </div>
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                            <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">How to protect</h4>
+                            <a href="https://www.stampseed.com/" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Stamp Seed</a>
+                            <p style="font-size: 0.8rem; color: #4CAF50; margin-top: 0.5rem; font-weight: 500;">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
+                        </div>
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                            <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">How to validate</h4>
+                            <a href="https://store.start9.com/" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Start9</a>
+                            <p style="font-size: 0.8rem; color: #4CAF50; margin-top: 0.5rem; font-weight: 500;">CODE: BNC5 for 5% off</p>
+                        </div>
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                            <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">1:1 Coaching</h4>
+                            <a href="https://pathtobitcoin.xyz" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Bitcoin 1:1</a>
+                        </div>
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                            <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">Where to learn</h4>
+                            <a href="https://www.youtube.com/channel/UC2aM2gVVEHTu0pfE1ZyA0BQ" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">YouTube</a>
+                        </div>
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                            <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">Privacy devices</h4>
+                            <a href="https://www.mark37.com/ref/BNC/" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">Mark37</a>
+                            <p style="font-size: 0.8rem; color: #4CAF50; margin-top: 0.5rem; font-weight: 500;">5% off using code: BNC</p>
+                        </div>
+                        <div style="background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); text-align: center; transition: transform 0.3s ease;">
+                            <h4 style="color: #333; margin-bottom: 0.5rem; font-size: 1rem; font-weight: bold;">BTC learning community</h4>
+                            <a href="https://www.skool.com/the-bitcoin-masters-4115" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">The Bitcoin Masters</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="support-section">
+                <div class="container support-grid">
+                    <div class="support-card">
+                        <div class="support-icon">⚡</div>
+                        <h2 class="support-title">Support Plebtools</h2>
+                        <p class="support-text">
+                            Enjoying these tools? You can help keep them free and open source by donating sats.
+                            Every contribution fuels more Bitcoin-first development.
+                        </p>
+                        <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Open Source Section -->
+            <div style="margin: 3rem 0; padding: 2rem; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid #e0e0e0;">
+                <h3 style="text-align: center; color: #000;">Open Source</h3>
+                <div style="text-align: center;">
+                    <p style="margin-bottom: 1rem; color: #000;">The Great Intersection is free and open source. Data from SEC EDGAR 8-K filings and Blockstream.</p>
+                    <p style="margin-bottom: 0.5rem; color: #000; font-weight: 600;">Open source contributor: ForrestHODL</p>
+                    <p style="margin-bottom: 1.5rem; color: #000;">Idea by Mason Foard</p>
+                    <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" style="background: #28a745; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; display: inline-block; font-weight: bold; transition: all 0.3s ease;">View on GitHub</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Plebtools. Open source Bitcoin tracking tools.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Restore theme before paint (default: dark)
+        (function() {
+            var saved = localStorage.getItem('strategyPageTheme');
+            if (saved !== 'light') document.body.classList.add('dark-theme');
+        })();
+
+        // Optional: set to a URL that returns JSON array of [ [dateStr, totalBtc], ... ]. Leave '' to use only static data.
+        const STRATEGY_DATA_URL = 'data/strategy-purchases.json';
+
+        // SEC EDGAR: MicroStrategy / Strategy CIK (zero-padded). SEC requires a descriptive User-Agent.
+        const SEC_CIK = '0001050446';
+        const SEC_SUBMISSIONS_URL = 'https://data.sec.gov/submissions/CIK' + SEC_CIK + '.json';
+        const SEC_USER_AGENT = 'Plebtools/1.0 (https://github.com/ForrestHODL/Plebtools; educational Bitcoin treasury tracking)';
+        const SEC_HEADERS = { 'User-Agent': SEC_USER_AGENT, 'Accept': 'application/json' };
+        const SEC_ARCHIVES_HEADERS = { 'User-Agent': SEC_USER_AGENT, 'Accept': 'text/html' };
+
+        // Strategy cumulative BTC holdings by date (from https://www.strategy.com/purchases). Fallback when STRATEGY_DATA_URL is not used or fails.
+        // Format: [ 'YYYY-MM-DD', totalBTC ]
+        const STRATEGY_PURCHASES_STATIC = [
+            ['2020-08-11', 21454],
+            ['2020-09-14', 38250],
+            ['2020-12-04', 40824],
+            ['2020-12-21', 70470],
+            ['2021-01-22', 70784],
+            ['2021-02-02', 71079],
+            ['2021-02-24', 90531],
+            ['2021-03-01', 90859],
+            ['2021-03-05', 91064],
+            ['2021-03-12', 91326],
+            ['2021-04-05', 91579],
+            ['2021-05-13', 91850],
+            ['2021-05-18', 92079],
+            ['2021-06-21', 105085],
+            ['2021-09-13', 114042],
+            ['2021-11-28', 121044],
+            ['2021-12-08', 122478],
+            ['2021-12-30', 124391],
+            ['2022-01-31', 125051],
+            ['2022-04-05', 129218],
+            ['2022-06-28', 129699],
+            ['2022-09-20', 130000],
+            ['2022-12-21', 132395],
+            ['2022-12-22', 131690],
+            ['2022-12-24', 132500],
+            ['2023-04-05', 140000],
+            ['2023-06-27', 152333],
+            ['2023-07-31', 152800],
+            ['2023-09-24', 158245],
+            ['2023-11-01', 158400],
+            ['2023-11-30', 174530],
+            ['2023-12-27', 189150],
+            ['2024-02-06', 190000],
+            ['2024-02-26', 193000],
+            ['2024-03-11', 205000],
+            ['2024-03-19', 214246],
+            ['2024-05-01', 214400],
+            ['2024-06-20', 226331],
+            ['2024-08-01', 226500],
+            ['2024-09-13', 244800],
+            ['2024-09-20', 252220],
+            ['2024-11-11', 279420],
+            ['2024-11-18', 331200],
+            ['2024-11-25', 386700],
+            ['2024-12-02', 402100],
+            ['2024-12-09', 423650],
+            ['2024-12-16', 439000],
+            ['2024-12-23', 444262],
+            ['2024-12-30', 446400],
+            ['2025-01-06', 447470],
+            ['2025-01-13', 450000],
+            ['2025-01-21', 461000],
+            ['2025-01-27', 471107],
+            ['2025-02-10', 478740],
+            ['2025-02-24', 499096],
+            ['2025-03-17', 499226],
+            ['2025-03-24', 506137],
+            ['2025-03-31', 528185],
+            ['2025-04-14', 531644],
+            ['2025-04-21', 538200],
+            ['2025-04-28', 553555],
+            ['2025-05-05', 555450],
+            ['2025-05-12', 568840],
+            ['2025-05-19', 576230],
+            ['2025-05-26', 580250],
+            ['2025-06-02', 580955],
+            ['2025-06-16', 592100],
+            ['2025-06-23', 592345],
+            ['2025-06-30', 597325],
+            ['2025-07-14', 601550],
+            ['2025-07-21', 607770],
+            ['2025-07-29', 628791],
+            ['2025-08-11', 629096],
+            ['2025-08-18', 629376],
+            ['2025-08-25', 632457],
+            ['2025-09-02', 636505],
+            ['2025-09-08', 638460],
+            ['2025-09-15', 638985],
+            ['2025-09-22', 639835],
+            ['2025-09-29', 640031],
+            ['2025-10-13', 640250],
+            ['2025-10-20', 640418],
+            ['2025-10-27', 640808],
+            ['2025-11-03', 641205],
+            ['2025-11-10', 641692],
+            ['2025-11-17', 649870],
+            ['2025-12-01', 650000],
+            ['2025-12-08', 660624],
+            ['2025-12-15', 671268],
+            ['2025-12-29', 672497],
+            ['2025-12-31', 672500],
+            ['2026-01-05', 673783],
+            ['2026-01-12', 687410],
+            ['2026-01-20', 709715],
+            ['2026-01-26', 712647],
+            ['2026-02-02', 713502],
+            ['2026-02-09', 714644],
+            ['2026-02-17', 717131],
+            ['2026-02-23', 717722],
+            ['2026-03-02', 720737]
+        ];
+
+        const BLOCKSTREAM_TIP_URL = 'https://blockstream.info/api/blocks/tip';
+
+        // Block-height anchors (date → height) for accurate "left to mine" by date.
+        // Uses real chain timestamps so supply matches actual mined supply by date, not fixed 144 blocks/day.
+        const BLOCK_ANCHORS = [
+            [new Date('2009-01-03T00:00:00Z').getTime(), 0],
+            [new Date('2012-11-28T00:00:00Z').getTime(), 210000],
+            [new Date('2016-07-09T00:00:00Z').getTime(), 420000],
+            [new Date('2020-05-11T00:00:00Z').getTime(), 630000],
+            [new Date('2024-04-19T00:00:00Z').getTime(), 840000]
+        ];
+        const BLOCKS_PER_DAY = 144;
+        const HALVINGS = [
+            { block: 0, reward: 50, cumulative: 0 },
+            { block: 210000, reward: 25, cumulative: 10500000 },
+            { block: 420000, reward: 12.5, cumulative: 15750000 },
+            { block: 630000, reward: 6.25, cumulative: 18375000 },
+            { block: 840000, reward: 3.125, cumulative: 19687500 }
+        ];
+
+        function dateToBlock(date) {
+            const t = typeof date === 'string' ? new Date(date + 'Z').getTime() : new Date(date).getTime();
+            if (t <= BLOCK_ANCHORS[0][0]) return 0;
+            for (let i = 0; i < BLOCK_ANCHORS.length - 1; i++) {
+                const [t1, h1] = BLOCK_ANCHORS[i];
+                const [t2, h2] = BLOCK_ANCHORS[i + 1];
+                if (t >= t1 && t <= t2) {
+                    return Math.round(h1 + (h2 - h1) * (t - t1) / (t2 - t1));
+                }
+            }
+            const [tLast, hLast] = BLOCK_ANCHORS[BLOCK_ANCHORS.length - 1];
+            const daysSince = (t - tLast) / (24 * 60 * 60 * 1000);
+            return Math.round(hLast + daysSince * BLOCKS_PER_DAY);
+        }
+
+        function blockToCumulativeSupply(block) {
+            let supply = 0;
+            for (let i = HALVINGS.length - 1; i >= 0; i--) {
+                if (block >= HALVINGS[i].block) {
+                    const nextBlock = i + 1 < HALVINGS.length ? HALVINGS[i + 1].block : Infinity;
+                    const blocksInEpoch = Math.min(block, nextBlock) - HALVINGS[i].block;
+                    supply = HALVINGS[i].cumulative + blocksInEpoch * HALVINGS[i].reward;
+                    break;
+                }
+            }
+            return supply;
+        }
+
+        const BTC_CAP = 21e6;
+
+        function getLeftToMine(dateStr) {
+            const mined = blockToCumulativeSupply(dateToBlock(dateStr));
+            return Math.max(0, BTC_CAP - mined);
+        }
+
+        function getLeftToMineFromBlockHeight(blockHeight) {
+            const mined = blockToCumulativeSupply(blockHeight);
+            return Math.max(0, BTC_CAP - mined);
+        }
+
+        function buildChartData(strategyPurchases, liveLeftToMineAndDate) {
+            const labels = [];
+            const strategyData = [];
+            const leftToMineData = [];
+            strategyPurchases.forEach(([dateStr, totalBtc]) => {
+                labels.push(dateStr);
+                strategyData.push(totalBtc);
+                leftToMineData.push(getLeftToMine(dateStr));
+            });
+            if (liveLeftToMineAndDate && liveLeftToMineAndDate.dateStr && liveLeftToMineAndDate.leftToMine != null) {
+                const lastDate = labels[labels.length - 1];
+                if (liveLeftToMineAndDate.dateStr > lastDate) {
+                    labels.push(liveLeftToMineAndDate.dateStr);
+                    strategyData.push(strategyData[strategyData.length - 1]);
+                    leftToMineData.push(liveLeftToMineAndDate.leftToMine);
+                } else {
+                    leftToMineData[leftToMineData.length - 1] = liveLeftToMineAndDate.leftToMine;
+                }
+            }
+            return { labels, strategyData, leftToMineData, strategyPurchases };
+        }
+
+        function renderNote(strategyPurchases, labels, strategyData, leftToMineData, liveSource) {
+            const latestStrategy = strategyData[strategyData.length - 1];
+            const latestLeftToMine = leftToMineData[leftToMineData.length - 1];
+            const gap = latestLeftToMine - latestStrategy;
+            const lastDate = strategyPurchases[strategyPurchases.length - 1][0];
+            const lastDateMs = new Date(lastDate + 'Z').getTime();
+            const cutoffMs = lastDateMs - 365 * 24 * 60 * 60 * 1000;
+            const inWindow = strategyPurchases.filter(([dateStr]) => new Date(dateStr + 'Z').getTime() >= cutoffMs);
+            const n = inWindow.length;
+            const recentStart = n >= 2 ? inWindow[0][0] : lastDate;
+            const recentEnd = lastDate;
+            const btcAtStart = n >= 2 ? inWindow[0][1] : latestStrategy;
+            const daysRecent = (new Date(recentEnd + 'Z') - new Date(recentStart + 'Z')) / (24 * 60 * 60 * 1000);
+            const strategyRatePerDay = daysRecent > 0 ? (latestStrategy - btcAtStart) / daysRecent : 0;
+            const miningRatePerDay = 3.125 * BLOCKS_PER_DAY;
+            const closingRatePerDay = strategyRatePerDay + miningRatePerDay;
+            const noteEl = document.getElementById('intersectionNote');
+            if (gap > 0) {
+                const strategyK = (latestStrategy / 1000).toFixed(0);
+                const leftM = (latestLeftToMine / 1e6).toFixed(2);
+                const gapK = (gap / 1000).toFixed(0);
+                const strategyRateStr = strategyRatePerDay >= 1000
+                    ? (strategyRatePerDay / 1000).toFixed(1) + 'k'
+                    : strategyRatePerDay.toFixed(0);
+                const recentStartFmt = new Date(recentStart + 'Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const recentEndFmt = new Date(recentEnd + 'Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const ratesLine = `<p class="rates">Strategy adds ~${strategyRateStr} BTC/day on average over the last 365 days (${recentStartFmt} to ${recentEndFmt}, ${n} data points).</p><p class="supply-line">The amount left to mine falls by 450 BTC per day (then 225/day after the next halving).</p>`;
+                let intersectLine = '';
+                if (closingRatePerDay > 0) {
+                    const daysToIntersection = gap / closingRatePerDay;
+                    const intersectDate = new Date();
+                    intersectDate.setDate(intersectDate.getDate() + Math.round(daysToIntersection));
+                    intersectLine = `<p class="intersect">At recent rates, the two could intersect around <strong>${intersectDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</strong>.</p>`;
+                }
+                noteEl.innerHTML = `<p class="stat">Strategy: ${strategyK}k BTC &emsp; Left to mine: ${leftM}M BTC (gap ${gapK}k)</p><p class="converge">Strategy is rising, supply left is falling. Lines are converging.</p>${ratesLine}${intersectLine}`;
+            } else {
+                noteEl.innerHTML = "<p>Strategy's holdings would exceed remaining supply at recent rates (model illustrative only).</p>";
+            }
+            const liveEl = document.getElementById('liveNote');
+            if (liveSource) {
+                liveEl.style.display = 'block';
+                liveEl.textContent = liveSource;
+            } else {
+                liveEl.style.display = 'none';
+            }
+        }
+
+        let chartInstance = null;
+
+        function renderChart(data) {
+            const { labels, strategyData, leftToMineData, strategyPurchases } = data;
+            renderNote(strategyPurchases, labels, strategyData, leftToMineData, data.liveSource);
+            const ctx = document.getElementById('supplyChart').getContext('2d');
+            if (chartInstance) chartInstance.destroy();
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: 'Strategy cumulative BTC',
+                            data: strategyData,
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            borderWidth: 2.5,
+                            fill: true,
+                            tension: 0.1,
+                            pointRadius: 0,
+                            pointHoverRadius: 6
+                        },
+                        {
+                            label: 'Bitcoin left to mine',
+                            data: leftToMineData,
+                            borderColor: '#0ea5e9',
+                            backgroundColor: 'rgba(14, 165, 233, 0.08)',
+                            borderWidth: 2.5,
+                            fill: true,
+                            tension: 0.1,
+                            pointRadius: 0,
+                            pointHoverRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { intersect: false, mode: 'index' },
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    const v = ctx.parsed.y;
+                                    return ctx.dataset.label + ': ' + v.toLocaleString('en-US', { maximumFractionDigits: 0 }) + ' BTC';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'category',
+                            title: { display: true, text: 'Date' },
+                            ticks: { maxRotation: 45, maxTicksLimit: 14 }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Cumulative BTC' },
+                            ticks: {
+                                callback: function(v) { return (v / 1000).toFixed(0) + 'k'; }
+                            }
+                        }
+                    }
+                }
+            });
+            if (chartInstance) applyChartTheme();
+        }
+
+        function applyChartTheme() {
+            if (!chartInstance) return;
+            const isDark = document.body.classList.contains('dark-theme');
+            const textColor = isDark ? '#9ca3af' : '#333';
+            const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+            chartInstance.options.plugins.legend.labels.color = textColor;
+            if (chartInstance.options.scales.x) {
+                chartInstance.options.scales.x.ticks = chartInstance.options.scales.x.ticks || {};
+                chartInstance.options.scales.x.ticks.color = textColor;
+                chartInstance.options.scales.x.grid = chartInstance.options.scales.x.grid || {};
+                chartInstance.options.scales.x.grid.color = gridColor;
+                if (chartInstance.options.scales.x.title) chartInstance.options.scales.x.title.color = textColor;
+            }
+            if (chartInstance.options.scales.y) {
+                chartInstance.options.scales.y.ticks = chartInstance.options.scales.y.ticks || {};
+                chartInstance.options.scales.y.ticks.color = textColor;
+                chartInstance.options.scales.y.grid = chartInstance.options.scales.y.grid || {};
+                chartInstance.options.scales.y.grid.color = gridColor;
+                if (chartInstance.options.scales.y.title) chartInstance.options.scales.y.title.color = textColor;
+            }
+            chartInstance.update('none');
+        }
+
+        async function fetchStrategyData() {
+            if (!STRATEGY_DATA_URL) return null;
+            try {
+                const r = await fetch(STRATEGY_DATA_URL, { cache: 'no-store' });
+                if (!r.ok) return null;
+                const raw = await r.json();
+                if (!Array.isArray(raw) || raw.length === 0) return null;
+                return raw.every(x => Array.isArray(x) && x.length >= 2)
+                    ? raw.map(([d, b]) => [String(d), Number(b)])
+                    : null;
+            } catch (_) { return null; }
+        }
+
+        function parse8KForBitcoinHoldings(html, filingDate) {
+            const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+            const candidates = [];
+            const aggregateRegex = /(?:aggregate|total|held)[^.]*?approximately\s*([\d,]+(?:\.[\d]+)?)\s*bitcoins?/gi;
+            let m;
+            while ((m = aggregateRegex.exec(text)) !== null) {
+                const num = parseInt(m[1].replace(/,/g, ''), 10);
+                if (!isNaN(num) && num > 1000 && num < 21e6) candidates.push(num);
+            }
+            if (candidates.length === 0) {
+                const fallbackRegex = /approximately\s*([\d,]+(?:\.[\d]+)?)\s*bitcoins?/gi;
+                while ((m = fallbackRegex.exec(text)) !== null) {
+                    const num = parseInt(m[1].replace(/,/g, ''), 10);
+                    if (!isNaN(num) && num > 1000 && num < 21e6) candidates.push(num);
+                }
+            }
+            if (candidates.length === 0) return null;
+            const total = Math.max(...candidates);
+            return [filingDate, total];
+        }
+
+        async function fetchSECStrategyData() {
+            try {
+                const r = await fetch(SEC_SUBMISSIONS_URL, { headers: SEC_HEADERS, cache: 'no-store' });
+                if (!r.ok) return null;
+                const data = await r.json();
+                const recent = data.filings && data.filings.recent;
+                if (!recent || !Array.isArray(recent.form)) return null;
+                const forms = recent.form;
+                const accessionNumbers = recent.accessionNumber || [];
+                const primaryDocs = recent.primaryDocument || [];
+                const filingDates = recent.filingDate || [];
+                const indices = [];
+                for (let i = 0; i < forms.length; i++) {
+                    if (forms[i] === '8-K') indices.push(i);
+                }
+                const results = [];
+                const seen = new Set();
+                for (let k = 0; k < Math.min(30, indices.length); k++) {
+                    const i = indices[k];
+                    const acc = accessionNumbers[i];
+                    const doc = primaryDocs[i] || '';
+                    const filingDate = filingDates[i];
+                    if (!acc || !doc || !filingDate || seen.has(filingDate)) continue;
+                    const accNoDashes = acc.replace(/-/g, '');
+                    const docUrl = 'https://www.sec.gov/Archives/edgar/data/' + SEC_CIK + '/' + accNoDashes + '/' + doc;
+                    await new Promise(resolve => setTimeout(resolve, 150));
+                    try {
+                        const rr = await fetch(docUrl, { headers: SEC_ARCHIVES_HEADERS, cache: 'no-store' });
+                        if (!rr.ok) continue;
+                        const html = await rr.text();
+                        const parsed = parse8KForBitcoinHoldings(html, filingDate);
+                        if (parsed) {
+                            results.push(parsed);
+                            seen.add(filingDate);
+                        }
+                    } catch (_) { /* skip */ }
+                }
+                return results.length > 0 ? results : null;
+            } catch (_) { return null; }
+        }
+
+        function mergeStrategyData(base, secData) {
+            if (!secData || secData.length === 0) return base;
+            const byDate = new Map(base.map(([d, b]) => [d, b]));
+            secData.forEach(([d, b]) => { byDate.set(d, b); });
+            return Array.from(byDate.entries()).map(([d, b]) => [d, b]).sort((a, b) => a[0].localeCompare(b[0]));
+        }
+
+        async function fetchLiveBlockTip() {
+            try {
+                const r = await fetch(BLOCKSTREAM_TIP_URL, { cache: 'no-store' });
+                if (!r.ok) return null;
+                const blocks = await r.json();
+                const tip = Array.isArray(blocks) && blocks[0] ? blocks[0] : blocks;
+                const height = tip.height;
+                const ts = tip.timestamp ? tip.timestamp * 1000 : Date.now();
+                const d = new Date(ts);
+                const dateStr = d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0') + '-' + String(d.getUTCDate()).padStart(2, '0');
+                const leftToMine = getLeftToMineFromBlockHeight(height);
+                return { dateStr, leftToMine, height };
+            } catch (_) { return null; }
+        }
+
+        (async function init() {
+            let strategyPurchases = STRATEGY_PURCHASES_STATIC;
+            let liveBlock = null;
+            let liveSource = '';
+
+            const [strategyFromUrl, secData] = await Promise.all([
+                fetchStrategyData(),
+                fetchSECStrategyData()
+            ]);
+
+            if (strategyFromUrl && strategyFromUrl.length > 0) {
+                strategyPurchases = strategyFromUrl;
+                liveSource = 'Strategy data: loaded from ' + STRATEGY_DATA_URL + '. ';
+            }
+            if (secData && secData.length > 0) {
+                strategyPurchases = mergeStrategyData(strategyPurchases, secData);
+                liveSource += 'Strategy holdings updated from SEC EDGAR 8-K filings (' + secData.length + ' parsed). ';
+            }
+
+            const blockTip = await fetchLiveBlockTip();
+            if (blockTip) {
+                liveBlock = { dateStr: blockTip.dateStr, leftToMine: blockTip.leftToMine };
+                liveSource += 'Left to mine: live from Blockstream (block ' + blockTip.height.toLocaleString() + ', ' + blockTip.dateStr + ').';
+            }
+
+            const data = buildChartData(strategyPurchases, liveBlock);
+            data.liveSource = liveSource.trim();
+            renderChart(data);
+        })();
+
+        // Tools dropdown
+        const toolsBtn = document.getElementById('toolsBtn');
+        const toolsContent = document.getElementById('toolsContent');
+        let isOpen = false;
+        if (toolsBtn && toolsContent) {
+            toolsBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (isOpen) {
+                    toolsContent.classList.remove('show');
+                    setTimeout(function() { toolsContent.style.display = 'none'; }, 300);
+                    isOpen = false;
+                } else {
+                    toolsContent.style.display = 'block';
+                    setTimeout(function() { toolsContent.classList.add('show'); }, 10);
+                    isOpen = true;
+                }
+            });
+            document.addEventListener('click', function(e) {
+                if (!document.getElementById('toolsDropdown').contains(e.target)) {
+                    toolsContent.classList.remove('show');
+                    setTimeout(function() { toolsContent.style.display = 'none'; }, 300);
+                    isOpen = false;
+                }
+            });
+        }
+
+        // Theme toggle (light = current look, dark = dark theme)
+        var themeToggle = document.createElement('button');
+        themeToggle.setAttribute('aria-label', 'Toggle dark/light theme');
+        themeToggle.innerHTML = document.body.classList.contains('dark-theme') ? '☀️' : '🌙';
+        themeToggle.style.cssText = 'position:fixed;top:20px;right:20px;width:50px;height:50px;border-radius:50%;border:2px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.2);color:white;font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1000;transition:all 0.3s ease;';
+        themeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-theme');
+            var isDark = document.body.classList.contains('dark-theme');
+            themeToggle.textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('strategyPageTheme', isDark ? 'dark' : 'light');
+            applyChartTheme();
+        });
+        document.body.appendChild(themeToggle);
+    </script>
+</body>
+</html>
