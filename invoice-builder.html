@@ -966,24 +966,23 @@
         </div>
         <div class="nav-links">
           <div class="dropdown">
-            <button class="dropdown-btn">Tools <span class="dropdown-arrow">▼</span></button>
+            <button class="dropdown-btn">Tools <span class="dropdown-arrow"></span></button>
             <div class="dropdown-content">
-              <a href="home">🏠 Home</a>
-              <a href="treasury">📊 Treasury</a>
-              <a href="btc-buy-tracker">💼 Portfolio</a>
-              <a href="coveredcall-tracker">📈 Covered Calls</a>
-              <a href="compound-interest-calculator">💰 Calculator</a>
-              <a href="the-great-intersection">📉 The Great Intersection</a>
-              <a href="btc-loan-ltv">🔒 BTC Loans</a>
-              <a href="financial-planner">📋 Financial Planner</a>
-              <a href="bitcoin-security">🛡️ Bitcoin Security</a>
-              <a href="pleb-release">📰 Pleb Release</a>
-              <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
-              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
-              <a href="invoice-builder" class="active">🧾 Invoice Builder</a>
+              <a href="home"> Home</a>
+              <a href="treasury"> Treasury</a>
+              <a href="btc-buy-tracker"> Portfolio</a>
+              <a href="coveredcall-tracker"> Covered Calls</a>
+              <a href="compound-interest-calculator"> Calculator</a>
+              <a href="the-great-intersection"> The Great Intersection</a>
+              <a href="btc-loan-ltv"> BTC Loans</a>
+              <a href="financial-planner"> Financial Planner</a>
+              <a href="bitcoin-security">️ Bitcoin Security</a>
+              <a href="pleb-release"> Pleb Release</a>
+              <a href="interest-arbitrage-calculator"> Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody"> Self Custody Guide</a>
+              <a href="invoice-builder" class="active"> Invoice Builder</a>
             </div>
           </div>
-          <a href="account" class="account-link">👤 Account</a>
           <div id="theme-toggle-container"></div>
         </div>
       </div>
@@ -995,7 +994,7 @@
       <div class="invoice-layout">
         <div class="invoice-controls">
           <div class="panel">
-            <h2><span>🧑‍💼</span>Business Details</h2>
+            <h2><span>‍</span>Business Details</h2>
             <div class="field-group">
               <label for="business-name">Business / Sender Name</label>
               <input id="business-name" type="text">
@@ -1016,14 +1015,14 @@
               <div>
                 <label for="logo-upload">Company Logo</label>
                 <input id="logo-upload" type="file" accept="image/*">
-                <p class="helper-text">PNG, JPG or SVG — up to 5 MB</p>
+                <p class="helper-text">PNG, JPG or SVG, up to 5 MB</p>
               </div>
               <div class="logo-preview" id="logo-preview">Upload your logo to personalise the invoice</div>
             </div>
           </div>
 
           <div class="panel">
-            <h2><span>📨</span>Client & Invoice</h2>
+            <h2><span></span>Client & Invoice</h2>
             <div class="field-group">
               <label for="client-name">Client Name</label>
               <input id="client-name" type="text">
@@ -1069,14 +1068,14 @@
           </div>
 
           <div class="panel">
-            <h2><span>🧾</span>Invoice Items</h2>
+            <h2><span></span>Invoice Items</h2>
             <div class="helper-text">Add services or products, and use negative values for discounts or credits. Taxes are per-line if needed.</div>
             <div class="items-list" id="items-body"></div>
             <button type="button" class="add-item-btn" id="add-item">+ Add line item</button>
           </div>
 
           <div class="panel">
-            <h2><span>💾</span>Saved Templates</h2>
+            <h2><span></span>Saved Templates</h2>
             <div class="field-group">
               <label for="save-name">Template Name</label>
               <input id="save-name" type="text">
@@ -1106,9 +1105,9 @@
               <div class="invoice-logo" id="preview-logo"></div>
               <div class="invoice-meta">
                 <h1>INVOICE</h1>
-                <p id="preview-number">Invoice #: —</p>
-                <p id="preview-date">Date: —</p>
-                <p id="preview-due">Due: —</p>
+                <p id="preview-number">Invoice #: -</p>
+                <p id="preview-date">Date: -</p>
+                <p id="preview-due">Due: -</p>
               </div>
             </div>
 
@@ -1202,13 +1201,13 @@
       <section class="support-section">
         <div class="container support-grid">
           <div class="support-card">
-            <div class="support-icon">⚡</div>
+            <div class="support-icon"></div>
             <h2 class="support-title">Support Plebtools</h2>
             <p class="support-text">
               Enjoying these tools? You can help keep them free and open source by donating sats.
               Every contribution fuels more Bitcoin-first development.
             </p>
-            <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+            <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate </a>
           </div>
         </div>
       </section>
@@ -1285,7 +1284,7 @@
         CAD: '$',
         AUD: '$',
         BTC: '₿',
-        SAT: '⚡'
+        SAT: ''
       };
 
       const controls = {
@@ -1487,12 +1486,12 @@
         if (mode === 'dark') {
           document.body.classList.add('dark-theme');
           if (themeToggle) {
-            themeToggle.textContent = '☀️  Light';
+            themeToggle.textContent = '☀️ Light';
           }
         } else {
           document.body.classList.add('light-theme');
           if (themeToggle) {
-            themeToggle.textContent = '🌙  Dark';
+            themeToggle.textContent = '🌙 Dark';
           }
         }
         localStorage.setItem('theme', mode);
@@ -1523,7 +1522,7 @@
 
       const formatCurrency = (amount, currency) => {
         if (currency === 'SAT') {
-          return `${amount.toLocaleString(undefined, { maximumFractionDigits: 0 })} ⚡`;
+          return `${amount.toLocaleString(undefined, { maximumFractionDigits: 0 })} `;
         }
         const symbol = currencySymbols[currency] || '';
         return `${symbol}${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -1539,9 +1538,9 @@
         const invoiceDate = controls.invoiceDate.value;
         const dueDate = controls.dueDate.value;
 
-        preview.number.textContent = `Invoice #: ${invoiceNo || '—'}`;
-        preview.date.textContent = `Date: ${invoiceDate || '—'}`;
-        preview.due.textContent = `Due: ${dueDate || '—'}`;
+        preview.number.textContent = `Invoice #: ${invoiceNo || '-'}`;
+        preview.date.textContent = `Date: ${invoiceDate || '-'}`;
+        preview.due.textContent = `Due: ${dueDate || '-'}`;
 
         downloadBtn.disabled = !invoiceNo;
       };
@@ -1560,8 +1559,8 @@
           controls.clientAddress.value
         ].map(line => line.trim()).filter(Boolean).map(escapeHTML);
 
-        preview.from.innerHTML = from.length ? from.map(line => `<p>${line}</p>`).join('') : '<p>—</p>';
-        preview.to.innerHTML = to.length ? to.map(line => `<p>${line}</p>`).join('') : '<p>—</p>';
+        preview.from.innerHTML = from.length ? from.map(line => `<p>${line}</p>`).join('') : '<p>-</p>';
+        preview.to.innerHTML = to.length ? to.map(line => `<p>${line}</p>`).join('') : '<p>-</p>';
       };
 
       const parseNumericInput = (rawValue, fallback = 0) => {
@@ -1613,10 +1612,10 @@
 
           const tr = document.createElement('tr');
           tr.innerHTML = `
-            <td>${escapeHTML(item.description || '—')}</td>
+            <td>${escapeHTML(item.description || '-')}</td>
             <td>${item.quantity || 0}</td>
             <td>${formatCurrency(item.price || 0, currency)}</td>
-            <td>${item.tax ? item.tax.toFixed(2) + '%' : '—'}</td>
+            <td>${item.tax ? item.tax.toFixed(2) + '%' : '-'}</td>
             <td>${formatCurrency(lineAmount + taxAmount, currency)}</td>
           `;
           preview.itemsTable.appendChild(tr);

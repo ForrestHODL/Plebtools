@@ -265,7 +265,7 @@
     }
 
     .step-card ul li::before {
-      content: "✔";
+      content: "";
       position: absolute;
       left: 0;
       color: #facc15;
@@ -451,7 +451,7 @@
     }
 
     .tip-list li::before {
-      content: "⚠";
+      content: "";
       position: absolute;
       left: 0;
       font-size: 0.82rem;
@@ -520,25 +520,25 @@
         <div class="nav-links">
           <div class="dropdown" id="toolsDropdown">
             <button class="dropdown-btn" id="toolsBtn">
-              Tools <span class="dropdown-arrow">▼</span>
+              Tools <span class="dropdown-arrow"></span>
             </button>
             <div class="dropdown-content" id="toolsContent" style="display: none;">
-              <a href="treasury">📊 Treasury</a>
-              <a href="btc-buy-tracker">💼 Portfolio</a>
-              <a href="coveredcall-tracker">📈 Covered Calls</a>
-              <a href="compound-interest-calculator">💰 Calculator</a>
-              <a href="retirement-calculator">🏖️ Retirement</a>
-              <a href="the-great-intersection">📉 The Great Intersection</a>
-              <a href="btc-loan-ltv">🔒 BTC Loans</a>
-              <a href="financial-planner">📋 Financial Planner</a>
-              <a href="bitcoin-security">🛡️ Bitcoin Security</a>
-              <a href="pleb-release">📰 Pleb Release</a>
-              <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
-              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
-              <a href="invoice-builder">🧾 Invoice Builder</a>
+              <a href="treasury"> Treasury</a>
+              <a href="btc-buy-tracker"> Portfolio</a>
+              <a href="coveredcall-tracker"> Covered Calls</a>
+              <a href="compound-interest-calculator"> Calculator</a>
+              <a href="retirement-calculator">️ Retirement</a>
+              <a href="the-great-intersection"> The Great Intersection</a>
+              <a href="btc-loan-ltv"> BTC Loans</a>
+              <a href="financial-planner"> Financial Planner</a>
+              <a href="bitcoin-security">️ Bitcoin Security</a>
+              <a href="pleb-release"> Pleb Release</a>
+              <a href="interest-arbitrage-calculator"> Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody"> Self Custody Guide</a>
+              <a href="invoice-builder"> Invoice Builder</a>
             </div>
           </div>
-          <a href="account" class="account-link">👤 Account</a>
+          <div id="theme-toggle-container" class="nav-theme-wrap"></div>
         </div>
       </div>
     </nav>
@@ -551,7 +551,7 @@
         <h1 class="hero-title">Step-by-Step Path to Self Custody</h1>
         <p class="hero-subtitle">
           Move from exchange exposure to sovereign ownership with a practical, human-readable checklist. This guide
-          walks you through each stage—from picking hardware to executing your first withdrawal—so you can hold your own
+          walks you through each stage - from picking hardware to executing your first withdrawal - so you can hold your own
           keys with confidence.
         </p>
         <div class="hero-actions">
@@ -569,13 +569,13 @@
       </p>
 
       <div class="step-grid">
-        <article class="step-card active" data-success="Great choice—every sat you buy should land in a wallet you control.">
+        <article class="step-card active" data-success="Great choice - every sat you buy should land in a wallet you control.">
           <span class="step-number">Step 1</span>
           <h3>Acquire Bitcoin the Right Way</h3>
           <p>Pick on-ramps that let you control custody quickly, regardless of where you buy.</p>
           <ul>
             <li>Use reputable exchanges for liquidity, but withdraw immediately after each purchase.</li>
-            <li>Explore P2P marketplaces (RoboSats, Peach, Hodl Hodl) for privacy—lean on escrow and reputation systems.</li>
+            <li>Explore P2P marketplaces (RoboSats, Peach, Hodl Hodl) for privacy - lean on escrow and reputation systems.</li>
             <li>Leverage non-custodial brokers like Bitcoin Well that deliver straight to your wallet during checkout.</li>
           </ul>
           <div class="step-quiz">
@@ -588,7 +588,7 @@
                 Use reputable Bitcoin-only exchanges or non-custodial brokers with fair fees that send sats straight to your wallet
               </button>
               <button type="button" class="quiz-choice" data-correct="false">
-                It doesn’t matter—I’ll just leave the bitcoin on the exchange and let them manage it for me
+                It doesn’t matter - I’ll just leave the bitcoin on the exchange and let them manage it for me
               </button>
               <button
                 type="button"
@@ -603,7 +603,7 @@
           </div>
         </article>
 
-        <article class="step-card locked" data-success="Excellent—you’re moving meaningful UTXOs into your own custody.">
+        <article class="step-card locked" data-success="Excellent - you’re moving meaningful UTXOs into your own custody.">
           <span class="step-number">Step 2</span>
           <h3>Understand UTXOs & Plan Withdrawals</h3>
           <p>Move your stack off exchanges in sensible chunks so every output stays useful later.</p>
@@ -637,14 +637,14 @@
           </div>
         </article>
 
-        <article class="step-card locked" data-success="Great start—your hardware choice keeps you in control.">
+        <article class="step-card locked" data-success="Great start - your hardware choice keeps you in control.">
           <span class="step-number">Step 3</span>
           <h3>Pick a Bitcoin-First Hardware Wallet</h3>
           <p>Use devices that are open source, audit-friendly, and laser-focused on Bitcoin.</p>
           <ul>
             <li>Prefer Bitcoin-only firmware (Coldcard, Passport, SeedSigner, Jade) that minimizes attack surface.</li>
             <li>Choose open-source designs so the community can verify there are no backdoors or insecure code paths.</li>
-            <li>Validate each device’s supply chain integrity—buy direct or from vetted resellers to avoid tampering.</li>
+            <li>Validate each device’s supply chain integrity - buy direct or from vetted resellers to avoid tampering.</li>
           </ul>
           <div class="step-quiz">
             <p class="quiz-question">Why opt for an open-source, Bitcoin-only hardware wallet?</p>
@@ -671,7 +671,7 @@
           </div>
         </article>
 
-        <article class="step-card locked" data-success="Nice—your device is clean and verified.">
+        <article class="step-card locked" data-success="Nice - your device is clean and verified.">
           <span class="step-number">Step 4</span>
           <h3>Secure Setup Environment</h3>
           <p>Keep malware and prying eyes out of the equation while you initialize your wallet.</p>
@@ -705,7 +705,7 @@
           </div>
         </article>
 
-        <article class="step-card locked" data-success="Excellent—you know how to secure the secret itself.">
+        <article class="step-card locked" data-success="Excellent - you know how to secure the secret itself.">
           <span class="step-number">Step 5</span>
           <h3>Secure Your Seed & Xpub</h3>
           <p>Create your recovery keys offline and harden them against leaks.</p>
@@ -807,7 +807,7 @@
           </div>
         </article>
 
-        <article class="step-card locked" data-success="Test run complete—you’ve proven you can receive and spend.">
+        <article class="step-card locked" data-success="Test run complete - you’ve proven you can receive and spend.">
           <span class="step-number">Step 8</span>
           <h3>Run a Low-Stakes Rehearsal</h3>
           <p>Practice the entire flow with a meaningful, but not mission-critical, amount of bitcoin.</p>
@@ -841,10 +841,10 @@
           </div>
         </article>
 
-        <article class="step-card locked" data-success="You proved recovery works—now migrate with confidence.">
+        <article class="step-card locked" data-success="You proved recovery works - now migrate with confidence.">
           <span class="step-number">Step 9</span>
           <h3>Test Recovery Before Full Migration</h3>
-          <p>Run a full restore from your backups so you know your private keys—and only your private keys—control your bitcoin.</p>
+          <p>Run a full restore from your backups so you know your private keys - and only your private keys - control your bitcoin.</p>
           <ul>
             <li>Factory reset (or use a spare device) and recover using your seed words plus passphrase before moving the full balance.</li>
             <li>Confirm the regenerated wallet matches your watch-only xpub and produces the same receive addresses.</li>
@@ -893,7 +893,7 @@
             class="quiz-choice"
             style="text-decoration: none;"
           >
-            ⚡ Donate to Plebtools using Bitcoin & Lightning
+             Donate to Plebtools using Bitcoin & Lightning
           </a>
           <a
             href="https://pathtobitcoin.xyz/"
@@ -902,7 +902,7 @@
             class="quiz-choice"
             style="text-decoration: none;"
           >
-            🤝 Book a 1:1 Bitcoin Session
+             Book a 1:1 Bitcoin Session
           </a>
         </div>
       </article>
@@ -928,29 +928,29 @@
         <ul class="resource-list">
           <li>
             <a href="https://store.coinkite.com/promo/169FA71FECC4928F725D" target="_blank" rel="noopener">
-              🔐 Coldcard - Bitcoin-Only Hardware Wallet
+               Coldcard - Bitcoin-Only Hardware Wallet
             </a>
           </li>
           <li>
             <a href="https://store.coinkite.com/promo/169FA71FECC4928F725D" target="_blank" rel="noopener">
-              🟧 Coldcard - Official Store
+               Coldcard - Official Store
             </a>
           </li>
           <li>
             <a href="https://www.stampseed.com/" target="_blank" rel="noopener">
-              🛠️ Stamp Seed - Durable Seed Backup
+              ️ Stamp Seed - Durable Seed Backup
             </a>
             <span class="resource-note">Use code BTCNOTCRYPTO15 for 15% off the Stamp Seed kit.</span>
           </li>
           <li>
             <a href="https://store.start9.com/" target="_blank" rel="noopener">
-              🖥️ Start9 - Self-hosted Node & Services
+              ️ Start9 - Self-hosted Node & Services
             </a>
             <span class="resource-note">Use code BNC5 for 5% off Start9 gear.</span>
           </li>
           <li>
             <a href="https://www.youtube.com/channel/UC2aM2gVVEHTu0pfE1ZyA0BQ" target="_blank" rel="noopener">
-              🎥 Bitcoin Not Crypto - Tutorials & Walkthroughs
+               Bitcoin Not Crypto - Tutorials & Walkthroughs
             </a>
           </li>
         </ul>
@@ -961,7 +961,7 @@
         <p>Self custody is a spectrum. Match your setup to the value at risk and the threats you actually face.</p>
         <ul class="tip-list">
           <li>Keep hot wallet balances minimal; treat phones as convenience tools, not vaults.</li>
-          <li>Beware of social engineering—never plug a hardware wallet into an unknown computer.</li>
+          <li>Beware of social engineering - never plug a hardware wallet into an unknown computer.</li>
           <li>Consider multisig with geographically separated backups once balances become life-changing.</li>
           <li>Practice recovery annually from written instructions to ensure nothing has degraded.</li>
         </ul>
@@ -975,7 +975,7 @@
           <li>
             <span class="faq-question">Do I need multisig right away?</span>
             Start with single-sig until you can run through a recovery from memory and documentation.
-            Multisig adds security but also complexity—graduate to it once single-sig feels trivial.
+            Multisig adds security but also complexity - graduate to it once single-sig feels trivial.
           </li>
           <li>
             <span class="faq-question">What if I’m not ready to move everything?</span>
@@ -1047,13 +1047,13 @@
     <section class="support-section">
       <div class="container support-grid">
         <div class="support-card">
-          <div class="support-icon">⚡</div>
+          <div class="support-icon"></div>
           <h2 class="support-title">Support Plebtools</h2>
           <p class="support-text">
             Enjoying these tools? You can help keep them free and open source by donating sats.
             Every contribution fuels more Bitcoin-first development.
           </p>
-          <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+          <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate </a>
         </div>
       </div>
     </section>
@@ -1074,7 +1074,7 @@
 
   <footer>
     <div class="container">
-      <p>&copy; 2024 Plebtools. Open source Bitcoin tracking tools.</p>
+      <p>&copy; 2025 Plebtools. Open source Bitcoin tracking tools.</p>
     </div>
   </footer>
 
@@ -1206,13 +1206,13 @@
       });
     }
 
-    // Theme toggle button
+    // Theme toggle button (in nav)
+    const themeToggleContainer = document.getElementById("theme-toggle-container");
     const themeToggle = document.createElement("button");
+    themeToggle.className = "theme-toggle-btn";
+    themeToggle.setAttribute("aria-label", "Toggle dark/light theme");
     themeToggle.innerHTML = "☀️";
     themeToggle.style.cssText = `
-      position: fixed;
-      bottom: 32px;
-      right: 32px;
       background: rgba(15, 23, 42, 0.85);
       border: 1px solid rgba(148, 163, 184, 0.35);
       color: #e5e7eb;
@@ -1225,7 +1225,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 1000;
       box-shadow: 0 18px 40px -28px rgba(15, 23, 42, 0.9);
     `;
 
@@ -1240,7 +1239,7 @@
     });
 
     let isDarkTheme = true;
-    document.body.appendChild(themeToggle);
+    if (themeToggleContainer) themeToggleContainer.appendChild(themeToggle);
 
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "light") {
@@ -1251,7 +1250,7 @@
     } else {
       document.body.classList.add("dark-theme");
       document.body.classList.remove("light-theme");
-      themeToggle.textContent = "☀️";
+      themeToggle.textContent = "️";
     }
 
     themeToggle.addEventListener("click", () => {
@@ -1259,7 +1258,7 @@
       if (isDarkTheme) {
         document.body.classList.add("dark-theme");
         document.body.classList.remove("light-theme");
-        themeToggle.textContent = "☀️";
+        themeToggle.textContent = "️";
         localStorage.setItem("theme", "dark");
       } else {
         document.body.classList.remove("dark-theme");

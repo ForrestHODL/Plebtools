@@ -1,85 +1,59 @@
 # Plebtools
 
-Plebtools is a collection of Bitcoin-first treasury utilities, calculators, and educational guides. The project ships as a Flask application that serves static HTML tools backed by a lightweight SQLite database for optional account storage.
+Plebtools is a collection of Bitcoin-first treasury utilities, calculators, and educational guides. The project is **static HTML/CSS/JS**. No backend, no accounts. Data is stored locally in your browser.
 
 ---
 
 ## Quick Start
 
-### Prerequisites
+### Option 1: Open directly
 
-- Python 3.10 or newer
-- `pip` (bundled with Python)
-- Git
+Open `home.html` (or `index.html`, which redirects to home) in your browser. All tools work offline with no server.
 
-### 1. Clone the Repository
+### Option 2: Local static server (optional)
 
-```bash
-git clone https://github.com/ForrestHODL/Plebtools.git
-cd Plebtools
-```
-
-### 2. Create and Activate a Virtual Environment (Recommended)
+To avoid CORS issues when editing, serve the folder with any static server:
 
 ```bash
-python -m venv .venv
-# Windows
-.venv\Scripts\activate
-# macOS / Linux
-source .venv/bin/activate
+# Python
+python -m http.server 8000
+
+# Node (npx)
+npx serve .
+
+# Then open http://localhost:8000/home.html
 ```
 
-### 3. Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Configure Environment (Optional)
-
-Copy `env.production` to `.env` (or export variables manually) if you need to set:
-
-```
-SECRET_KEY=your-secret-key
-DATABASE_URL=sqlite:///data/plebtools.db
-MAIL_SERVER=smtp.example.com
-MAIL_PORT=587
-MAIL_USERNAME=your-email@example.com
-MAIL_PASSWORD=your-email-password
-```
-
-> The project defaults to a local SQLite database and prints verification tokens to the console if email settings are absent.
-
-### 5. Run the Development Server
-
-```bash
-python app.py
-```
-
-The site will be available at http://localhost:5000/. Key entry points include:
-
-- `/home` – marketing landing page
-- `/interest-arbitrage-calculator` – yield arbitrage calculator
-- `/step-by-step-to-self-custody` – interactive self-custody guide
-
-Static assets (HTML/CSS/JS) live at the repository root, so any edits are reflected immediately without rebuilding.
+No database, environment variables, or dependencies required.
 
 ---
 
 ## Project Structure
 
 ```
-app.py                       # Flask application and API routes
-home.html                    # Default landing page
+home.html                    # Landing page
+index.html                   # Redirects to home
+treasury.html                # Treasury tracker
+btc-buy-tracker.html         # Portfolio tracker
+coveredcall-tracker.html      # Covered call tracker
+compound-interest-calculator.html
+retirement-calculator.html
+the-great-intersection.html
+btc-loan-ltv.html
+financial-planner.html
+bitcoin-security.html
+pleb-release.html
 interest-arbitrage-calculator.html
 step-by-step-to-self-custody.html
+invoice-builder.html
+forrest-portfolio.html
+privacy-analyzer.html
 styles.css                   # Shared styling
-requirements.txt             # Python dependencies
-start_server.py              # Optional helper for production deployment
+images/                      # Logos and assets
+data/                        # Optional: strategy chart data (JSON)
 ```
 
-- All calculator & guide views are standalone HTML files served directly by Flask.
-- User data for trackers (portfolio, covered calls, etc.) is persisted in `instance/plebtools.db` through SQLAlchemy models defined in `app.py`.
+All tools are standalone HTML files. Data is stored in the browser (localStorage); nothing is sent to a server.
 
 ---
 
@@ -110,18 +84,18 @@ If you’re unsure about large features, please open an issue first to align on 
 
 ## Manual Testing Checklist
 
-- Load `http://localhost:5000/home` in both light and dark theme modes.
+- Load the home page in both light and dark theme modes (where supported).
 - Navigate via the Tools dropdown to confirm every link resolves (no 404s).
-- Verify calculators plot correctly after editing JS or CSS.
-- For Flask changes, exercise the relevant API endpoints with cURL or Postman; confirm the SQLite database updates.
+- Verify calculators and charts work after editing JS or CSS.
 - When editing the self-custody guide, run through all quiz steps to ensure progression logic still unlocks properly.
 
 ---
 
-## Deployment Notes
+## Deployment
 
-- The app is designed to run on any WSGI-compatible host (Gunicorn, uWSGI). For shared hosting (e.g., cPanel), see `cpanel_deployment_guide.md` for step-by-step instructions.
-- Static files are versionless; leverage cache-busting (query strings) when updating critical assets (e.g., `styles.css?v=3`).
+Upload the repository contents to any static host (GitHub Pages, Netlify, cPanel static hosting, S3, etc.). No server-side runtime is required. See `cpanel_deployment_guide.md` for cPanel static deployment steps.
+
+Static files use cache-busting query strings where needed (e.g., `styles.css?v=3`).
 
 ---
 
@@ -133,5 +107,3 @@ Plebtools is built by and for Bitcoin plebs. If you ship an improvement, share i
 💬 Dev chat: https://t.me/+ybza8iAs5X9kZWMx
 
 Thanks for helping Bitcoiners take custody of their data and their sats.
-*** End Patch
-

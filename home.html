@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Plebtools - Bitcoin Treasury & Portfolio Tracking</title>
+  <meta name="description" content="Open-source Bitcoin tools for charting, understanding Bitcoin, recording your treasury, and more. Your data stays in your browser. No accounts, no servers." />
+  <meta property="og:title" content="Plebtools - Open-Source Bitcoin Tools" />
+  <meta property="og:description" content="Open-source tools for charting, understanding Bitcoin, and recording your treasury. Your data stays private in your browser." />
+  <meta property="og:type" content="website" />
+  <title>Plebtools - Open-Source Bitcoin Tools</title>
   <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
   <link rel="stylesheet" href="styles.css?v=3">
   
@@ -161,9 +165,19 @@
 
     .hero-subtitle {
       font-size: 1.3rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       opacity: 0.9;
       line-height: 1.6;
+    }
+
+    .hero-privacy {
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      opacity: 0.85;
+      line-height: 1.5;
+      max-width: 36em;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .hero-buttons {
@@ -376,6 +390,10 @@
 
       .hero-subtitle {
         font-size: 1.1rem;
+      }
+
+      .hero-privacy {
+        font-size: 0.95rem;
       }
 
       .hero-buttons {
@@ -716,25 +734,25 @@
         </div>
         <div class="nav-links">
           <div class="dropdown" id="toolsDropdown">
-            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">▼</span></button>
+            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow"></span></button>
             <div class="dropdown-content" id="toolsContent" style="display: none;">
 
-              <a href="treasury">📊 Treasury</a>
-              <a href="btc-buy-tracker">�� Portfolio</a>
-              <a href="coveredcall-tracker">�� Covered Calls</a>
-              <a href="compound-interest-calculator">💰 Calculator</a>
-              <a href="retirement-calculator">🏖️ Retirement</a>
-              <a href="the-great-intersection">📉 The Great Intersection</a>
-              <a href="btc-loan-ltv">🔒 BTC Loans</a>
-              <a href="financial-planner">📋 Financial Planner</a>
-              <a href="bitcoin-security">🛡️ Bitcoin Security</a>
-              <a href="pleb-release">📰 Pleb Release</a>
-              <a href="interest-arbitrage-calculator">💹 Yield Arbitrage</a>
-              <a href="step-by-step-to-self-custody">🔑 Self Custody Guide</a>
-              <a href="invoice-builder">🧾 Invoice Builder</a>
+              <a href="treasury">Treasury</a>
+              <a href="btc-buy-tracker">Portfolio</a>
+              <a href="coveredcall-tracker">Covered Calls</a>
+              <a href="compound-interest-calculator">Calculator</a>
+              <a href="retirement-calculator">Retirement</a>
+              <a href="the-great-intersection">The Great Intersection</a>
+              <a href="btc-loan-ltv">BTC Loans</a>
+              <a href="financial-planner">Financial Planner</a>
+              <a href="bitcoin-security">Bitcoin Security</a>
+              <a href="pleb-release">Pleb Release</a>
+              <a href="interest-arbitrage-calculator">Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody">Self Custody Guide</a>
+              <a href="invoice-builder">Invoice Builder</a>
             </div>
           </div>
-          <a href="account" class="account-link">👤 Account</a>
+          <div id="theme-toggle-container" class="nav-theme-wrap"></div>
         </div>
       </div>
     </nav>
@@ -746,8 +764,10 @@
       <div class="hero-content">
         <h1 class="hero-title">Plebtools</h1>
         <p class="hero-subtitle">
-          Professional Bitcoin treasury and portfolio tracking tools for individuals and organizations. 
-          Track your Bitcoin purchases, monitor portfolio performance, and make data-driven decisions.
+          Open-source tools for charting Bitcoin, understanding the network, recording your treasury, and more.
+        </p>
+        <p class="hero-privacy">
+          Your data never leaves your device. No accounts, no servers. Everything stays in your browser and stays private.
         </p>
         <div class="hero-buttons">
           <a href="#features" class="hero-btn">Explore All Tools</a>
@@ -759,7 +779,7 @@
     <section class="features-section" id="features">
       <div class="features-grid">
         <div class="feature-card">
-          <span class="feature-icon">📊</span>
+          <span class="feature-icon"></span>
           <h3 class="feature-title">Treasury Tracker</h3>
           <p class="feature-description">
             Pre-configured Bitcoin treasury tracking with real-time price data, 
@@ -769,7 +789,7 @@
         </div>
 
         <div class="feature-card">
-          <span class="feature-icon">💼</span>
+          <span class="feature-icon"></span>
           <h3 class="feature-title">Portfolio Tracker</h3>
           <p class="feature-description">
             Interactive Bitcoin portfolio management. Add, edit, and delete purchases 
@@ -779,7 +799,7 @@
         </div>
 
         <div class="feature-card">
-          <span class="feature-icon">📈</span>
+          <span class="feature-icon"></span>
           <h3 class="feature-title">Covered Call Tracker</h3>
           <p class="feature-description">
             Track covered call trades and analyze portfolio performance. Monitor cost basis 
@@ -789,7 +809,7 @@
         </div>
 
         <div class="feature-card">
-          <span class="feature-icon">🧾</span>
+          <span class="feature-icon"></span>
           <h3 class="feature-title">Invoice Builder</h3>
           <p class="feature-description">
             Generate polished invoices with customizable line items, logo uploads, tax handling, and PDF export.
@@ -799,7 +819,7 @@
         </div>
 
         <div class="feature-card">
-          <span class="feature-icon">💰</span>
+          <span class="feature-icon"></span>
           <h3 class="feature-title">Compound Interest Calculator</h3>
           <p class="feature-description">
             Calculate your Bitcoin wealth over time with compound interest projections. 
@@ -809,7 +829,7 @@
         </div>
 
         <div class="feature-card">
-          <span class="feature-icon">💹</span>
+          <span class="feature-icon"></span>
           <h3 class="feature-title">Yield Arbitrage Calculator</h3>
           <p class="feature-description">
             Model debt-funded yield strategies with side-by-side projections. Stress test spreads,
@@ -819,7 +839,7 @@
         </div>
 
         <div class="feature-card">
-          <span class="feature-icon">🔑</span>
+          <span class="feature-icon"></span>
           <h3 class="feature-title">Self-Custody Step-by-Step Guide</h3>
           <p class="feature-description">
             Follow an interactive, quiz-gated process that takes you from buying Bitcoin to secure cold
@@ -829,7 +849,7 @@
         </div>
 
         <div class="feature-card">
-          <span class="feature-icon">🏖️</span>
+          <span class="feature-icon"></span>
           <h3 class="feature-title">Bitcoin Retirement Calculator</h3>
           <p class="feature-description">
             Plan your Bitcoin retirement with detailed calculations. Determine how much Bitcoin 
@@ -839,7 +859,7 @@
         </div>
 
         <div class="feature-card">
-          <span class="feature-icon">🔍</span>
+          <span class="feature-icon"></span>
           <h3 class="feature-title">Transaction Privacy Analyzer</h3>
           <p class="feature-description">
             Analyze Bitcoin transaction privacy using advanced heuristics. Detect wallet clustering, 
@@ -849,7 +869,7 @@
         </div>
 
         <div class="feature-card">
-          <span class="feature-icon">📰</span>
+          <span class="feature-icon"></span>
           <h3 class="feature-title">Pleb Release Tool</h3>
           <p class="feature-description">
             Create professional press release images with custom text overlays. 
@@ -860,7 +880,7 @@
         </div>
 
         <div class="feature-card">
-          <span class="feature-icon">📋</span>
+          <span class="feature-icon"></span>
           <h3 class="feature-title">Financial Planner</h3>
           <p class="feature-description">
             Comprehensive financial planning tool to track income, expenses, 
@@ -871,7 +891,7 @@
         </div>
 
         <div class="feature-card">
-          <span class="feature-icon">🛡️</span>
+          <span class="feature-icon"></span>
           <h3 class="feature-title">Bitcoin Security</h3>
           <p class="feature-description">
             Understand the incredible security of Bitcoin private keys through 
@@ -883,7 +903,7 @@
 
 
         <div class="feature-card">
-          <span class="feature-icon">🔒</span>
+          <span class="feature-icon"></span>
           <h3 class="feature-title">Privacy First</h3>
           <p class="feature-description">
             All data stored locally in your browser. No accounts required, 
@@ -894,7 +914,7 @@
         </div>
 
         <div class="feature-card">
-          <span class="feature-icon">🚀</span>
+          <span class="feature-icon"></span>
           <h3 class="feature-title">Open Source</h3>
           <p class="feature-description">
             Free and open source tools that you can customize, deploy, 
@@ -955,13 +975,13 @@
     <section class="support-section">
       <div class="container support-grid">
         <div class="support-card">
-          <div class="support-icon">⚡</div>
+          <div class="support-icon"></div>
           <h2 class="section-title">Support Plebtools</h2>
           <p class="support-text">
             Enjoying these tools? You can help keep them free and open source by donating sats.
             Every contribution fuels more Bitcoin-first development.
           </p>
-          <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate ⚡</a>
+          <a href="https://coinos.io/plebtools" target="_blank" class="support-btn">Donate </a>
         </div>
       </div>
     </section>
@@ -977,7 +997,7 @@
           </p>
           <div class="contact-widget">
             <div class="contact-item">
-              <span class="contact-icon">📧</span>
+              <span class="contact-icon"></span>
               <div class="contact-info">
                 <h3>Email Us</h3>
                 <a href="mailto:Bitcoinnotcryptopod@gmail.com" class="contact-email">
@@ -1007,18 +1027,18 @@
 
   <footer>
     <div class="container">
-      <p>&copy; 2024 Plebtools. Open source Bitcoin tracking tools.</p>
+      <p>&copy; 2025 Plebtools. Open source Bitcoin tracking tools.</p>
     </div>
   </footer>
 
   <script>
-    // Theme toggle functionality
+    // Theme toggle functionality (in nav)
+    const themeToggleContainer = document.getElementById('theme-toggle-container');
     const themeToggle = document.createElement('button');
-    themeToggle.innerHTML = '🌙';
+    themeToggle.className = 'theme-toggle-btn';
+    themeToggle.setAttribute('aria-label', 'Toggle dark/light theme');
+    themeToggle.innerHTML = '';
     themeToggle.style.cssText = `
-      position: absolute;
-      top: 140px;
-      right: 40px;
       background: rgba(255, 255, 255, 0.2);
       border: 2px solid rgba(255, 255, 255, 0.3);
       color: white;
@@ -1031,7 +1051,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 1000;
     `;
 
     let isDarkTheme = false;
@@ -1057,7 +1076,7 @@
       themeToggle.textContent = "☀️";
     }
 
-    document.body.appendChild(themeToggle);
+    if (themeToggleContainer) themeToggleContainer.appendChild(themeToggle);
 
     // Simple dropdown functionality
     const toolsBtn = document.getElementById('toolsBtn');

@@ -1,136 +1,80 @@
-# Plebtools cPanel Deployment Guide
+# Plebtools cPanel Deployment Guide (Static)
 
-## 🚀 Quick Setup for cPanel Storage
+Plebtools is a **static site**. No Python, no database, no API. Upload the files and serve them from cPanel’s document root.
 
-I've configured everything for you! Here's what I've set up and what you need to do:
+---
 
-### ✅ What I've Done For You
+## What to Upload
 
-1. **Updated app.py** - Now uses SQLite database in `data/` folder
-2. **Created .htaccess** - Enables API routing on cPanel
-3. **Updated API URLs** - Both trackers now use relative URLs (`/api`)
-4. **Created env.production** - Environment configuration file
-5. **Added data directory creation** - Automatically creates storage folder
-
-### 📁 Files You Need to Upload to cPanel
-
-Upload these files to your cPanel `public_html` directory:
+Upload the project files to your cPanel `public_html` (or your domain’s document root):
 
 ```
 public_html/
+├── index.html
+├── home.html
+├── treasury.html
 ├── btc-buy-tracker.html
 ├── coveredcall-tracker.html
-├── home.html
-├── account.html
+├── compound-interest-calculator.html
+├── retirement-calculator.html
+├── the-great-intersection.html
+├── btc-loan-ltv.html
+├── financial-planner.html
+├── bitcoin-security.html
+├── pleb-release.html
+├── interest-arbitrage-calculator.html
+├── step-by-step-to-self-custody.html
+├── invoice-builder.html
+├── forrest-portfolio.html
+├── privacy-analyzer.html
 ├── styles.css
-├── app.py
-├── requirements.txt
-├── .htaccess
-├── env.production
-├── setup.py (optional)
-└── data/ (create this folder with 755 permissions)
+├── .htaccess          (optional: clean URLs + security headers)
+├── images/            (if you use any)
+├── data/              (optional: JSON/data files for charts)
+└── ... any other .html and assets
 ```
 
-### 🔧 cPanel Setup Steps
+No `app.py`, `requirements.txt`, `env.production`, or `data/` database folder is needed.
 
-#### 1. Create Data Directory
-1. Log into cPanel
-2. Go to **File Manager**
-3. Navigate to `public_html`
-4. Create a new folder called `data`
-5. Set permissions to **755**
+---
 
-#### 2. Upload Files
-1. Upload all the files listed above
-2. Make sure `.htaccess` is uploaded (it starts with a dot)
-3. Upload `env.production` and rename it to `.env`
-4. **OR** run `python setup.py` to auto-configure
+## Optional: .htaccess
 
-#### 3. Set Python App (if available)
-1. Go to **Python App** in cPanel
-2. Create a new Python app
-3. Set the app directory to your project folder
-4. Set the startup file to `app.py`
-5. Install requirements: `pip install -r requirements.txt`
+If you upload `.htaccess`, it will:
 
-#### 4. Alternative: Use CGI (if Python App not available)
-1. Make `app.py` executable: `chmod +x app.py`
-2. Add this shebang line to the top of `app.py`:
-   ```python
-   #!/usr/bin/env python3
-   ```
+- Map clean URLs (e.g. `/forrest-portfolio` → `forrest-portfolio.html`)
+- Add security headers (X-Content-Type-Options, X-Frame-Options, X-XSS-Protection)
+- Set cache rules for static assets
 
-### 🎯 How It Works
+If you don’t use it, links will still work using full filenames (e.g. `forrest-portfolio.html`).
 
-#### **Data Storage**
-- **Database**: SQLite file stored in `data/plebtools.db`
-- **Automatic**: Database is created when first user registers
-- **Persistent**: Data survives server restarts
-- **Secure**: Database file is protected by .htaccess
+---
 
-#### **API Routing**
-- **URL**: `https://yourdomain.com/api/endpoint`
-- **Handled by**: .htaccess routes to app.py
-- **CORS**: Configured for cross-origin requests
+## How It Works
 
-#### **User Experience**
-- **Anonymous**: Data stored in browser localStorage
-- **Registered**: Data synced to database + localStorage
-- **Cross-device**: Access data from any device when logged in
+- **No server runtime** – cPanel serves the HTML/CSS/JS files as static files.
+- **No accounts** – All user data stays in the browser (localStorage).
+- **No API** – There are no backend endpoints; the site is fully client-side.
 
-### 🔒 Security Features
+---
 
-- **Protected Files**: .env and database files are not accessible via web
-- **CORS Headers**: Proper cross-origin request handling
-- **Security Headers**: XSS protection, content type validation
-- **Password Hashing**: Secure password storage
+## Troubleshooting
 
-### 📊 Database Schema
+- **404s on links**  
+  Make sure all referenced `.html` files and folders (e.g. `images/`, `data/`) are uploaded and paths match (case-sensitive on Linux).
 
-The system automatically creates these tables:
-- **users** - User accounts and authentication
-- **btc_purchases** - Bitcoin purchase data
-- **wallet_addresses** - Bitcoin wallet addresses
-- **covered_call_trades** - Covered call trade data
+- **Styles or scripts not loading**  
+  Check that `styles.css` and any JS/assets are in the same directory (or correct subpaths) and that filenames match.
 
-### 🎉 What Users Get
+- **Clean URLs not working**  
+  Ensure `.htaccess` is uploaded and that Apache `mod_rewrite` is enabled for your account (your host can confirm).
 
-#### **Without Account (Anonymous)**
-- ✅ Add/edit/delete Bitcoin purchases
-- ✅ Add/remove wallet addresses
-- ✅ Add/edit/delete covered call trades
-- ✅ Export data to CSV
-- ✅ All data stored locally in browser
+---
 
-#### **With Account (Registered)**
-- ✅ Everything above PLUS:
-- ✅ Cross-device data access
-- ✅ Data backup in database
-- ✅ Data survives browser clearing
-- ✅ Email verification (if configured)
+## Next Steps
 
-### 🛠️ Troubleshooting
+1. Upload the static files to `public_html`.
+2. Open your domain in a browser and click through the Tools menu to confirm every page loads.
+3. Test a tool that uses localStorage (e.g. btc-buy-tracker) to confirm data is saved in the browser.
 
-#### **If API doesn't work:**
-1. Check .htaccess is uploaded correctly
-2. Verify data folder has 755 permissions
-3. Check cPanel error logs
-
-#### **If database doesn't work:**
-1. Ensure data folder exists and is writable
-2. Check file permissions (755 for folder, 644 for files)
-3. Verify .env file is uploaded
-
-#### **If Python doesn't work:**
-1. Check Python version (3.7+ required)
-2. Install requirements: `pip install -r requirements.txt`
-3. Check cPanel Python app configuration
-
-### 📈 Next Steps
-
-1. **Upload files to cPanel**
-2. **Create data folder with 755 permissions**
-3. **Test the tools on your domain**
-4. **Optional: Configure email for account verification**
-
-Your tools will work perfectly with both local storage and database storage! 🎉
+That’s it. No Python app, no database, no accounts.
