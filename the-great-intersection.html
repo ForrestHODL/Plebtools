@@ -94,6 +94,9 @@
         body.dark-theme .intersection-note .intersect,
         body.dark-theme .intersection-note .supply-line,
         body.dark-theme .intersection-note strong { color: #92400e !important; }
+        @media (max-width: 768px) {
+            main { padding-top: 4.25rem; }
+        }
     </style>
 </head>
 <body>
@@ -411,22 +414,24 @@
             const labels = [];
             const strategyData = [];
             const leftToMineData = [];
-            strategyPurchases.forEach(([dateStr, totalBtc]) => {
-                labels.push(dateStr);
+            for (var i = 0; i < strategyPurchases.length; i++) {
+                var dateStr = strategyPurchases[i][0];
+                var totalBtc = Number(strategyPurchases[i][1]);
+                labels.push(String(dateStr));
                 strategyData.push(totalBtc);
-                leftToMineData.push(getLeftToMine(dateStr));
-            });
+                leftToMineData.push(Number(getLeftToMine(dateStr)));
+            }
             if (liveLeftToMineAndDate && liveLeftToMineAndDate.dateStr && liveLeftToMineAndDate.leftToMine != null) {
-                const lastDate = labels[labels.length - 1];
+                var lastDate = labels[labels.length - 1];
                 if (liveLeftToMineAndDate.dateStr > lastDate) {
-                    labels.push(liveLeftToMineAndDate.dateStr);
+                    labels.push(String(liveLeftToMineAndDate.dateStr));
                     strategyData.push(strategyData[strategyData.length - 1]);
-                    leftToMineData.push(liveLeftToMineAndDate.leftToMine);
+                    leftToMineData.push(Number(liveLeftToMineAndDate.leftToMine));
                 } else {
-                    leftToMineData[leftToMineData.length - 1] = liveLeftToMineAndDate.leftToMine;
+                    leftToMineData[leftToMineData.length - 1] = Number(liveLeftToMineAndDate.leftToMine);
                 }
             }
-            return { labels, strategyData, leftToMineData, strategyPurchases };
+            return { labels: labels, strategyData: strategyData, leftToMineData: leftToMineData, strategyPurchases: strategyPurchases };
         }
 
         function renderNote(strategyPurchases, labels, strategyData, leftToMineData, liveSource) {
@@ -479,18 +484,28 @@
         let chartInstance = null;
 
         function renderChart(data) {
-            const { labels, strategyData, leftToMineData, strategyPurchases } = data;
+            var labels = data.labels;
+            var strategyData = data.strategyData;
+            var leftToMineData = data.leftToMineData;
+            var strategyPurchases = data.strategyPurchases;
             renderNote(strategyPurchases, labels, strategyData, leftToMineData, data.liveSource);
-            const ctx = document.getElementById('supplyChart').getContext('2d');
+            var canvas = document.getElementById('supplyChart');
+            if (!canvas || !canvas.getContext) return;
+            var ctx = canvas.getContext('2d');
             if (chartInstance) chartInstance.destroy();
+            var strategyNumbers = [];
+            var leftToMineNumbers = [];
+            for (var s = 0; s < strategyData.length; s++) strategyNumbers.push(Number(strategyData[s]));
+            for (var l = 0; l < leftToMineData.length; l++) leftToMineNumbers.push(Number(leftToMineData[l]));
+            var labelCopy = labels.slice ? labels.slice() : labels;
             chartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels,
+                    labels: labelCopy,
                     datasets: [
                         {
                             label: 'Strategy cumulative BTC',
-                            data: strategyData,
+                            data: strategyNumbers,
                             borderColor: '#f59e0b',
                             backgroundColor: 'rgba(245, 158, 11, 0.1)',
                             borderWidth: 2.5,
@@ -501,7 +516,7 @@
                         },
                         {
                             label: 'Bitcoin left to mine',
-                            data: leftToMineData,
+                            data: leftToMineNumbers,
                             borderColor: '#0ea5e9',
                             backgroundColor: 'rgba(14, 165, 233, 0.08)',
                             borderWidth: 2.5,
@@ -521,7 +536,7 @@
                         tooltip: {
                             callbacks: {
                                 label: function(ctx) {
-                                    const v = ctx.parsed.y;
+                                    var v = Number(ctx.parsed.y);
                                     return ctx.dataset.label + ': ' + v.toLocaleString('en-US', { maximumFractionDigits: 0 }) + ' BTC';
                                 }
                             }
@@ -535,9 +550,11 @@
                         },
                         y: {
                             beginAtZero: true,
+                            min: 0,
+                            max: 21000000,
                             title: { display: true, text: 'Cumulative BTC' },
                             ticks: {
-                                callback: function(v) { return (v / 1000).toFixed(0) + 'k'; }
+                                callback: function(v) { return (Number(v) / 1000).toFixed(0) + 'k'; }
                             }
                         }
                     }
@@ -572,7 +589,7 @@
         async function fetchStrategyData() {
             if (!STRATEGY_DATA_URL) return null;
             try {
-                const r = await fetch(STRATEGY_DATA_URL, { cache: 'no-store' });
+                const r = await fetch(STRATEGY_DATA_URL, { cache: 'default' });
                 if (!r.ok) return null;
                 const raw = await r.json();
                 if (!Array.isArray(raw) || raw.length === 0) return null;
@@ -605,7 +622,7 @@
 
         async function fetchSECStrategyData() {
             try {
-                const r = await fetch(SEC_SUBMISSIONS_URL, { headers: SEC_HEADERS, cache: 'no-store' });
+                const r = await fetch(SEC_SUBMISSIONS_URL, { headers: SEC_HEADERS, cache: 'default' });
                 if (!r.ok) return null;
                 const data = await r.json();
                 const recent = data.filings && data.filings.recent;
@@ -630,7 +647,7 @@
                     const docUrl = 'https://www.sec.gov/Archives/edgar/data/' + SEC_CIK + '/' + accNoDashes + '/' + doc;
                     await new Promise(resolve => setTimeout(resolve, 150));
                     try {
-                        const rr = await fetch(docUrl, { headers: SEC_ARCHIVES_HEADERS, cache: 'no-store' });
+                        const rr = await fetch(docUrl, { headers: SEC_ARCHIVES_HEADERS, cache: 'default' });
                         if (!rr.ok) continue;
                         const html = await rr.text();
                         const parsed = parse8KForBitcoinHoldings(html, filingDate);
@@ -646,18 +663,21 @@
 
         function mergeStrategyData(base, secData) {
             if (!secData || secData.length === 0) return base;
-            const byDate = new Map(base.map(([d, b]) => [d, b]));
-            secData.forEach(([d, b]) => { byDate.set(d, b); });
-            return Array.from(byDate.entries()).map(([d, b]) => [d, b]).sort((a, b) => a[0].localeCompare(b[0]));
+            var byDate = new Map();
+            for (var i = 0; i < base.length; i++) byDate.set(base[i][0], Number(base[i][1]));
+            for (var j = 0; j < secData.length; j++) byDate.set(secData[j][0], Number(secData[j][1]));
+            var entries = Array.from(byDate.entries()).map(function(e) { return [e[0], e[1]]; });
+            return entries.sort(function(a, b) { return a[0].localeCompare(b[0]); });
         }
 
         async function fetchLiveBlockTip() {
             try {
-                const r = await fetch(BLOCKSTREAM_TIP_URL, { cache: 'no-store' });
+                const r = await fetch(BLOCKSTREAM_TIP_URL, { cache: 'default' });
                 if (!r.ok) return null;
                 const blocks = await r.json();
                 const tip = Array.isArray(blocks) && blocks[0] ? blocks[0] : blocks;
-                const height = tip.height;
+                const height = tip && (typeof tip.height === 'number') ? tip.height : null;
+                if (height == null) return null;
                 const ts = tip.timestamp ? tip.timestamp * 1000 : Date.now();
                 const d = new Date(ts);
                 const dateStr = d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0') + '-' + String(d.getUTCDate()).padStart(2, '0');
@@ -666,34 +686,76 @@
             } catch (_) { return null; }
         }
 
+        var SEC_REFRESH_INTERVAL_MS = 60 * 60 * 1000;
+        var baseStrategyPurchases = STRATEGY_PURCHASES_STATIC;
+        var baseLiveSource = '';
+
+        function applyDataAndRender(strategyPurchases, liveBlock, liveSource) {
+            var data = buildChartData(strategyPurchases, liveBlock);
+            data.liveSource = liveSource;
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() { renderChart(data); });
+            });
+        }
+
+        async function refreshSECAndRender() {
+            var secData = null;
+            try { secData = await fetchSECStrategyData(); } catch (_) {}
+            var strategyPurchases = secData && secData.length > 0
+                ? mergeStrategyData(baseStrategyPurchases, secData)
+                : baseStrategyPurchases;
+            var blockTip = await fetchLiveBlockTip();
+            var liveBlock = blockTip && blockTip.height != null
+                ? { dateStr: blockTip.dateStr, leftToMine: blockTip.leftToMine }
+                : null;
+            var secPart = (secData && secData.length > 0)
+                ? 'Strategy holdings updated from SEC EDGAR 8-K filings (' + secData.length + ' parsed). '
+                : '';
+            var blockPart = (blockTip && blockTip.height != null)
+                ? 'Left to mine: live from Blockstream (block ' + blockTip.height.toLocaleString() + ', ' + blockTip.dateStr + ').'
+                : '';
+            var liveSource = (baseLiveSource + ' ' + secPart + blockPart).trim();
+            applyDataAndRender(strategyPurchases, liveBlock, liveSource);
+        }
+
         (async function init() {
-            let strategyPurchases = STRATEGY_PURCHASES_STATIC;
-            let liveBlock = null;
-            let liveSource = '';
+            var strategyPurchases = STRATEGY_PURCHASES_STATIC;
+            var liveBlock = null;
+            var liveSource = '';
 
-            const [strategyFromUrl, secData] = await Promise.all([
-                fetchStrategyData(),
-                fetchSECStrategyData()
-            ]);
+            try {
+                var strategyFromUrl = null;
+                var secData = null;
+                var results = await Promise.allSettled([
+                    fetchStrategyData(),
+                    fetchSECStrategyData()
+                ]);
+                if (results[0].status === 'fulfilled' && results[0].value) strategyFromUrl = results[0].value;
+                if (results[1].status === 'fulfilled' && results[1].value) secData = results[1].value;
 
-            if (strategyFromUrl && strategyFromUrl.length > 0) {
-                strategyPurchases = strategyFromUrl;
-                liveSource = 'Strategy data: loaded from ' + STRATEGY_DATA_URL + '. ';
+                if (strategyFromUrl && strategyFromUrl.length > 0) {
+                    strategyPurchases = strategyFromUrl;
+                    baseLiveSource = 'Strategy data: loaded from ' + STRATEGY_DATA_URL + '. ';
+                }
+                baseStrategyPurchases = strategyPurchases;
+                if (secData && secData.length > 0) {
+                    strategyPurchases = mergeStrategyData(strategyPurchases, secData);
+                    liveSource += 'Strategy holdings updated from SEC EDGAR 8-K filings (' + secData.length + ' parsed). ';
+                }
+
+                var blockTip = await fetchLiveBlockTip();
+                if (blockTip && blockTip.height != null) {
+                    liveBlock = { dateStr: blockTip.dateStr, leftToMine: blockTip.leftToMine };
+                    liveSource += 'Left to mine: live from Blockstream (block ' + blockTip.height.toLocaleString() + ', ' + blockTip.dateStr + ').';
+                }
+                liveSource = (baseLiveSource + liveSource).trim();
+            } catch (e) {
+                liveSource = 'Using built-in strategy data (some live sources unavailable in this browser). ';
             }
-            if (secData && secData.length > 0) {
-                strategyPurchases = mergeStrategyData(strategyPurchases, secData);
-                liveSource += 'Strategy holdings updated from SEC EDGAR 8-K filings (' + secData.length + ' parsed). ';
-            }
 
-            const blockTip = await fetchLiveBlockTip();
-            if (blockTip) {
-                liveBlock = { dateStr: blockTip.dateStr, leftToMine: blockTip.leftToMine };
-                liveSource += 'Left to mine: live from Blockstream (block ' + blockTip.height.toLocaleString() + ', ' + blockTip.dateStr + ').';
-            }
+            applyDataAndRender(strategyPurchases, liveBlock, liveSource);
 
-            const data = buildChartData(strategyPurchases, liveBlock);
-            data.liveSource = liveSource.trim();
-            renderChart(data);
+            setInterval(refreshSECAndRender, SEC_REFRESH_INTERVAL_MS);
         })();
 
         // Tools dropdown
