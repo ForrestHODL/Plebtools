@@ -1,0 +1,26 @@
+# Runs daily to fetch Strategy 8-K data from SEC and commit data/strategy-purchases.json.
+# The Great Intersection page loads this JSON (same origin), so the public always sees fresh data.
+name: Update Strategy holdings from SEC
+
+on:
+  schedule:
+    - cron: '0 14 * * *'   # daily at 14:00 UTC
+  workflow_dispatch:       # allow manual run
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run update script
+        run: node scripts/update-strategy-holdings.js
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/strategy-purchases.json
+          git diff --staged --quiet || (git commit -m "chore: update strategy-purchases.json from SEC 8-K" && git push)

@@ -146,7 +146,7 @@
                     <canvas id="supplyChart"></canvas>
                 </div>
                 <div id="intersectionNote" class="intersection-note"></div>
-                <p class="source-note" id="sourceNote">Strategy holdings: updated from <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001050446&type=8-K" target="_blank" rel="noopener">SEC EDGAR 8-K filings</a> (MicroStrategy/Strategy) when available; otherwise <a href="https://www.strategy.com/purchases" target="_blank" rel="noopener">Strategy.com Purchases</a>. Bitcoin left to mine: 21M minus cumulative mined from live block height (<a href="https://blockstream.info/" target="_blank" rel="noopener">Blockstream</a>) and standard halving schedule.</p>
+                <p class="source-note" id="sourceNote">Strategy holdings: from <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001050446&type=8-K" target="_blank" rel="noopener">SEC EDGAR 8-K filings</a> (MicroStrategy/Strategy) when available; otherwise built-in data. Bitcoin left to mine: live from <a href="https://blockstream.info/" target="_blank" rel="noopener">Blockstream</a>.</p>
                 <p class="source-note" id="liveNote" style="display: none; margin-top: 0.5rem;"></p>
             </div>
 
@@ -497,6 +497,10 @@
             var leftToMineNumbers = [];
             for (var s = 0; s < strategyData.length; s++) strategyNumbers.push(Number(strategyData[s]));
             for (var l = 0; l < leftToMineData.length; l++) leftToMineNumbers.push(Number(leftToMineData[l]));
+            var maxVal = 0;
+            for (var i = 0; i < strategyNumbers.length; i++) if (strategyNumbers[i] > maxVal) maxVal = strategyNumbers[i];
+            for (var j = 0; j < leftToMineNumbers.length; j++) if (leftToMineNumbers[j] > maxVal) maxVal = leftToMineNumbers[j];
+            var yMax = maxVal * 1.08;
             var labelCopy = labels.slice ? labels.slice() : labels;
             chartInstance = new Chart(ctx, {
                 type: 'line',
@@ -551,7 +555,7 @@
                         y: {
                             beginAtZero: true,
                             min: 0,
-                            max: 21000000,
+                            max: yMax,
                             title: { display: true, text: 'Cumulative BTC' },
                             ticks: {
                                 callback: function(v) { return (Number(v) / 1000).toFixed(0) + 'k'; }
@@ -560,14 +564,14 @@
                     }
                 }
             });
-            if (chartInstance) applyChartTheme();
+            if (chartInstance) setTimeout(function() { applyChartTheme(); }, 0);
         }
 
         function applyChartTheme() {
             if (!chartInstance) return;
-            const isDark = document.body.classList.contains('dark-theme');
-            const textColor = isDark ? '#9ca3af' : '#333';
-            const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+            var isDark = document.body.classList.contains('dark-theme');
+            var textColor = isDark ? '#9ca3af' : '#333';
+            var gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
             chartInstance.options.plugins.legend.labels.color = textColor;
             if (chartInstance.options.scales.x) {
                 chartInstance.options.scales.x.ticks = chartInstance.options.scales.x.ticks || {};
@@ -583,7 +587,7 @@
                 chartInstance.options.scales.y.grid.color = gridColor;
                 if (chartInstance.options.scales.y.title) chartInstance.options.scales.y.title.color = textColor;
             }
-            chartInstance.update('none');
+            try { chartInstance.update('none'); } catch (e) {}
         }
 
         async function fetchStrategyData() {
@@ -600,62 +604,111 @@
         }
 
         function parse8KForBitcoinHoldings(html, filingDate) {
-            const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
-            const candidates = [];
-            const aggregateRegex = /(?:aggregate|total|held)[^.]*?approximately\s*([\d,]+(?:\.[\d]+)?)\s*bitcoins?/gi;
-            let m;
-            while ((m = aggregateRegex.exec(text)) !== null) {
-                const num = parseInt(m[1].replace(/,/g, ''), 10);
-                if (!isNaN(num) && num > 1000 && num < 21e6) candidates.push(num);
+            var text = (html || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+            var candidates = [];
+            function addNum(s) {
+                if (typeof s !== 'string' && typeof s !== 'number') return;
+                var n = parseInt(String(s).replace(/,/g, ''), 10);
+                if (!isNaN(n) && n > 1000 && n < 21e6) candidates.push(n);
             }
-            if (candidates.length === 0) {
-                const fallbackRegex = /approximately\s*([\d,]+(?:\.[\d]+)?)\s*bitcoins?/gi;
-                while ((m = fallbackRegex.exec(text)) !== null) {
-                    const num = parseInt(m[1].replace(/,/g, ''), 10);
-                    if (!isNaN(num) && num > 1000 && num < 21e6) candidates.push(num);
+            var patterns = [
+                /aggregate\s+BTC\s+holdings[\s\S]{0,400}?(\d{1,3}(?:,\d{3})+)/gi,
+                /aggregate\s+BTC\s+holdings[:\s]*([\d,]+)/gi,
+                /(?:aggregate|total|held|holdings?)\s+(?:of\s+)?(?:approximately\s+)?([\d,]+(?:\.[\d]+)?)\s*bitcoins?/gi,
+                /approximately\s+([\d,]+(?:\.[\d]+)?)\s*bitcoins?/gi,
+                /(?:held|holdings?|total)\s+(?:of\s+)?([\d,]+(?:\.[\d]+)?)\s*bitcoins?/gi,
+                /(?:as\s+of|as\s+of\s+the)[^.]*?([\d,]+(?:\.[\d]+)?)\s*bitcoins?/gi,
+                /([\d,]+(?:\.[\d]+)?)\s*bitcoins?\s+(?:as\s+of|held|in\s+aggregate)/gi,
+                /([\d,]+(?:\.[\d]+)?)\s*BTC\b/gi,
+                /(?:approximately\s+)?([\d,]+(?:\.[\d]+)?)\s*bitcoins?\s+[(]?/gi,
+                /\b([\d,]+(?:\.[\d]+)?)\s*bitcoins?/gi,
+                /(\d{1,3}(?:,\d{3}){2,})\s*(?:bitcoin|BTC)/gi
+            ];
+            for (var p = 0; p < patterns.length; p++) {
+                var re = patterns[p];
+                re.lastIndex = 0;
+                var m;
+                while ((m = re.exec(text)) !== null) {
+                    addNum(m[1]);
                 }
+                if (candidates.length > 0) break;
             }
             if (candidates.length === 0) return null;
-            const total = Math.max(...candidates);
+            var total = Math.max.apply(null, candidates);
             return [filingDate, total];
+        }
+
+        async function fetchFilingDoc(baseUrl, docPath) {
+            if (!docPath) return null;
+            var url = baseUrl + docPath.replace(/^\//, '');
+            var r = await fetch(url, { headers: SEC_ARCHIVES_HEADERS, cache: 'default' });
+            if (!r.ok) return null;
+            return await r.text();
         }
 
         async function fetchSECStrategyData() {
             try {
-                const r = await fetch(SEC_SUBMISSIONS_URL, { headers: SEC_HEADERS, cache: 'default' });
+                var url = SEC_SUBMISSIONS_URL + '?t=' + Date.now();
+                var r = await fetch(url, { headers: SEC_HEADERS, cache: 'default' });
                 if (!r.ok) return null;
-                const data = await r.json();
-                const recent = data.filings && data.filings.recent;
+                var data = await r.json();
+                var recent = data.filings && data.filings.recent;
                 if (!recent || !Array.isArray(recent.form)) return null;
-                const forms = recent.form;
-                const accessionNumbers = recent.accessionNumber || [];
-                const primaryDocs = recent.primaryDocument || [];
-                const filingDates = recent.filingDate || [];
-                const indices = [];
-                for (let i = 0; i < forms.length; i++) {
-                    if (forms[i] === '8-K') indices.push(i);
+                var forms = recent.form;
+                var accessionNumbers = recent.accessionNumber || [];
+                var primaryDocs = recent.primaryDocument || [];
+                var filingDates = recent.filingDate || [];
+                var indices = [];
+                for (var i = 0; i < forms.length; i++) {
+                    var f = forms[i];
+                    if (f === '8-K' || f === '8-K/A') indices.push(i);
                 }
-                const results = [];
-                const seen = new Set();
-                for (let k = 0; k < Math.min(30, indices.length); k++) {
-                    const i = indices[k];
-                    const acc = accessionNumbers[i];
-                    const doc = primaryDocs[i] || '';
-                    const filingDate = filingDates[i];
-                    if (!acc || !doc || !filingDate || seen.has(filingDate)) continue;
-                    const accNoDashes = acc.replace(/-/g, '');
-                    const docUrl = 'https://www.sec.gov/Archives/edgar/data/' + SEC_CIK + '/' + accNoDashes + '/' + doc;
-                    await new Promise(resolve => setTimeout(resolve, 150));
+                indices.sort(function(a, b) { return (filingDates[b] || '').localeCompare(filingDates[a] || ''); });
+                var results = [];
+                var seen = {};
+                var maxToFetch = Math.min(12, indices.length);
+                for (var k = 0; k < maxToFetch; k++) {
+                    var idx = indices[k];
+                    var acc = accessionNumbers[idx];
+                    var doc = primaryDocs[idx] || '';
+                    var filingDate = filingDates[idx];
+                    if (!acc || !doc || !filingDate || seen[filingDate]) continue;
+                    var accNoDashes = acc.replace(/-/g, '');
+                    var baseUrl = 'https://www.sec.gov/Archives/edgar/data/' + SEC_CIK + '/' + accNoDashes + '/';
+                    await new Promise(function(resolve) { setTimeout(resolve, 110); });
+                    var parsed = null;
                     try {
-                        const rr = await fetch(docUrl, { headers: SEC_ARCHIVES_HEADERS, cache: 'default' });
-                        if (!rr.ok) continue;
-                        const html = await rr.text();
-                        const parsed = parse8KForBitcoinHoldings(html, filingDate);
-                        if (parsed) {
-                            results.push(parsed);
-                            seen.add(filingDate);
+                        var html = await fetchFilingDoc(baseUrl, doc);
+                        if (html) parsed = parse8KForBitcoinHoldings(html, filingDate);
+                        if (!parsed && html) {
+                            var exMatch = html.match(/href="([^"]*ex[-_]?99[^"]*\.(?:htm|html))"/i);
+                            if (exMatch && exMatch[1]) {
+                                await new Promise(function(resolve) { setTimeout(resolve, 110); });
+                                var exHtml = await fetchFilingDoc(baseUrl, exMatch[1]);
+                                if (exHtml) parsed = parse8KForBitcoinHoldings(exHtml, filingDate);
+                            }
                         }
-                    } catch (_) { /* skip */ }
+                        if (!parsed && k === 0) {
+                            var indexHtml = await fetchFilingDoc(baseUrl, 'index.html') || await fetchFilingDoc(baseUrl, 'index.htm');
+                            if (indexHtml) {
+                                var exLinks = indexHtml.match(/href="([^"]*ex[-_]?99[^"]*\.(?:htm|html))"/gi);
+                                if (exLinks) {
+                                    for (var e = 0; e < Math.min(3, exLinks.length); e++) {
+                                        var href = exLinks[e].match(/href="([^"]+)"/);
+                                        if (href && href[1]) {
+                                            await new Promise(function(resolve) { setTimeout(resolve, 110); });
+                                            var exHtml2 = await fetchFilingDoc(baseUrl, href[1]);
+                                            if (exHtml2) { parsed = parse8KForBitcoinHoldings(exHtml2, filingDate); if (parsed) break; }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch (_) {}
+                    if (parsed) {
+                        results.push(parsed);
+                        seen[filingDate] = true;
+                    }
                 }
                 return results.length > 0 ? results : null;
             } catch (_) { return null; }
@@ -698,23 +751,19 @@
             });
         }
 
-        async function refreshSECAndRender() {
-            var secData = null;
-            try { secData = await fetchSECStrategyData(); } catch (_) {}
-            var strategyPurchases = secData && secData.length > 0
-                ? mergeStrategyData(baseStrategyPurchases, secData)
+        async function refreshDataAndRender() {
+            var strategyFromUrl = await fetchStrategyData();
+            var strategyPurchases = (strategyFromUrl && strategyFromUrl.length > 0)
+                ? strategyFromUrl
                 : baseStrategyPurchases;
             var blockTip = await fetchLiveBlockTip();
             var liveBlock = blockTip && blockTip.height != null
                 ? { dateStr: blockTip.dateStr, leftToMine: blockTip.leftToMine }
                 : null;
-            var secPart = (secData && secData.length > 0)
-                ? 'Strategy holdings updated from SEC EDGAR 8-K filings (' + secData.length + ' parsed). '
-                : '';
             var blockPart = (blockTip && blockTip.height != null)
                 ? 'Left to mine: live from Blockstream (block ' + blockTip.height.toLocaleString() + ', ' + blockTip.dateStr + ').'
                 : '';
-            var liveSource = (baseLiveSource + ' ' + secPart + blockPart).trim();
+            var liveSource = (baseLiveSource + ' ' + blockPart).trim();
             applyDataAndRender(strategyPurchases, liveBlock, liveSource);
         }
 
@@ -724,24 +773,12 @@
             var liveSource = '';
 
             try {
-                var strategyFromUrl = null;
-                var secData = null;
-                var results = await Promise.allSettled([
-                    fetchStrategyData(),
-                    fetchSECStrategyData()
-                ]);
-                if (results[0].status === 'fulfilled' && results[0].value) strategyFromUrl = results[0].value;
-                if (results[1].status === 'fulfilled' && results[1].value) secData = results[1].value;
-
+                var strategyFromUrl = await fetchStrategyData();
                 if (strategyFromUrl && strategyFromUrl.length > 0) {
                     strategyPurchases = strategyFromUrl;
                     baseLiveSource = 'Strategy data: loaded from ' + STRATEGY_DATA_URL + '. ';
                 }
                 baseStrategyPurchases = strategyPurchases;
-                if (secData && secData.length > 0) {
-                    strategyPurchases = mergeStrategyData(strategyPurchases, secData);
-                    liveSource += 'Strategy holdings updated from SEC EDGAR 8-K filings (' + secData.length + ' parsed). ';
-                }
 
                 var blockTip = await fetchLiveBlockTip();
                 if (blockTip && blockTip.height != null) {
@@ -755,7 +792,7 @@
 
             applyDataAndRender(strategyPurchases, liveBlock, liveSource);
 
-            setInterval(refreshSECAndRender, SEC_REFRESH_INTERVAL_MS);
+            setInterval(refreshDataAndRender, SEC_REFRESH_INTERVAL_MS);
         })();
 
         // Tools dropdown
