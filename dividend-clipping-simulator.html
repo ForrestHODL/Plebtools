@@ -199,6 +199,16 @@
             <div class="value highlight" id="totalMonthly">—</div>
           </div>
           <div class="result-box">
+            <div class="label">Annual income (dividends only)</div>
+            <div class="value" id="annualIncome">—</div>
+            <div class="sub">monthly × 12 — regardless of buy/sell prices</div>
+          </div>
+          <div class="result-box">
+            <div class="label">Proceeds + annual income</div>
+            <div class="value" id="principalPlusAnnual">—</div>
+            <div class="sub">proceeds after rotation + annual income (moves with buy/sell)</div>
+          </div>
+          <div class="result-box">
             <div class="label">Proceeds after rotation (EOM)</div>
             <div class="value" id="proceeds">—</div>
             <div class="sub" id="capitalImpact">—</div>
@@ -264,6 +274,8 @@
           document.getElementById('strcShares').textContent = 'Enter principal';
           document.getElementById('sataShares').textContent = '';
           document.getElementById('totalMonthly').textContent = '—';
+          document.getElementById('annualIncome').textContent = '—';
+          document.getElementById('principalPlusAnnual').textContent = '—';
           document.getElementById('proceeds').textContent = '—';
           document.getElementById('capitalImpact').textContent = '';
           document.getElementById('annualPct').textContent = '—';
@@ -292,6 +304,9 @@
         document.getElementById('strcShares').textContent = strcShares.toFixed(1) + ' @ buy $' + strcBuyP.toFixed(2);
         document.getElementById('sataShares').textContent = sataShares.toFixed(1) + ' @ buy $' + sataBuyP.toFixed(2);
         document.getElementById('totalMonthly').textContent = '$' + total.toFixed(2);
+        var annualIncome = total * 12;
+        document.getElementById('annualIncome').textContent = '$' + annualIncome.toFixed(2);
+        document.getElementById('principalPlusAnnual').textContent = '$' + (endProceeds + annualIncome).toFixed(2);
         document.getElementById('proceeds').textContent = '$' + endProceeds.toFixed(2);
         var impactEl = document.getElementById('capitalImpact');
         if (capitalImpact >= 0) {
