@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dividend Clipping Simulator - STRC / SATA - Plebtools</title>
+  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
+  <style>
+    .sim-page { max-width: 720px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+    .sim-card {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #334155;
+    }
+    .sim-card h1 { color: #f59e0b; margin-bottom: 0.35rem; font-size: 1.6rem; }
+    .sim-card .subtitle { color: #94a3b8; margin-bottom: 1.25rem; font-size: 0.95rem; line-height: 1.5; }
+    .gauge-block {
+      background: rgba(0,0,0,0.25);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.25rem;
+      border: 1px solid #334155;
+    }
+    .gauge-block h3 { font-size: 1rem; color: #e2e8f0; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+    .gauge-block .ticker { font-weight: 700; color: #f59e0b; }
+    .gauge-block .ticker.sata { color: #38bdf8; }
+    .gauge-label { font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.35rem; }
+    .gauge-row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .gauge-slider { flex: 1; min-width: 140px; height: 8px; -webkit-appearance: none; appearance: none; background: #334155; border-radius: 4px; }
+    .gauge-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #f59e0b; cursor: pointer; }
+    .gauge-slider.sata::-webkit-slider-thumb { background: #38bdf8; }
+    .gauge-value { min-width: 5rem; font-weight: 700; font-size: 1.1rem; color: #e2e8f0; }
+    .gauge-value .price { color: #a5b4fc; font-weight: 600; font-size: 0.95rem; }
+    .principal-row { margin: 1.25rem 0; }
+    .principal-row label { display: block; font-size: 0.9rem; color: #94a3b8; margin-bottom: 0.4rem; }
+    .principal-row input { width: 100%; max-width: 200px; padding: 0.6rem 0.75rem; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #e2e8f0; font-size: 1.1rem; }
+    .timeline {
+      display: flex; align-items: stretch; margin: 1.25rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #334155;
+    }
+    .timeline-seg { flex: 1; padding: 0.9rem 0.75rem; text-align: center; font-size: 0.85rem; }
+    .timeline-seg.strc { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border-right: 2px solid #334155; }
+    .timeline-seg.sata { background: rgba(56, 189, 248, 0.2); color: #7dd3fc; }
+    .timeline-seg strong { display: block; font-size: 1rem; margin-bottom: 0.2rem; }
+    .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.25rem; }
+    @media (max-width: 520px) { .results-grid { grid-template-columns: 1fr; } }
+    .result-box {
+      background: rgba(0,0,0,0.3); border-radius: 10px; padding: 1rem 1.25rem; border: 1px solid #334155;
+    }
+    .result-box .label { font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.25rem; }
+    .result-box .value { font-size: 1.4rem; font-weight: 700; color: #e2e8f0; }
+    .result-box .value.highlight { color: #22c55e; }
+    .result-box .sub { font-size: 0.8rem; color: #64748b; margin-top: 0.25rem; }
+    .result-box .sub.capital-loss { color: #f87171; }
+    body.light-theme .result-box .sub.capital-loss { color: #b91c1c; }
+    .sources { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #334155; font-size: 0.85rem; color: #94a3b8; line-height: 1.6; }
+    .sources a { color: #7dd3fc; text-decoration: none; }
+    .sources a:hover { text-decoration: underline; }
+    body.light-theme .sources { border-color: #e2e8f0; color: #475569; }
+    body.light-theme .sources a { color: #0369a1; }
+    body.light-theme .sim-card { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-color: #cbd5e1; }
+    body.light-theme .sim-card h1 { color: #b45309; }
+    body.light-theme .sim-card .subtitle { color: #475569; }
+    body.light-theme .gauge-block { background: #fff; border-color: #e2e8f0; }
+    body.light-theme .gauge-block h3 { color: #1e293b; }
+    body.light-theme .gauge-block .ticker { color: #b45309; }
+    body.light-theme .gauge-block .ticker.sata { color: #0284c7; }
+    body.light-theme .gauge-label { color: #475569; }
+    body.light-theme .gauge-value { color: #1e293b; }
+    body.light-theme .gauge-value .price { color: #4f46e5; }
+    body.light-theme .principal-row input { background: #fff; border-color: #cbd5e1; color: #1e293b; }
+    body.light-theme .timeline-seg.strc { background: rgba(249, 115, 22, 0.15); color: #c2410c; }
+    body.light-theme .timeline-seg.sata { background: rgba(56, 189, 248, 0.15); color: #0369a1; }
+    body.light-theme .result-box { background: #fff; border-color: #e2e8f0; }
+    body.light-theme .result-box .label { color: #475569; }
+    body.light-theme .result-box .value { color: #1e293b; }
+    body.light-theme .result-box .value.highlight { color: #15803d; }
+    #toolsDropdown { position: relative; display: inline-block; }
+    #toolsBtn { background: none; border: none; color: inherit; font-weight: 500; font-size: 1rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; display: flex; align-items: center; gap: 0.5rem; }
+    #toolsBtn:hover { background: rgba(102, 126, 234, 0.1); color: #667eea; }
+    #toolsContent { position: absolute; top: 100%; right: 0; background: var(--card-bg, #1a1a2e); min-width: 220px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); border-radius: 12px; z-index: 1001; padding: 0.75rem 0; border: 1px solid #334155; margin-top: 8px; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; }
+    #toolsContent.show { opacity: 1; transform: translateY(0); }
+    #toolsContent a { display: block; padding: 0.875rem 1.5rem; color: inherit; text-decoration: none; transition: all 0.3s ease; font-weight: 500; }
+    #toolsContent a:hover { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    body.light-theme header .logo,
+    body.light-theme header .logo-container a { color: #1e293b; }
+    body.light-theme #toolsBtn { color: #1e293b; }
+    body.light-theme #toolsBtn:hover { color: #b45309; }
+    body.light-theme #toolsContent { background: #fff; border-color: #e2e8f0; }
+    body.light-theme #toolsContent a { color: #1e293b; }
+    body.light-theme #toolsContent a:hover { color: #b45309; background: rgba(249, 115, 22, 0.12); }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="nav-container">
+        <div class="logo-container">
+          <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+            <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+            <h1 class="logo">Plebtools</h1>
+          </a>
+        </div>
+        <div class="nav-links">
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow"></span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="home">Home</a>
+              <a href="treasury">Treasury</a>
+              <a href="btc-buy-tracker">Portfolio</a>
+              <a href="coveredcall-tracker">Covered Calls</a>
+              <a href="compound-interest-calculator">Calculator</a>
+              <a href="btc-dca-vs-sp500">DCA vs S&P 500</a>
+              <a href="dividend-clipping-simulator">Dividend Clipping</a>
+              <a href="retirement-calculator">Retirement</a>
+              <a href="the-great-intersection">The Great Intersection</a>
+              <a href="btc-loan-ltv">BTC Loans</a>
+              <a href="financial-planner">Financial Planner</a>
+              <a href="bitcoin-security">Bitcoin Security</a>
+              <a href="pleb-release">Pleb Release</a>
+              <a href="interest-arbitrage-calculator">Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody">Self Custody Guide</a>
+              <a href="invoice-builder">Invoice Builder</a>
+            </div>
+          </div>
+          <span class="nav-theme-wrap"><button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle theme"></button></span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="sim-page">
+      <div class="sim-card">
+        <h1>Dividend Clipping: STRC ↔ SATA</h1>
+        <p class="subtitle">
+          Simulate rotating between two monthly dividend preferreds: hold <strong>STRC</strong> (Strategy Stretch — 11.5% variable rate, ex-div ~15th) until after the dividend, then rotate into <strong>SATA</strong> (Strive preferred — 12.75% variable rate, ex-div end of month). Set <strong>buy</strong> and <strong>sell</strong> discounts for each — you may buy at a discount but also sell below par when you rotate, which affects proceeds and net income.
+        </p>
+
+        <div class="gauge-block">
+          <h3><span class="ticker">STRC</span> — when you buy (start of month)</h3>
+          <div class="gauge-label">% below $100 par (0 = at par, 5 = $95)</div>
+          <div class="gauge-row">
+            <input type="range" id="strcBuyBelow" class="gauge-slider" min="0" max="10" step="0.1" value="0">
+            <span class="gauge-value" id="strcBuyDisplay">0% <span class="price">($100.00)</span></span>
+          </div>
+        </div>
+        <div class="gauge-block">
+          <h3><span class="ticker">STRC</span> — when you sell (rotate out ~15th)</h3>
+          <div class="gauge-label">% below $100 par — selling below par shrinks proceeds into SATA. <strong>Observed avg 15 days after ex-div: +0.1%</strong> (7 dates: 0.68%, 0.17%, 0.46%, −1.12%, 1.33%, −0.98%, 0.28%).</div>
+          <div class="gauge-row">
+            <input type="range" id="strcSellBelow" class="gauge-slider" min="0" max="10" step="0.1" value="0">
+            <span class="gauge-value" id="strcSellDisplay">0% <span class="price">($100.00)</span></span>
+          </div>
+        </div>
+
+        <div class="gauge-block">
+          <h3><span class="ticker sata">SATA</span> — when you buy (~15th)</h3>
+          <div class="gauge-label">% below $100 par (0 = at par, 5 = $95)</div>
+          <div class="gauge-row">
+            <input type="range" id="sataBuyBelow" class="gauge-slider sata" min="0" max="20" step="0.1" value="0">
+            <span class="gauge-value" id="sataBuyDisplay">0% <span class="price">($100.00)</span></span>
+          </div>
+        </div>
+        <div class="gauge-block">
+          <h3><span class="ticker sata">SATA</span> — when you sell (rotate out end of month)</h3>
+          <div class="gauge-label">% below $100 par — selling below par shrinks next cycle’s principal. <strong>Observed avg from ex-div to 15th (rotate-by): −0.6%</strong> (3 dates: −1.7%, +2.79%, −2.86%).</div>
+          <div class="gauge-row">
+            <input type="range" id="sataSellBelow" class="gauge-slider sata" min="0" max="20" step="0.1" value="0">
+            <span class="gauge-value" id="sataSellDisplay">0% <span class="price">($100.00)</span></span>
+          </div>
+        </div>
+
+        <div class="principal-row">
+          <label for="principal">Amount rotating (USD)</label>
+          <input type="number" id="principal" min="100" step="1000" value="100000" placeholder="e.g. 100000">
+        </div>
+
+        <div class="timeline">
+          <div class="timeline-seg strc"><strong>STRC</strong> 1st → 15th<br>Ex-div ~15th</div>
+          <div class="timeline-seg sata"><strong>SATA</strong> 15th → EOM<br>Ex-div end of month</div>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-box">
+            <div class="label">STRC monthly dividend</div>
+            <div class="value" id="strcDiv">—</div>
+            <div class="sub" id="strcShares">—</div>
+          </div>
+          <div class="result-box">
+            <div class="label">SATA monthly dividend</div>
+            <div class="value" id="sataDiv">—</div>
+            <div class="sub" id="sataShares">—</div>
+          </div>
+          <div class="result-box">
+            <div class="label">Combined monthly income</div>
+            <div class="value highlight" id="totalMonthly">—</div>
+          </div>
+          <div class="result-box">
+            <div class="label">Proceeds after rotation (EOM)</div>
+            <div class="value" id="proceeds">—</div>
+            <div class="sub" id="capitalImpact">—</div>
+          </div>
+          <div class="result-box">
+            <div class="label">Annualized yield (on starting principal)</div>
+            <div class="value" id="annualPct">—</div>
+          </div>
+          <div class="result-box">
+            <div class="label">Annual yield if you only held STRC</div>
+            <div class="value" id="strcOnlyYield">—</div>
+            <div class="sub">buy & hold at your STRC buy price</div>
+          </div>
+          <div class="result-box">
+            <div class="label">Annual yield if you only held SATA</div>
+            <div class="value" id="sataOnlyYield">—</div>
+            <div class="sub">buy & hold at your SATA buy price</div>
+          </div>
+        </div>
+
+        <div class="sources">
+          <strong>Sources & data</strong><br>
+          <strong>STRC</strong> (Strategy Inc 9% Perp Stretch Preferred, variable rate): <a href="https://www.strategy.com/stretch" target="_blank" rel="noopener">strategy.com/stretch</a>. Dividend history & chart: <a href="https://www.nasdaq.com/market-activity/stocks/strc/dividend-history" target="_blank" rel="noopener">Nasdaq STRC dividend history</a>.<br>
+          <strong>SATA</strong> (Strive Inc Variable Rate Perpetual Preferred): <a href="https://treasury.strive.com/?tab=credit" target="_blank" rel="noopener">treasury.strive.com (Credit)</a>. Dividend history & chart: <a href="https://www.nasdaq.com/market-activity/stocks/sata/dividend-history" target="_blank" rel="noopener">Nasdaq SATA dividend history</a>.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function() {
+      var STRC_YIELD = 0.115;   // 11.5% annual
+      var SATA_YIELD = 0.1275;  // 12.75% annual
+      var NAV = 100;
+
+      var strcBuyBelow = document.getElementById('strcBuyBelow');
+      var strcSellBelow = document.getElementById('strcSellBelow');
+      var sataBuyBelow = document.getElementById('sataBuyBelow');
+      var sataSellBelow = document.getElementById('sataSellBelow');
+      var principal = document.getElementById('principal');
+
+      function priceBelow(pctInput) { return NAV * (1 - parseFloat(pctInput.value) / 100); }
+
+      function monthlyDivPerShare(yieldPct) {
+        return NAV * (yieldPct / 12);
+      }
+
+      function update() {
+        var p = parseFloat(principal.value) || 0;
+        var strcBuyP = priceBelow(strcBuyBelow);
+        var strcSellP = priceBelow(strcSellBelow);
+        var sataBuyP = priceBelow(sataBuyBelow);
+        var sataSellP = priceBelow(sataSellBelow);
+
+        document.getElementById('strcBuyDisplay').innerHTML = strcBuyBelow.value + '% <span class="price">($' + strcBuyP.toFixed(2) + ')</span>';
+        document.getElementById('strcSellDisplay').innerHTML = strcSellBelow.value + '% <span class="price">($' + strcSellP.toFixed(2) + ')</span>';
+        document.getElementById('sataBuyDisplay').innerHTML = sataBuyBelow.value + '% <span class="price">($' + sataBuyP.toFixed(2) + ')</span>';
+        document.getElementById('sataSellDisplay').innerHTML = sataSellBelow.value + '% <span class="price">($' + sataSellP.toFixed(2) + ')</span>';
+
+        if (p <= 0) {
+          document.getElementById('strcDiv').textContent = '—';
+          document.getElementById('sataDiv').textContent = '—';
+          document.getElementById('strcShares').textContent = 'Enter principal';
+          document.getElementById('sataShares').textContent = '';
+          document.getElementById('totalMonthly').textContent = '—';
+          document.getElementById('proceeds').textContent = '—';
+          document.getElementById('capitalImpact').textContent = '';
+          document.getElementById('annualPct').textContent = '—';
+          document.getElementById('strcOnlyYield').textContent = '—';
+          document.getElementById('sataOnlyYield').textContent = '—';
+          return;
+        }
+
+        // Cycle: buy STRC → div → sell STRC → buy SATA → div → sell SATA
+        var strcShares = p / strcBuyP;
+        var strcDivPerShare = monthlyDivPerShare(STRC_YIELD);
+        var strcMonthly = strcShares * strcDivPerShare;
+        var afterStrcSell = strcShares * strcSellP;
+
+        var sataShares = afterStrcSell / sataBuyP;
+        var sataDivPerShare = monthlyDivPerShare(SATA_YIELD);
+        var sataMonthly = sataShares * sataDivPerShare;
+        var endProceeds = sataShares * sataSellP;
+
+        var total = strcMonthly + sataMonthly;
+        var capitalImpact = endProceeds - p;
+        var annualPct = (total * 12 / p) * 100;
+
+        document.getElementById('strcDiv').textContent = '$' + strcMonthly.toFixed(2);
+        document.getElementById('sataDiv').textContent = '$' + sataMonthly.toFixed(2);
+        document.getElementById('strcShares').textContent = strcShares.toFixed(1) + ' @ buy $' + strcBuyP.toFixed(2);
+        document.getElementById('sataShares').textContent = sataShares.toFixed(1) + ' @ buy $' + sataBuyP.toFixed(2);
+        document.getElementById('totalMonthly').textContent = '$' + total.toFixed(2);
+        document.getElementById('proceeds').textContent = '$' + endProceeds.toFixed(2);
+        var impactEl = document.getElementById('capitalImpact');
+        if (capitalImpact >= 0) {
+          impactEl.textContent = 'Capital +$' + capitalImpact.toFixed(2) + ' this cycle';
+          impactEl.className = 'sub';
+        } else {
+          impactEl.textContent = 'Capital $' + capitalImpact.toFixed(2) + ' this cycle (selling below par)';
+          impactEl.className = 'sub capital-loss';
+        }
+        document.getElementById('annualPct').textContent = annualPct.toFixed(2) + '%';
+        var strcOnlyYield = (STRC_YIELD * NAV / strcBuyP) * 100;
+        var sataOnlyYield = (SATA_YIELD * NAV / sataBuyP) * 100;
+        document.getElementById('strcOnlyYield').textContent = strcOnlyYield.toFixed(2) + '%';
+        document.getElementById('sataOnlyYield').textContent = sataOnlyYield.toFixed(2) + '%';
+      }
+
+      [strcBuyBelow, strcSellBelow, sataBuyBelow, sataSellBelow, principal].forEach(function(el) {
+        el.addEventListener('input', update);
+        el.addEventListener('change', update);
+      });
+      update();
+    })();
+  </script>
+  <script>
+    var themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+      themeToggle.textContent = document.body.classList.contains('light-theme') ? '🌙' : '☀️';
+      themeToggle.addEventListener('click', function() {
+        var dark = !document.body.classList.contains('light-theme');
+        document.body.classList.toggle('light-theme');
+        themeToggle.textContent = dark ? '☀️' : '🌙';
+      });
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches && !document.body.classList.contains('light-theme') && !document.body.classList.contains('dark-theme'))
+        document.body.classList.add('light-theme');
+      themeToggle.textContent = document.body.classList.contains('light-theme') ? '🌙' : '☀️';
+    }
+    var toolsBtn = document.getElementById('toolsBtn');
+    var toolsContent = document.getElementById('toolsContent');
+    var isOpen = false;
+    if (toolsBtn && toolsContent) {
+      toolsBtn.addEventListener('click', function() {
+        if (isOpen) {
+          toolsContent.classList.remove('show');
+          setTimeout(function() { toolsContent.style.display = 'none'; }, 300);
+          isOpen = false;
+        } else {
+          toolsContent.style.display = 'block';
+          setTimeout(function() { toolsContent.classList.add('show'); }, 10);
+          isOpen = true;
+        }
+      });
+      document.addEventListener('click', function(e) {
+        if (document.getElementById('toolsDropdown') && !document.getElementById('toolsDropdown').contains(e.target)) {
+          toolsContent.classList.remove('show');
+          setTimeout(function() { toolsContent.style.display = 'none'; }, 300);
+          isOpen = false;
+        }
+      });
+    }
+  </script>
+</body>
+</html>

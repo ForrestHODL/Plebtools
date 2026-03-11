@@ -37,6 +37,7 @@ treasury.html                # Treasury tracker
 btc-buy-tracker.html         # Portfolio tracker
 coveredcall-tracker.html      # Covered call tracker
 compound-interest-calculator.html
+dividend-clipping-simulator.html
 retirement-calculator.html
 the-great-intersection.html
 btc-loan-ltv.html
