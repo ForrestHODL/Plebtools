@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STRC vs Bitcoin CAGR - Plebtools</title>
+  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .chart-page { max-width: 900px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+    .chart-card {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin: 2rem 0 1.5rem;
+      border: 1px solid #334155;
+    }
+    .chart-card h1 { color: #f59e0b; margin-bottom: 0.35rem; font-size: 1.7rem; }
+    .chart-card .subtitle { color: #94a3b8; margin-bottom: 1.25rem; font-size: 0.98rem; line-height: 1.5; }
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .control-group {
+      background: rgba(0,0,0,0.25);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      border: 1px solid #334155;
+    }
+    .control-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: #cbd5f5;
+      margin-bottom: 0.35rem;
+    }
+    .control-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .control-row input[type="range"] {
+      flex: 1;
+      min-width: 140px;
+      height: 6px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: #334155;
+      border-radius: 4px;
+    }
+    .control-row input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #f59e0b;
+      cursor: pointer;
+    }
+    .control-row input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #f59e0b;
+      cursor: pointer;
+      border: none;
+    }
+    .control-row input[type="number"] {
+      max-width: 130px;
+      padding: 0.4rem 0.6rem;
+      border-radius: 8px;
+      border: 1px solid #475569;
+      background: #020617;
+      color: #e2e8f0;
+      font-size: 0.95rem;
+    }
+    .control-value {
+      min-width: 4.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+    .control-value span {
+      color: #a5b4fc;
+      font-weight: 500;
+      font-size: 0.85rem;
+    }
+    .chart-wrap { position: relative; height: 380px; }
+    .summary-box {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .summary-item {
+      background: rgba(0,0,0,0.3);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      border: 1px solid #334155;
+    }
+    .summary-item strong { color: #e2e8f0; font-size: 0.9rem; }
+    .summary-item .value { font-size: 1.35rem; font-weight: 700; margin-top: 0.35rem; }
+    .summary-item .meta { font-size: 0.85rem; color: #94a3b8; margin-top: 0.25rem; }
+    .summary-item.btc .value { color: #f97316; }
+    .summary-item.strc .value { color: #22c55e; }
+    .note {
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+    body.light-theme .chart-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      border-color: #cbd5e1;
+    }
+    body.light-theme .chart-card h1 { color: #b45309; }
+    body.light-theme .chart-card .subtitle { color: #475569; }
+    body.light-theme .control-group {
+      background: #fff;
+      border-color: #e2e8f0;
+    }
+    body.light-theme .control-group label { color: #475569; }
+    body.light-theme .control-row input[type="number"] {
+      background: #fff;
+      border-color: #cbd5e1;
+      color: #0f172a;
+    }
+    body.light-theme .control-value { color: #0f172a; }
+    body.light-theme .control-value span { color: #4f46e5; }
+    body.light-theme .summary-item {
+      background: #fff;
+      border-color: #e2e8f0;
+    }
+    body.light-theme .summary-item strong { color: #1e293b; }
+    body.light-theme .summary-item .meta { color: #64748b; }
+    body.light-theme .note { color: #6b7280; }
+    body.light-theme #toolsBtn {
+      color: #111827;
+    }
+    body.light-theme #toolsBtn:hover {
+      color: #b45309;
+    }
+
+    #toolsDropdown { position: relative; display: inline-block; }
+    #toolsBtn {
+      background: none;
+      border: none;
+      color: inherit;
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 0.6rem 1.1rem;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    #toolsBtn:hover { background: rgba(102, 126, 234, 0.1); color: #667eea; }
+    #toolsContent {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: var(--card-bg, #1a1a2e);
+      min-width: 220px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      border-radius: 12px;
+      z-index: 1001;
+      padding: 0.75rem 0;
+      border: 1px solid #334155;
+      margin-top: 8px;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+      display: none;
+    }
+    #toolsContent.show { opacity: 1; transform: translateY(0); }
+    #toolsContent a {
+      display: block;
+      padding: 0.8rem 1.5rem;
+      color: inherit;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.01em;
+    }
+    #toolsContent a:hover { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="nav-container">
+        <div class="logo-container">
+          <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+            <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+            <h1 class="logo">Plebtools</h1>
+          </a>
+        </div>
+        <div class="nav-links">
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow"></span></button>
+            <div class="dropdown-content" id="toolsContent">
+              <a href="home">Home</a>
+              <a href="treasury">Treasury</a>
+              <a href="btc-buy-tracker">Portfolio</a>
+              <a href="coveredcall-tracker">Covered Calls</a>
+              <a href="compound-interest-calculator">Calculator</a>
+              <a href="btc-dca-vs-sp500">DCA vs S&P 500</a>
+              <a href="dividend-clipping-simulator">Dividend Clipping</a>
+              <a href="strc-vs-bitcoin-cagr">STRC vs Bitcoin CAGR</a>
+              <a href="retirement-calculator">Retirement</a>
+              <a href="the-great-intersection">The Great Intersection</a>
+              <a href="btc-loan-ltv">BTC Loans</a>
+              <a href="financial-planner">Financial Planner</a>
+              <a href="bitcoin-security">Bitcoin Security</a>
+              <a href="pleb-release">Pleb Release</a>
+              <a href="interest-arbitrage-calculator">Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody">Self Custody Guide</a>
+              <a href="invoice-builder">Invoice Builder</a>
+            </div>
+          </div>
+          <span class="nav-theme-wrap"><button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle theme"></button></span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="chart-page">
+      <div class="chart-card">
+        <h1>STRC vs Bitcoin – Capital vs Growth</h1>
+        <p class="subtitle">
+          Compare a STRC-style income position that pays coupons but keeps your capital flat versus Bitcoin across multi-decade horizons.
+          Adjust Bitcoin&rsquo;s assumed CAGR and extend the horizon beyond 20 years to see how pure BTC growth stacks up against a steady dividend stream.
+        </p>
+
+        <div class="controls-grid">
+          <div class="control-group">
+            <label for="startAmount">Starting amount (USD)</label>
+            <div class="control-row">
+              <input type="number" id="startAmount" min="1000" step="1000" value="100000">
+              <div class="control-value">$<span id="startAmountDisplay">100,000</span></div>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label for="years">Horizon (years)</label>
+            <div class="control-row">
+              <input type="range" id="years" min="5" max="30" step="1" value="20">
+              <div class="control-value"><span id="yearsDisplay">20</span> yrs</div>
+            </div>
+            <div class="note">Compare 5–30 years of STRC income vs Bitcoin growth.</div>
+          </div>
+
+          <div class="control-group">
+            <label for="strcYield">STRC dividend yield (annual)</label>
+            <div class="control-row">
+              <input type="range" id="strcYield" min="5" max="20" step="0.1" value="11.5">
+              <div class="control-value"><span id="strcYieldDisplay">11.5</span>%</div>
+            </div>
+            <div class="note">Assumes STRC pays this yield in cash dividends and the price stays flat (no reinvestment, no capital growth).</div>
+          </div>
+
+          <div class="control-group">
+            <label for="btcCagr">Bitcoin CAGR (starting assumption)</label>
+            <div class="control-row">
+              <input type="range" id="btcCagr" min="5" max="80" step="0.5" value="30">
+              <div class="control-value"><span id="btcCagrDisplay">30.0</span>%</div>
+            </div>
+            <div class="note">Base-case annual growth rate in year 1 (before any diminishing).</div>
+          </div>
+
+          <div class="control-group">
+            <label for="btcFinal">Bitcoin final-year CAGR</label>
+            <div class="control-row">
+              <input type="range" id="btcFinal" min="0" max="80" step="0.5" value="10">
+              <div class="control-value"><span id="btcFinalDisplay">10.0</span>%</div>
+            </div>
+            <div class="note">BTC&rsquo;s growth rate starts at your base CAGR and moves in a straight line to this rate by the final year. Example: 30% → 10% over 20 years.</div>
+          </div>
+
+          <div class="control-group">
+            <label for="reinvestPct">Reinvest STRC dividends back into STRC</label>
+            <div class="control-row">
+              <input type="range" id="reinvestPct" min="0" max="100" step="5" value="0">
+              <div class="control-value"><span id="reinvestPctDisplay">0</span>%</div>
+            </div>
+            <div class="note">Each year, this % of your STRC income buys more STRC, growing the STRC line. The rest is taken as cash.</div>
+          </div>
+
+          <div class="control-group">
+            <label for="strcDca">Extra STRC buy each month (USD)</label>
+            <div class="control-row">
+              <input type="range" id="strcDca" min="0" max="10000" step="250" value="0">
+              <div class="control-value">$<span id="strcDcaDisplay">0</span>/mo</div>
+            </div>
+            <div class="note">New money you add into STRC each month (on top of starting amount). Treated as 12 equal contributions per year.</div>
+          </div>
+
+          <div class="control-group">
+            <label for="btcDca">Extra Bitcoin buy each month (USD)</label>
+            <div class="control-row">
+              <input type="range" id="btcDca" min="0" max="10000" step="250" value="0">
+              <div class="control-value">$<span id="btcDcaDisplay">0</span>/mo</div>
+            </div>
+            <div class="note">New money you stack into Bitcoin each month along the BTC path. Treated as 12 equal contributions per year.</div>
+          </div>
+        </div>
+
+        <div class="chart-wrap">
+          <canvas id="cagrChart"></canvas>
+        </div>
+
+        <div class="summary-box">
+          <div class="summary-item strc">
+            <strong>STRC path (with optional reinvest)</strong>
+            <div class="value" id="strcEndValue">—</div>
+            <div class="meta" id="strcMultiple">—</div>
+          </div>
+          <div class="summary-item btc">
+            <strong>Bitcoin path (adjustable CAGR)</strong>
+            <div class="value" id="btcEndValue">—</div>
+            <div class="meta" id="btcMultiple">—</div>
+          </div>
+          <div class="summary-item">
+            <strong>STRC reinvest vs cash-out</strong>
+            <div class="value" id="reinvestSummary">—</div>
+            <div class="meta" id="reinvestMeta">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function() {
+      var startAmountInput = document.getElementById('startAmount');
+      var yearsInput = document.getElementById('years');
+      var strcYieldInput = document.getElementById('strcYield');
+      var btcCagrInput = document.getElementById('btcCagr');
+      var btcFinalInput = document.getElementById('btcFinal');
+      var reinvestPctInput = document.getElementById('reinvestPct');
+      var strcDcaInput = document.getElementById('strcDca');
+      var btcDcaInput = document.getElementById('btcDca');
+
+      var startAmountDisplay = document.getElementById('startAmountDisplay');
+      var yearsDisplay = document.getElementById('yearsDisplay');
+      var strcYieldDisplay = document.getElementById('strcYieldDisplay');
+      var btcCagrDisplay = document.getElementById('btcCagrDisplay');
+      var btcFinalDisplay = document.getElementById('btcFinalDisplay');
+      var reinvestPctDisplay = document.getElementById('reinvestPctDisplay');
+      var strcDcaDisplay = document.getElementById('strcDcaDisplay');
+      var btcDcaDisplay = document.getElementById('btcDcaDisplay');
+
+      var strcEndValueEl = document.getElementById('strcEndValue');
+      var btcEndValueEl = document.getElementById('btcEndValue');
+      var strcMultipleEl = document.getElementById('strcMultiple');
+      var btcMultipleEl = document.getElementById('btcMultiple');
+      var reinvestSummaryEl = document.getElementById('reinvestSummary');
+      var reinvestMetaEl = document.getElementById('reinvestMeta');
+
+      var chart;
+
+      function formatCurrency(v) {
+        return v.toLocaleString('en-US', { maximumFractionDigits: 0 });
+      }
+
+      function buildDiminishingSeries(start, years, startCagrPct, finalCagrPct, annualContribution) {
+        var data = [start];
+        var value = start;
+        var contrib = annualContribution || 0;
+        if (years === 0) return data;
+        for (var y = 1; y <= years; y++) {
+          var t = (years === 1) ? 1 : (y - 1) / (years - 1); // 0 → 1 over horizon
+          var yearRatePct = startCagrPct + (finalCagrPct - startCagrPct) * t;
+          var rate = yearRatePct / 100;
+          // assume contribution is added at the start of each year, then grows at that year's rate
+          value = (value + contrib) * (1 + rate);
+          data.push(value);
+        }
+        return data;
+      }
+
+      function buildLabels(years) {
+        var labels = [];
+        for (var y = 0; y <= years; y++) {
+          labels.push('Year ' + y);
+        }
+        return labels;
+      }
+
+      function updateDisplays() {
+        var start = parseFloat(startAmountInput.value) || 0;
+        startAmountDisplay.textContent = formatCurrency(start);
+        yearsDisplay.textContent = yearsInput.value;
+        strcYieldDisplay.textContent = parseFloat(strcYieldInput.value).toFixed(1);
+        btcCagrDisplay.textContent = parseFloat(btcCagrInput.value).toFixed(1);
+        btcFinalDisplay.textContent = parseFloat(btcFinalInput.value).toFixed(1);
+        reinvestPctDisplay.textContent = parseFloat(reinvestPctInput.value).toFixed(0);
+        strcDcaDisplay.textContent = formatCurrency(parseFloat(strcDcaInput.value) || 0);
+        btcDcaDisplay.textContent = formatCurrency(parseFloat(btcDcaInput.value) || 0);
+      }
+
+      function render() {
+        var start = parseFloat(startAmountInput.value) || 0;
+        var years = parseInt(yearsInput.value, 10) || 0;
+        var strcYield = parseFloat(strcYieldInput.value) || 0;
+        var btcCagr = parseFloat(btcCagrInput.value) || 0;
+        var btcFinal = parseFloat(btcFinalInput.value) || 0;
+        var reinvestPct = parseFloat(reinvestPctInput.value) || 0;
+        var strcDcaMonthly = parseFloat(strcDcaInput.value) || 0;
+        var btcDcaMonthly = parseFloat(btcDcaInput.value) || 0;
+
+        if (start <= 0 || years <= 0) {
+          if (strcEndValueEl) strcEndValueEl.textContent = '—';
+          if (btcEndValueEl) btcEndValueEl.textContent = '—';
+          if (strcMultipleEl) strcMultipleEl.textContent = 'Enter a starting amount to see paths.';
+          if (btcMultipleEl) btcMultipleEl.textContent = '';
+          if (chart) chart.destroy();
+          return;
+        }
+
+        var labels = buildLabels(years);
+
+        // STRC portfolio with optional reinvestment of dividends and extra monthly buys.
+        // Chart shows total STRC "wealth" = current STRC capital + cumulative cash paid out
+        // so the line always trends up even when 0% is reinvested.
+        var strcSeries = [];
+        var strcCapital = start;
+        var totalPaidOut = 0;
+        var strcDcaAnnual = strcDcaMonthly * 12;
+        for (var y = 0; y <= years; y++) {
+          if (y === 0) {
+            strcSeries.push(strcCapital);
+          } else {
+            // Add new DCA capital at start of the year
+            strcCapital += strcDcaAnnual;
+            var div = strcCapital * (strcYield / 100);
+            var reinvestAmt = div * (reinvestPct / 100);
+            var paidOut = div - reinvestAmt;
+            strcCapital += reinvestAmt;
+            totalPaidOut += paidOut;
+            strcSeries.push(strcCapital + totalPaidOut);
+          }
+        }
+
+        // Bitcoin path uses the initial lump sum plus extra monthly BTC DCA (converted to annual contribution)
+        var btcDcaAnnual = btcDcaMonthly * 12;
+        var btcSeries = buildDiminishingSeries(start, years, btcCagr, btcFinal, btcDcaAnnual);
+
+        var isDark = !document.body.classList.contains('light-theme');
+        var gridColor = isDark ? 'rgba(148, 163, 184, 0.2)' : 'rgba(15, 23, 42, 0.08)';
+        var textColor = isDark ? '#e2e8f0' : '#1e293b';
+
+        if (chart) chart.destroy();
+
+        var ctx = document.getElementById('cagrChart').getContext('2d');
+        chart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: 'STRC path',
+                data: strcSeries,
+                borderColor: '#22c55e',
+                backgroundColor: 'rgba(34, 197, 94, 0.12)',
+                borderWidth: 2.5,
+                fill: true,
+                tension: 0.15,
+                pointRadius: 0,
+                pointHoverRadius: 5
+              },
+              {
+                label: 'Bitcoin path',
+                data: btcSeries,
+                borderColor: '#f97316',
+                backgroundColor: 'rgba(249, 115, 22, 0.12)',
+                borderWidth: 2.5,
+                fill: true,
+                tension: 0.15,
+                pointRadius: 0,
+                pointHoverRadius: 5
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { intersect: false, mode: 'index' },
+            plugins: {
+              legend: { labels: { color: textColor, padding: 16 } },
+              tooltip: {
+                callbacks: {
+                  label: function(ctx) {
+                    var label = ctx.dataset.label || '';
+                    var v = ctx.raw != null ? ctx.raw : 0;
+                    return label + ': $' + formatCurrency(Math.round(v));
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: { color: gridColor },
+                ticks: { color: textColor }
+              },
+              y: {
+                grid: { color: gridColor },
+                ticks: {
+                  color: textColor,
+                  callback: function(v) {
+                    if (v >= 1_000_000) return '$' + (v / 1_000_000).toFixed(1) + 'M';
+                    if (v >= 1_000) return '$' + (v / 1_000).toFixed(1) + 'k';
+                    return '$' + v;
+                  }
+                }
+              }
+            }
+          }
+        });
+
+        var strcEnd = strcSeries[strcSeries.length - 1];
+        var btcEnd = btcSeries[btcSeries.length - 1];
+        strcEndValueEl.textContent = '$' + formatCurrency(Math.round(strcEnd));
+        btcEndValueEl.textContent = '$' + formatCurrency(Math.round(btcEnd));
+        strcMultipleEl.textContent =
+          'End STRC value $' + formatCurrency(Math.round(strcEnd)) +
+          ' · cash paid out ≈ $' + formatCurrency(Math.round(totalPaidOut)) +
+          ' over ' + years + ' yrs (' + reinvestPct.toFixed(0) + '% reinvested, ' +
+          (100 - reinvestPct).toFixed(0) + '% taken as cash; +' +
+          formatCurrency(Math.round(strcDcaAnnual)) + '/yr new STRC buys).';
+        var finalYearRate = years <= 1 ? btcCagr : btcFinal;
+        btcMultipleEl.textContent =
+          'Capital grows to ×' + (btcEnd / start).toFixed(1) +
+          ' over ' + years + ' yrs. BTC rate path: ' +
+          btcCagr.toFixed(1) + '% → ' + finalYearRate.toFixed(1) +
+          '% in a straight line.';
+
+        // Reinvestment summary
+        if (reinvestPct > 0) {
+          reinvestSummaryEl.textContent = reinvestPct.toFixed(0) + '% of STRC income reinvested';
+          reinvestMetaEl.textContent =
+            'Line shows STRC capital plus cash paid out. More reinvestment bends the STRC curve upward over time.';
+        } else {
+          reinvestSummaryEl.textContent = '0% reinvested';
+          reinvestMetaEl.textContent =
+            'All STRC income is taken as cash; line shows starting capital plus cumulative dividends over time.';
+        }
+      }
+
+      function updateAll() {
+        updateDisplays();
+        render();
+      }
+
+      [startAmountInput, yearsInput, strcYieldInput, btcCagrInput, btcFinalInput, reinvestPctInput, strcDcaInput, btcDcaInput].forEach(function(el) {
+        el.addEventListener('input', updateAll);
+        el.addEventListener('change', updateAll);
+      });
+
+      updateAll();
+
+      // Theme toggle
+      var themeToggle = document.getElementById('themeToggle');
+      if (themeToggle) {
+        var saved = localStorage.getItem('theme');
+        if (saved === 'light') {
+          document.body.classList.add('light-theme');
+        }
+        themeToggle.textContent = document.body.classList.contains('light-theme') ? '🌙' : '☀️';
+        themeToggle.addEventListener('click', function() {
+          document.body.classList.toggle('light-theme');
+          var dark = !document.body.classList.contains('light-theme');
+          themeToggle.textContent = dark ? '☀️' : '🌙';
+          localStorage.setItem('theme', dark ? 'dark' : 'light');
+          render();
+        });
+      }
+
+      // Tools dropdown
+      var toolsBtn = document.getElementById('toolsBtn');
+      var toolsContent = document.getElementById('toolsContent');
+      var isOpen = false;
+      if (toolsBtn && toolsContent) {
+        toolsBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (isOpen) {
+            toolsContent.classList.remove('show');
+            setTimeout(function() { toolsContent.style.display = 'none'; }, 300);
+            isOpen = false;
+          } else {
+            toolsContent.style.display = 'block';
+            setTimeout(function() { toolsContent.classList.add('show'); }, 10);
+            isOpen = true;
+          }
+        });
+        document.addEventListener('click', function(e) {
+          if (!document.getElementById('toolsDropdown').contains(e.target)) {
+            toolsContent.classList.remove('show');
+            setTimeout(function() { toolsContent.style.display = 'none'; }, 300);
+            isOpen = false;
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
+
