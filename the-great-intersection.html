@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <meta name="description" content="Strategy's Bitcoin treasury holdings vs Bitcoin left to be mined. The Great Intersection - Plebtools." />
     <meta property="og:title" content="The Great Intersection - Plebtools" />
     <meta property="og:description" content="Strategy's Bitcoin treasury vs Bitcoin left to be mined. Open-source chart and data." />
@@ -120,6 +123,8 @@
                             <a href="compound-interest-calculator"> Calculator</a>
                             <a href="retirement-calculator">️ Retirement</a>
                             <a href="the-great-intersection"> The Great Intersection</a>
+                            <a href="btc-dca-vs-sp500"> DCA vs S&P 500</a>
+                            <a href="strc-vs-bitcoin-cagr"> STRC vs Bitcoin CAGR</a>
                             <a href="btc-loan-ltv"> BTC Loans</a>
                             <a href="financial-planner"> Financial Planner</a>
                             <a href="bitcoin-security">️ Bitcoin Security</a>
@@ -236,7 +241,8 @@
         })();
 
         // Strategy holdings JSON (same origin). Upload data/strategy-purchases.json to your server so the chart stays current; otherwise built-in data is used.
-        const STRATEGY_DATA_URL = 'data/strategy-purchases.json';
+        // Note: we compute the absolute URL at runtime to avoid issues when the HTML is served from a subdirectory.
+        const STRATEGY_DATA_URL_REL = 'data/strategy-purchases.json';
 
         // SEC EDGAR: MicroStrategy / Strategy CIK (zero-padded). SEC requires a descriptive User-Agent.
         const SEC_CIK = '0001050446';
@@ -348,7 +354,9 @@
             ['2026-02-17', 717131],
             ['2026-02-23', 717722],
             ['2026-03-02', 720737],
-            ['2026-03-08', 738731]
+            ['2026-03-08', 738731],
+            ['2026-03-15', 761068],
+            ['2026-03-22', 762099]
         ];
 
         const BLOCKSTREAM_TIP_URL = 'https://blockstream.info/api/blocks/tip';
@@ -428,7 +436,8 @@
                     labels.push(String(liveLeftToMineAndDate.dateStr));
                     strategyData.push(strategyData[strategyData.length - 1]);
                     leftToMineData.push(Number(liveLeftToMineAndDate.leftToMine));
-                } else {
+                } else if (liveLeftToMineAndDate.dateStr === lastDate) {
+                    // Only overwrite when the dates match; otherwise keep model-based date alignment.
                     leftToMineData[leftToMineData.length - 1] = Number(liveLeftToMineAndDate.leftToMine);
                 }
             }
@@ -442,7 +451,15 @@
             const lastDate = strategyPurchases[strategyPurchases.length - 1][0];
             const lastDateMs = new Date(lastDate + 'Z').getTime();
             const cutoffMs = lastDateMs - 365 * 24 * 60 * 60 * 1000;
-            const inWindow = strategyPurchases.filter(([dateStr]) => new Date(dateStr + 'Z').getTime() >= cutoffMs);
+            // Ensure window start/end are correctly ordered even if the incoming dataset order changes.
+            const inWindow = strategyPurchases
+                .filter(function(entry) {
+                    var ms = new Date(entry[0] + 'Z').getTime();
+                    return ms >= cutoffMs && ms <= lastDateMs;
+                })
+                .sort(function(a, b) {
+                    return new Date(a[0] + 'Z').getTime() - new Date(b[0] + 'Z').getTime();
+                });
             const n = inWindow.length;
             const recentStart = n >= 2 ? inWindow[0][0] : lastDate;
             const recentEnd = lastDate;
@@ -469,9 +486,10 @@
                     intersectDate.setDate(intersectDate.getDate() + Math.round(daysToIntersection));
                     intersectLine = `<p class="intersect">At recent rates, the two could intersect around <strong>${intersectDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</strong>.</p>`;
                 }
-                noteEl.innerHTML = `<p class="stat">Strategy: ${strategyK}k BTC &emsp; Left to mine: ${leftM}M BTC (gap ${gapK}k)</p><p class="converge">Strategy is rising, supply left is falling. Lines are converging.</p>${ratesLine}${intersectLine}`;
+                var strategyTrend = strategyRatePerDay >= 0 ? 'rising' : 'falling';
+                noteEl.innerHTML = `<p class="stat">Strategy: ${strategyK}k BTC &emsp; Left to mine: ${leftM}M BTC (gap ${gapK}k)</p><p class="converge">Strategy is ${strategyTrend}, supply left is falling. Lines are converging.</p><p class="rates">Strategy data source: ${strategySourceLabel}.</p><p class="rates">Latest Strategy point: ${lastDate} (${latestStrategy.toLocaleString('en-US')} BTC).</p>${ratesLine}${intersectLine}`;
             } else {
-                noteEl.innerHTML = "<p>Strategy's holdings would exceed remaining supply at recent rates (model illustrative only).</p>";
+                noteEl.innerHTML = "<p>Strategy's holdings would exceed remaining supply at recent rates (model illustrative only).</p><p class=\"rates\">Strategy data source: " + strategySourceLabel + ".</p><p class=\"rates\">Latest Strategy point: " + lastDate + " (" + latestStrategy.toLocaleString('en-US') + " BTC).</p>";
             }
             const liveEl = document.getElementById('liveNote');
             if (liveSource) {
@@ -586,10 +604,16 @@
             } catch (e) {}
         }
 
+        function getStrategyDataUrl() {
+            var base = window.location.href.replace(/[^/]*$/, ''); // directory portion
+            return new URL(STRATEGY_DATA_URL_REL + '?t=' + Date.now(), base).toString();
+        }
+
         async function fetchStrategyData() {
-            if (!STRATEGY_DATA_URL) return null;
+            // This relies on same-origin access to JSON; if unavailable, we fall back to the built-in dataset.
             try {
-                const r = await fetch(STRATEGY_DATA_URL, { cache: 'default' });
+                const url = getStrategyDataUrl();
+                const r = await fetch(url, { cache: 'no-store' });
                 if (!r.ok) return null;
                 const raw = await r.json();
                 if (!Array.isArray(raw) || raw.length === 0) return null;
@@ -721,7 +745,8 @@
 
         async function fetchLiveBlockTip() {
             try {
-                const r = await fetch(BLOCKSTREAM_TIP_URL, { cache: 'default' });
+                // Avoid stale Blockstream tip data from browser/CDN caching.
+                const r = await fetch(BLOCKSTREAM_TIP_URL + '?t=' + Date.now(), { cache: 'no-store' });
                 if (!r.ok) return null;
                 const blocks = await r.json();
                 const tip = Array.isArray(blocks) && blocks[0] ? blocks[0] : blocks;
@@ -738,6 +763,7 @@
         var SEC_REFRESH_INTERVAL_MS = 60 * 60 * 1000;
         var baseStrategyPurchases = STRATEGY_PURCHASES_STATIC;
         var baseLiveSource = '';
+        var strategySourceLabel = 'built-in';
 
         function applyDataAndRender(strategyPurchases, liveBlock, liveSource) {
             var data = buildChartData(strategyPurchases, liveBlock);
@@ -750,6 +776,9 @@
             var strategyPurchases = (strategyFromUrl && strategyFromUrl.length > 0)
                 ? mergeStrategyData(STRATEGY_PURCHASES_STATIC, strategyFromUrl)
                 : baseStrategyPurchases;
+            strategySourceLabel = (strategyFromUrl && strategyFromUrl.length > 0)
+                ? 'data/strategy-purchases.json'
+                : 'built-in';
             var blockTip = await fetchLiveBlockTip();
             var liveBlock = blockTip && blockTip.height != null
                 ? { dateStr: blockTip.dateStr, leftToMine: blockTip.leftToMine }
@@ -770,6 +799,7 @@
                 var strategyFromUrl = await fetchStrategyData();
                 if (strategyFromUrl && strategyFromUrl.length > 0) {
                     strategyPurchases = mergeStrategyData(STRATEGY_PURCHASES_STATIC, strategyFromUrl);
+                    strategySourceLabel = 'data/strategy-purchases.json';
                 }
                 baseStrategyPurchases = strategyPurchases;
 
@@ -778,7 +808,10 @@
                     liveBlock = { dateStr: blockTip.dateStr, leftToMine: blockTip.leftToMine };
                     liveSource += 'Left to mine: live from Blockstream (block ' + blockTip.height.toLocaleString() + ', ' + blockTip.dateStr + ').';
                 }
-                liveSource = (baseLiveSource + liveSource).trim();
+                if (strategySourceLabel) {
+                    baseLiveSource = (baseLiveSource + 'Strategy holdings: ' + strategySourceLabel + '.').trim();
+                }
+                liveSource = (baseLiveSource + ' ' + liveSource).trim();
             } catch (e) {
                 liveSource = 'Using built-in strategy data (some live sources unavailable in this browser). ';
             }

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bitcoin DCA at ATH vs S&P 500 - Plebtools</title>
+  <link rel="stylesheet" href="styles.css?v=3">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .chart-page { max-width: 900px; margin: 0 auto; padding: 1rem; }
+    .chart-card {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+      border: 1px solid #333;
+    }
+    .chart-card h1 { color: #f59e0b; margin-bottom: 0.5rem; font-size: 1.75rem; }
+    .chart-card .subtitle { color: #94a3b8; margin-bottom: 1.5rem; font-size: 1rem; }
+    .chart-wrap { position: relative; height: 380px; }
+    .summary-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    @media (max-width: 600px) { .summary-box { grid-template-columns: 1fr; } }
+    .summary-item {
+      background: rgba(0,0,0,0.25);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      border: 1px solid #334155;
+    }
+    .summary-item strong { color: #e2e8f0; }
+    .summary-item .value { font-size: 1.35rem; font-weight: 700; margin-top: 0.25rem; }
+    .summary-item.btc .value { color: #f59e0b; }
+    .summary-item.sp500 .value { color: #3b82f6; }
+    body.light-theme .chart-card { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-color: #cbd5e1; }
+    body.light-theme .chart-card h1 { color: #b45309; }
+    body.light-theme .chart-card .subtitle { color: #475569; }
+    body.light-theme .summary-item { background: #fff; border-color: #e2e8f0; }
+    body.light-theme .summary-item strong { color: #1e293b; }
+    #toolsDropdown { position: relative; display: inline-block; }
+    #toolsBtn { background: none; border: none; color: inherit; font-weight: 500; font-size: 1rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; display: flex; align-items: center; gap: 0.5rem; }
+    #toolsBtn:hover { background: rgba(102, 126, 234, 0.1); color: #667eea; }
+    #toolsContent { position: absolute; top: 100%; right: 0; background: var(--card-bg, #1a1a2e); min-width: 220px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); border-radius: 12px; z-index: 1001; padding: 0.75rem 0; border: 1px solid #334155; margin-top: 8px; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; }
+    #toolsContent.show { opacity: 1; transform: translateY(0); }
+    #toolsContent a { display: block; padding: 0.875rem 1.5rem; color: inherit; text-decoration: none; transition: all 0.3s ease; font-weight: 500; }
+    #toolsContent a:hover { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="nav-container">
+        <div class="logo-container">
+          <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
+            <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+            <h1 class="logo">Plebtools</h1>
+          </a>
+        </div>
+        <div class="nav-links">
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow"></span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="home"> Home</a>
+              <a href="treasury"> Treasury</a>
+              <a href="btc-buy-tracker"> Portfolio</a>
+              <a href="compound-interest-calculator"> Calculator</a>
+              <a href="btc-dca-vs-sp500"> DCA vs S&P 500</a>
+              <a href="strc-vs-bitcoin-cagr"> STRC vs Bitcoin CAGR</a>
+              <a href="retirement-calculator"> Retirement</a>
+              <a href="the-great-intersection"> The Great Intersection</a>
+              <a href="btc-loan-ltv"> BTC Loans</a>
+              <a href="financial-planner"> Financial Planner</a>
+              <a href="bitcoin-security"> Bitcoin Security</a>
+              <a href="pleb-release"> Pleb Release</a>
+              <a href="interest-arbitrage-calculator"> Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody"> Self Custody Guide</a>
+              <a href="invoice-builder"> Invoice Builder</a>
+            </div>
+          </div>
+          <span class="nav-theme-wrap"><button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle theme"></button></span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="chart-page">
+      <div class="chart-card">
+        <h1>DCA at Bitcoin All-Time High vs S&P 500</h1>
+        <p class="subtitle">Same dollar amount invested every month from Nov 2021 (BTC ATH ~$69k). Volatility means you buy more BTC when price is low, so DCA into Bitcoin can still outperform the S&P 500 even when you start at the top. Data: <a href="https://coinyep.com/api/v1/?from=BTC&to=USD" target="_blank" rel="noopener">CoinYep</a> (BTC), <a href="https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC" target="_blank" rel="noopener">Yahoo Finance</a> (^GSPC).</p>
+        <p id="loadStatus" class="subtitle" style="margin-bottom: 0.5rem;"></p>
+        <div class="chart-wrap">
+          <canvas id="dcaChart"></canvas>
+        </div>
+        <div class="summary-box">
+          <div class="summary-item btc">
+            <strong>Bitcoin DCA</strong>
+            <div class="value" id="btcValue">--</div>
+            <div id="btcReturn" style="font-size: 0.9rem; color: #94a3b8;"></div>
+          </div>
+          <div class="summary-item sp500">
+            <strong>S&P 500 DCA</strong>
+            <div class="value" id="sp500Value">--</div>
+            <div id="sp500Return" style="font-size: 0.9rem; color: #94a3b8;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const MONTHLY_INVEST = 500;
+    const START_DATE = new Date('2021-11-01'); // DCA start = BTC ATH month
+
+    function setStatus(msg) {
+      var el = document.getElementById('loadStatus');
+      if (el) el.textContent = msg;
+    }
+
+    function buildMonthLabels(monthKeys) {
+      var names = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return monthKeys.map(function(k) {
+        var p = k.split('-');
+        return names[parseInt(p[1], 10) - 1] + ' ' + p[0].slice(2);
+      });
+    }
+
+    function runDCA(btcMonthly, spMonthly, labels) {
+      var btcShares = 0, spShares = 0;
+      var btcValues = [], spValues = [];
+      var n = Math.min(btcMonthly.length, spMonthly.length);
+      for (var i = 0; i < n; i++) {
+        btcShares += MONTHLY_INVEST / btcMonthly[i];
+        spShares += MONTHLY_INVEST / spMonthly[i];
+        btcValues.push(btcShares * btcMonthly[i]);
+        spValues.push(spShares * spMonthly[i]);
+      }
+      var totalInvested = MONTHLY_INVEST * n;
+      return {
+        labels: labels.slice(0, n),
+        btcValues: btcValues,
+        spValues: spValues,
+        btcFinal: btcValues[n - 1],
+        spFinal: spValues[n - 1],
+        totalInvested: totalInvested
+      };
+    }
+
+    function renderChart(data) {
+      var isDark = !document.body.classList.contains('light-theme');
+      var gridColor = isDark ? 'rgba(148, 163, 184, 0.2)' : 'rgba(0,0,0,0.08)';
+      var textColor = isDark ? '#e2e8f0' : '#1e293b';
+
+      window.dcaChart = new Chart(document.getElementById('dcaChart'), {
+        type: 'line',
+        data: {
+          labels: data.labels,
+          datasets: [
+            {
+              label: 'Bitcoin DCA ($' + MONTHLY_INVEST + '/mo)',
+              data: data.btcValues,
+              borderColor: '#f59e0b',
+              backgroundColor: 'rgba(245, 158, 11, 0.1)',
+              fill: true,
+              tension: 0.2,
+              pointRadius: 0,
+              pointHoverRadius: 6
+            },
+            {
+              label: 'S&P 500 (^GSPC) DCA ($' + MONTHLY_INVEST + '/mo)',
+              data: data.spValues,
+              borderColor: '#3b82f6',
+              backgroundColor: 'rgba(59, 130, 246, 0.08)',
+              fill: true,
+              tension: 0.2,
+              pointRadius: 0,
+              pointHoverRadius: 6
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { intersect: false, mode: 'index' },
+          plugins: {
+            legend: { labels: { color: textColor, padding: 16 } },
+            tooltip: {
+              callbacks: {
+                label: function(ctx) {
+                  return ctx.dataset.label + ': $' + Math.round(ctx.raw).toLocaleString();
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: gridColor },
+              ticks: { color: textColor, maxRotation: 45 }
+            },
+            y: {
+              grid: { color: gridColor },
+              ticks: {
+                color: textColor,
+                callback: function(v) { return '$' + (v >= 1000 ? (v/1000).toFixed(1) + 'k' : v); }
+              }
+            }
+          }
+        }
+      });
+
+      document.getElementById('btcValue').textContent = '$' + Math.round(data.btcFinal).toLocaleString();
+      document.getElementById('sp500Value').textContent = '$' + Math.round(data.spFinal).toLocaleString();
+      var btcPct = ((data.btcFinal / data.totalInvested - 1) * 100).toFixed(1);
+      var spPct = ((data.spFinal / data.totalInvested - 1) * 100).toFixed(1);
+      document.getElementById('btcReturn').textContent = 'Total invested: $' + data.totalInvested.toLocaleString() + ' · Return: ' + btcPct + '%';
+      document.getElementById('sp500Return').textContent = 'Total invested: $' + data.totalInvested.toLocaleString() + ' · Return: ' + spPct + '%';
+    }
+
+    function updateChartTheme(chart) {
+      if (!chart) return;
+      var isDark = !document.body.classList.contains('light-theme');
+      var gridColor = isDark ? 'rgba(148, 163, 184, 0.2)' : 'rgba(0,0,0,0.08)';
+      var textColor = isDark ? '#e2e8f0' : '#1e293b';
+      chart.options.scales.x.grid.color = chart.options.scales.y.grid.color = gridColor;
+      chart.options.scales.x.ticks.color = chart.options.scales.y.ticks.color = textColor;
+      chart.options.plugins.legend.labels.color = textColor;
+      chart.update();
+    }
+
+    setStatus('Loading Bitcoin and S&P 500 data…');
+
+    var startTs = Math.floor(START_DATE.getTime() / 1000);
+    var endTs = Math.floor(Date.now() / 1000);
+    var startMs = startTs * 1000;
+    var endMs = endTs * 1000;
+
+    var coinyepUrl = 'https://coinyep.com/api/v1/?from=BTC&to=USD';
+    var binanceUrl = 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&startTime=' + startMs + '&endTime=' + endMs + '&limit=1500';
+    var yahooChartUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?period1=' + startTs + '&period2=' + endTs + '&interval=1d';
+
+    Promise.all([
+      fetch(coinyepUrl).then(function(r) { if (!r.ok) throw new Error('CoinYep ' + r.status); return r.json(); }),
+      fetch(binanceUrl).then(function(r) { if (!r.ok) throw new Error('Binance ' + r.status); return r.json(); }),
+      fetch(yahooChartUrl).then(function(r) { if (!r.ok) throw new Error('Yahoo ' + r.status); return r.json(); })
+    ]).then(function(results) {
+      var coinyep = results[0];
+      var btcKlines = results[1];
+      var yahoo = results[2];
+      if (!coinyep || coinyep.price == null) throw new Error('No Bitcoin price from CoinYep');
+      if (!Array.isArray(btcKlines) || btcKlines.length === 0) throw new Error('No Bitcoin history from Binance');
+      var chartData = yahoo.chart && yahoo.chart.result && yahoo.chart.result[0];
+      if (!chartData || !chartData.timestamp || !chartData.indicators || !chartData.indicators.quote) throw new Error('No ^GSPC data from Yahoo');
+      var timestamps = chartData.timestamp;
+      var quotes = chartData.indicators.quote[0];
+      var gspcCloses = quotes.close;
+      if (!gspcCloses || gspcCloses.length === 0) throw new Error('No ^GSPC close prices');
+
+      var btcByMonth = {};
+      btcKlines.forEach(function(candle) {
+        var t = candle[0];
+        var d = new Date(t);
+        var key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+        btcByMonth[key] = parseFloat(candle[4]);
+      });
+      var spByMonth = {};
+      for (var i = 0; i < timestamps.length; i++) {
+        var d = new Date(timestamps[i] * 1000);
+        var key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+        var c = gspcCloses[i];
+        if (c != null && !isNaN(c)) spByMonth[key] = c;
+      }
+      var monthKeys = Object.keys(btcByMonth).sort();
+      var btcMonthly = monthKeys.map(function(k) { return btcByMonth[k]; });
+      var spMonthly = monthKeys.map(function(k) { return spByMonth[k]; }).filter(function(v) { return v != null; });
+      if (spMonthly.length < monthKeys.length) {
+        var validMonths = monthKeys.filter(function(k) { return spByMonth[k] != null; });
+        monthKeys = validMonths;
+        btcMonthly = monthKeys.map(function(k) { return btcByMonth[k]; });
+        spMonthly = monthKeys.map(function(k) { return spByMonth[k]; });
+      }
+      var labels = buildMonthLabels(monthKeys);
+      var data = runDCA(btcMonthly, spMonthly, labels);
+      setStatus('Data: CoinYep (BTC), Yahoo Finance (^GSPC). BTC history from Binance (CoinYep is current only). Through ' + (labels[labels.length - 1] || '') + '.');
+      renderChart(data);
+    }).catch(function(err) {
+      setStatus('Could not load data: ' + (err.message || err));
+      console.error(err);
+    });
+
+    // Theme toggle
+    var themeToggle = document.getElementById('themeToggle');
+    themeToggle.textContent = document.body.classList.contains('light-theme') ? '🌙' : '☀️';
+    themeToggle.addEventListener('click', function() {
+      document.body.classList.toggle('light-theme');
+      var dark = !document.body.classList.contains('light-theme');
+      themeToggle.textContent = dark ? '☀️' : '🌙';
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+      if (window.dcaChart) updateChartTheme(window.dcaChart);
+    });
+    const saved = localStorage.getItem('theme');
+    if (saved === 'light') {
+      document.body.classList.add('light-theme');
+      themeToggle.textContent = '🌙';
+    }
+
+    const toolsBtn = document.getElementById('toolsBtn');
+    const toolsContent = document.getElementById('toolsContent');
+    let isOpen = false;
+    toolsBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (isOpen) {
+        toolsContent.classList.remove('show');
+        setTimeout(function() { toolsContent.style.display = 'none'; }, 300);
+        isOpen = false;
+      } else {
+        toolsContent.style.display = 'block';
+        setTimeout(function() { toolsContent.classList.add('show'); }, 10);
+        isOpen = true;
+      }
+    });
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('toolsDropdown').contains(e.target)) {
+        toolsContent.classList.remove('show');
+        setTimeout(function() { toolsContent.style.display = 'none'; }, 300);
+        isOpen = false;
+      }
+    });
+  </script>
+</body>
+</html>

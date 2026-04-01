@@ -113,6 +113,7 @@
               <a href="coveredcall-tracker">Covered Calls</a>
               <a href="compound-interest-calculator">Calculator</a>
               <a href="btc-dca-vs-sp500">DCA vs S&P 500</a>
+              <a href="strc-vs-bitcoin-cagr">STRC vs Bitcoin CAGR</a>
               <a href="dividend-clipping-simulator">Dividend Clipping</a>
               <a href="retirement-calculator">Retirement</a>
               <a href="the-great-intersection">The Great Intersection</a>
@@ -214,6 +215,11 @@
             <div class="sub" id="capitalImpact">—</div>
           </div>
           <div class="result-box">
+            <div class="label">Proceeds + this month’s income</div>
+            <div class="value highlight" id="proceedsPlusMonthly">—</div>
+            <div class="sub">EOM proceeds with monthly income added back in</div>
+          </div>
+          <div class="result-box">
             <div class="label">Annualized yield (on starting principal)</div>
             <div class="value" id="annualPct">—</div>
           </div>
@@ -277,6 +283,7 @@
           document.getElementById('annualIncome').textContent = '—';
           document.getElementById('principalPlusAnnual').textContent = '—';
           document.getElementById('proceeds').textContent = '—';
+          document.getElementById('proceedsPlusMonthly').textContent = '—';
           document.getElementById('capitalImpact').textContent = '';
           document.getElementById('annualPct').textContent = '—';
           document.getElementById('strcOnlyYield').textContent = '—';
@@ -308,6 +315,7 @@
         document.getElementById('annualIncome').textContent = '$' + annualIncome.toFixed(2);
         document.getElementById('principalPlusAnnual').textContent = '$' + (endProceeds + annualIncome).toFixed(2);
         document.getElementById('proceeds').textContent = '$' + endProceeds.toFixed(2);
+        document.getElementById('proceedsPlusMonthly').textContent = '$' + (endProceeds + total).toFixed(2);
         var impactEl = document.getElementById('capitalImpact');
         if (capitalImpact >= 0) {
           impactEl.textContent = 'Capital +$' + capitalImpact.toFixed(2) + ' this cycle';
