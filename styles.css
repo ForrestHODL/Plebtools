@@ -808,3 +808,80 @@ body.light-theme header {
 .dark-theme .totals-display .discount-code {
   color: #4CAF50;
 }
+
+/* Tools menu: nav stays dark while many pages used #333 on #toolsBtn — keep label + panel readable in both themes */
+header #toolsBtn,
+#toolsDropdown #toolsBtn {
+  color: #f5f5f5 !important;
+  border: 1px solid rgba(245, 158, 11, 0.45) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+header #toolsBtn:hover,
+#toolsDropdown #toolsBtn:hover {
+  color: #fbbf24 !important;
+  background: rgba(245, 158, 11, 0.18) !important;
+  border-color: rgba(251, 191, 36, 0.55) !important;
+}
+
+#toolsDropdown .dropdown-arrow {
+  color: inherit !important;
+  opacity: 0.9;
+}
+
+body.light-theme header #toolsBtn,
+body.light-theme #toolsDropdown #toolsBtn {
+  color: #1e293b !important;
+  border-color: rgba(15, 23, 42, 0.18) !important;
+  background: rgba(15, 23, 42, 0.06) !important;
+}
+
+body.light-theme header #toolsBtn:hover,
+body.light-theme #toolsDropdown #toolsBtn:hover {
+  color: #b45309 !important;
+  background: rgba(245, 158, 11, 0.12) !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+body:not(.light-theme) #toolsContent,
+.dark-theme #toolsContent {
+  background: #1f2937 !important;
+  border: 1px solid rgba(245, 158, 11, 0.28) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45) !important;
+}
+
+body:not(.light-theme) #toolsContent a,
+.dark-theme #toolsContent a {
+  color: #e5e7eb !important;
+}
+
+body:not(.light-theme) #toolsContent a:hover,
+.dark-theme #toolsContent a:hover {
+  color: #fbbf24 !important;
+  background: rgba(245, 158, 11, 0.12) !important;
+}
+
+body.light-theme #toolsContent {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12) !important;
+}
+
+body.light-theme #toolsContent a {
+  color: #1e293b !important;
+}
+
+body.light-theme #toolsContent a:hover {
+  color: #b45309 !important;
+  background: rgba(245, 158, 11, 0.08) !important;
+}
+
+/* Tools dropdown: cap height so the full list is reachable on short viewports / mobile */
+#toolsContent {
+  max-height: min(75vh, calc(100vh - 6rem));
+  max-height: min(75vh, calc(100dvh - 6rem));
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dividend Clipping Simulator - STRC / SATA - Plebtools</title>
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="styles.css?v=6">
   <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
   <style>
     .sim-page { max-width: 720px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
@@ -115,6 +115,7 @@
               <a href="btc-dca-vs-sp500">DCA vs S&P 500</a>
               <a href="strc-vs-bitcoin-cagr">STRC vs Bitcoin CAGR</a>
               <a href="dividend-clipping-simulator">Dividend Clipping</a>
+              <a href="portfolio-monte-carlo">Monte Carlo</a>
               <a href="retirement-calculator">Retirement</a>
               <a href="the-great-intersection">The Great Intersection</a>
               <a href="btc-loan-ltv">BTC Loans</a>
@@ -124,7 +125,9 @@
               <a href="interest-arbitrage-calculator">Yield Arbitrage</a>
               <a href="step-by-step-to-self-custody">Self Custody Guide</a>
               <a href="invoice-builder">Invoice Builder</a>
-            </div>
+            
+              <a href="bip-110-economic-support">BIP-110 Support</a>
+</div>
           </div>
           <span class="nav-theme-wrap"><button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle theme"></button></span>
         </div>
@@ -341,15 +344,18 @@
   <script>
     var themeToggle = document.getElementById('themeToggle');
     if (themeToggle) {
+      if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-theme');
+      } else {
+        document.body.classList.remove('light-theme');
+      }
       themeToggle.textContent = document.body.classList.contains('light-theme') ? '🌙' : '☀️';
       themeToggle.addEventListener('click', function() {
-        var dark = !document.body.classList.contains('light-theme');
         document.body.classList.toggle('light-theme');
-        themeToggle.textContent = dark ? '☀️' : '🌙';
+        var isLight = document.body.classList.contains('light-theme');
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        themeToggle.textContent = isLight ? '🌙' : '☀️';
       });
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches && !document.body.classList.contains('light-theme') && !document.body.classList.contains('dark-theme'))
-        document.body.classList.add('light-theme');
-      themeToggle.textContent = document.body.classList.contains('light-theme') ? '🌙' : '☀️';
     }
     var toolsBtn = document.getElementById('toolsBtn');
     var toolsContent = document.getElementById('toolsContent');

@@ -12,7 +12,7 @@
     <meta property="og:type" content="website" />
     <title>The Great Intersection - Plebtools</title>
     <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
-    <link rel="stylesheet" href="styles.css?v=3">
+    <link rel="stylesheet" href="styles.css?v=6">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <style>
         body { color: #111; background: #f5f5f5; }
@@ -121,6 +121,7 @@
                             <a href="btc-buy-tracker"> Portfolio</a>
                             <a href="coveredcall-tracker"> Covered Calls</a>
                             <a href="compound-interest-calculator"> Calculator</a>
+                            <a href="portfolio-monte-carlo"> Monte Carlo</a>
                             <a href="retirement-calculator">️ Retirement</a>
                             <a href="the-great-intersection"> The Great Intersection</a>
                             <a href="btc-dca-vs-sp500"> DCA vs S&P 500</a>
@@ -131,7 +132,9 @@
                             <a href="interest-arbitrage-calculator"> Yield Arbitrage</a>
                             <a href="step-by-step-to-self-custody"> Self Custody Guide</a>
                             <a href="invoice-builder"> Invoice Builder</a>
-                            <a href="pleb-release"> Pleb Release</a>
+                            
+              <a href="bip-110-economic-support">BIP-110 Support</a>
+              <a href="pleb-release"> Pleb Release</a>
                         </div>
                     </div>
                     <div id="theme-toggle-container" class="nav-theme-wrap"></div>
@@ -234,9 +237,9 @@
     </footer>
 
     <script>
-        // Restore theme before paint (default: dark)
+        // Restore theme before paint (default: dark; shared key "theme" with rest of site)
         (function() {
-            var saved = localStorage.getItem('strategyPageTheme');
+            var saved = localStorage.getItem('theme') || localStorage.getItem('strategyPageTheme');
             if (saved !== 'light') document.body.classList.add('dark-theme');
         })();
 
@@ -356,7 +359,11 @@
             ['2026-03-02', 720737],
             ['2026-03-08', 738731],
             ['2026-03-15', 761068],
-            ['2026-03-22', 762099]
+            ['2026-03-22', 762099],
+            ['2026-04-05', 766970],
+            ['2026-04-12', 780897],
+            ['2026-04-19', 815061],
+            ['2026-04-26', 818334]
         ];
 
         const BLOCKSTREAM_TIP_URL = 'https://blockstream.info/api/blocks/tip';
@@ -859,7 +866,7 @@
             document.body.classList.toggle('dark-theme');
             var isDark = document.body.classList.contains('dark-theme');
             themeToggle.textContent = isDark ? '☀️' : '🌙';
-            localStorage.setItem('strategyPageTheme', isDark ? 'dark' : 'light');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
             applyChartTheme();
         });
         if (themeToggleEl) themeToggleEl.appendChild(themeToggle);

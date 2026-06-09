@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Plebtools Financial Planner</title>
   <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="stylesheet" href="styles.css?v=6">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
   
@@ -755,11 +755,14 @@
               <a href="strc-vs-bitcoin-cagr"> STRC vs Bitcoin CAGR</a>
               <a href="the-great-intersection"> The Great Intersection</a>
               <a href="btc-loan-ltv"> BTC Loans</a>
+              <a href="portfolio-monte-carlo"> Monte Carlo</a>
               <a href="financial-planner"> Financial Planner</a>
               <a href="bitcoin-security">️ Bitcoin Security</a>
               <a href="interest-arbitrage-calculator"> Yield Arbitrage</a>
               <a href="step-by-step-to-self-custody"> Self Custody Guide</a>
               <a href="invoice-builder"> Invoice Builder</a>
+              
+              <a href="bip-110-economic-support">BIP-110 Support</a>
               <a href="pleb-release"> Pleb Release</a>
             </div>
           </div>
@@ -1313,28 +1316,26 @@
 
     // Theme toggle functionality
     const themeToggle = document.getElementById("themeToggle");
-    let isDarkTheme = false;
+    let isDarkTheme = localStorage.getItem("theme") !== "light";
+
+    function applyNavTheme() {
+      if (isDarkTheme) {
+        document.body.classList.add("dark-theme");
+        document.body.classList.remove("light-theme");
+        themeToggle.textContent = "☀️";
+      } else {
+        document.body.classList.remove("dark-theme");
+        document.body.classList.add("light-theme");
+        themeToggle.textContent = "🌙";
+      }
+    }
+    applyNavTheme();
 
     themeToggle.addEventListener("click", () => {
       isDarkTheme = !isDarkTheme;
-      if (isDarkTheme) {
-        document.body.classList.add("dark-theme");
-        themeToggle.textContent = "☀️";
-        localStorage.setItem("theme", "dark");
-      } else {
-        document.body.classList.remove("dark-theme");
-        themeToggle.textContent = "🌙";
-        localStorage.setItem("theme", "light");
-      }
+      localStorage.setItem("theme", isDarkTheme ? "dark" : "light");
+      applyNavTheme();
     });
-
-    // Load saved theme on page load
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      isDarkTheme = true;
-      document.body.classList.add("dark-theme");
-      themeToggle.textContent = "☀️";
-    }
 
     // Simple dropdown functionality
     const toolsBtn = document.getElementById('toolsBtn');

@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Bitcoin influencer rankings by trust and track record." />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Pleb Ranking - Plebtools</title>
+    <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
+    <link rel="stylesheet" href="styles.css?v=7">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <style>
+        body.pleb-ranking-page {
+            margin: 0;
+            min-height: 100vh;
+            background: #0b1120;
+            color: #e2e8f0;
+        }
+
+        .pr-plebtools-nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.75rem 1.25rem 0;
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        .pr-plebtools-nav a {
+            color: #93c5fd;
+            text-decoration: none;
+        }
+
+        .pr-plebtools-nav a:hover {
+            text-decoration: underline;
+        }
+
+        .pr-plebtools-nav span {
+            margin: 0 0.4rem;
+        }
+
+        body.pleb-ranking-page.light-ranking .pr-plebtools-nav {
+            color: #64748b;
+        }
+
+        body.pleb-ranking-page.light-ranking .pr-plebtools-nav a {
+            color: #2563eb;
+        }
+
+        body.pleb-ranking-page.light-ranking {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .pr-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.25rem 4rem;
+        }
+
+        .pr-hero {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .pr-hero h1 {
+            margin: 0 0 0.5rem;
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            font-weight: 800;
+            color: #fbbf24;
+        }
+
+        .pr-hero p {
+            margin: 0 auto;
+            max-width: 32rem;
+            color: #94a3b8;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        body.light-ranking .pr-hero p { color: #64748b; }
+
+        .pr-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            align-items: flex-end;
+        }
+
+        .pr-toolbar-row {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: flex-end;
+        }
+
+        .pr-search {
+            flex: 1 1 220px;
+            padding: 0.7rem 1rem;
+            border-radius: 10px;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: #f8fafc;
+            font-size: 1rem;
+        }
+
+        body.light-ranking .pr-search {
+            background: #fff;
+            border-color: #cbd5e1;
+            color: #0f172a;
+        }
+
+        .pr-select {
+            padding: 0.7rem 0.85rem;
+            border-radius: 10px;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: #f8fafc;
+            font-size: 0.9rem;
+        }
+
+        body.light-ranking .pr-select {
+            background: #fff;
+            border-color: #cbd5e1;
+            color: #0f172a;
+        }
+
+        .pr-view-label {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            flex: 1 1 280px;
+            min-width: min(100%, 280px);
+        }
+
+        .pr-view-label span {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #fbbf24;
+        }
+
+        body.light-ranking .pr-view-label span { color: #b45309; }
+
+        .pr-view-select {
+            width: 100%;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            border-color: #f59e0b;
+            background: #0f172a;
+        }
+
+        body.light-ranking .pr-view-select {
+            background: #fff;
+        }
+
+        .pr-rank-badge {
+            display: inline-block;
+            margin-right: 0.5rem;
+            padding: 0.15rem 0.45rem;
+            border-radius: 6px;
+            background: #f59e0b;
+            color: #0f172a;
+            font-size: 0.8rem;
+            font-weight: 800;
+            vertical-align: middle;
+        }
+
+        .pr-meta {
+            margin: 0 0 0.75rem;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        body.light-ranking .pr-meta { color: #64748b; }
+
+        .pr-names-section {
+            margin-bottom: 1.25rem;
+        }
+
+        .pr-names-heading {
+            margin: 0 0 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #94a3b8;
+        }
+
+        body.light-ranking .pr-names-heading { color: #64748b; }
+
+        .pr-name-index {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 0.65rem;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            background: #1e293b;
+        }
+
+        body.light-ranking .pr-name-index {
+            background: #fff;
+            border-color: #e2e8f0;
+        }
+
+        .pr-name-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.6rem;
+            border-radius: 8px;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: #f1f5f9;
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .pr-name-chip:hover {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.12);
+        }
+
+        body.light-ranking .pr-name-chip {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            color: #0f172a;
+        }
+
+        .pr-name-rank {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #f59e0b;
+        }
+
+        .pr-name-val {
+            margin-left: 0.35rem;
+            padding: 0.1rem 0.35rem;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+        }
+
+        body.light-ranking .pr-name-val {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .pr-name-empty {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        .pr-card-focus {
+            outline: 2px solid #f59e0b;
+            outline-offset: 2px;
+        }
+
+        .pr-vote-btn {
+            font-size: 0.85rem;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .pr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1rem;
+        }
+
+        .pr-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 14px;
+            padding: 1.15rem 1.25rem;
+        }
+
+        body.light-ranking .pr-card {
+            background: #fff;
+            border-color: #e2e8f0;
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+        }
+
+        .pr-card-head {
+            display: flex;
+            gap: 0.85rem;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .pr-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f59e0b, #b45309);
+            color: #0f172a;
+            font-weight: 800;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .pr-title h2 {
+            margin: 0 0 0.2rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+
+        body.light-ranking .pr-title h2 { color: #0f172a; }
+
+        .pr-liked {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .pr-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-bottom: 0.65rem;
+        }
+
+        .pr-tag {
+            font-size: 0.72rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+        }
+
+        body.light-ranking .pr-tag {
+            background: #fffbeb;
+            color: #b45309;
+        }
+
+        .pr-bio {
+            margin: 0 0 0.5rem;
+            font-size: 0.88rem;
+            line-height: 1.45;
+            color: #cbd5e1;
+        }
+
+        body.light-ranking .pr-bio { color: #475569; }
+
+        .pr-bio strong { color: #94a3b8; }
+        body.light-ranking .pr-bio strong { color: #64748b; }
+
+        .pr-scores {
+            display: grid;
+            gap: 0.5rem;
+            margin: 0.75rem 0;
+        }
+
+        .pr-score-top {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            color: #94a3b8;
+            margin-bottom: 0.25rem;
+        }
+
+        .pr-bar {
+            height: 6px;
+            border-radius: 99px;
+            background: #334155;
+            overflow: hidden;
+        }
+
+        body.light-ranking .pr-bar { background: #e2e8f0; }
+
+        .pr-fill {
+            display: block;
+            height: 100%;
+            border-radius: 99px;
+        }
+
+        .pr-fill.trust { background: #22c55e; }
+        .pr-fill.track { background: #3b82f6; }
+
+        .pr-community {
+            font-size: 0.78rem;
+            color: #a78bfa;
+            margin: 0.5rem 0 0;
+        }
+
+        .pr-vote-btn {
+            margin-top: 0.75rem;
+            width: 100%;
+            padding: 0.55rem;
+            border: none;
+            border-radius: 8px;
+            background: #f59e0b;
+            color: #0f172a;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .pr-vote-btn:hover { background: #fbbf24; }
+
+        .pr-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #94a3b8;
+        }
+
+        .pr-foot {
+            margin-top: 2.5rem;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #64748b;
+        }
+
+        .theme-fab {
+            position: fixed;
+            bottom: 1.25rem;
+            right: 1.25rem;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: #f8fafc;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .vote-modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .vote-modal-backdrop.open { display: flex; }
+
+        .vote-modal {
+            width: 100%;
+            max-width: 400px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 1.25rem;
+            color: #e2e8f0;
+        }
+
+        .vote-modal h3 { margin: 0 0 0.35rem; color: #fbbf24; }
+        .vote-modal .sub { margin: 0 0 1rem; font-size: 0.88rem; color: #94a3b8; }
+        .vote-field { margin-bottom: 0.75rem; }
+        .vote-field label { display: block; font-size: 0.85rem; margin-bottom: 0.35rem; }
+        .vote-field input[type="range"] { width: 100%; }
+        .vote-field textarea,
+        .vote-field input[type="number"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: #f8fafc;
+        }
+
+        .vote-modal-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .vote-modal-actions button {
+            flex: 1;
+            padding: 0.6rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-cancel { background: #334155; color: #e2e8f0; }
+        .btn-zap { background: #f59e0b; color: #0f172a; }
+        .vote-status { font-size: 0.82rem; color: #94a3b8; margin-top: 0.75rem; min-height: 1.2em; }
+        .invoice-box { margin-top: 0.5rem; font-size: 0.7rem; word-break: break-all; max-height: 80px; overflow: auto; }
+
+        @media (max-width: 600px) {
+            .pr-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="pleb-ranking-page dark-theme">
+    <nav class="pr-plebtools-nav" aria-label="Plebtools">
+        <a href="home">← Plebtools</a>
+        <span>·</span>
+        <a href="portfolio-monte-carlo">Monte Carlo</a>
+        <span>·</span>
+        <a href="bip-110-economic-support">BIP-110 Support</a>
+    </nav>
+    <main class="pr-page">
+        <header class="pr-hero">
+            <h1>Pleb Ranking</h1>
+            <p>62 Bitcoin voices — pick how you want them ordered from the View menu.</p>
+        </header>
+
+        <div class="pr-toolbar">
+            <input type="search" class="pr-search" id="searchInput" placeholder="Search by name…" autocomplete="off" />
+            <label class="pr-view-label">
+                <span>Order list by</span>
+                <select class="pr-select pr-view-select" id="viewOrder" aria-label="How to order influencers">
+                    <option value="liked:desc">Highest rated → lowest</option>
+                    <option value="liked:asc">Lowest rated → highest</option>
+                    <option value="trust:desc">Trust — highest to lowest</option>
+                    <option value="trust:asc">Trust — lowest to highest</option>
+                    <option value="track:desc">Track record — highest to lowest</option>
+                    <option value="track:asc">Track record — lowest to highest</option>
+                    <option value="sats:desc">Most sats zapped</option>
+                    <option value="votes:desc">Most votes</option>
+                    <option value="name:asc">Alphabetical (A–Z)</option>
+                    <option value="name:desc">Alphabetical (Z–A)</option>
+                </select>
+            </label>
+        </div>
+
+        <p class="pr-meta" id="resultsMeta">Loading…</p>
+
+        <section class="pr-names-section" aria-label="Influencer names">
+            <h2 class="pr-names-heading" id="namesHeading">Names</h2>
+            <div class="pr-name-index" id="nameIndex"></div>
+        </section>
+
+        <div class="pr-grid" id="rankingGrid"></div>
+
+        <p class="pr-foot">Editorial scores — not financial advice. Not linked from Plebtools nav. <span id="pageVersion">v20260516</span></p>
+    </main>
+
+    <button type="button" class="theme-fab" id="themeFab" aria-label="Toggle theme">☀️</button>
+
+    <div class="vote-modal-backdrop" id="voteModalBackdrop" aria-hidden="true">
+        <div class="vote-modal">
+            <h3 id="voteModalTitle">Vote</h3>
+            <p class="sub" id="voteModalSubtitle"></p>
+            <div class="vote-field">
+                <label>Trust <span id="trustVal">5</span>/10</label>
+                <input type="range" id="voteTrust" min="1" max="10" value="5" />
+            </div>
+            <div class="vote-field">
+                <label>Track <span id="trackVal">5</span>/10</label>
+                <input type="range" id="voteTrack" min="1" max="10" value="5" />
+            </div>
+            <div class="vote-field">
+                <label for="voteNote">Note</label>
+                <textarea id="voteNote" maxlength="400" rows="2"></textarea>
+            </div>
+            <div class="vote-field">
+                <label for="voteSats">Sats</label>
+                <input type="number" id="voteSats" min="21" value="21" />
+            </div>
+            <div class="vote-modal-actions">
+                <button type="button" class="btn-cancel" id="voteCancel">Cancel</button>
+                <button type="button" class="btn-zap" id="voteSubmit">⚡ Pay</button>
+            </div>
+            <p class="vote-status" id="voteStatus"></p>
+            <div class="invoice-box" id="invoiceBox" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script src="scripts/pleb-ranking-data.js?v=20260516"></script>
+    <script src="scripts/pleb-ranking-app.js?v=20260516"></script>
+</body>
+</html>

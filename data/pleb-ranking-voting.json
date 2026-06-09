@@ -1,0 +1,14 @@
+{
+  "schema": "pleb-ranking-vote-v1",
+  "recipientLud16": "plebtools@coinos.io",
+  "recipientNpubHex": "72bdbc57bdd6dfc4e62685051de8041d148c3c68fe42bf301f71aa6cf53e52fb",
+  "lnurlCallback": "https://coinos.io/api/lnurl/df7a75b4-9012-45e4-b9c9-cdc822d99892",
+  "relays": [
+    "wss://relay.damus.io",
+    "wss://nos.lol",
+    "wss://relay.primal.net"
+  ],
+  "minVoteSats": 21,
+  "defaultVoteSats": 21,
+  "zapLookbackDays": 120
+}

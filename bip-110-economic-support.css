@@ -1,0 +1,260 @@
+* { box-sizing: border-box; }
+
+.plebtools-wiki-nav {
+  font-size: 0.85rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #ccc;
+  background: #f8f9fa;
+}
+
+.plebtools-wiki-nav .nav-sep {
+  color: #888;
+  margin: 0 0.35rem;
+}
+
+.plebtools-wiki-nav .nav-current {
+  color: #444;
+}
+
+body.bip-110-page {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #222;
+  background: #fff;
+}
+
+a { color: #0645ad; }
+a:visited { color: #0b0080; }
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.site-header {
+  padding: 1.5rem 0 1rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.eyebrow {
+  margin: 0 0 0.25rem;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.site-header h1 {
+  margin: 0 0 0.75rem;
+  font-size: 1.75rem;
+  font-weight: normal;
+}
+
+.lead {
+  margin: 0 0 1rem;
+  max-width: 70ch;
+}
+
+.alert-banner {
+  margin: 0;
+  padding: 0.75rem;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  font-size: 0.9rem;
+}
+
+main { padding: 1.5rem 0 2rem; }
+
+section { margin-bottom: 2rem; }
+
+h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-bottom: 1px solid #aaa;
+  padding-bottom: 0.25rem;
+}
+
+.tag {
+  font-size: 0.75rem;
+  font-weight: normal;
+  color: #666;
+}
+
+.table-note {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+/* Stats — simple inline list */
+.stats-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.stat-card {
+  min-width: 140px;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.stat-detail {
+  display: block;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.stats-source {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Position cells — matches Bitcoin Wiki template colors */
+.pos-cell {
+  text-align: center;
+  vertical-align: middle;
+  color: #000;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.pos-prefer { background: #90ff90; }
+.pos-acceptable { background: #a0df50; }
+.pos-weak { background: #90ffff; }
+.pos-wanting { background: #bfff90; }
+.pos-evaluating { background: #cfcfcf; }
+.pos-deficient { background: #ffff90; }
+.pos-accjuly { background: #d0dfa0; }
+.pos-no { background: #ff9090; }
+.pos-unknown { background: #e8e8e8; color: #444; }
+.pos-empty { background: #fff; color: #999; }
+
+/* Inline badge (header note only) */
+.badge {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.badge-prefer { background: #90ff90; color: #000; }
+.badge-acceptable { background: #a0df50; color: #000; }
+.badge-weak { background: #90ffff; color: #000; }
+.badge-wanting { background: #bfff90; color: #000; }
+.badge-evaluating { background: #cfcfcf; color: #000; }
+.badge-deficient { background: #ffff90; color: #000; }
+.badge-accjuly { background: #d0dfa0; color: #000; }
+.badge-no { background: #ff9090; color: #000; }
+.badge-unknown { background: #e8e8e8; color: #444; }
+.badge-empty { background: #fff; color: #999; }
+
+/* Legend — wiki-style key table */
+.legend-table {
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  border: 1px solid #a2a9b1;
+  max-width: 720px;
+}
+
+.legend-table td {
+  padding: 0.45rem 0.75rem;
+  border: 1px solid #a2a9b1;
+  vertical-align: middle;
+}
+
+.legend-table td:first-child {
+  width: 140px;
+  text-align: center;
+  font-weight: normal;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.filters label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.filters input,
+.filters select {
+  font: inherit;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #aaa;
+  background: #fff;
+}
+
+/* Tables — wikitable style */
+.table-wrap {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  border: 1px solid #a2a9b1;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #a2a9b1;
+  text-align: left;
+  vertical-align: top;
+}
+
+.data-table thead th {
+  background: #eaecf0;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.data-table thead th.sorted-asc::after { content: " ↑"; }
+.data-table thead th.sorted-desc::after { content: " ↓"; }
+
+.data-table thead th.bip110-header {
+  background: #d8e4f0;
+}
+
+.data-table tbody tr.hidden { display: none; }
+
+.data-table td.name-col {
+  background: #fff;
+  font-weight: normal;
+}
+
+.source-link { font-size: 0.8rem; }
+
+.site-footer {
+  border-top: 1px solid #ccc;
+  padding: 1rem 0;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .data-table { font-size: 0.78rem; }
+}

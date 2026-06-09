@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>STRC vs Bitcoin CAGR - Plebtools</title>
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="styles.css?v=6">
   <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -188,6 +188,26 @@
       letter-spacing: 0.01em;
     }
     #toolsContent a:hover { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+
+    .strc-footer-links {
+      margin-top: 2rem;
+      padding-top: 1.75rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.25);
+    }
+    .strc-affiliate-note {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
+    body.light-theme .strc-affiliate-note { color: #64748b; }
+    .strc-github-wrap {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    body.light-theme .strc-footer-links {
+      border-top-color: rgba(15, 23, 42, 0.12);
+    }
   </style>
 </head>
 <body>
@@ -212,6 +232,7 @@
               <a href="btc-dca-vs-sp500">DCA vs S&P 500</a>
               <a href="dividend-clipping-simulator">Dividend Clipping</a>
               <a href="strc-vs-bitcoin-cagr">STRC vs Bitcoin CAGR</a>
+              <a href="portfolio-monte-carlo">Monte Carlo</a>
               <a href="retirement-calculator">Retirement</a>
               <a href="the-great-intersection">The Great Intersection</a>
               <a href="btc-loan-ltv">BTC Loans</a>
@@ -221,7 +242,9 @@
               <a href="interest-arbitrage-calculator">Yield Arbitrage</a>
               <a href="step-by-step-to-self-custody">Self Custody Guide</a>
               <a href="invoice-builder">Invoice Builder</a>
-            </div>
+            
+              <a href="bip-110-economic-support">BIP-110 Support</a>
+</div>
           </div>
           <span class="nav-theme-wrap"><button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle theme"></button></span>
         </div>
@@ -330,6 +353,50 @@
             <strong>STRC reinvest vs cash-out</strong>
             <div class="value" id="reinvestSummary">—</div>
             <div class="meta" id="reinvestMeta">—</div>
+          </div>
+        </div>
+
+        <div class="strc-footer-links">
+          <p class="strc-affiliate-note">These are affiliate/discount links</p>
+          <div class="affiliate-links">
+            <div class="affiliate-item">
+              <h4>Where to buy</h4>
+              <a href="https://bitcoinwell.com/referral/bitcoinnotcrypto" target="_blank" rel="noopener noreferrer" class="affiliate-link">Bitcoin Well</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>Where to store</h4>
+              <a href="https://store.coinkite.com/promo/169FA71FECC4928F725D" target="_blank" rel="noopener noreferrer" class="affiliate-link">Coldcard</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>How to protect</h4>
+              <a href="https://www.stampseed.com/" target="_blank" rel="noopener noreferrer" class="affiliate-link">Stamp Seed</a>
+              <p class="discount-code">USE CODE: BTCNOTCRYPTO15 for 15% off</p>
+            </div>
+            <div class="affiliate-item">
+              <h4>How to validate</h4>
+              <a href="https://store.start9.com/" target="_blank" rel="noopener noreferrer" class="affiliate-link">Start9</a>
+              <p class="discount-code">CODE: BNC5 for 5% off</p>
+            </div>
+            <div class="affiliate-item">
+              <h4>1:1 Coaching</h4>
+              <a href="https://pathtobitcoin.xyz" target="_blank" rel="noopener noreferrer" class="affiliate-link">Bitcoin 1:1</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>Where to learn</h4>
+              <a href="https://www.youtube.com/channel/UC2aM2gVVEHTu0pfE1ZyA0BQ" target="_blank" rel="noopener noreferrer" class="affiliate-link">YouTube</a>
+            </div>
+            <div class="affiliate-item">
+              <h4>Privacy devices</h4>
+              <a href="https://www.mark37.com/ref/BNC/" target="_blank" rel="noopener noreferrer" class="affiliate-link">Mark37</a>
+              <p style="font-size: 0.8rem; color: #4CAF50; margin-top: 0.5rem; font-weight: 500;">5% off using code: BNC</p>
+            </div>
+            <div class="affiliate-item">
+              <h4>BTC learning community</h4>
+              <a href="https://www.skool.com/the-bitcoin-masters-4115" target="_blank" rel="noopener noreferrer" class="affiliate-link">The Bitcoin Masters</a>
+            </div>
+          </div>
+          <div class="strc-github-wrap">
+            <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" rel="noopener noreferrer" class="affiliate-link">View on GitHub</a>
           </div>
         </div>
       </div>
@@ -452,6 +519,16 @@
         var btcDcaAnnual = btcDcaMonthly * 12;
         var btcSeries = buildDiminishingSeries(start, years, btcCagr, btcFinal, btcDcaAnnual);
 
+        // Total return % vs. cumulative dollars put in (lump sum + DCA through that year index)
+        var strcPctReturn = [];
+        var btcPctReturn = [];
+        for (var yi = 0; yi <= years; yi++) {
+          var strcContrib = start + yi * strcDcaAnnual;
+          var btcContrib = start + yi * btcDcaAnnual;
+          strcPctReturn.push(strcContrib > 0 ? ((strcSeries[yi] / strcContrib - 1) * 100) : 0);
+          btcPctReturn.push(btcContrib > 0 ? ((btcSeries[yi] / btcContrib - 1) * 100) : 0);
+        }
+
         var isDark = !document.body.classList.contains('light-theme');
         var gridColor = isDark ? 'rgba(148, 163, 184, 0.2)' : 'rgba(15, 23, 42, 0.08)';
         var textColor = isDark ? '#e2e8f0' : '#1e293b';
@@ -499,7 +576,19 @@
                   label: function(ctx) {
                     var label = ctx.dataset.label || '';
                     var v = ctx.raw != null ? ctx.raw : 0;
-                    return label + ': $' + formatCurrency(Math.round(v));
+                    var idx = ctx.dataIndex;
+                    var pct = ctx.datasetIndex === 0 ? strcPctReturn[idx] : btcPctReturn[idx];
+                    var pctStr = (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%';
+                    return label + ': $' + formatCurrency(Math.round(v)) + '  (' + pctStr + ')';
+                  },
+                  footer: function(tooltipItems) {
+                    if (!tooltipItems.length) return '';
+                    var idx = tooltipItems[0].dataIndex;
+                    var s = strcPctReturn[idx];
+                    var b = btcPctReturn[idx];
+                    var gap = b - s;
+                    var gapStr = (gap >= 0 ? '+' : '') + gap.toFixed(1);
+                    return 'Total return gap (BTC − STRC): ' + gapStr + '%';
                   }
                 }
               }

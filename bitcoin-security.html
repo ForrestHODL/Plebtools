@@ -8,7 +8,7 @@
     <meta property="og:description" content="Bitcoin security education: key strength, brute-force simulation, and self-custody best practices." />
     <meta property="og:type" content="website" />
     <title>Bitcoin Security - Plebtools</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=6">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         /* Bitcoin Security specific styles */
@@ -294,6 +294,7 @@
                             <a href="btc-buy-tracker"> Portfolio</a>
                             <a href="coveredcall-tracker"> Covered Calls</a>
                             <a href="compound-interest-calculator"> Calculator</a>
+                            <a href="portfolio-monte-carlo"> Monte Carlo</a>
                             <a href="retirement-calculator">️ Retirement</a>
                             <a href="strc-vs-bitcoin-cagr"> STRC vs Bitcoin CAGR</a>
                             <a href="the-great-intersection"> The Great Intersection</a>
@@ -303,7 +304,9 @@
               <a href="interest-arbitrage-calculator"> Yield Arbitrage</a>
               <a href="step-by-step-to-self-custody"> Self Custody Guide</a>
               <a href="invoice-builder"> Invoice Builder</a>
-                            <a href="pleb-release"> Pleb Release</a>
+                            
+              <a href="bip-110-economic-support">BIP-110 Support</a>
+              <a href="pleb-release"> Pleb Release</a>
                         </div>
                     </div>
                 </div>
@@ -441,8 +444,8 @@
             if (btn) btn.innerHTML = isDark ? '☀️' : '🌙';
         }
 
-        // Load saved theme
-        if (localStorage.getItem('theme') === 'dark') {
+        // Load saved theme (default: dark)
+        if (localStorage.getItem('theme') !== 'light') {
             document.body.classList.add('dark-theme');
         }
 
