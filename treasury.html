@@ -8,7 +8,7 @@
   <meta http-equiv="Expires" content="0" />
   <title>Plebtools Treasury</title>
   <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
-  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="styles.css?v=6">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <style>
@@ -781,17 +781,21 @@
             <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow"></span></button>
             <div class="dropdown-content" id="toolsContent" style="display: none;">
               <a href="home"> Home</a>
+              <a href="ai-million-pnl"> AI Million P&amp;L</a>
               <a href="btc-buy-tracker"> Portfolio</a>
               <a href="coveredcall-tracker"> Covered Calls</a>
               <a href="compound-interest-calculator"> Calculator</a>
               <a href="strc-vs-bitcoin-cagr"> STRC vs Bitcoin CAGR</a>
               <a href="the-great-intersection"> The Great Intersection</a>
               <a href="btc-loan-ltv"> BTC Loans</a>
+              <a href="portfolio-monte-carlo"> Monte Carlo</a>
               <a href="financial-planner"> Financial Planner</a>
               <a href="bitcoin-security">️ Bitcoin Security</a>
               <a href="interest-arbitrage-calculator"> Yield Arbitrage</a>
               <a href="step-by-step-to-self-custody"> Self Custody Guide</a>
               <a href="invoice-builder"> Invoice Builder</a>
+              
+              <a href="bip-110-economic-support">BIP-110 Support</a>
               <a href="pleb-release"> Pleb Release</a>
             </div>
           </div>
@@ -2076,31 +2080,6 @@
       refreshPriceBtn.innerHTML = " Refresh Price";
     });
 
-    // Theme toggle functionality
-    const themeToggle = document.getElementById("themeToggle");
-    let isDarkTheme = false;
-
-    themeToggle.addEventListener("click", () => {
-      isDarkTheme = !isDarkTheme;
-      if (isDarkTheme) {
-        document.body.classList.add("dark-theme");
-        themeToggle.textContent = "️";
-        localStorage.setItem("theme", "dark");
-      } else {
-        document.body.classList.remove("dark-theme");
-        themeToggle.textContent = "";
-        localStorage.setItem("theme", "light");
-      }
-    });
-
-    // Load saved theme on page load
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      isDarkTheme = true;
-      document.body.classList.add("dark-theme");
-      themeToggle.textContent = "️";
-    }
-
     // Simple dropdown functionality
     const toolsBtn = document.getElementById('toolsBtn');
     const toolsContent = document.getElementById('toolsContent');
@@ -2195,21 +2174,26 @@
         });
     });
 
-    // Theme Toggle
+    // Theme Toggle (default: dark — only "light" in localStorage enables light)
     function toggleTheme() {
       document.body.classList.toggle('light-theme');
       const isLight = document.body.classList.contains('light-theme');
       localStorage.setItem('theme', isLight ? 'light' : 'dark');
-      document.getElementById('themeToggle').textContent = isLight ? '☀️' : '🌙';
+      document.getElementById('themeToggle').textContent = isLight ? '🌙' : '☀️';
     }
 
-    // Load saved theme
-    if (localStorage.getItem('theme') === 'light') {
-      document.body.classList.add('light-theme');
-      document.getElementById('themeToggle').textContent = '☀️';
-    }
-
-    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    (function initTreasuryTheme() {
+      const btn = document.getElementById('themeToggle');
+      if (!btn) return;
+      if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-theme');
+        btn.textContent = '🌙';
+      } else {
+        document.body.classList.remove('light-theme');
+        btn.textContent = '☀️';
+      }
+      btn.addEventListener('click', toggleTheme);
+    })();
   </script>
 </body>
 </html>

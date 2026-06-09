@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pleb Release Tool - Plebtools</title>
   <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="styles.css?v=6">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Seymour+One&family=Press+Start+2P&family=Audiowide&family=Goldman:wght@400;700&family=Zen+Dots&family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -415,11 +415,14 @@
               <a href="strc-vs-bitcoin-cagr"> STRC vs Bitcoin CAGR</a>
               <a href="the-great-intersection"> The Great Intersection</a>
               <a href="btc-loan-ltv"> BTC Loans</a>
+              <a href="portfolio-monte-carlo"> Monte Carlo</a>
               <a href="financial-planner"> Financial Planner</a>
               <a href="bitcoin-security">️ Bitcoin Security</a>
               <a href="interest-arbitrage-calculator"> Yield Arbitrage</a>
               <a href="step-by-step-to-self-custody"> Self Custody Guide</a>
               <a href="invoice-builder"> Invoice Builder</a>
+              
+              <a href="bip-110-economic-support">BIP-110 Support</a>
               <a href="pleb-release"> Pleb Release</a>
             </div>
           </div>
@@ -900,28 +903,26 @@ Now Holds</textarea>
       this.style.boxShadow = '0 3px 10px rgba(102, 126, 234, 0.3)';
     });
 
-    let isDarkTheme = false;
+    let isDarkTheme = localStorage.getItem("theme") !== "light";
+
+    function applyNavTheme() {
+      if (isDarkTheme) {
+        document.body.classList.add("dark-theme");
+        document.body.classList.remove("light-theme");
+        themeToggle.textContent = "☀️";
+      } else {
+        document.body.classList.remove("dark-theme");
+        document.body.classList.add("light-theme");
+        themeToggle.textContent = "🌙";
+      }
+    }
+    applyNavTheme();
 
     themeToggle.addEventListener("click", () => {
       isDarkTheme = !isDarkTheme;
-      if (isDarkTheme) {
-        document.body.classList.add("dark-theme");
-        themeToggle.textContent = "☀️";
-        localStorage.setItem("theme", "dark");
-      } else {
-        document.body.classList.remove("dark-theme");
-        themeToggle.textContent = "🌙";
-        localStorage.setItem("theme", "light");
-      }
+      localStorage.setItem("theme", isDarkTheme ? "dark" : "light");
+      applyNavTheme();
     });
-
-    // Load saved theme on page load
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      isDarkTheme = true;
-      document.body.classList.add("dark-theme");
-      themeToggle.textContent = "☀️";
-    }
 
     document.getElementById('theme-toggle-container').appendChild(themeToggle);
 

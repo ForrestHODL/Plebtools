@@ -1,0 +1,746 @@
+window.PLEB_RANKING_DATA=[
+  {
+    "id": "andreas-antonopoulos",
+    "name": "Andreas M. Antonopoulos",
+    "who": "Longtime Bitcoin educator and author; explains technical concepts in plain language.",
+    "does": "Books, talks, Mastering Bitcoin, and open-access learning resources for builders and plebs.",
+    "tags": [
+      "educator",
+      "author"
+    ],
+    "trustworthiness": 9,
+    "trackRecord": 9
+  },
+  {
+    "id": "jameson-lopp",
+    "name": "Jameson Lopp",
+    "who": "Security-focused Bitcoin engineer and privacy advocate.",
+    "does": "Casa co-founder, key management guidance, and deep dives on custody and operational security.",
+    "tags": [
+      "builder",
+      "security"
+    ],
+    "trustworthiness": 9,
+    "trackRecord": 8
+  },
+  {
+    "id": "lyn-alden",
+    "name": "Lyn Alden",
+    "who": "Macro researcher covering markets, monetary policy, and Bitcoin adoption.",
+    "does": "Newsletter, research reports, and frameworks connecting fiat systems to Bitcoin.",
+    "tags": [
+      "research",
+      "macro"
+    ],
+    "trustworthiness": 8,
+    "trackRecord": 8
+  },
+  {
+    "id": "michael-saylor",
+    "name": "Michael Saylor",
+    "who": "Executive chairman of Strategy (MicroStrategy); corporate Bitcoin treasury pioneer.",
+    "does": "Large-scale BTC treasury strategy, public advocacy, and institutional framing for Bitcoin.",
+    "tags": [
+      "corporate",
+      "media"
+    ],
+    "trustworthiness": 6,
+    "trackRecord": 8
+  },
+  {
+    "id": "jack-dorsey",
+    "name": "Jack Dorsey",
+    "who": "Founder-focused technologist; Block (Square) and open-protocol interests.",
+    "does": "Bitcoin-native payments, Lightning infrastructure, and funding open-source Bitcoin work.",
+    "tags": [
+      "builder",
+      "payments"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 7
+  },
+  {
+    "id": "peter-mccormack",
+    "name": "Peter McCormack",
+    "who": "Independent media host and long-running Bitcoin podcaster.",
+    "does": "What Bitcoin Did interviews, commentary, and community-facing media.",
+    "tags": [
+      "media",
+      "podcast"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 7
+  },
+  {
+    "id": "preston-pysh",
+    "name": "Preston Pysh",
+    "who": "Investor-educator bridging traditional finance audiences to Bitcoin.",
+    "does": "The Investors Podcast, Bitcoin education series, and macro-to-Bitcoin narratives.",
+    "tags": [
+      "media",
+      "education"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 7
+  },
+  {
+    "id": "robert-breedlove",
+    "name": "Robert Breedlove",
+    "who": "Philosopher and monetary-theory commentator in the Bitcoin space.",
+    "does": "What is Money content, interviews, and Austrian-style Bitcoin framing.",
+    "tags": [
+      "media",
+      "philosophy"
+    ],
+    "trustworthiness": 6,
+    "trackRecord": 6
+  },
+  {
+    "id": "stephan-livera",
+    "name": "Stephan Livera",
+    "who": "Podcaster focused on Austrian economics and Bitcoin sovereignty.",
+    "does": "Stephan Livera Podcast, technical and philosophical Bitcoin discussions.",
+    "tags": [
+      "podcast",
+      "education"
+    ],
+    "trustworthiness": 8,
+    "trackRecord": 8
+  },
+  {
+    "id": "jimmy-song",
+    "name": "Jimmy Song",
+    "who": "Bitcoin developer, instructor, and author.",
+    "does": "Programming Bitcoin, workshops, and builder-oriented Bitcoin education.",
+    "tags": [
+      "builder",
+      "educator"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 7
+  },
+  {
+    "id": "nic-carter",
+    "name": "Nic Carter",
+    "who": "Partner and researcher covering Bitcoin markets, mining, and energy.",
+    "does": "On-chain analysis, mining commentary, and venture perspectives on Bitcoin infra.",
+    "tags": [
+      "research",
+      "venture"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 7
+  },
+  {
+    "id": "caitlin-long",
+    "name": "Caitlin Long",
+    "who": "Banking and policy operator focused on sound money and Bitcoin rails.",
+    "does": "Custodia Bank efforts, regulatory advocacy, and institutional Bitcoin infrastructure.",
+    "tags": [
+      "policy",
+      "institutional"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 7
+  },
+  {
+    "id": "samson-mow",
+    "name": "Samson Mow",
+    "who": "CEO of Jan3; nation-state and corporate Bitcoin adoption strategist.",
+    "does": "Advisory on sovereign and corporate BTC programs, mining, and adoption playbooks.",
+    "tags": [
+      "advisory",
+      "corporate"
+    ],
+    "trustworthiness": 6,
+    "trackRecord": 7
+  },
+  {
+    "id": "eric-voorhees",
+    "name": "Eric Voorhees",
+    "who": "Early Bitcoin entrepreneur; libertarian market advocate.",
+    "does": "ShapeShift history, Venice, and open-market Bitcoin product direction.",
+    "tags": [
+      "entrepreneur",
+      "markets"
+    ],
+    "trustworthiness": 6,
+    "trackRecord": 7
+  },
+  {
+    "id": "anthony-pompliano",
+    "name": "Anthony Pompliano",
+    "who": "Media personality and investor with a broad finance audience.",
+    "does": "Daily content, interviews, and mainstream Bitcoin distribution.",
+    "tags": [
+      "media",
+      "investing"
+    ],
+    "trustworthiness": 6,
+    "trackRecord": 6
+  },
+  {
+    "id": "jeff-booth",
+    "name": "Jeff Booth",
+    "who": "Author and entrepreneur focused on technology deflation and Bitcoin.",
+    "does": "The Price of Tomorrow thesis and talks on exponential tech vs sound money.",
+    "tags": [
+      "author",
+      "macro"
+    ],
+    "trustworthiness": 8,
+    "trackRecord": 8
+  },
+  {
+    "id": "matt-odell",
+    "name": "Matt Odell",
+    "who": "Privacy and protocol advocate; open-source Bitcoin communicator.",
+    "does": "Nostr and privacy tooling commentary, Citadel Dispatch, and builder community support.",
+    "tags": [
+      "privacy",
+      "open-source"
+    ],
+    "trustworthiness": 8,
+    "trackRecord": 7
+  },
+  {
+    "id": "fred-krueger",
+    "name": "Fred Krueger",
+    "who": "Investor bridging real estate and Bitcoin allocation narratives.",
+    "does": "Macro threads, portfolio framing, and pleb-accessible Bitcoin conviction content.",
+    "tags": [
+      "investing",
+      "media"
+    ],
+    "trustworthiness": 6,
+    "trackRecord": 6
+  },
+  {
+    "id": "max-keiser",
+    "name": "Max Keiser",
+    "who": "Veteran media host and high-conviction Bitcoin maximalist.",
+    "does": "Keiser Report legacy, Orange Pill podcast, and provocative Bitcoin media.",
+    "tags": [
+      "media",
+      "maximalist"
+    ],
+    "trustworthiness": 5,
+    "trackRecord": 6
+  },
+  {
+    "id": "adam-back",
+    "name": "Adam Back",
+    "who": "Hashcash inventor and Blockstream CEO; cypherpunk-era Bitcoin contributor.",
+    "does": "Protocol R&D, Liquid sidechain, and long-horizon Bitcoin infrastructure leadership.",
+    "tags": [
+      "builder",
+      "cypherpunk"
+    ],
+    "trustworthiness": 8,
+    "trackRecord": 9
+  },
+  {
+    "id": "greg-maxwell",
+    "name": "Greg Maxwell",
+    "who": "Highly technical Bitcoin contributor and privacy researcher.",
+    "does": "Core protocol work, confidential transactions research, and rigorous technical discourse.",
+    "tags": [
+      "builder",
+      "research"
+    ],
+    "trustworthiness": 9,
+    "trackRecord": 9
+  },
+  {
+    "id": "luke-dashjr",
+    "name": "Luke Dashjr",
+    "who": "Long-time Bitcoin Core contributor and uncompromising protocol maximalist.",
+    "does": "Core development, node software, and strong security-first Bitcoin advocacy.",
+    "tags": [
+      "builder",
+      "core"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 8
+  },
+  {
+    "id": "elizabeth-stark",
+    "name": "Elizabeth Stark",
+    "who": "Lightning Labs co-founder; scaling and developer ecosystem leader.",
+    "does": "Lightning Network development, LND, and developer tools for Bitcoin payments.",
+    "tags": [
+      "builder",
+      "lightning"
+    ],
+    "trustworthiness": 8,
+    "trackRecord": 8
+  },
+  {
+    "id": "saifedean-ammous",
+    "name": "Saifedean Ammous",
+    "who": "Economist and author of The Bitcoin Standard.",
+    "does": "Austrian economics education, seminars, and hard-money Bitcoin curriculum.",
+    "tags": [
+      "author",
+      "education"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 8
+  },
+  {
+    "id": "gigi",
+    "name": "Gigi",
+    "who": "Anonymous-style Bitcoin philosopher and writer.",
+    "does": "21 Lessons, memetic essays, and cultural framing of Bitcoin maximalism.",
+    "tags": [
+      "author",
+      "culture"
+    ],
+    "trustworthiness": 8,
+    "trackRecord": 7
+  },
+  {
+    "id": "planb",
+    "name": "PlanB",
+    "who": "Former institutional investor known for stock-to-flow Bitcoin models.",
+    "does": "S2F models, charts, and quantitative framing of Bitcoin scarcity.",
+    "tags": [
+      "research",
+      "models"
+    ],
+    "trustworthiness": 5,
+    "trackRecord": 6
+  },
+  {
+    "id": "alex-gladstein",
+    "name": "Alex Gladstein",
+    "who": "Human-rights advocate connecting authoritarian finance to Bitcoin.",
+    "does": "Human Rights Foundation work, essays on financial freedom and global adoption.",
+    "tags": [
+      "policy",
+      "human-rights"
+    ],
+    "trustworthiness": 9,
+    "trackRecord": 8
+  },
+  {
+    "id": "marty-bent",
+    "name": "Marty Bent",
+    "who": "Media operator and mining-industry commentator.",
+    "does": "TFTC podcast, mining commentary, and independent Bitcoin media.",
+    "tags": [
+      "media",
+      "mining"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 7
+  },
+  {
+    "id": "pierre-rochard",
+    "name": "Pierre Rochard",
+    "who": "Bitcoin policy and education advocate; Riot Platforms VP.",
+    "does": "Policy engagement, node advocacy, and corporate Bitcoin treasury discourse.",
+    "tags": [
+      "policy",
+      "corporate"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 7
+  },
+  {
+    "id": "dennis-porter",
+    "name": "Dennis Porter",
+    "who": "CEO of Satoshi Action Fund; U.S. state-level Bitcoin policy.",
+    "does": "Mining advocacy, state legislation, and grassroots Bitcoin policy campaigns.",
+    "tags": [
+      "policy",
+      "mining"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 7
+  },
+  {
+    "id": "tuur-demeester",
+    "name": "Tuur Demeester",
+    "who": "Early Bitcoin analyst and macro commentator.",
+    "does": "Research notes, cycle analysis, and investor-oriented Bitcoin reports.",
+    "tags": [
+      "research",
+      "macro"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 7
+  },
+  {
+    "id": "tone-vays",
+    "name": "Tone Vays",
+    "who": "Trader and educator with a long public Bitcoin presence.",
+    "does": "Trading education, conferences, and technical/market Bitcoin content.",
+    "tags": [
+      "media",
+      "trading"
+    ],
+    "trustworthiness": 5,
+    "trackRecord": 6
+  },
+  {
+    "id": "balaji-srinivasan",
+    "name": "Balaji Srinivasan",
+    "who": "Technologist and investor; network-state and crypto futurist.",
+    "does": "The Network State, tech-thesis content, and broad attention on Bitcoin themes.",
+    "tags": [
+      "tech",
+      "media"
+    ],
+    "trustworthiness": 6,
+    "trackRecord": 6
+  },
+  {
+    "id": "willy-woo",
+    "name": "Willy Woo",
+    "who": "On-chain analyst popularizing Bitcoin market dashboards.",
+    "does": "On-chain metrics, charts, and investor-facing Bitcoin data products.",
+    "tags": [
+      "research",
+      "on-chain"
+    ],
+    "trustworthiness": 6,
+    "trackRecord": 7
+  },
+  {
+    "id": "nvk",
+    "name": "NVK",
+    "who": "Coinkite founder; hardware wallet and open-tooling builder.",
+    "does": "Coldcard, bitcoin hardware, and builder tools for self-custody.",
+    "tags": [
+      "builder",
+      "hardware"
+    ],
+    "trustworthiness": 8,
+    "trackRecord": 8
+  },
+  {
+    "id": "obi-nwosu",
+    "name": "Obi Nwosu",
+    "who": "Fedi and Fedimint advocate for community custody.",
+    "does": "Chaumian e-cash, Fedimint, and community-scale Bitcoin custody models.",
+    "tags": [
+      "builder",
+      "ecash"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 7
+  },
+  {
+    "id": "francis-pouliot",
+    "name": "Francis Pouliot",
+    "who": "Canadian Bitcoin industry operator and privacy advocate.",
+    "does": "Bull Bitcoin, privacy advocacy, and sovereign Bitcoin business building.",
+    "tags": [
+      "entrepreneur",
+      "privacy"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 7
+  },
+  {
+    "id": "john-carvalho",
+    "name": "John Carvalho",
+    "who": "Protocol thinker and long-time Bitcoin builder/commentator.",
+    "does": "Synonym, Bitcointalk-era discourse, and product-level Bitcoin commentary.",
+    "tags": [
+      "builder",
+      "media"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 7
+  },
+  {
+    "id": "matt-corallo",
+    "name": "Matt Corallo",
+    "who": "Bitcoin Core developer focused on decentralization and mining.",
+    "does": "Core dev, BetterHash, and research on mining centralization risks.",
+    "tags": [
+      "builder",
+      "core"
+    ],
+    "trustworthiness": 9,
+    "trackRecord": 9
+  },
+  {
+    "id": "walker-america",
+    "name": "Walker",
+    "who": "Independent Bitcoin media creator (Walker America).",
+    "does": "Video essays, culture commentary, and accessible Bitcoin storytelling.",
+    "tags": [
+      "media",
+      "video"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 7
+  },
+  {
+    "id": "btc-sessions",
+    "name": "BTC Sessions",
+    "who": "Educator focused on practical self-custody for beginners.",
+    "does": "Wallet tutorials, hardware guides, and pleb-friendly how-to videos.",
+    "tags": [
+      "education",
+      "video"
+    ],
+    "trustworthiness": 8,
+    "trackRecord": 8
+  },
+  {
+    "id": "jack-mallers",
+    "name": "Jack Mallers",
+    "who": "Strike founder; Lightning payments and remittance evangelist.",
+    "does": "Lightning payments products, El Salvador narrative, and payment UX advocacy.",
+    "tags": [
+      "entrepreneur",
+      "lightning"
+    ],
+    "trustworthiness": 6,
+    "trackRecord": 7
+  },
+  {
+    "id": "trace-mayer",
+    "name": "Trace Mayer",
+    "who": "Early Bitcoin investor and monetary sovereignty advocate.",
+    "does": "Proof of Keys, early advocacy, and monetary-sovereignty education.",
+    "tags": [
+      "investor",
+      "education"
+    ],
+    "trustworthiness": 6,
+    "trackRecord": 7
+  },
+  {
+    "id": "hodlonaut",
+    "name": "Hodlonaut",
+    "who": "Pseudonymous Bitcoin advocate known for Lightning torch and discourse.",
+    "does": "Community activism, Lightning torch, and maximalist cultural leadership.",
+    "tags": [
+      "culture",
+      "lightning"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 7
+  },
+  {
+    "id": "beautyon",
+    "name": "Beautyon",
+    "who": "Pseudonymous Bitcoin writer and software freedom advocate.",
+    "does": "Essays on Bitcoin philosophy, privacy, and anti-statist economics.",
+    "tags": [
+      "author",
+      "culture"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 7
+  },
+  {
+    "id": "american-hodl",
+    "name": "American HODL",
+    "who": "Pseudonymous pleb advocate and high-energy media personality.",
+    "does": "Podcast rants, HODL culture, and retail-stackers motivation content.",
+    "tags": [
+      "media",
+      "culture"
+    ],
+    "trustworthiness": 6,
+    "trackRecord": 6
+  },
+  {
+    "id": "shinobi",
+    "name": "Shinobi",
+    "who": "Technical writer on Bitcoin protocol and privacy.",
+    "does": "Shinobi Bitcoin blog, node guides, and deep technical explainers.",
+    "tags": [
+      "education",
+      "technical"
+    ],
+    "trustworthiness": 8,
+    "trackRecord": 8
+  },
+  {
+    "id": "waxwing",
+    "name": "Adam Gibson",
+    "who": "JoinMarket creator and Bitcoin privacy developer.",
+    "does": "CoinJoin tooling, JoinMarket, and applied cryptography for privacy.",
+    "tags": [
+      "builder",
+      "privacy"
+    ],
+    "trustworthiness": 9,
+    "trackRecord": 9
+  },
+  {
+    "id": "eric-wall",
+    "name": "Eric Wall",
+    "who": "Independent researcher and outspoken Bitcoin/Ethereum commentator.",
+    "does": "Research threads, debates, and cross-ecosystem technical commentary.",
+    "tags": [
+      "research",
+      "media"
+    ],
+    "trustworthiness": 6,
+    "trackRecord": 6
+  },
+  {
+    "id": "chris-belcher",
+    "name": "Chris Belcher",
+    "who": "JoinMarket maintainer and Bitcoin privacy engineer.",
+    "does": "CoinJoin research, privacy software, and technical Bitcoin development.",
+    "tags": [
+      "builder",
+      "privacy"
+    ],
+    "trustworthiness": 9,
+    "trackRecord": 9
+  },
+  {
+    "id": "bruce-fenton",
+    "name": "Bruce Fenton",
+    "who": "Early Bitcoin advocate and securities/industry commentator.",
+    "does": "Industry advocacy, public speaking, and Bitcoin policy engagement.",
+    "tags": [
+      "policy",
+      "advocacy"
+    ],
+    "trustworthiness": 6,
+    "trackRecord": 7
+  },
+  {
+    "id": "calle",
+    "name": "Calle",
+    "who": "Cashu and ecash protocol contributor.",
+    "does": "Chaumian ecash on Bitcoin, Cashu mints, and privacy-preserving payments.",
+    "tags": [
+      "builder",
+      "ecash"
+    ],
+    "trustworthiness": 8,
+    "trackRecord": 7
+  },
+  {
+    "id": "fiatjaf",
+    "name": "fiatjaf",
+    "who": "Nostr and open-protocol developer.",
+    "does": "Nostr protocol, relays, and decentralized social on Bitcoin rails.",
+    "tags": [
+      "builder",
+      "nostr"
+    ],
+    "trustworthiness": 8,
+    "trackRecord": 8
+  },
+  {
+    "id": "rory-highside",
+    "name": "Rory Highside",
+    "who": "Bitcoin privacy researcher and educator.",
+    "does": "Privacy guides, coinjoin education, and operational security content.",
+    "tags": [
+      "privacy",
+      "education"
+    ],
+    "trustworthiness": 8,
+    "trackRecord": 7
+  },
+  {
+    "id": "bitcoin-tina",
+    "name": "Bitcoin Tina",
+    "who": "Community educator focused on pleb onboarding.",
+    "does": "Social education, meetups, and beginner-friendly Bitcoin content.",
+    "tags": [
+      "education",
+      "community"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 7
+  },
+  {
+    "id": "bitcoin-qna",
+    "name": "Bitcoin Q&A",
+    "who": "Technical educator breaking down Bitcoin concepts.",
+    "does": "Q&A threads, diagrams, and technical explainers for plebs.",
+    "tags": [
+      "education",
+      "technical"
+    ],
+    "trustworthiness": 8,
+    "trackRecord": 7
+  },
+  {
+    "id": "peter-todd",
+    "name": "Peter Todd",
+    "who": "Bitcoin Core contributor and applied cryptography consultant.",
+    "does": "Protocol review, security consulting, and technical Bitcoin discourse.",
+    "tags": [
+      "builder",
+      "security"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 8
+  },
+  {
+    "id": "andrew-poelstra",
+    "name": "Andrew Poelstra",
+    "who": "Mathematician and Blockstream research director.",
+    "does": "Scriptless scripts, MuSig, and advanced Bitcoin cryptography research.",
+    "tags": [
+      "research",
+      "builder"
+    ],
+    "trustworthiness": 9,
+    "trackRecord": 9
+  },
+  {
+    "id": "whalepanda",
+    "name": "WhalePanda",
+    "who": "Long-time pseudonymous Bitcoin commentator.",
+    "does": "Market commentary, memes, and maximalist social discourse.",
+    "tags": [
+      "media",
+      "culture"
+    ],
+    "trustworthiness": 5,
+    "trackRecord": 6
+  },
+  {
+    "id": "dan-held",
+    "name": "Dan Held",
+    "who": "Growth/marketing leader in Bitcoin companies.",
+    "does": "Marketing narratives, growth playbooks, and mainstream Bitcoin distribution.",
+    "tags": [
+      "media",
+      "marketing"
+    ],
+    "trustworthiness": 6,
+    "trackRecord": 6
+  },
+  {
+    "id": "raoul-pal",
+    "name": "Raoul Pal",
+    "who": "Macro investor with large finance audience.",
+    "does": "Global macro content, Real Vision, and periodic Bitcoin allocation advocacy.",
+    "tags": [
+      "macro",
+      "media"
+    ],
+    "trustworthiness": 5,
+    "trackRecord": 5
+  },
+  {
+    "id": "lyn-ulbricht",
+    "name": "Lyn Ulbricht",
+    "who": "Advocate in Ross Ulbricht clemency and justice campaigns.",
+    "does": "Clemency advocacy tying Bitcoin community to criminal-justice reform.",
+    "tags": [
+      "advocacy",
+      "policy"
+    ],
+    "trustworthiness": 7,
+    "trackRecord": 6
+  }
+];

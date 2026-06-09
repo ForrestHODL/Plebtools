@@ -1,0 +1,46 @@
+{
+  "challenge": "AI to One Million",
+  "goalUsd": 1000000,
+  "currency": "USD",
+  "incomeCategories": [
+    { "id": "donation", "label": "Donation" },
+    { "id": "affiliate", "label": "Affiliate" },
+    { "id": "sponsorship", "label": "Sponsorship" },
+    { "id": "product", "label": "Product / Service" },
+    { "id": "other_income", "label": "Other Income" }
+  ],
+  "expenseCategories": [
+    { "id": "software_tools", "label": "Software & Tools" },
+    { "id": "developer_platform", "label": "Developer & Platform Fees" },
+    { "id": "hosting", "label": "Hosting & Infrastructure" },
+    { "id": "marketing", "label": "Marketing" },
+    { "id": "education", "label": "Education & Research" },
+    { "id": "other_expense", "label": "Other Expense" }
+  ],
+  "entries": [
+    {
+      "id": "inc-2026-06-02-donation",
+      "date": "2026-06-02",
+      "type": "income",
+      "amount": 5,
+      "category": "donation",
+      "description": "Donation"
+    },
+    {
+      "id": "exp-2026-06-01-cursor",
+      "date": "2026-06-01",
+      "type": "expense",
+      "amount": 16,
+      "category": "software_tools",
+      "description": "Cursor"
+    },
+    {
+      "id": "exp-2026-06-03-google-console",
+      "date": "2026-06-03",
+      "type": "expense",
+      "amount": 25,
+      "category": "developer_platform",
+      "description": "Google Console developer account"
+    }
+  ]
+}

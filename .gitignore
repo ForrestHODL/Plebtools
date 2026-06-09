@@ -1,0 +1,4 @@
+node_modules/
+dist/
+deploy/
+.DS_Store

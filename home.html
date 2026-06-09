@@ -9,7 +9,7 @@
   <meta property="og:type" content="website" />
   <title>Plebtools - Open-Source Bitcoin Tools</title>
   <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="styles.css?v=7">
   
   <style>
     /* Inline dropdown styles to ensure they work */
@@ -64,6 +64,12 @@
       opacity: 0;
       transform: translateY(-10px);
       transition: all 0.3s ease;
+      max-height: min(75vh, calc(100vh - 6rem));
+      max-height: min(75vh, calc(100dvh - 6rem));
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
     }
     
     #toolsContent.show {
@@ -738,12 +744,14 @@
             <div class="dropdown-content" id="toolsContent" style="display: none;">
 
               <a href="treasury">Treasury</a>
+              <a href="ai-million-pnl">AI Million P&amp;L</a>
               <a href="btc-buy-tracker">Portfolio</a>
               <a href="coveredcall-tracker">Covered Calls</a>
               <a href="compound-interest-calculator">Calculator</a>
               <a href="btc-dca-vs-sp500">DCA vs S&P 500</a>
               <a href="strc-vs-bitcoin-cagr">STRC vs Bitcoin CAGR</a>
               <a href="dividend-clipping-simulator">Dividend Clipping</a>
+              <a href="portfolio-monte-carlo">Monte Carlo</a>
               <a href="retirement-calculator">Retirement</a>
               <a href="the-great-intersection">The Great Intersection</a>
               <a href="btc-loan-ltv">BTC Loans</a>
@@ -753,6 +761,8 @@
               <a href="interest-arbitrage-calculator">Yield Arbitrage</a>
               <a href="step-by-step-to-self-custody">Self Custody Guide</a>
               <a href="invoice-builder">Invoice Builder</a>
+            
+              <a href="bip-110-economic-support">BIP-110 Support</a>
             </div>
           </div>
           <div id="theme-toggle-container" class="nav-theme-wrap"></div>
@@ -789,6 +799,16 @@
             historical analysis, and comprehensive portfolio visualization.
           </p>
           <a href="treasury" class="feature-btn">View Treasury Tracker</a>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon"></span>
+          <h3 class="feature-title">AI to One Million P&amp;L</h3>
+          <p class="feature-description">
+            Track profit and loss for the AI to one million challenge. Income by source
+            and expenses by category, with net progress toward the $1M goal.
+          </p>
+          <a href="ai-million-pnl" class="feature-btn">View P&amp;L Tracker</a>
         </div>
 
         <div class="feature-card">
@@ -880,6 +900,16 @@
             Bitcoin announcements and corporate communications.
           </p>
           <a href="pleb-release" class="feature-btn">Create Pleb Release</a>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon"></span>
+          <h3 class="feature-title">BIP-110 Support Table</h3>
+          <p class="feature-description">
+            Wiki-style comparison of 2017 Segwit positions alongside researched BIP-110 stances
+            for developers, businesses, and influencers — with live miner signaling stats.
+          </p>
+          <a href="bip-110-economic-support" class="feature-btn">View BIP-110 Table</a>
         </div>
 
         <div class="feature-card">
@@ -1056,28 +1086,26 @@
       justify-content: center;
     `;
 
-    let isDarkTheme = false;
+    let isDarkTheme = localStorage.getItem("theme") !== "light";
+
+    function applyHomeTheme() {
+      if (isDarkTheme) {
+        document.body.classList.add("dark-theme");
+        document.body.classList.remove("light-theme");
+        themeToggle.textContent = "☀️";
+      } else {
+        document.body.classList.remove("dark-theme");
+        document.body.classList.add("light-theme");
+        themeToggle.textContent = "🌙";
+      }
+    }
+    applyHomeTheme();
 
     themeToggle.addEventListener("click", () => {
       isDarkTheme = !isDarkTheme;
-      if (isDarkTheme) {
-        document.body.classList.add("dark-theme");
-        themeToggle.textContent = "☀️";
-        localStorage.setItem("theme", "dark");
-      } else {
-        document.body.classList.remove("dark-theme");
-        themeToggle.textContent = "🌙";
-        localStorage.setItem("theme", "light");
-      }
+      localStorage.setItem("theme", isDarkTheme ? "dark" : "light");
+      applyHomeTheme();
     });
-
-    // Load saved theme on page load
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      isDarkTheme = true;
-      document.body.classList.add("dark-theme");
-      themeToggle.textContent = "☀️";
-    }
 
     if (themeToggleContainer) themeToggleContainer.appendChild(themeToggle);
 

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Wiki-style Segwit vs BIP-110 support comparison table for developers, businesses, and influencers.">
+  <title>Segwit vs BIP-110 Support Comparison - Plebtools</title>
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
+  <link rel="stylesheet" href="bip-110-economic-support.css?v=20260607">
+</head>
+<body class="bip-110-page">
+  <nav class="plebtools-wiki-nav" aria-label="Plebtools">
+    <div class="container">
+      <a href="home">← Plebtools</a>
+      <span class="nav-sep">·</span>
+      <a href="portfolio-monte-carlo">Monte Carlo</a>
+      <span class="nav-sep">·</span>
+      <span class="nav-current">BIP-110 Support Table</span>
+    </div>
+  </nav>
+
+  <header class="site-header">
+    <div class="container">
+      <p class="eyebrow">Bitcoin Protocol Politics · Historical &amp; Live Comparison</p>
+      <h1>Segwit Support vs BIP-110</h1>
+      <p class="lead">
+        Recreating the archived <a href="https://en.bitcoin.it/wiki/Segwit_support" target="_blank" rel="noopener">Bitcoin Wiki Segwit support</a> table (2017),
+        with a researched BIP-110 column for the same developers and businesses.
+        BIP-110 (Reduced Data Temporary Softfork) proposes a one-year consensus limit on arbitrary on-chain data.
+      </p>
+      <div class="alert-banner">
+        <strong>Note:</strong> The original Segwit list is incomplete and archived. BIP-110 positions reflect public statements
+        found through news, GitHub, mailing lists, and X/Twitter as of June 2026. Entries marked
+        <span class="badge badge-unknown">Unknown</span> have no identified public position.
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="live-stats" id="live-stats">
+      <h2>Live BIP-110 Network Status</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-label">Current Period Signaling</span>
+          <span class="stat-value" id="stat-pct">—</span>
+          <span class="stat-detail" id="stat-blocks">Loading…</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Blocks Signaling (Period)</span>
+          <span class="stat-value" id="stat-count">—</span>
+          <span class="stat-detail">55% needed for early lock-in</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Activation Threshold</span>
+          <span class="stat-value">55%</span>
+          <span class="stat-detail">1,109 / 2,016 blocks per period</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Mandatory Enforcement</span>
+          <span class="stat-value">Aug 2026</span>
+          <span class="stat-detail">Block ~961,632 · UASF path</span>
+        </div>
+      </div>
+      <p class="stats-source">Miner signaling data from <a href="https://bip110monitor.com/" target="_blank" rel="noopener">bip110monitor.com</a></p>
+    </section>
+
+    <section class="legend-section">
+      <h2>Legend</h2>
+      <p class="table-note">Cell colors match the <a href="https://en.bitcoin.it/wiki/Segwit_support" target="_blank" rel="noopener">Bitcoin Wiki</a> position scale. Each colored cell in the tables below shows that person's or company's stance.</p>
+      <table class="legend-table">
+        <tbody>
+          <tr><td class="pos-cell pos-no">No</td><td>Doesn't support (but might go along with sufficient community support)</td></tr>
+          <tr><td class="pos-cell pos-deficient">Deficient</td><td>Okay with the idea, but considers it to have insufficient community support</td></tr>
+          <tr><td class="pos-cell pos-evaluating">Evaluating</td><td>Still evaluating the idea</td></tr>
+          <tr><td class="pos-cell pos-accjuly">Acc. until July</td><td>Workable solution, provided activated before August 1 (BIP148-compatible)</td></tr>
+          <tr><td class="pos-cell pos-wanting">Wanting</td><td>Positively likes the idea, but considers insufficient community support</td></tr>
+          <tr><td class="pos-cell pos-weak">Weak</td><td>Better than nothing at all</td></tr>
+          <tr><td class="pos-cell pos-acceptable">Acceptable</td><td>It is a workable solution</td></tr>
+          <tr><td class="pos-cell pos-prefer">Prefer</td><td>What they would choose if it was only up to them</td></tr>
+          <tr><td class="pos-cell pos-unknown">Unknown</td><td>No public BIP-110 position identified (2026 research)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="filters">
+      <label>
+        Filter by name
+        <input type="search" id="search-input" placeholder="Search names…">
+      </label>
+      <label>
+        BIP-110 position
+        <select id="bip110-filter">
+          <option value="">All positions</option>
+          <option value="prefer">Prefer</option>
+          <option value="acceptable">Acceptable</option>
+          <option value="weak">Weak</option>
+          <option value="wanting">Wanting</option>
+          <option value="evaluating">Evaluating</option>
+          <option value="deficient">Deficient</option>
+          <option value="no">No</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </label>
+      <label>
+        Show
+        <select id="table-filter">
+          <option value="all">All tables</option>
+          <option value="developers">Developers only</option>
+          <option value="businesses">Businesses only</option>
+          <option value="influencers">Influencers only</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="table-section" data-table="developers">
+      <h2>Developers</h2>
+      <p class="table-note">
+        Alphabetical by surname. Support for a proposal does not mean support for merging into Core or any specific codebase.
+        <em>Affiliation</em> reflects 2016-era project association from the original wiki.
+      </p>
+      <div class="table-wrap">
+        <table class="data-table sortable" id="developers-table">
+          <thead>
+            <tr>
+              <th rowspan="2" data-sort="name">Developer</th>
+              <th rowspan="2" data-sort="aff">Aff.</th>
+              <th rowspan="2" data-sort="segwit">Segwit</th>
+              <th colspan="3">Deployment methods (2017)</th>
+              <th colspan="2">Hardfork bundles</th>
+              <th rowspan="2" data-sort="bip110" class="bip110-header">BIP-110</th>
+              <th rowspan="2">BIP-110 Source</th>
+            </tr>
+            <tr class="subhead">
+              <th data-sort="bip141"><a href="https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki" target="_blank" rel="noopener">BIP 141</a></th>
+              <th data-sort="bip148"><a href="https://github.com/bitcoin/bips/blob/master/bip-0148.mediawiki" target="_blank" rel="noopener">BIP 148</a></th>
+              <th data-sort="bip149"><a href="https://github.com/bitcoin/bips/blob/master/bip-0149.mediawiki" target="_blank" rel="noopener">BIP 149</a></th>
+              <th data-sort="bip91"><a href="https://github.com/bitcoin/bips/blob/master/bip-0091.mediawiki" target="_blank" rel="noopener">BIP 91</a></th>
+              <th data-sort="segwit2x">Segwit2x</th>
+            </tr>
+          </thead>
+          <tbody id="developers-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="table-section" data-table="businesses">
+      <h2>Businesses</h2>
+      <p class="table-note">Sources for BIP-110 positions are linked where available.</p>
+      <div class="table-wrap">
+        <table class="data-table sortable" id="businesses-table">
+          <thead>
+            <tr>
+              <th rowspan="2" data-sort="name">Company</th>
+              <th rowspan="2" data-sort="aff">Service</th>
+              <th rowspan="2" data-sort="segwit">Segwit</th>
+              <th colspan="3">Deployment methods (2017)</th>
+              <th colspan="2">Hardfork bundles</th>
+              <th rowspan="2" data-sort="bip110" class="bip110-header">BIP-110</th>
+              <th rowspan="2">BIP-110 Source</th>
+            </tr>
+            <tr class="subhead">
+              <th data-sort="bip141">BIP 141</th>
+              <th data-sort="bip148">BIP 148</th>
+              <th data-sort="bip149">BIP 149</th>
+              <th data-sort="bip91">BIP 91</th>
+              <th data-sort="segwit2x">Segwit2x</th>
+            </tr>
+          </thead>
+          <tbody id="businesses-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="table-section" data-table="influencers">
+      <h2>Influencers</h2>
+      <p class="table-note">Podcasters, commentators, and X personalities with identified BIP-110 positions.</p>
+      <div class="table-wrap">
+        <table class="data-table sortable" id="influencers-table">
+          <thead>
+            <tr>
+              <th data-sort="name">Name</th>
+              <th data-sort="handle">Handle</th>
+              <th data-sort="bip110" class="bip110-header">BIP-110</th>
+              <th>Notes</th>
+              <th>Source</th>
+            </tr>
+          </thead>
+          <tbody id="influencers-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Data compiled June 2026. Segwit columns from archived Bitcoin Wiki. BIP-110 column from public sources — not an endorsement tracker. <a href="home">Back to Plebtools</a></p>
+      <p>Want to make an update? Report it on <a href="https://github.com/ForrestHODL/bip-110-economic-support" target="_blank" rel="noopener">GitHub</a>.</p>
+    </div>
+  </footer>
+
+  <script src="scripts/bip-110-economic-support-data.js?v=20260608"></script>
+  <script src="scripts/bip-110-economic-support-app.js?v=20260608"></script>
+</body>
+</html>
