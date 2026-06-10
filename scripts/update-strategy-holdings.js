@@ -6,12 +6,17 @@
  * data; the browser only loads the JSON from same origin (no CORS).
  */
 
-const https = require('https');
-const fs = require('fs');
-const path = require('path');
+import https from 'node:https';
+import http from 'node:http';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const SEC_CIK = '0001050446';
-const USER_AGENT = 'Plebtools/1.0 (https://github.com/ForrestHODL/Plebtools; educational Bitcoin treasury tracking)';
+// SEC EDGAR requires a descriptive User-Agent with contact info (see sec.gov/os/accessing-edgar-data).
+const USER_AGENT = 'Mozilla/5.0 (compatible; Plebtools/1.0; +https://plebtools.com; forrest@plebtools.com)';
 
 const STATIC = [
   ['2020-08-11', 21454], ['2020-09-14', 38250], ['2020-12-04', 40824], ['2020-12-21', 70470],
@@ -40,47 +45,92 @@ const STATIC = [
   ['2026-01-12', 687410], ['2026-01-20', 709715], ['2026-01-26', 712647], ['2026-02-02', 713502],
   ['2026-02-09', 714644], ['2026-02-17', 717131], ['2026-02-23', 717722], ['2026-03-02', 720737],
   ['2026-03-08', 738731], ['2026-03-15', 761068], ['2026-03-22', 762099],
-  ['2026-04-05', 766970], ['2026-04-12', 780897], ['2026-04-19', 815061], ['2026-04-26', 818334]
+  ['2026-04-05', 766970], ['2026-04-12', 780897], ['2026-04-19', 815061], ['2026-04-26', 818334],
+  ['2026-05-04', 818334], ['2026-05-26', 843738], ['2026-06-01', 843706], ['2026-06-08', 845256]
 ];
 
-function get(url, headers = {}) {
+function get(url, headers = {}, redirects = 0) {
   return new Promise((resolve, reject) => {
+    const parsed = new URL(url);
+    const lib = parsed.protocol === 'https:' ? https : http;
     const opts = { headers: { 'User-Agent': USER_AGENT, ...headers } };
-    https.get(url, opts, (res) => {
+    lib.get(url, opts, (res) => {
+      if ([301, 302, 307, 308].includes(res.statusCode) && res.headers.location && redirects < 5) {
+        const next = new URL(res.headers.location, url).toString();
+        res.resume();
+        resolve(get(next, headers, redirects + 1));
+        return;
+      }
       let body = '';
-      res.on('data', (c) => body += c);
-      res.on('end', () => resolve(res.statusCode === 200 ? body : null));
+      res.on('data', (c) => { body += c; });
+      res.on('end', () => resolve({ status: res.statusCode, body }));
     }).on('error', reject);
   });
 }
 
+function getText(url, headers = {}) {
+  return get(url, headers).then((res) => (res.status === 200 ? res.body : null));
+}
+
 function parse8K(html, filingDate) {
   const text = (html || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
-  const candidates = [];
-  const add = (s) => {
-    const n = parseInt(String(s).replace(/,/g, ''), 10);
-    if (!isNaN(n) && n > 1000 && n < 21e6) candidates.push(n);
-  };
-  const patterns = [
-    /aggregate\s+BTC\s+holdings[\s\S]{0,400}?(\d{1,3}(?:,\d{3})+)/gi,
-    /aggregate\s+BTC\s+holdings[:\s]*([\d,]+)/gi,
-    /(?:aggregate|total|held|holdings?)\s+(?:of\s+)?(?:approximately\s+)?([\d,]+(?:\.[\d]+)?)\s*bitcoins?/gi,
-    /approximately\s+([\d,]+(?:\.[\d]+)?)\s*bitcoins?/gi,
-    /(?:held|holdings?|total)\s+(?:of\s+)?([\d,]+(?:\.[\d]+)?)\s*bitcoins?/gi,
-    /(?:as\s+of|as\s+of\s+the)[^.]*?([\d,]+(?:\.[\d]+)?)\s*bitcoins?/gi,
-    /([\d,]+(?:\.[\d]+)?)\s*bitcoins?\s+(?:as\s+of|held|in\s+aggregate)/gi,
-    /([\d,]+(?:\.[\d]+)?)\s*BTC\b/gi,
-    /\b([\d,]+(?:\.[\d]+)?)\s*bitcoins?/gi,
-    /(\d{1,3}(?:,\d{3})+)\s*(?:bitcoin|BTC)/gi
+  const lower = text.toLowerCase();
+  if (!/(?:bitcoin|btc)/.test(lower)) return null;
+
+  const MIN_HOLDINGS = 100000;
+  const toNum = (s) => parseInt(String(s).replace(/,/g, ''), 10);
+  const valid = (n) => !isNaN(n) && n >= MIN_HOLDINGS && n < 21e6;
+
+  const holdingsPatterns = [
+    /aggregate\s+BTC\s+holdings[\s\S]{0,400}?(\d{1,3}(?:,\d{3})+)/i,
+    /aggregate\s+BTC\s+holdings[:\s]*([\d,]+)/i,
+    /(?:aggregate|total)\s+(?:bitcoin\s+)?holdings[\s\S]{0,160}?(\d{1,3}(?:,\d{3})+)\s*bitcoins?/i,
+    /(?:held|holds)\s+(?:an\s+)?(?:aggregate\s+of\s+)?(\d{1,3}(?:,\d{3})+)\s*bitcoins?/i,
+    /approximately\s+(\d{1,3}(?:,\d{3})+)\s+bitcoins?\s+(?:as\s+of|held)/i,
+    /(\d{1,3}(?:,\d{3})+)\s+bitcoins?\s+(?:as\s+of|held|in\s+aggregate)/i,
   ];
-  for (const re of patterns) {
-    re.lastIndex = 0;
-    let m;
-    while ((m = re.exec(text)) !== null) add(m[1]);
-    if (candidates.length > 0) break;
+
+  for (const re of holdingsPatterns) {
+    const m = re.exec(text);
+    if (m && valid(toNum(m[1]))) return [filingDate, toNum(m[1])];
   }
-  if (candidates.length === 0) return null;
-  return [filingDate, Math.max(...candidates)];
+
+  // Strategy table: headers then row with BTC Acquired + Aggregate BTC Holdings (take largest valid #).
+  const updateSection = text.match(/(?:bitcoin holdings|btc update)[:\s][\s\S]{0,1400}/i);
+  if (updateSection) {
+    const nums = [...updateSection[0].matchAll(/(\d{1,3}(?:,\d{3})+)/g)]
+      .map((m) => toNum(m[1]))
+      .filter(valid);
+    if (nums.length > 0) return [filingDate, Math.max(...nums)];
+  }
+
+  const aggMatch = text.match(/aggregate BTC holdings[\s\S]{0,700}/i);
+  if (aggMatch) {
+    const nums = [...aggMatch[0].matchAll(/(\d{1,3}(?:,\d{3})+)/g)]
+      .map((m) => toNum(m[1]))
+      .filter(valid);
+    if (nums.length > 0) return [filingDate, Math.max(...nums)];
+  }
+
+  return null;
+}
+
+const MIN_SERIES_BTC = 100000;
+
+function cleanHoldingsSeries(data) {
+  const sorted = [...data].sort((a, b) => a[0].localeCompare(b[0]));
+  const out = [];
+  for (const [date, btc] of sorted) {
+    const prev = out[out.length - 1];
+    if (btc < MIN_SERIES_BTC) continue;
+    if (prev && btc < prev[1] * 0.5) continue;
+    if (prev && prev[0] === date) {
+      out[out.length - 1] = [date, Math.max(prev[1], btc)];
+      continue;
+    }
+    out.push([date, btc]);
+  }
+  return out;
 }
 
 function merge(base, secData) {
@@ -99,30 +149,26 @@ async function main() {
 
   let data = null;
   try {
-    const raw = await get('https://data.sec.gov/submissions/CIK' + SEC_CIK + '.json', { Accept: 'application/json' });
+    const raw = await getText(`https://data.sec.gov/submissions/CIK${SEC_CIK}.json`, { Accept: 'application/json' });
     if (raw) data = JSON.parse(raw);
   } catch (e) {
     console.error('Failed to fetch SEC submissions:', e.message);
   }
 
-  const recent = data && data.filings && data.filings.recent;
+  const recent = data?.filings?.recent;
   if (!recent || !Array.isArray(recent.form)) {
     console.log('SEC data unavailable; writing static baseline only.');
     const outDir = path.dirname(outPath);
     if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
-    fs.writeFileSync(outPath, JSON.stringify(STATIC, null, 0), 'utf8');
+    fs.writeFileSync(outPath, JSON.stringify(STATIC), 'utf8');
     console.log('Wrote', outPath, 'with', STATIC.length, 'points.');
-    process.exit(0);
+    return;
   }
 
-  const forms = recent.form;
-  const accessionNumbers = recent.accessionNumber || [];
-  const primaryDocs = recent.primaryDocument || [];
-  const filingDates = recent.filingDate || [];
+  const { form: forms, accessionNumber: accessionNumbers = [], primaryDocument: primaryDocs = [], filingDate: filingDates = [] } = recent;
   const indices = [];
   for (let i = 0; i < forms.length; i++) {
-    const f = forms[i];
-    if (f === '8-K' || f === '8-K/A') indices.push(i);
+    if (forms[i] === '8-K' || forms[i] === '8-K/A') indices.push(i);
   }
   indices.sort((a, b) => (filingDates[b] || '').localeCompare(filingDates[a] || ''));
 
@@ -135,34 +181,36 @@ async function main() {
     const acc = accessionNumbers[idx];
     const doc = primaryDocs[idx] || '';
     const filingDate = filingDates[idx];
-    if (!acc || !doc || !filingDate || seen[filingDate]) continue;
+    if (!acc || !doc || !filingDate) continue;
+    if (seen[filingDate]) continue;
 
     const accNoDashes = acc.replace(/-/g, '');
-    const baseUrl = 'https://www.sec.gov/Archives/edgar/data/' + SEC_CIK + '/' + accNoDashes + '/';
+    const baseUrl = `https://www.sec.gov/Archives/edgar/data/${SEC_CIK}/${accNoDashes}/`;
     await sleep(150);
 
     let parsed = null;
     try {
-      let html = await get(baseUrl + doc, { Accept: 'text/html' });
+      let html = await getText(baseUrl + doc, { Accept: 'text/html' });
       if (html) parsed = parse8K(html, filingDate);
       if (!parsed && html) {
         const exMatch = html.match(/href="([^"]*ex[-_]?99[^"]*\.(?:htm|html))"/i);
-        if (exMatch && exMatch[1]) {
+        if (exMatch?.[1]) {
           await sleep(120);
-          const exHtml = await get(baseUrl + exMatch[1], { Accept: 'text/html' });
+          const exHtml = await getText(baseUrl + exMatch[1], { Accept: 'text/html' });
           if (exHtml) parsed = parse8K(exHtml, filingDate);
         }
       }
       if (!parsed && k === 0) {
-        let indexHtml = await get(baseUrl + 'index.html', { Accept: 'text/html' }) || await get(baseUrl + 'index.htm', { Accept: 'text/html' });
+        const indexHtml = await getText(`${baseUrl}index.html`, { Accept: 'text/html' })
+          || await getText(`${baseUrl}index.htm`, { Accept: 'text/html' });
         if (indexHtml) {
           const exLinks = indexHtml.match(/href="([^"]*ex[-_]?99[^"]*\.(?:htm|html))"/gi);
           if (exLinks) {
             for (let e = 0; e < Math.min(3, exLinks.length); e++) {
               const href = exLinks[e].match(/href="([^"]+)"/);
-              if (href && href[1]) {
+              if (href?.[1]) {
                 await sleep(120);
-                const exHtml2 = await get(baseUrl + href[1], { Accept: 'text/html' });
+                const exHtml2 = await getText(baseUrl + href[1], { Accept: 'text/html' });
                 if (exHtml2) {
                   parsed = parse8K(exHtml2, filingDate);
                   if (parsed) break;
@@ -172,18 +220,21 @@ async function main() {
           }
         }
       }
-    } catch (_) {}
+    } catch (_) { /* skip filing */ }
     if (parsed) {
       results.push(parsed);
       seen[filingDate] = true;
     }
   }
 
-  const merged = results.length > 0 ? merge(STATIC, results) : STATIC;
+  const merged = cleanHoldingsSeries(results.length > 0 ? merge(STATIC, results) : STATIC);
   const outDir = path.dirname(outPath);
   if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
-  fs.writeFileSync(outPath, JSON.stringify(merged, null, 0), 'utf8');
-  console.log('Wrote', outPath, 'with', merged.length, 'points.', results.length > 0 ? 'SEC 8-K parsed: ' + results.length : 'No new SEC data.');
+  fs.writeFileSync(outPath, JSON.stringify(merged), 'utf8');
+  console.log('Wrote', outPath, 'with', merged.length, 'points.', results.length > 0 ? `SEC 8-K parsed: ${results.length}` : 'No new SEC data.');
+  if (results.length > 0) {
+    console.log('Latest SEC points:', results.slice(0, 3).map(([d, b]) => `${d}: ${b}`).join(', '));
+  }
 }
 
 main().catch((e) => {

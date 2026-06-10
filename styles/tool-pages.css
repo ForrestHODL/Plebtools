@@ -864,6 +864,73 @@ body.pt-site .affiliates-section .section-title {
   text-align: center !important;
 }
 
+/* ─── The Great Intersection ─── */
+body.pt-site .page-container {
+  max-width: var(--pt-max) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 1.5rem 1.5rem 3rem !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+body.pt-site .chart-container {
+  background: var(--pt-bg-card) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius-lg) !important;
+  box-shadow: none !important;
+  max-width: 100% !important;
+  margin: 0 auto 2rem !important;
+  padding: 1.5rem !important;
+}
+
+body.pt-site .chart-header .page-title,
+body.pt-site .chart-header h1 {
+  color: var(--pt-text) !important;
+}
+
+body.pt-site .chart-header p {
+  color: var(--pt-text-muted) !important;
+}
+
+body.pt-site .chart-wrapper {
+  position: relative;
+  height: 420px;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+body.pt-site .chart-wrapper canvas {
+  max-width: 100% !important;
+}
+
+body.pt-site .intersection-note {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+  color: var(--pt-amber) !important;
+}
+
+body.pt-site .intersection-note p,
+body.pt-site .intersection-note .stat,
+body.pt-site .intersection-note .converge,
+body.pt-site .intersection-note .rates,
+body.pt-site .intersection-note .intersect,
+body.pt-site .intersection-note .supply-line,
+body.pt-site .intersection-note strong {
+  color: var(--pt-amber) !important;
+}
+
+body.pt-site .source-note {
+  color: var(--pt-text-dim) !important;
+  text-align: center;
+}
+
+body.pt-site .source-note a {
+  color: var(--pt-cyan) !important;
+}
+
 /* ─── Bitcoin Compound Interest Calculator ─── */
 body.pt-site .calculator-container {
   max-width: var(--pt-max) !important;
