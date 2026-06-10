@@ -8,14 +8,6 @@ import {
 } from './pleb-ranking-vote.js';
 import { PLEB_RANKING_INFLUENCERS } from './pleb-ranking-influencers.js';
 
-(function () {
-  const saved = localStorage.getItem('plebRankingTheme');
-  if (saved === 'light') {
-    document.body.classList.remove('dark-theme');
-    document.body.classList.add('light-ranking');
-  }
-})();
-
 let allInfluencers = [];
 let filtered = [];
 let activeVoteSlug = null;
@@ -308,20 +300,11 @@ document.getElementById('voteSubmit').addEventListener('click', async () => {
   }
 });
 
-document.getElementById('themeFab').addEventListener('click', function () {
-  const isLight = document.body.classList.toggle('light-ranking');
-  document.body.classList.toggle('dark-theme', !isLight);
-  this.textContent = isLight ? '🌙' : '☀️';
-  localStorage.setItem('plebRankingTheme', isLight ? 'light' : 'dark');
-});
-
 (async function init() {
   const cfg = await loadVoteConfig();
   const minSats = cfg.minVoteSats || 21;
   document.getElementById('minSatsLabel').textContent = String(minSats);
   document.getElementById('voteSats').min = String(minSats);
   document.getElementById('voteSats').value = String(cfg.defaultVoteSats || minSats);
-  const fab = document.getElementById('themeFab');
-  if (document.body.classList.contains('light-ranking')) fab.textContent = '🌙';
   loadData();
 })();

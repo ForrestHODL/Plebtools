@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Step by Step to Self Custody - Plebtools</title>
   <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg" />
-  <link rel="stylesheet" href="styles.css?v=5" />
+  <link rel="stylesheet" href="styles.css?v=9" />
+  <link rel="stylesheet" href="styles/tool-pages.css?v=2" />
   <style>
     :root {
       font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -506,42 +507,41 @@
       }
     }
   </style>
+  <script>localStorage.setItem('theme','dark');</script>
 </head>
-<body>
-  <header>
+<body class="dark-theme pt-site">
+                <header>
     <nav>
       <div class="nav-container">
-        <div class="logo-container">
-          <a href="index.html" class="logo-link">
-            <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo" />
-            <span class="logo">Plebtools</span>
-          </a>
-        </div>
+        <a href="home.html" class="logo-link">
+          <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+          <span class="logo">Plebtools</span>
+        </a>
         <div class="nav-links">
           <div class="dropdown" id="toolsDropdown">
-            <button class="dropdown-btn" id="toolsBtn">
-              Tools <span class="dropdown-arrow"></span>
-            </button>
+            <button class="dropdown-btn" id="toolsBtn" type="button">Tools <span class="dropdown-arrow"></span></button>
             <div class="dropdown-content" id="toolsContent" style="display: none;">
-              <a href="treasury"> Treasury</a>
-              <a href="btc-buy-tracker"> Portfolio</a>
-              <a href="coveredcall-tracker"> Covered Calls</a>
-              <a href="compound-interest-calculator"> Calculator</a>
-              <a href="portfolio-monte-carlo"> Monte Carlo</a>
-              <a href="retirement-calculator">️ Retirement</a>
-              <a href="the-great-intersection"> The Great Intersection</a>
-              <a href="btc-loan-ltv"> BTC Loans</a>
-              <a href="financial-planner"> Financial Planner</a>
-              <a href="bitcoin-security">️ Bitcoin Security</a>
-              <a href="pleb-release"> Pleb Release</a>
-              <a href="interest-arbitrage-calculator"> Yield Arbitrage</a>
-              <a href="step-by-step-to-self-custody"> Self Custody Guide</a>
-              <a href="invoice-builder"> Invoice Builder</a>
-            
-              <a href="bip-110-economic-support">BIP-110 Support</a>
-</div>
+              <a href="treasury.html">Treasury</a>
+              <a href="btc-buy-tracker.html">Portfolio</a>
+              <a href="coveredcall-tracker.html">Covered Calls</a>
+              <a href="compound-interest-calculator.html">Calculator</a>
+              <a href="btc-dca-vs-sp500.html">DCA vs S&amp;P 500</a>
+              <a href="strc-vs-bitcoin-cagr.html">STRC vs Bitcoin CAGR</a>
+              <a href="dividend-clipping-simulator.html">Dividend Clipping</a>
+              <a href="portfolio-monte-carlo.html">Monte Carlo</a>
+              <a href="retirement-calculator.html">Retirement</a>
+              <a href="the-great-intersection.html">The Great Intersection</a>
+              <a href="btc-loan-ltv.html">BTC Loans</a>
+              <a href="financial-planner.html">Financial Planner</a>
+              <a href="bitcoin-security.html">Bitcoin Security</a>
+              <a href="pleb-release.html">Pleb Release</a>
+              <a href="interest-arbitrage-calculator.html">Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody.html">Self Custody Guide</a>
+              <a href="invoice-builder.html">Invoice Builder</a>
+              <a href="privacy-analyzer.html">Privacy Analyzer</a>
+              <a href="bip-110-economic-support.html">BIP-110 Support</a>
+            </div>
           </div>
-          <div id="theme-toggle-container" class="nav-theme-wrap"></div>
         </div>
       </div>
     </nav>
@@ -1075,9 +1075,31 @@
     </section>
   </main>
 
-  <footer>
+                <footer>
     <div class="container">
-      <p>&copy; 2025 Plebtools. Open source Bitcoin tracking tools.</p>
+      <div class="pt-footer-wordmark">Plebtools</div>
+      <div class="pt-footer-grid">
+        <div class="pt-footer-col">
+          <h4>Tools</h4>
+          <a href="treasury.html">Treasury</a>
+          <a href="portfolio-monte-carlo.html">Monte Carlo</a>
+          <a href="retirement-calculator.html">Retirement</a>
+          <a href="btc-buy-tracker.html">Portfolio</a>
+        </div>
+        <div class="pt-footer-col">
+          <h4>Guides</h4>
+          <a href="step-by-step-to-self-custody.html">Self Custody</a>
+          <a href="bitcoin-security.html">Security</a>
+          <a href="the-great-intersection.html">Great Intersection</a>
+        </div>
+        <div class="pt-footer-col">
+          <h4>Project</h4>
+          <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://coinos.io/plebtools" target="_blank" rel="noopener">Donate</a>
+          <a href="home.html">Home</a>
+        </div>
+      </div>
+      <p>&copy; 2025 Plebtools. Open source Bitcoin tools.</p>
     </div>
   </footer>
 
@@ -1209,100 +1231,9 @@
       });
     }
 
-    // Theme toggle button (in nav)
-    const themeToggleContainer = document.getElementById("theme-toggle-container");
-    const themeToggle = document.createElement("button");
-    themeToggle.className = "theme-toggle-btn";
-    themeToggle.setAttribute("aria-label", "Toggle dark/light theme");
-    themeToggle.innerHTML = "☀️";
-    themeToggle.style.cssText = `
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      color: #e5e7eb;
-      font-size: 1.35rem;
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 18px 40px -28px rgba(15, 23, 42, 0.9);
-    `;
-
-    themeToggle.addEventListener("mouseenter", () => {
-      themeToggle.style.transform = "translateY(-2px)";
-      themeToggle.style.boxShadow = "0 24px 55px -28px rgba(59, 130, 246, 0.45)";
-    });
-
-    themeToggle.addEventListener("mouseleave", () => {
-      themeToggle.style.transform = "translateY(0)";
-      themeToggle.style.boxShadow = "0 18px 40px -28px rgba(15, 23, 42, 0.9)";
-    });
-
-    let isDarkTheme = true;
-    if (themeToggleContainer) themeToggleContainer.appendChild(themeToggle);
-
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "light") {
-      isDarkTheme = false;
-      document.body.classList.remove("dark-theme");
-      document.body.classList.add("light-theme");
-      themeToggle.textContent = "🌙";
-    } else {
-      document.body.classList.add("dark-theme");
-      document.body.classList.remove("light-theme");
-      themeToggle.textContent = "️";
-    }
-
-    themeToggle.addEventListener("click", () => {
-      isDarkTheme = !isDarkTheme;
-      if (isDarkTheme) {
-        document.body.classList.add("dark-theme");
-        document.body.classList.remove("light-theme");
-        themeToggle.textContent = "️";
-        localStorage.setItem("theme", "dark");
-      } else {
-        document.body.classList.remove("dark-theme");
-        document.body.classList.add("light-theme");
-        themeToggle.textContent = "🌙";
-        localStorage.setItem("theme", "light");
-      }
-    });
-
-    // Dropdown toggle
-    const toolsBtn = document.getElementById("toolsBtn");
-    const toolsContent = document.getElementById("toolsContent");
-    let dropdownOpen = false;
-
-    toolsBtn.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      dropdownOpen = !dropdownOpen;
-      if (dropdownOpen) {
-        toolsContent.style.display = "block";
-        requestAnimationFrame(() => {
-          toolsContent.classList.add("show");
-        });
-      } else {
-        toolsContent.classList.remove("show");
-        setTimeout(() => {
-          toolsContent.style.display = "none";
-        }, 250);
-      }
-    });
-
-    document.addEventListener("click", (event) => {
-      if (!document.getElementById("toolsDropdown").contains(event.target)) {
-        toolsContent.classList.remove("show");
-        setTimeout(() => {
-          toolsContent.style.display = "none";
-        }, 250);
-        dropdownOpen = false;
-      }
-    });
   </script>
+<script src="scripts/plebtools-nav.js"></script>
+<script src="scripts/plebtools-theme.js"></script>
 </body>
 </html>
 

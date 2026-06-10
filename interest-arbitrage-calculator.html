@@ -4,7 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Interest Rate Arbitrage Calculator</title>
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
+  <link rel="stylesheet" href="styles.css?v=9">
   <style>
+    /* Layout only — theme via tool-pages.css */
+    .arb-page { max-width: 800px; margin: 0 auto; padding: 1.5rem 1.5rem 3rem; }
+    .arb-header { text-align: center; margin-bottom: 2rem; }
+    .arb-header .lead { max-width: 36rem; margin: 0.75rem auto 0; font-size: 1rem; line-height: 1.6; }
     :root {
       font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       line-height: 1.5;
@@ -62,68 +68,43 @@
 
     body.dark-theme {
       color-scheme: dark;
-      --color-bg: linear-gradient(135deg, #0f172a 0%, #111827 100%);
-      --color-text: #e5e7eb;
-      --color-heading: #facc15;
-      --color-description: #cbd5f5;
-      --color-section-title: #facc15;
-      --card-bg: rgba(17, 24, 39, 0.9);
-      --card-border: rgba(148, 163, 184, 0.2);
-      --card-shadow: 0 30px 60px rgba(15, 23, 42, 0.55);
-      --label-color: #cbd5f5;
-      --input-bg: rgba(15, 23, 42, 0.85);
-      --input-border: rgba(148, 163, 184, 0.35);
-      --input-text: #f8fafc;
-      --input-focus-border: #38bdf8;
-      --input-focus-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
-      --hint-color: #94a3b8;
-      --summary-text: #cbd5f5;
-      --summary-list: #9ca3af;
-      --metric-bg: rgba(30, 41, 59, 0.92);
-      --metric-border: rgba(148, 163, 184, 0.25);
-      --metric-label: #a5b4fc;
-      --metric-value: #f8fafc;
-      --metric-subtext: #cbd5f5;
-      --error-bg: rgba(185, 28, 28, 0.2);
-      --error-border: rgba(248, 113, 113, 0.45);
-      --error-text: #fecaca;
-      --secondary-btn-bg: rgba(51, 65, 85, 0.65);
-      --secondary-btn-text: #e2e8f0;
-      --chart-hint-text: #cbd5f5;
-      --toggle-bg: linear-gradient(135deg, rgba(59, 130, 246, 0.35) 0%, rgba(129, 140, 248, 0.55) 100%);
-      --toggle-border: rgba(129, 140, 248, 0.45);
-      --toggle-text: #e2e8f0;
-      --toggle-shadow: 0 8px 20px rgba(59, 130, 246, 0.35);
-      --toggle-hover-shadow: 0 12px 28px rgba(99, 102, 241, 0.45);
-      --nav-bg: rgba(15, 23, 42, 0.85);
-      --nav-border: rgba(148, 163, 184, 0.2);
-      --nav-link: #a5b4fc;
-      --nav-link-active: #facc15;
-    }
-
-    .page {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 52px 24px 72px;
-    }
-
-    h1 {
-      font-size: 2.55rem;
-      margin-bottom: 0.75rem;
-      color: var(--color-heading);
-    }
-
-    .page-header {
-      max-width: 960px;
-      margin: 0 auto 2.4rem;
-      padding: 0 24px;
-    }
-
-    p.lead {
-      max-width: 760px;
-      font-size: 1.03rem;
-      color: var(--color-description);
-      margin-bottom: 2.4rem;
+      --color-bg: #000000;
+      --color-text: #a1a1aa;
+      --color-heading: #ffffff;
+      --color-description: #a1a1aa;
+      --color-section-title: #ffffff;
+      --card-bg: #0f0f0f;
+      --card-border: #27272a;
+      --card-shadow: none;
+      --label-color: #a1a1aa;
+      --input-bg: #0a0a0a;
+      --input-border: #27272a;
+      --input-text: #ffffff;
+      --input-focus-border: #a855f7;
+      --input-focus-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+      --hint-color: #71717a;
+      --summary-text: #a1a1aa;
+      --summary-list: #71717a;
+      --metric-bg: #0a0a0a;
+      --metric-border: #27272a;
+      --metric-label: #71717a;
+      --metric-value: #ffffff;
+      --metric-subtext: #a1a1aa;
+      --error-bg: rgba(127, 29, 29, 0.2);
+      --error-border: rgba(248, 113, 113, 0.35);
+      --error-text: #fca5a5;
+      --secondary-btn-bg: transparent;
+      --secondary-btn-text: #ffffff;
+      --chart-hint-text: #a1a1aa;
+      --toggle-bg: #0f0f0f;
+      --toggle-border: #27272a;
+      --toggle-text: #a1a1aa;
+      --toggle-shadow: none;
+      --toggle-hover-shadow: none;
+      --nav-bg: rgba(0, 0, 0, 0.72);
+      --nav-border: #1c1c1f;
+      --nav-link: #a1a1aa;
+      --nav-link-active: #ffffff;
     }
 
     .theme-toggle-btn {
@@ -694,52 +675,53 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="styles/tool-pages.css?v=6">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js" defer></script>
+  <script>localStorage.setItem('theme','dark');</script>
 </head>
-<body class="dark-theme">
-  <main class="page">
-    <header class="page-header">
-      <nav class="main-nav">
-        <div class="nav-container">
-          <a href="home" class="logo-link">
-            <img src="images/plub tools image.jpeg" alt="Plebtools">
-            <span>Plebtools</span>
-          </a>
-          <div class="nav-links">
-            <div class="dropdown">
-              <button class="dropdown-btn">Tools ▾</button>
-              <div class="dropdown-content">
-                <a href="home"> Home</a>
-                <a href="treasury"> Treasury</a>
-                <a href="btc-buy-tracker"> Portfolio</a>
-                <a href="coveredcall-tracker"> Covered Calls</a>
-                <a href="compound-interest-calculator"> Calculator</a>
-                <a href="the-great-intersection"> The Great Intersection</a>
-                        <a href="btc-loan-ltv"> BTC Loans</a>
-                        <a href="strc-vs-bitcoin-cagr"> STRC vs Bitcoin CAGR</a>
-                        <a href="portfolio-monte-carlo"> Monte Carlo</a>
-                        <a href="financial-planner"> Financial Planner</a>
-                <a href="bitcoin-security">️ Bitcoin Security</a>
-                <a href="pleb-release"> Pleb Release</a>
-              <a href="interest-arbitrage-calculator" aria-current="page"> Yield Arbitrage</a>
-              <a href="step-by-step-to-self-custody"> Self Custody Guide</a>
-                <a href="invoice-builder"> Invoice Builder</a>
-              
-              <a href="bip-110-economic-support">BIP-110 Support</a>
-</div>
+<body class="pt-site dark-theme">
+          <header>
+    <nav>
+      <div class="nav-container">
+        <a href="home.html" class="logo-link">
+          <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+          <span class="logo">Plebtools</span>
+        </a>
+        <div class="nav-links">
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn" type="button">Tools <span class="dropdown-arrow"></span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="treasury.html">Treasury</a>
+              <a href="btc-buy-tracker.html">Portfolio</a>
+              <a href="coveredcall-tracker.html">Covered Calls</a>
+              <a href="compound-interest-calculator.html">Calculator</a>
+              <a href="btc-dca-vs-sp500.html">DCA vs S&amp;P 500</a>
+              <a href="strc-vs-bitcoin-cagr.html">STRC vs Bitcoin CAGR</a>
+              <a href="dividend-clipping-simulator.html">Dividend Clipping</a>
+              <a href="portfolio-monte-carlo.html">Monte Carlo</a>
+              <a href="retirement-calculator.html">Retirement</a>
+              <a href="the-great-intersection.html">The Great Intersection</a>
+              <a href="btc-loan-ltv.html">BTC Loans</a>
+              <a href="financial-planner.html">Financial Planner</a>
+              <a href="bitcoin-security.html">Bitcoin Security</a>
+              <a href="pleb-release.html">Pleb Release</a>
+              <a href="interest-arbitrage-calculator.html">Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody.html">Self Custody Guide</a>
+              <a href="invoice-builder.html">Invoice Builder</a>
+              <a href="privacy-analyzer.html">Privacy Analyzer</a>
+              <a href="bip-110-economic-support.html">BIP-110 Support</a>
             </div>
-            <div id="theme-toggle-container"></div>
           </div>
         </div>
-      </nav>
-      <div class="page-header">
-        <h1>Interest Rate Arbitrage Calculator</h1>
       </div>
-      <p class="lead">
-        Explore the carry trade between borrowed capital and an income-producing asset. Enter the cost of funds,
-        asset yield, compounding assumptions, and time horizon to quantify spread, annual carry, and cumulative
-        profit under different servicing strategies.
-      </p>
+    </nav>
+  </header>
+
+  <main>
+    <div class="arb-page">
+    <header class="arb-header">
+      <h1>Interest Rate Arbitrage Calculator</h1>
+      <p class="lead">Model carry trades by comparing debt costs against asset yield — debt service, spread, reinvested profits, and payoff scenarios.</p>
     </header>
 
     <section class="card" aria-labelledby="inputs-title">
@@ -887,6 +869,7 @@
         </ul>
       </div>
     </section>
+    </div>
   </main>
 
   <section class="affiliates-section">
@@ -991,38 +974,18 @@
     const resultsChartHint = document.getElementById("resultsChartHint");
     const resultsChartCanvas = document.getElementById("resultsChart");
     const resultsChartCtx = resultsChartCanvas ? resultsChartCanvas.getContext("2d") : null;
-    const themeToggleContainer = document.getElementById("theme-toggle-container");
-    let themeToggleBtn = null;
-
     let resultsChart = null;
 
-    const applyTheme = (mode) => {
-      const isDark = mode === "dark";
-      document.body.classList.toggle("dark-theme", isDark);
-      document.body.classList.toggle("light-theme", !isDark);
-      if (themeToggleBtn) {
-        themeToggleBtn.textContent = isDark ? "☀️ Light" : "🌙 Dark";
-      }
-      localStorage.setItem("plebtools-theme", mode);
-      if (resultsSection && resultsSection.style.display === "flex") {
+    const applyTheme = () => {
+      document.body.classList.add('dark-theme');
+      document.body.classList.remove('light-theme');
+      localStorage.setItem('plebtools-theme', 'dark');
+      if (resultsSection && resultsSection.style.display === 'flex') {
         requestAnimationFrame(() => calculate());
       }
     };
 
-    const savedTheme = localStorage.getItem("plebtools-theme") || "dark";
-
-    if (themeToggleContainer) {
-      themeToggleBtn = document.createElement("button");
-      themeToggleBtn.type = "button";
-      themeToggleBtn.className = "theme-toggle-btn";
-      themeToggleContainer.appendChild(themeToggleBtn);
-      themeToggleBtn.addEventListener("click", () => {
-        const nextMode = document.body.classList.contains("dark-theme") ? "light" : "dark";
-        applyTheme(nextMode);
-      });
-    }
-
-    applyTheme(savedTheme);
+    applyTheme();
 
     const formatCurrency = (value) => {
       return Number.isFinite(value)
@@ -1465,6 +1428,35 @@
     });
 
   </script>
+        <footer>
+    <div class="container">
+      <div class="pt-footer-wordmark">Plebtools</div>
+      <div class="pt-footer-grid">
+        <div class="pt-footer-col">
+          <h4>Tools</h4>
+          <a href="treasury.html">Treasury</a>
+          <a href="portfolio-monte-carlo.html">Monte Carlo</a>
+          <a href="retirement-calculator.html">Retirement</a>
+          <a href="btc-buy-tracker.html">Portfolio</a>
+        </div>
+        <div class="pt-footer-col">
+          <h4>Guides</h4>
+          <a href="step-by-step-to-self-custody.html">Self Custody</a>
+          <a href="bitcoin-security.html">Security</a>
+          <a href="the-great-intersection.html">Great Intersection</a>
+        </div>
+        <div class="pt-footer-col">
+          <h4>Project</h4>
+          <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://coinos.io/plebtools" target="_blank" rel="noopener">Donate</a>
+          <a href="home.html">Home</a>
+        </div>
+      </div>
+      <p>&copy; 2025 Plebtools. Open source Bitcoin tools.</p>
+    </div>
+  </footer>
+<script src="scripts/plebtools-nav.js"></script>
+<script src="scripts/plebtools-theme.js"></script>
 </body>
 </html>
 

@@ -4,132 +4,72 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dividend Clipping Simulator - STRC / SATA - Plebtools</title>
-  <link rel="stylesheet" href="styles.css?v=6">
+  <link rel="stylesheet" href="styles.css?v=9">
   <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
   <style>
+    /* Layout only — theme via tool-pages.css */
     .sim-page { max-width: 720px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
-    .sim-card {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-      border-radius: 12px;
-      padding: 1.75rem;
-      margin-bottom: 1.5rem;
-      border: 1px solid #334155;
-    }
-    .sim-card h1 { color: #f59e0b; margin-bottom: 0.35rem; font-size: 1.6rem; }
-    .sim-card .subtitle { color: #94a3b8; margin-bottom: 1.25rem; font-size: 0.95rem; line-height: 1.5; }
-    .gauge-block {
-      background: rgba(0,0,0,0.25);
-      border-radius: 10px;
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 1.25rem;
-      border: 1px solid #334155;
-    }
-    .gauge-block h3 { font-size: 1rem; color: #e2e8f0; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
-    .gauge-block .ticker { font-weight: 700; color: #f59e0b; }
-    .gauge-block .ticker.sata { color: #38bdf8; }
-    .gauge-label { font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.35rem; }
     .gauge-row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-    .gauge-slider { flex: 1; min-width: 140px; height: 8px; -webkit-appearance: none; appearance: none; background: #334155; border-radius: 4px; }
-    .gauge-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #f59e0b; cursor: pointer; }
-    .gauge-slider.sata::-webkit-slider-thumb { background: #38bdf8; }
-    .gauge-value { min-width: 5rem; font-weight: 700; font-size: 1.1rem; color: #e2e8f0; }
-    .gauge-value .price { color: #a5b4fc; font-weight: 600; font-size: 0.95rem; }
+    .gauge-slider { flex: 1; min-width: 140px; height: 8px; -webkit-appearance: none; appearance: none; border-radius: 4px; background: transparent; }
+    .gauge-slider::-webkit-slider-runnable-track { height: 8px; border-radius: 4px; background: #27272a; border: none; }
+    .gauge-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #f59e0b; border: 2px solid #000; cursor: pointer; margin-top: -5px; }
+    .gauge-slider.sata::-webkit-slider-thumb { background: #22d3ee; }
+    .gauge-slider::-moz-range-track { height: 8px; border-radius: 4px; background: #27272a; border: none; }
+    .gauge-slider::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #f59e0b; border: 2px solid #000; cursor: pointer; }
+    .gauge-slider.sata::-moz-range-thumb { background: #22d3ee; }
+    .gauge-value { min-width: 5rem; font-weight: 600; font-size: 1rem; }
+    .gauge-value .price { font-weight: 500; font-size: 0.9rem; }
     .principal-row { margin: 1.25rem 0; }
-    .principal-row label { display: block; font-size: 0.9rem; color: #94a3b8; margin-bottom: 0.4rem; }
-    .principal-row input { width: 100%; max-width: 200px; padding: 0.6rem 0.75rem; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #e2e8f0; font-size: 1.1rem; }
-    .timeline {
-      display: flex; align-items: stretch; margin: 1.25rem 0; border-radius: 10px; overflow: hidden; border: 1px solid #334155;
-    }
+    .principal-row label { display: block; font-size: 0.875rem; margin-bottom: 0.4rem; }
+    .principal-row input { width: 100%; max-width: 220px; padding: 0.6rem 0.75rem; border-radius: 8px; font-size: 1rem; }
+    .timeline { display: flex; align-items: stretch; margin: 1.25rem 0; border-radius: 10px; overflow: hidden; }
     .timeline-seg { flex: 1; padding: 0.9rem 0.75rem; text-align: center; font-size: 0.85rem; }
-    .timeline-seg.strc { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border-right: 2px solid #334155; }
-    .timeline-seg.sata { background: rgba(56, 189, 248, 0.2); color: #7dd3fc; }
     .timeline-seg strong { display: block; font-size: 1rem; margin-bottom: 0.2rem; }
-    .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.25rem; }
+    .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1.25rem; }
     @media (max-width: 520px) { .results-grid { grid-template-columns: 1fr; } }
-    .result-box {
-      background: rgba(0,0,0,0.3); border-radius: 10px; padding: 1rem 1.25rem; border: 1px solid #334155;
-    }
-    .result-box .label { font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.25rem; }
-    .result-box .value { font-size: 1.4rem; font-weight: 700; color: #e2e8f0; }
-    .result-box .value.highlight { color: #22c55e; }
-    .result-box .sub { font-size: 0.8rem; color: #64748b; margin-top: 0.25rem; }
-    .result-box .sub.capital-loss { color: #f87171; }
-    body.light-theme .result-box .sub.capital-loss { color: #b91c1c; }
-    .sources { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #334155; font-size: 0.85rem; color: #94a3b8; line-height: 1.6; }
-    .sources a { color: #7dd3fc; text-decoration: none; }
+    .result-box .label { font-size: 0.8125rem; margin-bottom: 0.25rem; }
+    .result-box .value { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
+    .result-box .sub { font-size: 0.75rem; margin-top: 0.25rem; line-height: 1.4; }
+    .sources { margin-top: 1.5rem; padding-top: 1rem; font-size: 0.8125rem; line-height: 1.65; }
+    .sources a { text-decoration: none; }
     .sources a:hover { text-decoration: underline; }
-    body.light-theme .sources { border-color: #e2e8f0; color: #475569; }
-    body.light-theme .sources a { color: #0369a1; }
-    body.light-theme .sim-card { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-color: #cbd5e1; }
-    body.light-theme .sim-card h1 { color: #b45309; }
-    body.light-theme .sim-card .subtitle { color: #475569; }
-    body.light-theme .gauge-block { background: #fff; border-color: #e2e8f0; }
-    body.light-theme .gauge-block h3 { color: #1e293b; }
-    body.light-theme .gauge-block .ticker { color: #b45309; }
-    body.light-theme .gauge-block .ticker.sata { color: #0284c7; }
-    body.light-theme .gauge-label { color: #475569; }
-    body.light-theme .gauge-value { color: #1e293b; }
-    body.light-theme .gauge-value .price { color: #4f46e5; }
-    body.light-theme .principal-row input { background: #fff; border-color: #cbd5e1; color: #1e293b; }
-    body.light-theme .timeline-seg.strc { background: rgba(249, 115, 22, 0.15); color: #c2410c; }
-    body.light-theme .timeline-seg.sata { background: rgba(56, 189, 248, 0.15); color: #0369a1; }
-    body.light-theme .result-box { background: #fff; border-color: #e2e8f0; }
-    body.light-theme .result-box .label { color: #475569; }
-    body.light-theme .result-box .value { color: #1e293b; }
-    body.light-theme .result-box .value.highlight { color: #15803d; }
-    #toolsDropdown { position: relative; display: inline-block; }
-    #toolsBtn { background: none; border: none; color: inherit; font-weight: 500; font-size: 1rem; cursor: pointer; padding: 0.5rem 1rem; border-radius: 5px; display: flex; align-items: center; gap: 0.5rem; }
-    #toolsBtn:hover { background: rgba(102, 126, 234, 0.1); color: #667eea; }
-    #toolsContent { position: absolute; top: 100%; right: 0; background: var(--card-bg, #1a1a2e); min-width: 220px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); border-radius: 12px; z-index: 1001; padding: 0.75rem 0; border: 1px solid #334155; margin-top: 8px; opacity: 0; transform: translateY(-10px); transition: all 0.3s ease; }
-    #toolsContent.show { opacity: 1; transform: translateY(0); }
-    #toolsContent a { display: block; padding: 0.875rem 1.5rem; color: inherit; text-decoration: none; transition: all 0.3s ease; font-weight: 500; }
-    #toolsContent a:hover { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
-    body.light-theme header .logo,
-    body.light-theme header .logo-container a { color: #1e293b; }
-    body.light-theme #toolsBtn { color: #1e293b; }
-    body.light-theme #toolsBtn:hover { color: #b45309; }
-    body.light-theme #toolsContent { background: #fff; border-color: #e2e8f0; }
-    body.light-theme #toolsContent a { color: #1e293b; }
-    body.light-theme #toolsContent a:hover { color: #b45309; background: rgba(249, 115, 22, 0.12); }
   </style>
+  <link rel="stylesheet" href="styles/tool-pages.css?v=7">
+  <script>localStorage.setItem('theme','dark');</script>
 </head>
-<body>
-  <header>
+<body class="dark-theme pt-site">
+                <header>
     <nav>
       <div class="nav-container">
-        <div class="logo-container">
-          <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
-            <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
-            <h1 class="logo">Plebtools</h1>
-          </a>
-        </div>
+        <a href="home.html" class="logo-link">
+          <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+          <span class="logo">Plebtools</span>
+        </a>
         <div class="nav-links">
           <div class="dropdown" id="toolsDropdown">
-            <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow"></span></button>
+            <button class="dropdown-btn" id="toolsBtn" type="button">Tools <span class="dropdown-arrow"></span></button>
             <div class="dropdown-content" id="toolsContent" style="display: none;">
-              <a href="home">Home</a>
-              <a href="treasury">Treasury</a>
-              <a href="btc-buy-tracker">Portfolio</a>
-              <a href="coveredcall-tracker">Covered Calls</a>
-              <a href="compound-interest-calculator">Calculator</a>
-              <a href="btc-dca-vs-sp500">DCA vs S&P 500</a>
-              <a href="strc-vs-bitcoin-cagr">STRC vs Bitcoin CAGR</a>
-              <a href="dividend-clipping-simulator">Dividend Clipping</a>
-              <a href="portfolio-monte-carlo">Monte Carlo</a>
-              <a href="retirement-calculator">Retirement</a>
-              <a href="the-great-intersection">The Great Intersection</a>
-              <a href="btc-loan-ltv">BTC Loans</a>
-              <a href="financial-planner">Financial Planner</a>
-              <a href="bitcoin-security">Bitcoin Security</a>
-              <a href="pleb-release">Pleb Release</a>
-              <a href="interest-arbitrage-calculator">Yield Arbitrage</a>
-              <a href="step-by-step-to-self-custody">Self Custody Guide</a>
-              <a href="invoice-builder">Invoice Builder</a>
-            
-              <a href="bip-110-economic-support">BIP-110 Support</a>
-</div>
+              <a href="treasury.html">Treasury</a>
+              <a href="btc-buy-tracker.html">Portfolio</a>
+              <a href="coveredcall-tracker.html">Covered Calls</a>
+              <a href="compound-interest-calculator.html">Calculator</a>
+              <a href="btc-dca-vs-sp500.html">DCA vs S&amp;P 500</a>
+              <a href="strc-vs-bitcoin-cagr.html">STRC vs Bitcoin CAGR</a>
+              <a href="dividend-clipping-simulator.html">Dividend Clipping</a>
+              <a href="portfolio-monte-carlo.html">Monte Carlo</a>
+              <a href="retirement-calculator.html">Retirement</a>
+              <a href="the-great-intersection.html">The Great Intersection</a>
+              <a href="btc-loan-ltv.html">BTC Loans</a>
+              <a href="financial-planner.html">Financial Planner</a>
+              <a href="bitcoin-security.html">Bitcoin Security</a>
+              <a href="pleb-release.html">Pleb Release</a>
+              <a href="interest-arbitrage-calculator.html">Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody.html">Self Custody Guide</a>
+              <a href="invoice-builder.html">Invoice Builder</a>
+              <a href="privacy-analyzer.html">Privacy Analyzer</a>
+              <a href="bip-110-economic-support.html">BIP-110 Support</a>
+            </div>
           </div>
-          <span class="nav-theme-wrap"><button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle theme"></button></span>
         </div>
       </div>
     </nav>
@@ -341,45 +281,35 @@
       update();
     })();
   </script>
-  <script>
-    var themeToggle = document.getElementById('themeToggle');
-    if (themeToggle) {
-      if (localStorage.getItem('theme') === 'light') {
-        document.body.classList.add('light-theme');
-      } else {
-        document.body.classList.remove('light-theme');
-      }
-      themeToggle.textContent = document.body.classList.contains('light-theme') ? '🌙' : '☀️';
-      themeToggle.addEventListener('click', function() {
-        document.body.classList.toggle('light-theme');
-        var isLight = document.body.classList.contains('light-theme');
-        localStorage.setItem('theme', isLight ? 'light' : 'dark');
-        themeToggle.textContent = isLight ? '🌙' : '☀️';
-      });
-    }
-    var toolsBtn = document.getElementById('toolsBtn');
-    var toolsContent = document.getElementById('toolsContent');
-    var isOpen = false;
-    if (toolsBtn && toolsContent) {
-      toolsBtn.addEventListener('click', function() {
-        if (isOpen) {
-          toolsContent.classList.remove('show');
-          setTimeout(function() { toolsContent.style.display = 'none'; }, 300);
-          isOpen = false;
-        } else {
-          toolsContent.style.display = 'block';
-          setTimeout(function() { toolsContent.classList.add('show'); }, 10);
-          isOpen = true;
-        }
-      });
-      document.addEventListener('click', function(e) {
-        if (document.getElementById('toolsDropdown') && !document.getElementById('toolsDropdown').contains(e.target)) {
-          toolsContent.classList.remove('show');
-          setTimeout(function() { toolsContent.style.display = 'none'; }, 300);
-          isOpen = false;
-        }
-      });
-    }
-  </script>
+
+  <footer>
+    <div class="container">
+      <div class="pt-footer-wordmark">Plebtools</div>
+      <div class="pt-footer-grid">
+        <div class="pt-footer-col">
+          <h4>Tools</h4>
+          <a href="treasury.html">Treasury</a>
+          <a href="portfolio-monte-carlo.html">Monte Carlo</a>
+          <a href="retirement-calculator.html">Retirement</a>
+          <a href="btc-buy-tracker.html">Portfolio</a>
+        </div>
+        <div class="pt-footer-col">
+          <h4>Guides</h4>
+          <a href="step-by-step-to-self-custody.html">Self Custody</a>
+          <a href="bitcoin-security.html">Security</a>
+          <a href="the-great-intersection.html">Great Intersection</a>
+        </div>
+        <div class="pt-footer-col">
+          <h4>Project</h4>
+          <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://coinos.io/plebtools" target="_blank" rel="noopener">Donate</a>
+          <a href="home.html">Home</a>
+        </div>
+      </div>
+      <p>&copy; 2025 Plebtools. Open source Bitcoin tools.</p>
+    </div>
+  </footer>
+<script src="scripts/plebtools-nav.js"></script>
+<script src="scripts/plebtools-theme.js"></script>
 </body>
 </html>

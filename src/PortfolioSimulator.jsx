@@ -277,21 +277,21 @@ export default function PortfolioSimulator() {
       <div className="mc-chart">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={simulationData.chartData} margin={{ top: 24, right: 24, left: 8, bottom: 36 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
             <XAxis
               dataKey="year"
-              stroke="#aaa"
+              stroke="#71717a"
               tickMargin={10}
-              label={{ value: 'Years', position: 'insideBottom', offset: -24, fill: '#aaa' }}
+              label={{ value: 'Years', position: 'insideBottom', offset: -24, fill: '#71717a' }}
             />
             <YAxis
-              stroke="#aaa"
+              stroke="#71717a"
               width={80}
               tickMargin={8}
               allowDataOverflow
               domain={[simulationData.yMin, simulationData.yMax]}
               tickFormatter={(v) => formatValue(v)}
-              label={{ value: 'Portfolio Value', angle: -90, position: 'insideLeft', offset: 12, fill: '#aaa' }}
+              label={{ value: 'Portfolio Value', angle: -90, position: 'insideLeft', offset: 12, fill: '#71717a' }}
             />
             <Tooltip content={<ChartTooltip />} />
             {Array.from({ length: 30 }).map((_, i) => (
@@ -299,13 +299,13 @@ export default function PortfolioSimulator() {
                 key={i}
                 type="monotone"
                 dataKey={`path_${i * 3}`}
-                stroke="#555"
+                stroke="#27272a"
                 strokeWidth={0.75}
                 dot={false}
                 activeDot={false}
               />
             ))}
-            <Line type="monotone" dataKey="median" stroke="#2196f3" strokeWidth={3} dot={{ r: 4 }} name="Median Path" />
+            <Line type="monotone" dataKey="median" stroke="#a855f7" strokeWidth={3} dot={{ r: 4 }} name="Median Path" />
           </LineChart>
         </ResponsiveContainer>
       </div>

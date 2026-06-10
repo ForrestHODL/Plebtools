@@ -250,12 +250,6 @@
   }
 
   function init() {
-    var theme = localStorage.getItem('plebRankingTheme');
-    if (theme === 'light') {
-      document.body.classList.add('light-ranking');
-      document.body.classList.remove('dark-theme');
-    }
-
     document.getElementById('searchInput').addEventListener('input', applyFilters);
     var viewEl = document.getElementById('viewOrder');
     if (viewEl) {
@@ -301,17 +295,6 @@
         status.textContent = (err && err.message) ? err.message : 'Vote unavailable on this connection.';
       });
     });
-
-    document.getElementById('themeFab').addEventListener('click', function () {
-      var isLight = document.body.classList.toggle('light-ranking');
-      document.body.classList.toggle('dark-theme', !isLight);
-      this.textContent = isLight ? '🌙' : '☀️';
-      localStorage.setItem('plebRankingTheme', isLight ? 'light' : 'dark');
-    });
-
-    if (document.body.classList.contains('light-ranking')) {
-      document.getElementById('themeFab').textContent = '🌙';
-    }
 
     loadInfluencers();
     setTimeout(loadVotesLater, 100);

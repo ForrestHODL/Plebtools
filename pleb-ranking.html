@@ -7,14 +7,15 @@
     <meta name="robots" content="noindex, nofollow" />
     <title>Pleb Ranking - Plebtools</title>
     <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
-    <link rel="stylesheet" href="styles.css?v=7">
+    <link rel="stylesheet" href="styles.css?v=9">
+  <link rel="stylesheet" href="styles/tool-pages.css?v=2">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <style>
         body.pleb-ranking-page {
             margin: 0;
             min-height: 100vh;
-            background: #0b1120;
-            color: #e2e8f0;
+            background: #000000;
+            color: #ffffff;
         }
 
         .pr-plebtools-nav {
@@ -26,7 +27,7 @@
         }
 
         .pr-plebtools-nav a {
-            color: #93c5fd;
+            color: #a1a1aa;
             text-decoration: none;
         }
 
@@ -65,14 +66,15 @@
         .pr-hero h1 {
             margin: 0 0 0.5rem;
             font-size: clamp(2rem, 5vw, 2.5rem);
-            font-weight: 800;
-            color: #fbbf24;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: #ffffff;
         }
 
         .pr-hero p {
             margin: 0 auto;
             max-width: 32rem;
-            color: #94a3b8;
+            color: #a1a1aa;
             font-size: 1rem;
             line-height: 1.5;
         }
@@ -98,10 +100,10 @@
         .pr-search {
             flex: 1 1 220px;
             padding: 0.7rem 1rem;
-            border-radius: 10px;
-            border: 1px solid #334155;
-            background: #1e293b;
-            color: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #27272a;
+            background: #0f0f0f;
+            color: #ffffff;
             font-size: 1rem;
         }
 
@@ -113,10 +115,10 @@
 
         .pr-select {
             padding: 0.7rem 0.85rem;
-            border-radius: 10px;
-            border: 1px solid #334155;
-            background: #1e293b;
-            color: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #27272a;
+            background: #0f0f0f;
+            color: #ffffff;
             font-size: 0.9rem;
         }
 
@@ -503,16 +505,47 @@
             .pr-grid { grid-template-columns: 1fr; }
         }
     </style>
+  <script>localStorage.setItem('theme','dark');</script>
 </head>
-<body class="pleb-ranking-page dark-theme">
-    <nav class="pr-plebtools-nav" aria-label="Plebtools">
-        <a href="home">← Plebtools</a>
-        <span>·</span>
-        <a href="portfolio-monte-carlo">Monte Carlo</a>
-        <span>·</span>
-        <a href="bip-110-economic-support">BIP-110 Support</a>
+<body class="pt-site pleb-ranking-page dark-theme">
+              <header>
+    <nav>
+      <div class="nav-container">
+        <a href="home.html" class="logo-link">
+          <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+          <span class="logo">Plebtools</span>
+        </a>
+        <div class="nav-links">
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn" type="button">Tools <span class="dropdown-arrow"></span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="treasury.html">Treasury</a>
+              <a href="btc-buy-tracker.html">Portfolio</a>
+              <a href="coveredcall-tracker.html">Covered Calls</a>
+              <a href="compound-interest-calculator.html">Calculator</a>
+              <a href="btc-dca-vs-sp500.html">DCA vs S&amp;P 500</a>
+              <a href="strc-vs-bitcoin-cagr.html">STRC vs Bitcoin CAGR</a>
+              <a href="dividend-clipping-simulator.html">Dividend Clipping</a>
+              <a href="portfolio-monte-carlo.html">Monte Carlo</a>
+              <a href="retirement-calculator.html">Retirement</a>
+              <a href="the-great-intersection.html">The Great Intersection</a>
+              <a href="btc-loan-ltv.html">BTC Loans</a>
+              <a href="financial-planner.html">Financial Planner</a>
+              <a href="bitcoin-security.html">Bitcoin Security</a>
+              <a href="pleb-release.html">Pleb Release</a>
+              <a href="interest-arbitrage-calculator.html">Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody.html">Self Custody Guide</a>
+              <a href="invoice-builder.html">Invoice Builder</a>
+              <a href="privacy-analyzer.html">Privacy Analyzer</a>
+              <a href="bip-110-economic-support.html">BIP-110 Support</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </nav>
-    <main class="pr-page">
+  </header>
+
+  <main class="pr-page">
         <header class="pr-hero">
             <h1>Pleb Ranking</h1>
             <p>62 Bitcoin voices — pick how you want them ordered from the View menu.</p>
@@ -546,12 +579,36 @@
 
         <div class="pr-grid" id="rankingGrid"></div>
 
-        <p class="pr-foot">Editorial scores — not financial advice. Not linked from Plebtools nav. <span id="pageVersion">v20260516</span></p>
+        <p class="pr-foot">Editorial scores — not financial advice. <span id="pageVersion">v20260516</span></p>
     </main>
-
-    <button type="button" class="theme-fab" id="themeFab" aria-label="Toggle theme">☀️</button>
-
-    <div class="vote-modal-backdrop" id="voteModalBackdrop" aria-hidden="true">
+              <footer>
+    <div class="container">
+      <div class="pt-footer-wordmark">Plebtools</div>
+      <div class="pt-footer-grid">
+        <div class="pt-footer-col">
+          <h4>Tools</h4>
+          <a href="treasury.html">Treasury</a>
+          <a href="portfolio-monte-carlo.html">Monte Carlo</a>
+          <a href="retirement-calculator.html">Retirement</a>
+          <a href="btc-buy-tracker.html">Portfolio</a>
+        </div>
+        <div class="pt-footer-col">
+          <h4>Guides</h4>
+          <a href="step-by-step-to-self-custody.html">Self Custody</a>
+          <a href="bitcoin-security.html">Security</a>
+          <a href="the-great-intersection.html">Great Intersection</a>
+        </div>
+        <div class="pt-footer-col">
+          <h4>Project</h4>
+          <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://coinos.io/plebtools" target="_blank" rel="noopener">Donate</a>
+          <a href="home.html">Home</a>
+        </div>
+      </div>
+      <p>&copy; 2025 Plebtools. Open source Bitcoin tools.</p>
+    </div>
+  </footer>
+<div class="vote-modal-backdrop" id="voteModalBackdrop" aria-hidden="true">
         <div class="vote-modal">
             <h3 id="voteModalTitle">Vote</h3>
             <p class="sub" id="voteModalSubtitle"></p>
@@ -582,5 +639,7 @@
 
     <script src="scripts/pleb-ranking-data.js?v=20260516"></script>
     <script src="scripts/pleb-ranking-app.js?v=20260516"></script>
+<script src="scripts/plebtools-nav.js"></script>
+<script src="scripts/plebtools-theme.js"></script>
 </body>
 </html>

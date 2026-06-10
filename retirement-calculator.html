@@ -9,7 +9,8 @@
     <meta property="og:type" content="website" />
     <title>Bitcoin Retirement Calculator - Plebtools</title>
     <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
-    <link rel="stylesheet" href="styles.css?v=6">
+    <link rel="stylesheet" href="styles.css?v=9">
+  <link rel="stylesheet" href="styles/tool-pages.css?v=2">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
@@ -206,6 +207,32 @@
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             border: 1px solid #e0e0e0;
+        }
+
+        .chart-wrap {
+            position: relative;
+            min-height: 320px;
+        }
+
+        .chart-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #71717a;
+            font-size: 0.9375rem;
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .chart-wrap.has-chart .chart-placeholder {
+            display: none;
+        }
+
+        .chart-wrap canvas {
+            width: 100% !important;
+            max-height: 420px;
         }
 
         .chart-description {
@@ -477,46 +504,45 @@
             color: #667eea;
         }
     </style>
+  <script>localStorage.setItem('theme','dark');</script>
 </head>
-<body>
-    <header>
-        <nav>
-            <div class="nav-container">
-                <div class="logo-container">
-                    <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
-                        <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
-                        <h1 class="logo">Plebtools</h1>
-                    </a>
-                </div>
-                <div class="nav-links">
-                    <div class="dropdown" id="toolsDropdown">
-                        <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow"></span></button>
-                        <div class="dropdown-content" id="toolsContent" style="display: none;">
-                            <a href="home"> Home</a>
-                            <a href="treasury"> Treasury</a>
-                            <a href="btc-buy-tracker"> Portfolio</a>
-                            <a href="coveredcall-tracker"> Covered Calls</a>
-                            <a href="compound-interest-calculator"> Calculator</a>
-                            <a href="portfolio-monte-carlo"> Monte Carlo</a>
-                            <a href="retirement-calculator">️ Retirement</a>
-                            <a href="strc-vs-bitcoin-cagr"> STRC vs Bitcoin CAGR</a>
-                            <a href="the-great-intersection"> The Great Intersection</a>
-                            <a href="btc-loan-ltv"> BTC Loans</a>
-                            <a href="financial-planner"> Financial Planner</a>
-                            <a href="bitcoin-security">️ Bitcoin Security</a>
-              <a href="interest-arbitrage-calculator"> Yield Arbitrage</a>
-              <a href="step-by-step-to-self-custody"> Self Custody Guide</a>
-              <a href="invoice-builder"> Invoice Builder</a>
-                            
-              <a href="bip-110-economic-support">BIP-110 Support</a>
-              <a href="pleb-release"> Pleb Release</a>
-                        </div>
-                    </div>
-                    <div id="theme-toggle-container" class="nav-theme-wrap"></div>
-                </div>
+<body class="dark-theme pt-site">
+                  <header>
+    <nav>
+      <div class="nav-container">
+        <a href="home.html" class="logo-link">
+          <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+          <span class="logo">Plebtools</span>
+        </a>
+        <div class="nav-links">
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn" type="button">Tools <span class="dropdown-arrow"></span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="treasury.html">Treasury</a>
+              <a href="btc-buy-tracker.html">Portfolio</a>
+              <a href="coveredcall-tracker.html">Covered Calls</a>
+              <a href="compound-interest-calculator.html">Calculator</a>
+              <a href="btc-dca-vs-sp500.html">DCA vs S&amp;P 500</a>
+              <a href="strc-vs-bitcoin-cagr.html">STRC vs Bitcoin CAGR</a>
+              <a href="dividend-clipping-simulator.html">Dividend Clipping</a>
+              <a href="portfolio-monte-carlo.html">Monte Carlo</a>
+              <a href="retirement-calculator.html">Retirement</a>
+              <a href="the-great-intersection.html">The Great Intersection</a>
+              <a href="btc-loan-ltv.html">BTC Loans</a>
+              <a href="financial-planner.html">Financial Planner</a>
+              <a href="bitcoin-security.html">Bitcoin Security</a>
+              <a href="pleb-release.html">Pleb Release</a>
+              <a href="interest-arbitrage-calculator.html">Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody.html">Self Custody Guide</a>
+              <a href="invoice-builder.html">Invoice Builder</a>
+              <a href="privacy-analyzer.html">Privacy Analyzer</a>
+              <a href="bip-110-economic-support.html">BIP-110 Support</a>
             </div>
-        </nav>
-    </header>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
 
     <main>
         <div class="calculator-container">
@@ -596,7 +622,10 @@
 
             <div class="chart-container">
                 <h2>Financial Progression Chart</h2>
-                <canvas id="chart" width="400" height="200"></canvas>
+                <div class="chart-wrap" id="chartWrap">
+                    <p class="chart-placeholder" id="chartPlaceholder">Click “Calculate Retirement Plan” to generate the chart.</p>
+                    <canvas id="chart"></canvas>
+                </div>
                 <p class="chart-description">
                     Each year begins by increasing the Bitcoin price by the appreciation rate and raising your planned dollar expenses by the inflation rate. Immediately afterward, the required cash for the year is raised by selling Bitcoin at that year’s adjusted price, which reduces the Bitcoin stack shown in orange. The remaining BTC then compounds for the following year.
                 </p>
@@ -673,11 +702,33 @@
         </div>
     </main>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Plebtools. Open source Bitcoin tracking tools.</p>
+                  <footer>
+    <div class="container">
+      <div class="pt-footer-wordmark">Plebtools</div>
+      <div class="pt-footer-grid">
+        <div class="pt-footer-col">
+          <h4>Tools</h4>
+          <a href="treasury.html">Treasury</a>
+          <a href="portfolio-monte-carlo.html">Monte Carlo</a>
+          <a href="retirement-calculator.html">Retirement</a>
+          <a href="btc-buy-tracker.html">Portfolio</a>
         </div>
-    </footer>
+        <div class="pt-footer-col">
+          <h4>Guides</h4>
+          <a href="step-by-step-to-self-custody.html">Self Custody</a>
+          <a href="bitcoin-security.html">Security</a>
+          <a href="the-great-intersection.html">Great Intersection</a>
+        </div>
+        <div class="pt-footer-col">
+          <h4>Project</h4>
+          <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://coinos.io/plebtools" target="_blank" rel="noopener">Donate</a>
+          <a href="home.html">Home</a>
+        </div>
+      </div>
+      <p>&copy; 2025 Plebtools. Open source Bitcoin tools.</p>
+    </div>
+  </footer>
 
     <script>
         let chart = null;
@@ -968,10 +1019,15 @@
 
         function updateChart(data) {
             const ctx = document.getElementById('chart').getContext('2d');
+            const chartWrap = document.getElementById('chartWrap');
             
             if (chart) {
                 chart.destroy();
             }
+            
+            const isDark = document.body.classList.contains('dark-theme');
+            const textColor = isDark ? '#a1a1aa' : '#333333';
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)';
             
             chart = new Chart(ctx, {
                 type: 'line',
@@ -980,86 +1036,108 @@
                     datasets: [{
                         label: 'Year-End Balance',
                         data: data.map(row => row.endingBalance),
-                        borderColor: '#764ba2',
-                        backgroundColor: 'rgba(118, 75, 162, 0.1)',
+                        borderColor: '#a855f7',
+                        backgroundColor: 'rgba(168, 85, 247, 0.12)',
                         tension: 0.4,
-                        yAxisID: 'y'
+                        yAxisID: 'y',
+                        pointRadius: 2,
+                        pointHoverRadius: 4
                     }, {
                         label: 'Ending BTC',
                         data: data.map(row => row.endingBtc),
                         borderColor: '#f59e0b',
-                        backgroundColor: 'rgba(245, 158, 11, 0.15)',
+                        backgroundColor: 'rgba(245, 158, 11, 0.12)',
                         tension: 0.4,
-                        yAxisID: 'y1'
+                        yAxisID: 'y1',
+                        pointRadius: 2,
+                        pointHoverRadius: 4
                     }]
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: 2,
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Financial Progression Over Time'
+                            text: 'Financial Progression Over Time',
+                            color: textColor
                         },
                         legend: {
                             display: true,
                             position: 'top',
                             labels: {
-                                color: '#333'
+                                color: textColor,
+                                boxWidth: 12,
+                                usePointStyle: true
                             }
                         }
                     },
                     scales: {
+                        x: {
+                            ticks: { color: textColor },
+                            grid: { color: gridColor },
+                            border: { color: gridColor }
+                        },
                         y: {
                             beginAtZero: false,
                             ticks: {
+                                color: textColor,
                                 callback: function(value) {
                                     return '$' + value.toLocaleString();
                                 }
-                            }
+                            },
+                            grid: { color: gridColor },
+                            border: { color: gridColor }
                         },
                         y1: {
                             position: 'right',
                             beginAtZero: false,
-                            grid: {
-                                drawOnChartArea: false
-                            },
                             ticks: {
+                                color: textColor,
                                 callback: function(value) {
                                     return value.toFixed(2) + ' BTC';
                                 }
-                            }
+                            },
+                            grid: {
+                                drawOnChartArea: false,
+                                color: gridColor
+                            },
+                            border: { color: gridColor }
                         }
                     }
                 }
             });
-            
-            applyChartTheme();
+
+            if (chartWrap) chartWrap.classList.add('has-chart');
         }
 
         function applyChartTheme() {
             if (!chart) return;
             const isDark = document.body.classList.contains('dark-theme');
-            const legendColor = isDark ? '#bbbbbb' : '#333';
-            const titleColor = legendColor;
-            chart.options.plugins.legend.labels.color = legendColor;
+            const textColor = isDark ? '#a1a1aa' : '#333333';
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)';
+
+            chart.options.plugins.legend.labels.color = textColor;
             if (chart.options.plugins.title) {
-                chart.options.plugins.title.color = titleColor;
+                chart.options.plugins.title.color = textColor;
             }
-            
-            if (chart.options.scales.x && chart.options.scales.x.ticks) {
-                chart.options.scales.x.ticks.color = legendColor;
-            }
-            if (chart.options.scales.y && chart.options.scales.y.ticks) {
-                chart.options.scales.y.ticks.color = legendColor;
-            }
-            if (chart.options.scales.y1 && chart.options.scales.y1.ticks) {
-                chart.options.scales.y1.ticks.color = legendColor;
-            }
-            
+
+            ['x', 'y', 'y1'].forEach(axis => {
+                const scale = chart.options.scales[axis];
+                if (!scale) return;
+                scale.ticks = scale.ticks || {};
+                scale.ticks.color = textColor;
+                scale.grid = scale.grid || {};
+                scale.grid.color = gridColor;
+                scale.border = scale.border || {};
+                scale.border.color = gridColor;
+            });
+
             chart.update('none');
         }
 
-        // Load current Bitcoin price on page load
+        // Load current Bitcoin price and run initial calculation
         window.addEventListener('load', async () => {
             try {
                 const currentPrice = await fetchBitcoinPrice();
@@ -1067,88 +1145,10 @@
             } catch (error) {
                 console.error('Failed to load current Bitcoin price:', error);
             }
+            calculateRetirement();
         });
-
-        // --- Dropdown Functionality ---
-        const toolsBtn = document.getElementById('toolsBtn');
-        const toolsContent = document.getElementById('toolsContent');
-        let isOpen = false;
-
-        toolsBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            if (isOpen) {
-                toolsContent.classList.remove('show');
-                setTimeout(() => {
-                    toolsContent.style.display = 'none';
-                }, 300);
-                isOpen = false;
-            } else {
-                toolsContent.style.display = 'block';
-                setTimeout(() => {
-                    toolsContent.classList.add('show');
-                }, 10);
-                isOpen = true;
-            }
-        });
-
-        // Close when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!document.getElementById('toolsDropdown').contains(e.target)) {
-                toolsContent.classList.remove('show');
-                setTimeout(() => {
-                    toolsContent.style.display = 'none';
-                }, 300);
-                isOpen = false;
-            }
-        });
-
-        // Theme toggle functionality (in nav)
-        const themeToggleContainer = document.getElementById('theme-toggle-container');
-        const themeToggle = document.createElement('button');
-        themeToggle.className = 'theme-toggle-btn';
-        themeToggle.setAttribute('aria-label', 'Toggle dark/light theme');
-        themeToggle.innerHTML = '';
-        themeToggle.style.cssText = `
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            font-size: 1.5rem;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        `;
-
-        let isDarkTheme = localStorage.getItem("theme") !== "light";
-
-        function applyNavTheme() {
-            if (isDarkTheme) {
-                document.body.classList.add("dark-theme");
-                document.body.classList.remove("light-theme");
-                themeToggle.textContent = "☀️";
-            } else {
-                document.body.classList.remove("dark-theme");
-                document.body.classList.add("light-theme");
-                themeToggle.textContent = "🌙";
-            }
-        }
-        applyNavTheme();
-
-        themeToggle.addEventListener("click", () => {
-            isDarkTheme = !isDarkTheme;
-            localStorage.setItem("theme", isDarkTheme ? "dark" : "light");
-            applyNavTheme();
-            applyChartTheme();
-        });
-
-        if (themeToggleContainer) themeToggleContainer.appendChild(themeToggle);
-        applyChartTheme();
     </script>
+<script src="scripts/plebtools-nav.js"></script>
+<script src="scripts/plebtools-theme.js"></script>
 </body>
 </html>

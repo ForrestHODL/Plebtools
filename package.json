@@ -3,9 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview",
+    "preview": "vite preview --host",
+    "preview:static": "npx --yes serve . -l 8080",
     "deploy:prepare": "node scripts/prepare-deploy.mjs"
   },
   "dependencies": {

@@ -1,0 +1,940 @@
+/* Tool pages — aligned with home (Basedash dark) */
+
+body.pt-site {
+  background: var(--pt-bg) !important;
+}
+
+body.pt-site main,
+body.pt-site .tracker-container,
+body.pt-site .privacy-container,
+body.pt-site .calculator-container,
+body.pt-site .planner-container,
+body.pt-site .page,
+body.pt-site .mc-page,
+body.pt-site .chart-card,
+body.pt-site .tool-wrapper {
+  max-width: var(--pt-max);
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 3rem;
+}
+
+/* Page titles */
+body.pt-site .gradient-text,
+body.pt-site .hero h1,
+body.pt-site .portfolio-title,
+body.pt-site .page-header h1,
+body.pt-site .chart-card h1,
+body.pt-site .calculator-header h1,
+body.pt-site .storage-section > h1 {
+  background: none !important;
+  -webkit-text-fill-color: unset !important;
+  color: var(--pt-text) !important;
+  font-size: clamp(1.75rem, 4vw, 2.5rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+  text-align: center;
+  margin-bottom: 0.75rem !important;
+}
+
+body.pt-site .hero p,
+body.pt-site .storage-section > p,
+body.pt-site .page-header p,
+body.pt-site .chart-card .subtitle,
+body.pt-site .calculator-header p {
+  color: var(--pt-text-muted) !important;
+  text-align: center;
+  max-width: 36rem;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
+}
+
+/* Cards & sections */
+body.pt-site .storage-section,
+body.pt-site .totals-section,
+body.pt-site .table-section,
+body.pt-site .chart-section,
+body.pt-site .tracker-form,
+body.pt-site .proof-of-reserves-section,
+body.pt-site .input-section,
+body.pt-site .results-section,
+body.pt-site .analysis-section,
+body.pt-site .visualization-section,
+body.pt-site .tips-section,
+body.pt-site .control-group,
+body.pt-site .summary-item,
+body.pt-site .chart-wrap,
+body.pt-site .form-section,
+body.pt-site .output-panel,
+body.pt-site .simulator-panel,
+body.pt-site .guidelines-section,
+body.pt-site .step-card,
+body.pt-site .resource-card,
+body.pt-site .checklist-card,
+body.pt-site .faq-card,
+body.pt-site .callout-card {
+  background: var(--pt-bg-card) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius-lg) !important;
+  box-shadow: none !important;
+  margin-bottom: 1rem;
+}
+
+body.pt-site .totals-section h3,
+body.pt-site .table-section h3,
+body.pt-site .chart-section h3,
+body.pt-site .input-section h2,
+body.pt-site .results-section h2,
+body.pt-site .analysis-card h3 {
+  color: var(--pt-text) !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem !important;
+}
+
+body.pt-site .empty-state,
+body.pt-site .empty-state h3,
+body.pt-site .totals-display {
+  color: var(--pt-text-muted) !important;
+}
+
+/* Buttons */
+body.pt-site .submit-btn,
+body.pt-site .add-btn,
+body.pt-site .analyze-btn,
+body.pt-site .calculate-btn,
+body.pt-site .export-btn:not(.delete-btn),
+body.pt-site .action-btn.primary,
+body.pt-site .btn-primary,
+body.pt-site .feature-btn,
+body.pt-site .support-btn,
+body.pt-site a.affiliate-link {
+  background: var(--pt-text) !important;
+  color: var(--pt-bg) !important;
+  border: none !important;
+  border-radius: var(--pt-radius) !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+}
+
+body.pt-site .submit-btn:hover,
+body.pt-site .add-btn:hover,
+body.pt-site .analyze-btn:hover,
+body.pt-site .feature-btn:hover,
+body.pt-site .support-btn:hover,
+body.pt-site a.affiliate-link:hover {
+  opacity: 0.9 !important;
+  color: var(--pt-bg) !important;
+}
+
+body.pt-site .delete-btn,
+body.pt-site .btn-danger,
+body.pt-site button.danger {
+  background: transparent !important;
+  color: #fca5a5 !important;
+  border: 1px solid #7f1d1d !important;
+}
+
+/* Legacy green / orange / purple inline buttons */
+body.pt-site a[style*="background: #28a745"],
+body.pt-site a[style*="background:#28a745"],
+body.pt-site .submit-btn[style*="28a745"],
+body.pt-site a[style*="667eea"],
+body.pt-site a[style*="f97316"] {
+  background: var(--pt-text) !important;
+  color: var(--pt-bg) !important;
+  border: none !important;
+}
+
+/* Bottom sections on tool pages */
+body.pt-site .support-section,
+body.pt-site .features-section,
+body.pt-site .affiliate-section,
+body.pt-site .opensource-section {
+  padding: 4rem 1.5rem !important;
+  border-top: 1px solid var(--pt-border-subtle) !important;
+  background: transparent !important;
+}
+
+body.pt-site .support-card {
+  max-width: 28rem;
+  margin: 0 auto;
+  text-align: center;
+  padding: 2rem !important;
+  border: 1px solid rgba(245, 158, 11, 0.25) !important;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(0, 0, 0, 0.4) 60%) !important;
+}
+
+body.pt-site .support-title,
+body.pt-site .section-title {
+  color: var(--pt-text) !important;
+}
+
+body.pt-site .support-text {
+  color: var(--pt-text-muted) !important;
+}
+
+/* Dropdown animation (shared with home) */
+#toolsDropdown { position: relative; display: inline-block; }
+
+/* Override per-page nav dropdown inline styles */
+body.pt-site header #toolsBtn,
+body.pt-site header .dropdown-btn {
+  background: transparent !important;
+  border: 1px solid var(--pt-border) !important;
+  color: var(--pt-text-muted) !important;
+  font-family: var(--pt-font) !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  padding: 0.45rem 0.85rem !important;
+  border-radius: var(--pt-radius) !important;
+}
+
+body.pt-site header #toolsBtn:hover,
+body.pt-site header .dropdown-btn:hover {
+  color: var(--pt-text) !important;
+  border-color: #3f3f46 !important;
+  background: var(--pt-bg-hover) !important;
+}
+
+body.pt-site header #toolsContent,
+body.pt-site header .dropdown-content {
+  background: var(--pt-bg-elevated) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius-lg) !important;
+  padding: 0.35rem !important;
+}
+
+body.pt-site header #toolsContent a,
+body.pt-site header .dropdown-content a {
+  color: var(--pt-text-muted) !important;
+  font-size: 0.8125rem !important;
+  padding: 0.55rem 0.85rem !important;
+  border-radius: 6px !important;
+}
+
+body.pt-site header #toolsContent a:hover,
+body.pt-site header .dropdown-content a:hover {
+  background: var(--pt-bg-hover) !important;
+  color: var(--pt-text) !important;
+}
+
+body.pt-site .logo-link,
+body.pt-site .logo-container a {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+body.pt-site .logo-link h1,
+body.pt-site .logo-container .logo,
+body.pt-site .logo-link .logo {
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  color: var(--pt-text) !important;
+  margin: 0 !important;
+}
+
+body.pt-site .hero {
+  padding: 2rem 0 1rem !important;
+  text-align: center;
+}
+
+/* Privacy analyzer legacy nav list hidden if any remain */
+body.pt-site .nav-links > li {
+  list-style: none;
+}
+
+body.pt-site .nav-links ul {
+  display: contents;
+}
+
+
+/* Pleb ranking under standard header */
+body.pleb-ranking-page.pt-site .pr-page {
+  padding-top: 1rem;
+}
+
+body.pleb-ranking-page.pt-site .pr-plebtools-nav {
+  display: none;
+}
+
+/* Hide leftover theme toggle slots */
+body.pt-site .nav-theme-wrap,
+body.pt-site #theme-toggle-container {
+  display: none !important;
+}
+
+/* Pleb ranking — match site chrome */
+body.pleb-ranking-page.pt-site .pr-hero h1 {
+  color: var(--pt-text) !important;
+  font-size: clamp(1.75rem, 4vw, 2.5rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+  text-align: center;
+}
+
+body.pleb-ranking-page.pt-site .pr-hero p {
+  color: var(--pt-text-muted) !important;
+  text-align: center;
+}
+
+body.pleb-ranking-page.pt-site .pr-card,
+body.pleb-ranking-page.pt-site .pr-toolbar,
+body.pleb-ranking-page.pt-site .pr-names-section {
+  background: var(--pt-bg-card) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius-lg) !important;
+}
+
+body.pleb-ranking-page.pt-site .pr-page {
+  background: var(--pt-bg) !important;
+}
+
+/* Privacy analyzer */
+body.pt-site .privacy-container {
+  background: transparent !important;
+}
+
+body.pt-site .privacy-header {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+body.pt-site .privacy-header h1 {
+  color: var(--pt-text) !important;
+}
+
+body.pt-site .metric-card,
+body.pt-site .result-card,
+body.pt-site .recommendation-card {
+  background: var(--pt-bg-card) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius-lg) !important;
+}
+
+/* Treasury / tracker hero gradients → flat dark */
+body.pt-site header:not(.pr-hero),
+body.pt-site .hero-section,
+body.pt-site .portfolio-header {
+  background: var(--pt-bg) !important;
+  background-image: none !important;
+}
+
+/* GitHub / green CTAs */
+body.pt-site .github-btn,
+body.pt-site a.github-link,
+body.pt-site .btn-github {
+  background: var(--pt-bg-hover) !important;
+  color: var(--pt-text) !important;
+  border: 1px solid var(--pt-border) !important;
+}
+
+body.pt-site .github-btn:hover,
+body.pt-site a.github-link:hover {
+  background: var(--pt-border) !important;
+}
+
+/* Self-custody guide inline overrides */
+body.pt-site .guide-hero,
+body.pt-site .guide-section {
+  background: var(--pt-bg-card) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius-lg) !important;
+}
+
+body.pt-site .guide-hero h1 {
+  color: var(--pt-text) !important;
+  background: none !important;
+  -webkit-text-fill-color: unset !important;
+}
+
+/* ─── Covered Call Tracker ─── */
+body.pt-site .tracker-container {
+  background: transparent !important;
+  min-height: auto !important;
+  padding: 1.5rem 1.5rem 3rem !important;
+}
+
+body.pt-site .tracker-header {
+  background: var(--pt-bg-card) !important;
+  background-image: none !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius-lg) !important;
+  box-shadow: none !important;
+  color: var(--pt-text) !important;
+  padding: 2rem 1.5rem !important;
+  margin-bottom: 2rem !important;
+}
+
+body.pt-site .tracker-title {
+  color: var(--pt-text) !important;
+  font-size: clamp(1.75rem, 4vw, 2.5rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+  text-shadow: none !important;
+}
+
+body.pt-site .tracker-description {
+  color: var(--pt-text-muted) !important;
+  opacity: 1 !important;
+}
+
+body.pt-site .controls-panel,
+body.pt-site .visualization-panel,
+body.pt-site .dark-theme .controls-panel,
+body.pt-site .dark-theme .visualization-panel {
+  background: var(--pt-bg-card) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius-lg) !important;
+  box-shadow: none !important;
+}
+
+body.pt-site .controls-panel h3,
+body.pt-site .visualization-panel h3,
+body.pt-site .dark-theme .controls-panel h3,
+body.pt-site .dark-theme .visualization-panel h3 {
+  color: var(--pt-text) !important;
+}
+
+body.pt-site .control-label,
+body.pt-site .dark-theme .control-label {
+  color: var(--pt-text-muted) !important;
+}
+
+body.pt-site .control-input,
+body.pt-site .dark-theme .control-input {
+  background: var(--pt-bg-elevated) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius) !important;
+  color: var(--pt-text) !important;
+}
+
+body.pt-site .control-input:focus {
+  border-color: #52525b !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08) !important;
+}
+
+body.pt-site .btn-primary,
+body.pt-site .btn-success,
+body.pt-site .csv-btn,
+body.pt-site .csv-btn.upload,
+body.pt-site .chart-toggle-btn {
+  background: var(--pt-text) !important;
+  color: var(--pt-bg) !important;
+  border: none !important;
+  border-radius: var(--pt-radius) !important;
+  box-shadow: none !important;
+}
+
+body.pt-site .btn-primary:hover,
+body.pt-site .btn-success:hover,
+body.pt-site .csv-btn:hover,
+body.pt-site .chart-toggle-btn:hover {
+  opacity: 0.9 !important;
+}
+
+body.pt-site .btn-secondary {
+  background: var(--pt-bg-hover) !important;
+  color: var(--pt-text) !important;
+  border: 1px solid var(--pt-border) !important;
+}
+
+body.pt-site .btn-danger {
+  background: transparent !important;
+  color: #fca5a5 !important;
+  border: 1px solid #7f1d1d !important;
+}
+
+body.pt-site .stat-card,
+body.pt-site .dark-theme .stat-card {
+  background: var(--pt-bg-elevated) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius) !important;
+  box-shadow: none !important;
+}
+
+body.pt-site .stat-value {
+  color: var(--pt-text) !important;
+}
+
+body.pt-site .stat-label,
+body.pt-site .dark-theme .stat-label {
+  color: var(--pt-text-muted) !important;
+}
+
+body.pt-site .trades-table,
+body.pt-site .dark-theme .trades-table {
+  background: var(--pt-bg-card) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius-lg) !important;
+  box-shadow: none !important;
+}
+
+body.pt-site .table th,
+body.pt-site .dark-theme .table th {
+  background: var(--pt-bg-elevated) !important;
+  color: var(--pt-text) !important;
+  border-bottom: 1px solid var(--pt-border) !important;
+}
+
+body.pt-site .table td,
+body.pt-site .dark-theme .table td {
+  color: var(--pt-text-muted) !important;
+  border-bottom: 1px solid var(--pt-border-subtle) !important;
+}
+
+body.pt-site .table tr:hover,
+body.pt-site .dark-theme .table tr:hover {
+  background: var(--pt-bg-hover) !important;
+}
+
+body.pt-site .profit {
+  color: #4ade80 !important;
+}
+
+body.pt-site .loss {
+  color: #f87171 !important;
+}
+
+body.pt-site .dark-theme .tracker-container {
+  background: transparent !important;
+}
+
+body.pt-site .features-section,
+body.pt-site .dark-theme .features-section {
+  background: transparent !important;
+}
+
+body.pt-site .affiliate-item,
+body.pt-site .dark-theme .affiliate-item {
+  background: var(--pt-bg-card) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius-lg) !important;
+  box-shadow: none !important;
+  color: var(--pt-text-muted) !important;
+}
+
+body.pt-site .affiliate-item h4,
+body.pt-site .dark-theme .affiliate-item h4 {
+  color: var(--pt-text) !important;
+}
+
+body.pt-site .discount-code,
+body.pt-site .dark-theme .discount-code {
+  color: var(--pt-text-dim) !important;
+}
+
+body.pt-site .open-source-text {
+  color: var(--pt-text-muted) !important;
+}
+
+body.pt-site textarea.control-input {
+  resize: vertical;
+  min-height: 4rem;
+}
+
+body.pt-site .controls-panel h4,
+body.pt-site .visualization-panel h4 {
+  color: var(--pt-text) !important;
+}
+
+body.pt-site .logo {
+  color: var(--pt-text) !important;
+}
+
+/* ─── Dividend Clipping Simulator ─── */
+body.pt-site .sim-page {
+  max-width: 720px !important;
+}
+
+body.pt-site .sim-card {
+  background: var(--pt-bg-card) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius-lg) !important;
+  padding: 1.75rem 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+  box-shadow: none !important;
+}
+
+body.pt-site .sim-card h1 {
+  color: var(--pt-text) !important;
+  font-size: clamp(1.5rem, 3.5vw, 2rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+  margin-bottom: 0.5rem !important;
+}
+
+body.pt-site .sim-card .subtitle {
+  color: var(--pt-text-muted) !important;
+  font-size: 0.9375rem !important;
+  line-height: 1.6 !important;
+  margin-bottom: 1.5rem !important;
+}
+
+body.pt-site .sim-card .subtitle strong {
+  color: var(--pt-text) !important;
+  font-weight: 600;
+}
+
+body.pt-site .gauge-block {
+  background: var(--pt-bg-elevated) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius) !important;
+  padding: 1.25rem 1.25rem !important;
+  margin-bottom: 1rem !important;
+}
+
+body.pt-site .gauge-block h3 {
+  font-size: 0.9375rem !important;
+  font-weight: 600 !important;
+  color: var(--pt-text) !important;
+  margin-bottom: 0.75rem !important;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+body.pt-site .gauge-block .ticker {
+  font-weight: 700;
+  color: var(--pt-amber) !important;
+}
+
+body.pt-site .gauge-block .ticker.sata {
+  color: var(--pt-cyan) !important;
+}
+
+body.pt-site .gauge-label {
+  color: var(--pt-text-dim) !important;
+  font-size: 0.8125rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+body.pt-site .gauge-slider {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  background: transparent !important;
+  height: 8px;
+}
+
+body.pt-site .gauge-slider::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--pt-border) !important;
+  border: none;
+}
+
+body.pt-site .gauge-slider::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--pt-amber) !important;
+  border: 2px solid var(--pt-bg) !important;
+  cursor: pointer;
+  margin-top: -5px;
+}
+
+body.pt-site .gauge-slider.sata::-webkit-slider-thumb {
+  background: var(--pt-cyan) !important;
+}
+
+body.pt-site .gauge-slider::-moz-range-track {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--pt-border) !important;
+  border: none;
+}
+
+body.pt-site .gauge-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--pt-amber) !important;
+  border: 2px solid var(--pt-bg) !important;
+  cursor: pointer;
+}
+
+body.pt-site .gauge-slider.sata::-moz-range-thumb {
+  background: var(--pt-cyan) !important;
+}
+
+body.pt-site .gauge-value {
+  color: var(--pt-text) !important;
+}
+
+body.pt-site .gauge-value .price {
+  color: var(--pt-text-muted) !important;
+}
+
+body.pt-site .principal-row label {
+  color: var(--pt-text-muted) !important;
+}
+
+body.pt-site .principal-row input {
+  background: var(--pt-bg-elevated) !important;
+  border: 1px solid var(--pt-border) !important;
+  color: var(--pt-text) !important;
+  border-radius: var(--pt-radius) !important;
+}
+
+body.pt-site .principal-row input:focus {
+  outline: none !important;
+  border-color: #52525b !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08) !important;
+}
+
+body.pt-site .timeline {
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius) !important;
+}
+
+body.pt-site .timeline-seg.strc {
+  background: rgba(245, 158, 11, 0.08) !important;
+  color: var(--pt-amber) !important;
+  border-right: 1px solid var(--pt-border) !important;
+}
+
+body.pt-site .timeline-seg.sata {
+  background: rgba(34, 211, 238, 0.08) !important;
+  color: var(--pt-cyan) !important;
+}
+
+body.pt-site .result-box {
+  background: var(--pt-bg-elevated) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius) !important;
+  padding: 1rem 1.125rem !important;
+}
+
+body.pt-site .result-box .label {
+  color: var(--pt-text-dim) !important;
+}
+
+body.pt-site .result-box .value {
+  color: var(--pt-text) !important;
+}
+
+body.pt-site .result-box .value.highlight {
+  color: #4ade80 !important;
+}
+
+body.pt-site .result-box .sub {
+  color: var(--pt-text-dim) !important;
+}
+
+body.pt-site .result-box .sub.capital-loss {
+  color: #f87171 !important;
+}
+
+body.pt-site .sources {
+  border-top: 1px solid var(--pt-border) !important;
+  color: var(--pt-text-muted) !important;
+}
+
+body.pt-site .sources strong {
+  color: var(--pt-text) !important;
+}
+
+body.pt-site .sources a {
+  color: var(--pt-text) !important;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+body.pt-site .sources a:hover {
+  color: var(--pt-cyan) !important;
+}
+
+/* ─── Interest Rate Arbitrage Calculator ─── */
+body.pt-site .arb-page {
+  max-width: 800px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 1.5rem 1.5rem 3rem !important;
+}
+
+body.pt-site .arb-header h1 {
+  color: var(--pt-text) !important;
+  font-size: clamp(1.75rem, 4vw, 2.5rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+  margin-bottom: 0 !important;
+}
+
+body.pt-site .arb-header .lead {
+  color: var(--pt-text-muted) !important;
+}
+
+body.pt-site .arb-page .card {
+  background: var(--pt-bg-card) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius-lg) !important;
+  box-shadow: none !important;
+  padding: 1.75rem 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+body.pt-site .arb-page .section-title {
+  text-align: left !important;
+  font-size: 1.125rem !important;
+  margin-bottom: 1.25rem !important;
+}
+
+body.pt-site .arb-page .field label {
+  color: var(--pt-text-muted) !important;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+body.pt-site .arb-page .field input,
+body.pt-site .arb-page .field select {
+  background: var(--pt-bg-elevated) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius) !important;
+  color: var(--pt-text) !important;
+}
+
+body.pt-site .arb-page .field input:focus,
+body.pt-site .arb-page .field select:focus {
+  border-color: #52525b !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08) !important;
+}
+
+body.pt-site .arb-page .field small,
+body.pt-site .arb-page .hint {
+  color: var(--pt-text-dim) !important;
+}
+
+body.pt-site .arb-page button.primary {
+  background: var(--pt-text) !important;
+  color: var(--pt-bg) !important;
+  box-shadow: none !important;
+}
+
+body.pt-site .arb-page button.secondary {
+  background: transparent !important;
+  color: var(--pt-text) !important;
+  border: 1px solid var(--pt-border) !important;
+}
+
+body.pt-site .arb-page .metric-card {
+  background: var(--pt-bg-elevated) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius) !important;
+}
+
+body.pt-site .arb-page .metric-label {
+  color: var(--pt-text-dim) !important;
+}
+
+body.pt-site .arb-page .metric-value {
+  color: var(--pt-text) !important;
+}
+
+body.pt-site .arb-page .metric-subtext,
+body.pt-site .arb-page .summary {
+  color: var(--pt-text-muted) !important;
+}
+
+body.pt-site .arb-page .error {
+  background: rgba(127, 29, 29, 0.2) !important;
+  border: 1px solid rgba(248, 113, 113, 0.35) !important;
+  color: #fca5a5 !important;
+}
+
+body.pt-site .arb-page .results {
+  display: none;
+}
+
+body.pt-site .arb-page .results[style*="flex"],
+body.pt-site .arb-page .results.is-visible {
+  display: flex !important;
+}
+
+body.pt-site .affiliates-section .section-title {
+  text-align: center !important;
+}
+
+/* ─── Bitcoin Compound Interest Calculator ─── */
+body.pt-site .calculator-container {
+  max-width: var(--pt-max) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  background: transparent !important;
+  min-height: auto !important;
+  padding: 1.5rem 1.5rem 3rem !important;
+}
+
+body.pt-site .calculator-header {
+  background: var(--pt-bg-card) !important;
+  background-image: none !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius-lg) !important;
+  box-shadow: none !important;
+  padding: 2rem 1.5rem !important;
+  margin-bottom: 2rem !important;
+}
+
+body.pt-site .calculator-title {
+  color: var(--pt-text) !important;
+  background: none !important;
+  -webkit-text-fill-color: unset !important;
+  font-size: clamp(1.75rem, 4vw, 2.5rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+  text-shadow: none !important;
+}
+
+body.pt-site .calculator-description {
+  color: var(--pt-text-muted) !important;
+  opacity: 1 !important;
+}
+
+body.pt-site .calculator-interface {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  body.pt-site .calculator-interface {
+    grid-template-columns: 1fr;
+  }
+}
+
+body.pt-site .controls-panel,
+body.pt-site .visualization-panel,
+body.pt-site .dark-theme .controls-panel,
+body.pt-site .dark-theme .visualization-panel {
+  background: var(--pt-bg-card) !important;
+  border: 1px solid var(--pt-border) !important;
+  border-radius: var(--pt-radius-lg) !important;
+  box-shadow: none !important;
+}
+
+body.pt-site .controls-panel h3,
+body.pt-site .controls-panel h4,
+body.pt-site .visualization-panel h3,
+body.pt-site .visualization-panel h4,
+body.pt-site .dark-theme .controls-panel h3,
+body.pt-site .dark-theme .controls-panel h4 {
+  color: var(--pt-text) !important;
+}
+
+body.pt-site .dark-theme .calculator-container {
+  background: transparent !important;
+}
+
+body.pt-site .dark-theme .calculator-header {
+  background: var(--pt-bg-card) !important;
+  background-image: none !important;
+}

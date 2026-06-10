@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bitcoin Compound Interest Calculator - Plebtools</title>
     <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
-    <link rel="stylesheet" href="styles.css?v=6">
+    <link rel="stylesheet" href="styles.css?v=9">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
@@ -602,42 +602,46 @@
             box-shadow: 0 28px 60px -30px rgba(34, 197, 94, 0.65);
         }
     </style>
+  <link rel="stylesheet" href="styles/tool-pages.css?v=6">
+  <script>localStorage.setItem('theme','dark');</script>
 </head>
-<body>
-    <header>
-        <nav>
-            <div class="nav-container">
-                <div class="logo-container">
-                    <a href="home" style="display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;">
-                        <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
-                        <h1 class="logo">Plebtools</h1>
-                    </a>
-                </div>
-                <div class="nav-links">
-                <div class="dropdown" id="toolsDropdown">
-                    <button class="dropdown-btn" id="toolsBtn">Tools <span class="dropdown-arrow">?</span></button>
-                    <div class="dropdown-content" id="toolsContent" style="display: none;">
-              <a href="home">?? Home</a>
-              <a href="treasury">?? Treasury</a>
-              <a href="btc-buy-tracker">?? Portfolio</a>
-              <a href="coveredcall-tracker">?? Covered Calls</a>
-              <a href="btc-loan-ltv">?? BTC Loans</a>
-              <a href="strc-vs-bitcoin-cagr">?? STRC vs BTC CAGR</a>
-              <a href="portfolio-monte-carlo">?? Monte Carlo</a>
-              <a href="financial-planner">?? Financial Planner</a>
-              <a href="bitcoin-security">??? Bitcoin Security</a>
-              <a href="interest-arbitrage-calculator">?? Yield Arbitrage</a>
-              <a href="step-by-step-to-self-custody">?? Self Custody Guide</a>
-              <a href="invoice-builder">?? Invoice Builder</a>
-              
-              <a href="bip-110-economic-support">BIP-110 Support</a>
-              <a href="pleb-release">?? Pleb Release</a>
-                    </div>
-                </div>
-</div>
+<body class="dark-theme pt-site">
+                  <header>
+    <nav>
+      <div class="nav-container">
+        <a href="home.html" class="logo-link">
+          <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+          <span class="logo">Plebtools</span>
+        </a>
+        <div class="nav-links">
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn" type="button">Tools <span class="dropdown-arrow"></span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="treasury.html">Treasury</a>
+              <a href="btc-buy-tracker.html">Portfolio</a>
+              <a href="coveredcall-tracker.html">Covered Calls</a>
+              <a href="compound-interest-calculator.html">Calculator</a>
+              <a href="btc-dca-vs-sp500.html">DCA vs S&amp;P 500</a>
+              <a href="strc-vs-bitcoin-cagr.html">STRC vs Bitcoin CAGR</a>
+              <a href="dividend-clipping-simulator.html">Dividend Clipping</a>
+              <a href="portfolio-monte-carlo.html">Monte Carlo</a>
+              <a href="retirement-calculator.html">Retirement</a>
+              <a href="the-great-intersection.html">The Great Intersection</a>
+              <a href="btc-loan-ltv.html">BTC Loans</a>
+              <a href="financial-planner.html">Financial Planner</a>
+              <a href="bitcoin-security.html">Bitcoin Security</a>
+              <a href="pleb-release.html">Pleb Release</a>
+              <a href="interest-arbitrage-calculator.html">Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody.html">Self Custody Guide</a>
+              <a href="invoice-builder.html">Invoice Builder</a>
+              <a href="privacy-analyzer.html">Privacy Analyzer</a>
+              <a href="bip-110-economic-support.html">BIP-110 Support</a>
             </div>
-        </nav>
-    </header>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
 
     <main>
         <div class="calculator-container">
@@ -906,14 +910,33 @@
         </div>
     </section>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Plebtools. Open source Bitcoin tracking tools.</p>
-            <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
-                <strong>Open Source Contributors:</strong> ForrestHODL & Rajat Soni
-            </p>
+                  <footer>
+    <div class="container">
+      <div class="pt-footer-wordmark">Plebtools</div>
+      <div class="pt-footer-grid">
+        <div class="pt-footer-col">
+          <h4>Tools</h4>
+          <a href="treasury.html">Treasury</a>
+          <a href="portfolio-monte-carlo.html">Monte Carlo</a>
+          <a href="retirement-calculator.html">Retirement</a>
+          <a href="btc-buy-tracker.html">Portfolio</a>
         </div>
-    </footer>
+        <div class="pt-footer-col">
+          <h4>Guides</h4>
+          <a href="step-by-step-to-self-custody.html">Self Custody</a>
+          <a href="bitcoin-security.html">Security</a>
+          <a href="the-great-intersection.html">Great Intersection</a>
+        </div>
+        <div class="pt-footer-col">
+          <h4>Project</h4>
+          <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://coinos.io/plebtools" target="_blank" rel="noopener">Donate</a>
+          <a href="home.html">Home</a>
+        </div>
+      </div>
+      <p>&copy; 2025 Plebtools. Open source Bitcoin tools.</p>
+    </div>
+  </footer>
 
     <script>
         // Global variables
@@ -1574,85 +1597,9 @@
             link.click();
         }
 
-        // Theme toggle functionality
-        const themeToggle = document.createElement('button');
-        themeToggle.innerHTML = '??';
-        themeToggle.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            font-size: 1.5rem;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        `;
-
-        let isDarkTheme = localStorage.getItem("theme") !== "light";
-
-        function applyNavTheme() {
-            if (isDarkTheme) {
-                document.body.classList.add("dark-theme");
-                document.body.classList.remove("light-theme");
-                themeToggle.textContent = "☀️";
-            } else {
-                document.body.classList.remove("dark-theme");
-                document.body.classList.add("light-theme");
-                themeToggle.textContent = "🌙";
-            }
-        }
-        applyNavTheme();
-
-        themeToggle.addEventListener("click", () => {
-            isDarkTheme = !isDarkTheme;
-            localStorage.setItem("theme", isDarkTheme ? "dark" : "light");
-            applyNavTheme();
-        });
-
-        document.body.appendChild(themeToggle);
-
-            // Simple dropdown functionality
-            const toolsBtn = document.getElementById('toolsBtn');
-            const toolsContent = document.getElementById('toolsContent');
-            let isOpen = false;
-
-            toolsBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                if (isOpen) {
-                    toolsContent.classList.remove('show');
-                    setTimeout(() => {
-                        toolsContent.style.display = 'none';
-                    }, 300);
-                    isOpen = false;
-                } else {
-                    toolsContent.style.display = 'block';
-                    setTimeout(() => {
-                        toolsContent.classList.add('show');
-                    }, 10);
-                    isOpen = true;
-                }
-            });
-
-            // Close when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!document.getElementById('toolsDropdown').contains(e.target)) {
-                    toolsContent.classList.remove('show');
-                    setTimeout(() => {
-                        toolsContent.style.display = 'none';
-                    }, 300);
-                    isOpen = false;
-                }
-            });
-    </script>
+        // Theme: dark mode only (see scripts/plebtools-theme.js)
+</script>
+<script src="scripts/plebtools-nav.js"></script>
+<script src="scripts/plebtools-theme.js"></script>
 </body>
 </html>
