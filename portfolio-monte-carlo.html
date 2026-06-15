@@ -38,19 +38,43 @@
     .mc-control {
       position: relative;
     }
-    .mc-controls label {
-      display: block;
+    .mc-control-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
       margin-bottom: 8px;
       font-size: 14px;
+    }
+    .mc-control-help {
+      flex: 0 0 auto;
+      width: 1.1rem;
+      height: 1.1rem;
+      padding: 0;
+      border: 1px solid #3f3f46;
+      border-radius: 999px;
+      background: #18181b;
+      color: #a1a1aa;
+      font-size: 0.68rem;
+      font-weight: 700;
+      line-height: 1;
       cursor: help;
     }
+    .mc-control-help:hover,
+    .mc-control-help:focus-visible {
+      color: #fff;
+      border-color: #52525b;
+    }
     .mc-controls input[type="range"] { width: 100%; cursor: pointer; }
-    .mc-control[data-tooltip]::after {
+    .mc-control-help[data-tooltip] {
+      position: relative;
+    }
+    .mc-control-help[data-tooltip]::after {
       content: attr(data-tooltip);
       position: absolute;
-      left: 0;
       right: 0;
-      bottom: calc(100% + 6px);
+      bottom: calc(100% + 8px);
+      width: min(240px, 70vw);
       z-index: 20;
       padding: 0.55rem 0.7rem;
       border-radius: 8px;
@@ -59,14 +83,16 @@
       color: #d4d4d8;
       font-size: 0.78rem;
       line-height: 1.45;
+      text-align: left;
+      font-weight: 400;
       pointer-events: none;
       opacity: 0;
       transform: translateY(4px);
-      transition: opacity 0.15s ease, transform 0.15s ease;
+      transition: opacity 0.12s ease, transform 0.12s ease;
       box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
     }
-    .mc-control:hover::after,
-    .mc-control:focus-within::after {
+    .mc-control-help:hover::after,
+    .mc-control-help:focus-visible::after {
       opacity: 1;
       transform: translateY(0);
     }
@@ -236,7 +262,17 @@
     body.light-theme .mc-explainer-hover { color: #475569; }
     body.light-theme .mc-explainer-hover strong { color: #1e293b; }
     body.light-theme .mc-sim-actions-note { color: #64748b; }
-    body.light-theme .mc-control[data-tooltip]::after {
+    body.light-theme .mc-control-help {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      color: #64748b;
+    }
+    body.light-theme .mc-control-help:hover,
+    body.light-theme .mc-control-help:focus-visible {
+      color: #1e293b;
+      border-color: #94a3b8;
+    }
+    body.light-theme .mc-control-help[data-tooltip]::after {
       background: #fff;
       border-color: #cbd5e1;
       color: #334155;

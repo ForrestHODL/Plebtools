@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 // Internal values are in thousands of dollars ($1 unit = $1,000).
@@ -14,9 +14,19 @@ function formatValue(valueInThousands) {
 
 function SliderControl({ label, valueLabel, min, max, step, value, onChange, tooltip }) {
   return (
-    <div className="mc-control" data-tooltip={tooltip}>
-      <label>
-        {label}: {valueLabel}
+    <div className="mc-control">
+      <label className="mc-control-label">
+        <span>
+          {label}: {valueLabel}
+        </span>
+        <button
+          type="button"
+          className="mc-control-help"
+          data-tooltip={tooltip}
+          aria-label={tooltip}
+        >
+          ?
+        </button>
       </label>
       <input
         type="range"
@@ -65,6 +75,17 @@ function ChartTooltip({ active, payload, label }) {
 const NUM_PATHS = 100;
 const YEARS = 10;
 
+function useDebouncedValue(value, delayMs = 150) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setDebouncedValue(value), delayMs);
+    return () => window.clearTimeout(timer);
+  }, [value, delayMs]);
+
+  return debouncedValue;
+}
+
 function createSeededRandom(seed) {
   let state = seed >>> 0;
   return () => {
@@ -103,6 +124,18 @@ export default function PortfolioSimulator() {
   const [taxRate, setTaxRate] = useState(15);
   const [simulationSeed, setSimulationSeed] = useState(() => Date.now());
 
+  useEffect(() => {
+    setCashBuffer((currentCashBuffer) => Math.min(currentCashBuffer, totalCapital));
+  }, [totalCapital]);
+
+  const debouncedTotalCapital = useDebouncedValue(totalCapital);
+  const debouncedCashBuffer = useDebouncedValue(cashBuffer);
+  const debouncedBaseSpending = useDebouncedValue(baseSpending);
+  const debouncedInflationRate = useDebouncedValue(inflationRate);
+  const debouncedVolatility = useDebouncedValue(volatility);
+  const debouncedExpectedReturn = useDebouncedValue(expectedReturn);
+  const debouncedTaxRate = useDebouncedValue(taxRate);
+
   const returnShocks = useMemo(() => buildReturnShocks(simulationSeed), [simulationSeed]);
 
   const simulationData = useMemo(() => {
@@ -111,17 +144,24 @@ export default function PortfolioSimulator() {
     const paths = [];
 
     for (let i = 0; i < numPaths; i++) {
-      paths.push([{ year: 0, totalValue: totalCapital, assetValue: totalCapital - cashBuffer, cashBalance: cashBuffer }]);
+      paths.push([
+        {
+          year: 0,
+          totalValue: debouncedTotalCapital,
+          assetValue: debouncedTotalCapital - debouncedCashBuffer,
+          cashBalance: debouncedCashBuffer,
+        },
+      ]);
     }
 
     for (let year = 1; year <= years; year++) {
-      const infRateDecimal = inflationRate / 100;
-      const taxRateDecimal = taxRate / 100;
-      const meanReturn = expectedReturn / 100;
-      const stdDev = volatility / 100;
+      const infRateDecimal = debouncedInflationRate / 100;
+      const taxRateDecimal = debouncedTaxRate / 100;
+      const meanReturn = debouncedExpectedReturn / 100;
+      const stdDev = debouncedVolatility / 100;
 
-      const currentSpend = baseSpending * Math.pow(1 + infRateDecimal, year - 1);
-      const nextSpend = baseSpending * Math.pow(1 + infRateDecimal, year);
+      const currentSpend = debouncedBaseSpending * Math.pow(1 + infRateDecimal, year - 1);
+      const nextSpend = debouncedBaseSpending * Math.pow(1 + infRateDecimal, year);
 
       for (let i = 0; i < numPaths; i++) {
         const currentPath = paths[i];
@@ -213,9 +253,9 @@ export default function PortfolioSimulator() {
         0.1,
       ),
     );
-    const clusterHigh = Math.max(...yearlyP50, totalCapital, medianFinalValue);
-    const clusterLow = Math.min(...yearlyP10, totalCapital);
-    const span = Math.max(clusterHigh - clusterLow, totalCapital * 0.2, 400);
+    const clusterHigh = Math.max(...yearlyP50, debouncedTotalCapital, medianFinalValue);
+    const clusterLow = Math.min(...yearlyP10, debouncedTotalCapital);
+    const span = Math.max(clusterHigh - clusterLow, debouncedTotalCapital * 0.2, 400);
     const yMin = Math.max(0, clusterLow - span * 0.12);
     const yMax = clusterHigh + span * 0.15;
 
@@ -228,7 +268,16 @@ export default function PortfolioSimulator() {
       yMin,
       yMax,
     };
-  }, [totalCapital, cashBuffer, baseSpending, inflationRate, volatility, expectedReturn, taxRate, returnShocks]);
+  }, [
+    debouncedTotalCapital,
+    debouncedCashBuffer,
+    debouncedBaseSpending,
+    debouncedInflationRate,
+    debouncedVolatility,
+    debouncedExpectedReturn,
+    debouncedTaxRate,
+    returnShocks,
+  ]);
 
   return (
     <div className="mc-simulator">
@@ -247,21 +296,21 @@ export default function PortfolioSimulator() {
           label="Initial Cash Buffer"
           valueLabel={formatValue(cashBuffer)}
           min={0}
-          max={2000}
+          max={totalCapital}
           step={10}
           value={cashBuffer}
           onChange={setCashBuffer}
-          tooltip="Cash on hand at year 0, spent before liquidating assets. Scale: $0–$2.0M in $10k steps."
+          tooltip="Cash is part of total capital, not extra money. Increasing it lowers invested assets dollar-for-dollar. Scale: $0–total capital in $10k steps."
         />
         <SliderControl
           label="Annual Spending (Base)"
           valueLabel={formatValue(baseSpending)}
-          min={100}
+          min={10}
           max={1500}
           step={10}
           value={baseSpending}
           onChange={setBaseSpending}
-          tooltip="Year-1 expenses before inflation is applied. Scale: $100k–$1.5M in $10k steps."
+          tooltip="Year-1 expenses before inflation is applied. Scale: $10k–$1.5M in $10k steps."
         />
         <SliderControl
           label="Inflation Rate"
