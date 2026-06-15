@@ -35,12 +35,41 @@
       gap: 20px;
       margin-bottom: 30px;
     }
+    .mc-control {
+      position: relative;
+    }
     .mc-controls label {
       display: block;
       margin-bottom: 8px;
       font-size: 14px;
+      cursor: help;
     }
-    .mc-controls input[type="range"] { width: 100%; }
+    .mc-controls input[type="range"] { width: 100%; cursor: pointer; }
+    .mc-control[data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: calc(100% + 6px);
+      z-index: 20;
+      padding: 0.55rem 0.7rem;
+      border-radius: 8px;
+      background: #18181b;
+      border: 1px solid #3f3f46;
+      color: #d4d4d8;
+      font-size: 0.78rem;
+      line-height: 1.45;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+    }
+    .mc-control:hover::after,
+    .mc-control:focus-within::after {
+      opacity: 1;
+      transform: translateY(0);
+    }
     .mc-sim-actions {
       display: flex;
       flex-wrap: wrap;
@@ -207,6 +236,12 @@
     body.light-theme .mc-explainer-hover { color: #475569; }
     body.light-theme .mc-explainer-hover strong { color: #1e293b; }
     body.light-theme .mc-sim-actions-note { color: #64748b; }
+    body.light-theme .mc-control[data-tooltip]::after {
+      background: #fff;
+      border-color: #cbd5e1;
+      color: #334155;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
     body.light-theme .mc-tooltip {
       background: #fff;
       border-color: #cbd5e1;

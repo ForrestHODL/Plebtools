@@ -12,6 +12,24 @@ function formatValue(valueInThousands) {
   return `$${Math.round(valueInThousands)}k`;
 }
 
+function SliderControl({ label, valueLabel, min, max, step, value, onChange, tooltip }) {
+  return (
+    <div className="mc-control" data-tooltip={tooltip}>
+      <label>
+        {label}: {valueLabel}
+      </label>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+      />
+    </div>
+  );
+}
+
 function ChartTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
 
@@ -215,34 +233,76 @@ export default function PortfolioSimulator() {
   return (
     <div className="mc-simulator">
       <div className="mc-controls">
-        <div>
-          <label>Total Capital: {formatValue(totalCapital)}</label>
-          <input type="range" min="1000" max="10000" step="100" value={totalCapital} onChange={(e) => setTotalCapital(Number(e.target.value))} />
-        </div>
-        <div>
-          <label>Initial Cash Buffer: {formatValue(cashBuffer)}</label>
-          <input type="range" min="0" max="2000" step="50" value={cashBuffer} onChange={(e) => setCashBuffer(Number(e.target.value))} />
-        </div>
-        <div>
-          <label>Annual Spending (Base): {formatValue(baseSpending)}</label>
-          <input type="range" min="100" max="1500" step="50" value={baseSpending} onChange={(e) => setBaseSpending(Number(e.target.value))} />
-        </div>
-        <div>
-          <label>Inflation Rate: {inflationRate}%</label>
-          <input type="range" min="0" max="20" step="1" value={inflationRate} onChange={(e) => setInflationRate(Number(e.target.value))} />
-        </div>
-        <div>
-          <label>Asset Volatility: {volatility}%</label>
-          <input type="range" min="10" max="100" step="5" value={volatility} onChange={(e) => setVolatility(Number(e.target.value))} />
-        </div>
-        <div>
-          <label>Expected Annual Return: {expectedReturn}%</label>
-          <input type="range" min="0" max="80" step="5" value={expectedReturn} onChange={(e) => setExpectedReturn(Number(e.target.value))} />
-        </div>
-        <div>
-          <label>Tax Rate: {taxRate}%</label>
-          <input type="range" min="0" max="40" step="1" value={taxRate} onChange={(e) => setTaxRate(Number(e.target.value))} />
-        </div>
+        <SliderControl
+          label="Total Capital"
+          valueLabel={formatValue(totalCapital)}
+          min={50}
+          max={10000}
+          step={50}
+          value={totalCapital}
+          onChange={setTotalCapital}
+          tooltip="Starting portfolio (cash buffer + invested assets). Scale: $50k–$10.0M in $50k steps."
+        />
+        <SliderControl
+          label="Initial Cash Buffer"
+          valueLabel={formatValue(cashBuffer)}
+          min={0}
+          max={2000}
+          step={10}
+          value={cashBuffer}
+          onChange={setCashBuffer}
+          tooltip="Cash on hand at year 0, spent before liquidating assets. Scale: $0–$2.0M in $10k steps."
+        />
+        <SliderControl
+          label="Annual Spending (Base)"
+          valueLabel={formatValue(baseSpending)}
+          min={100}
+          max={1500}
+          step={10}
+          value={baseSpending}
+          onChange={setBaseSpending}
+          tooltip="Year-1 expenses before inflation is applied. Scale: $100k–$1.5M in $10k steps."
+        />
+        <SliderControl
+          label="Inflation Rate"
+          valueLabel={`${inflationRate}%`}
+          min={0}
+          max={20}
+          step={1}
+          value={inflationRate}
+          onChange={setInflationRate}
+          tooltip="Annual increase to spending each year. Scale: 0%–20% in 1% steps."
+        />
+        <SliderControl
+          label="Asset Volatility"
+          valueLabel={`${volatility}%`}
+          min={10}
+          max={100}
+          step={5}
+          value={volatility}
+          onChange={setVolatility}
+          tooltip="Standard deviation of yearly asset returns. Scale: 10%–100% in 5% steps."
+        />
+        <SliderControl
+          label="Expected Annual Return"
+          valueLabel={`${expectedReturn}%`}
+          min={0}
+          max={80}
+          step={5}
+          value={expectedReturn}
+          onChange={setExpectedReturn}
+          tooltip="Average yearly return on invested assets (before spending). Scale: 0%–80% in 5% steps."
+        />
+        <SliderControl
+          label="Tax Rate"
+          valueLabel={`${taxRate}%`}
+          min={0}
+          max={40}
+          step={1}
+          value={taxRate}
+          onChange={setTaxRate}
+          tooltip="Flat tax on asset sales when cash runs short. Scale: 0%–40% in 1% steps."
+        />
       </div>
 
       <div className="mc-sim-actions">
