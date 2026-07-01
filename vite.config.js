@@ -41,6 +41,18 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
+    proxy: {
+      '/api/yahoo': {
+        target: 'https://query1.finance.yahoo.com',
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/api\/yahoo/, ''),
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (compatible; Plebtools/1.0)',
+          Accept: 'application/json',
+        },
+      },
+    },
   },
   build: {
     rollupOptions: {

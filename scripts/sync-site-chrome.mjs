@@ -19,6 +19,7 @@ const HEADER = `  <header>
               <a href="btc-buy-tracker.html">Portfolio</a>
               <a href="coveredcall-tracker.html">Covered Calls</a>
               <a href="compound-interest-calculator.html">Calculator</a>
+              <a href="dca-bitcoin-vs-spy.html">DCA Bitcoin vs S&amp;P</a>
               <a href="strc-vs-bitcoin-cagr.html">STRC vs Bitcoin CAGR</a>
               <a href="dividend-clipping-simulator.html">Dividend Clipping</a>
               <a href="portfolio-monte-carlo.html">Monte Carlo</a>
@@ -48,6 +49,7 @@ const FOOTER = `  <footer>
           <h4>Tools</h4>
           <a href="treasury.html">Treasury</a>
           <a href="portfolio-monte-carlo.html">Monte Carlo</a>
+          <a href="dca-bitcoin-vs-spy.html">DCA Bitcoin vs S&amp;P</a>
           <a href="retirement-calculator.html">Retirement</a>
           <a href="btc-buy-tracker.html">Portfolio</a>
         </div>

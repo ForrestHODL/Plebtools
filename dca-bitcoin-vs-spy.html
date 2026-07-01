@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DCA Bitcoin vs S&amp;P 500 - Plebtools</title>
+  <link rel="stylesheet" href="styles.css?v=9">
+  <link rel="stylesheet" href="styles/tool-pages.css?v=2">
+  <link rel="icon" type="image/x-icon" href="images/bitcoin retro symbol.jpeg">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .chart-page { max-width: 960px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+    .chart-card {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin: 2rem 0 1.5rem;
+      border: 1px solid #334155;
+    }
+    .chart-card h1 { color: #f59e0b; margin-bottom: 0.35rem; font-size: 1.7rem; }
+    .chart-card .subtitle { color: #94a3b8; margin-bottom: 1.25rem; font-size: 0.98rem; line-height: 1.5; }
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .control-group {
+      background: rgba(0,0,0,0.25);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      border: 1px solid #334155;
+    }
+    .control-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: #cbd5f5;
+      margin-bottom: 0.35rem;
+    }
+    .control-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .control-row input[type="range"] {
+      flex: 1;
+      min-width: 140px;
+      height: 6px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: #334155;
+      border-radius: 4px;
+    }
+    .control-row input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #f59e0b;
+      cursor: pointer;
+    }
+    .control-value {
+      min-width: 4.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+    .chart-wrap { position: relative; height: 420px; }
+    .summary-box {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .summary-item {
+      background: rgba(0,0,0,0.3);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      border: 1px solid #334155;
+    }
+    .summary-item strong { color: #e2e8f0; font-size: 0.9rem; }
+    .summary-item .value { font-size: 1.35rem; font-weight: 700; margin-top: 0.35rem; }
+    .summary-item .meta { font-size: 0.85rem; color: #94a3b8; margin-top: 0.25rem; }
+    .summary-item.btc .value { color: #f97316; }
+    .summary-item.spy .value { color: #22c55e; }
+    .summary-item.invested .value { color: #94a3b8; }
+    .note { margin-top: 0.75rem; font-size: 0.8rem; color: #64748b; }
+    .status-pill {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+      margin-left: 0.35rem;
+      vertical-align: middle;
+    }
+    .status-pill.loading { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
+    .status-pill.error { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+    .chart-wrap.is-loading {
+      display: flex; align-items: center; justify-content: center;
+      color: #64748b; font-size: 0.95rem;
+    }
+    body.light-theme .chart-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      border-color: #cbd5e1;
+    }
+    body.light-theme .chart-card h1 { color: #b45309; }
+    body.light-theme .chart-card .subtitle { color: #475569; }
+    body.light-theme .control-group { background: #fff; border-color: #e2e8f0; }
+    body.light-theme .control-group label { color: #475569; }
+    body.light-theme .control-value { color: #0f172a; }
+    body.light-theme .summary-item { background: #fff; border-color: #e2e8f0; }
+    body.light-theme .summary-item strong { color: #1e293b; }
+    body.light-theme .note { color: #6b7280; }
+    #toolsDropdown { position: relative; display: inline-block; }
+    #toolsBtn {
+      background: none; border: none; color: inherit; font-weight: 600;
+      font-size: 0.95rem; letter-spacing: 0.03em; text-transform: uppercase;
+      cursor: pointer; padding: 0.6rem 1.1rem; border-radius: 999px;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    #toolsBtn:hover { background: rgba(102, 126, 234, 0.1); color: #667eea; }
+    #toolsContent {
+      position: absolute; top: 100%; right: 0;
+      background: var(--card-bg, #1a1a2e); min-width: 220px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2); border-radius: 12px;
+      z-index: 1001; padding: 0.75rem 0; border: 1px solid #334155;
+      margin-top: 8px; opacity: 0; transform: translateY(-10px);
+      transition: all 0.3s ease; display: none;
+    }
+    #toolsContent.show { opacity: 1; transform: translateY(0); }
+    #toolsContent a {
+      display: block; padding: 0.8rem 1.5rem; color: inherit;
+      text-decoration: none; transition: all 0.2s ease; font-weight: 500;
+    }
+    #toolsContent a:hover { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .dca-footer-links {
+      margin-top: 2rem; padding-top: 1.75rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.25);
+    }
+    .dca-github-wrap { text-align: center; margin-top: 1.5rem; }
+  </style>
+  <script>localStorage.setItem('theme','dark');</script>
+</head>
+<body class="dark-theme pt-site">
+    <header>
+    <nav>
+      <div class="nav-container">
+        <a href="home.html" class="logo-link">
+          <img src="images/plub tools image.jpeg" alt="Plebtools" class="nav-logo">
+          <span class="logo">Plebtools</span>
+        </a>
+        <div class="nav-links">
+          <div class="dropdown" id="toolsDropdown">
+            <button class="dropdown-btn" id="toolsBtn" type="button">Tools <span class="dropdown-arrow"></span></button>
+            <div class="dropdown-content" id="toolsContent" style="display: none;">
+              <a href="treasury.html">Treasury</a>
+              <a href="btc-buy-tracker.html">Portfolio</a>
+              <a href="coveredcall-tracker.html">Covered Calls</a>
+              <a href="compound-interest-calculator.html">Calculator</a>
+              <a href="dca-bitcoin-vs-spy.html">DCA Bitcoin vs S&amp;P</a>
+              <a href="strc-vs-bitcoin-cagr.html">STRC vs Bitcoin CAGR</a>
+              <a href="dividend-clipping-simulator.html">Dividend Clipping</a>
+              <a href="portfolio-monte-carlo.html">Monte Carlo</a>
+              <a href="retirement-calculator.html">Retirement</a>
+              <a href="the-great-intersection.html">The Great Intersection</a>
+              <a href="btc-loan-ltv.html">BTC Loans</a>
+              <a href="financial-planner.html">Financial Planner</a>
+              <a href="bitcoin-security.html">Bitcoin Security</a>
+              <a href="pleb-release.html">Pleb Release</a>
+              <a href="interest-arbitrage-calculator.html">Yield Arbitrage</a>
+              <a href="step-by-step-to-self-custody.html">Self Custody Guide</a>
+              <a href="invoice-builder.html">Invoice Builder</a>
+              <a href="privacy-analyzer.html">Privacy Analyzer</a>
+              <a href="bip-110-economic-support.html">BIP-110 Support</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="chart-page">
+      <div class="chart-card">
+        <h1>DCA Bitcoin vs S&amp;P 500</h1>
+        <p class="subtitle">
+          Weekly dollar-cost averaging into Bitcoin versus SPY (S&amp;P 500 ETF), starting the week of
+          Bitcoin&rsquo;s November 2021 all-time high. Each Sunday you buy a fixed USD amount at that
+          week&rsquo;s market close; portfolio value is marked to market weekly.
+          <span class="status-pill loading" id="priceStatus">Fetching live market data…</span>
+        </p>
+
+        <div class="controls-grid">
+          <div class="control-group">
+            <label for="weeklyAmount">Weekly purchase (USD)</label>
+            <div class="control-row">
+              <input type="range" id="weeklyAmount" min="25" max="500" step="25" value="100">
+              <div class="control-value">$<span id="weeklyAmountDisplay">100</span>/wk</div>
+            </div>
+            <div class="note">Same amount into BTC and SPY each week.</div>
+          </div>
+        </div>
+
+        <div class="chart-wrap is-loading" id="chartWrap">
+          <canvas id="dcaChart" hidden></canvas>
+          <span id="chartLoadingMsg">Fetching live weekly prices…</span>
+        </div>
+
+        <div class="summary-box">
+          <div class="summary-item invested">
+            <strong>Total invested</strong>
+            <div class="value" id="totalInvested">—</div>
+            <div class="meta" id="weeksMeta">—</div>
+          </div>
+          <div class="summary-item btc">
+            <strong>Bitcoin DCA</strong>
+            <div class="value" id="btcValue">—</div>
+            <div class="meta" id="btcMeta">—</div>
+          </div>
+          <div class="summary-item spy">
+            <strong>S&amp;P 500 (SPY) DCA</strong>
+            <div class="value" id="spyValue">—</div>
+            <div class="meta" id="spyMeta">—</div>
+          </div>
+          <div class="summary-item">
+            <strong>BTC vs SPY (return)</strong>
+            <div class="value" id="compareReturn">—</div>
+            <div class="meta" id="compareMeta">—</div>
+          </div>
+        </div>
+
+        <p class="note" id="dataNote">Live data: Bitcoin via CoinGecko, SPY via Yahoo Finance. Refreshed on each page load.</p>
+
+        <div class="dca-footer-links">
+          <div class="dca-github-wrap">
+            <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" rel="noopener noreferrer" class="affiliate-link">View on GitHub</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { loadWeeklySeries } from './scripts/dca-market-data.js';
+
+    var weeklyInput = document.getElementById('weeklyAmount');
+    var weeklyDisplay = document.getElementById('weeklyAmountDisplay');
+    var totalInvestedEl = document.getElementById('totalInvested');
+    var weeksMetaEl = document.getElementById('weeksMeta');
+    var btcValueEl = document.getElementById('btcValue');
+    var btcMetaEl = document.getElementById('btcMeta');
+    var spyValueEl = document.getElementById('spyValue');
+    var spyMetaEl = document.getElementById('spyMeta');
+    var compareReturnEl = document.getElementById('compareReturn');
+    var compareMetaEl = document.getElementById('compareMeta');
+    var priceStatusEl = document.getElementById('priceStatus');
+    var chartWrapEl = document.getElementById('chartWrap');
+    var chartCanvasEl = document.getElementById('dcaChart');
+    var chartLoadingMsgEl = document.getElementById('chartLoadingMsg');
+
+    var weeklyRows = [];
+    var chart;
+    var dataReady = false;
+
+    function formatCurrency(v) {
+      return '$' + Math.round(v).toLocaleString('en-US');
+    }
+
+    function formatPct(v) {
+      return (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
+    }
+
+    function formatDateLabel(iso) {
+      var d = new Date(iso + 'T12:00:00');
+      return d.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+    }
+
+    function computeDca(rows, weeklyAmount) {
+      var btcHeld = 0;
+      var spyShares = 0;
+      var labels = [];
+      var invested = [];
+      var btcValues = [];
+      var spyValues = [];
+
+      for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        btcHeld += weeklyAmount / row.btcPrice;
+        spyShares += weeklyAmount / row.spyPrice;
+        labels.push(formatDateLabel(row.date));
+        invested.push(weeklyAmount * (i + 1));
+        btcValues.push(btcHeld * row.btcPrice);
+        spyValues.push(spyShares * row.spyPrice);
+      }
+
+      var last = rows[rows.length - 1];
+      return {
+        labels: labels,
+        invested: invested,
+        btcValues: btcValues,
+        spyValues: spyValues,
+        btcHeld: btcHeld,
+        spyShares: spyShares,
+        weeks: rows.length,
+        lastBtcPrice: last.btcPrice,
+        lastSpyPrice: last.spyPrice,
+      };
+    }
+
+    function showChart() {
+      chartWrapEl.classList.remove('is-loading');
+      chartCanvasEl.hidden = false;
+      if (chartLoadingMsgEl) chartLoadingMsgEl.hidden = true;
+    }
+
+    function showError(message) {
+      dataReady = false;
+      if (priceStatusEl) {
+        priceStatusEl.textContent = message;
+        priceStatusEl.classList.remove('loading');
+        priceStatusEl.classList.add('error');
+      }
+      if (chartLoadingMsgEl) chartLoadingMsgEl.textContent = message;
+      if (chart) chart.destroy();
+    }
+
+    function setProgress(message) {
+      if (priceStatusEl) {
+        priceStatusEl.textContent = message;
+        priceStatusEl.classList.add('loading');
+        priceStatusEl.classList.remove('error');
+      }
+      if (chartLoadingMsgEl) chartLoadingMsgEl.textContent = message;
+    }
+
+    function renderChart(series) {
+      if (!chartCanvasEl) return;
+      var isDark = document.body.classList.contains('dark-theme');
+      var textColor = isDark ? '#9ca3af' : '#475569';
+      var gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)';
+
+      if (chart) chart.destroy();
+
+      chart = new Chart(chartCanvasEl.getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: series.labels,
+          datasets: [
+            {
+              label: 'Bitcoin DCA',
+              data: series.btcValues,
+              borderColor: '#f97316',
+              backgroundColor: 'rgba(249, 115, 22, 0.08)',
+              borderWidth: 2.5,
+              fill: true,
+              tension: 0.15,
+              pointRadius: 0,
+              pointHoverRadius: 5,
+            },
+            {
+              label: 'S&P 500 (SPY) DCA',
+              data: series.spyValues,
+              borderColor: '#22c55e',
+              backgroundColor: 'rgba(34, 197, 94, 0.08)',
+              borderWidth: 2.5,
+              fill: true,
+              tension: 0.15,
+              pointRadius: 0,
+              pointHoverRadius: 5,
+            },
+            {
+              label: 'Total contributed',
+              data: series.invested,
+              borderColor: '#64748b',
+              borderDash: [6, 4],
+              borderWidth: 1.5,
+              fill: false,
+              tension: 0,
+              pointRadius: 0,
+              pointHoverRadius: 4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { position: 'top', labels: { color: textColor } },
+            tooltip: {
+              callbacks: {
+                title: function (items) {
+                  var idx = items[0].dataIndex;
+                  return weeklyRows[idx] ? weeklyRows[idx].date : items[0].label;
+                },
+                label: function (ctx) {
+                  return ctx.dataset.label + ': ' + formatCurrency(ctx.parsed.y);
+                },
+              },
+            },
+          },
+          scales: {
+            x: {
+              ticks: { color: textColor, maxTicksLimit: 12, maxRotation: 0 },
+              grid: { color: gridColor },
+            },
+            y: {
+              ticks: {
+                color: textColor,
+                callback: function (v) {
+                  if (v >= 1e6) return '$' + (v / 1e6).toFixed(1) + 'M';
+                  if (v >= 1e3) return '$' + (v / 1e3).toFixed(0) + 'k';
+                  return '$' + v;
+                },
+              },
+              grid: { color: gridColor },
+            },
+          },
+        },
+      });
+    }
+
+    function updateSummary(series, weeklyAmount) {
+      var invested = weeklyAmount * series.weeks;
+      var btcEnd = series.btcHeld * series.lastBtcPrice;
+      var spyEnd = series.spyShares * series.lastSpyPrice;
+      var btcReturn = (btcEnd / invested - 1) * 100;
+      var spyReturn = (spyEnd / invested - 1) * 100;
+
+      weeklyDisplay.textContent = weeklyAmount.toLocaleString('en-US');
+      totalInvestedEl.textContent = formatCurrency(invested);
+      weeksMetaEl.textContent = series.weeks + ' weekly buys since Nov 2021';
+      btcValueEl.textContent = formatCurrency(btcEnd);
+      btcMetaEl.textContent =
+        series.btcHeld.toFixed(8) + ' BTC · ' + formatPct(btcReturn) + ' total return';
+      spyValueEl.textContent = formatCurrency(spyEnd);
+      spyMetaEl.textContent =
+        series.spyShares.toFixed(4) + ' SPY shares · ' + formatPct(spyReturn) + ' total return';
+      compareReturnEl.textContent = formatPct(btcReturn - spyReturn);
+      compareMetaEl.textContent =
+        'BTC ' + formatPct(btcReturn) + ' vs SPY ' + formatPct(spyReturn) +
+        ' · BTC @ ' + formatCurrency(series.lastBtcPrice) +
+        ', SPY @ ' + formatCurrency(series.lastSpyPrice);
+    }
+
+    function render() {
+      if (!dataReady || !weeklyRows.length) return;
+      var weeklyAmount = parseFloat(weeklyInput.value) || 100;
+      var series = computeDca(weeklyRows, weeklyAmount);
+      renderChart(series);
+      updateSummary(series, weeklyAmount);
+    }
+
+    async function loadLiveData() {
+      setProgress('Fetching live market data…');
+
+      var result = await loadWeeklySeries(setProgress);
+      weeklyRows = result.rows;
+      dataReady = true;
+      showChart();
+      render();
+
+      if (priceStatusEl) {
+        priceStatusEl.textContent =
+          'Live · BTC ' + formatCurrency(result.btcLive) +
+          ' · SPY ' + formatCurrency(result.spyLive);
+        priceStatusEl.classList.remove('loading');
+      }
+    }
+
+    weeklyInput.addEventListener('input', render);
+    weeklyInput.addEventListener('change', render);
+
+    loadLiveData().catch(function (err) {
+      console.error(err);
+      showError('Could not load live market data. Check your connection and reload.');
+    });
+  </script>
+
+    <footer>
+    <div class="container">
+      <div class="pt-footer-wordmark">Plebtools</div>
+      <div class="pt-footer-grid">
+        <div class="pt-footer-col">
+          <h4>Tools</h4>
+          <a href="treasury.html">Treasury</a>
+          <a href="portfolio-monte-carlo.html">Monte Carlo</a>
+          <a href="dca-bitcoin-vs-spy.html">DCA Bitcoin vs S&amp;P</a>
+          <a href="retirement-calculator.html">Retirement</a>
+          <a href="btc-buy-tracker.html">Portfolio</a>
+        </div>
+        <div class="pt-footer-col">
+          <h4>Guides</h4>
+          <a href="step-by-step-to-self-custody.html">Self Custody</a>
+          <a href="bitcoin-security.html">Security</a>
+          <a href="the-great-intersection.html">Great Intersection</a>
+        </div>
+        <div class="pt-footer-col">
+          <h4>Project</h4>
+          <a href="https://github.com/ForrestHODL/Plebtools" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://coinos.io/plebtools" target="_blank" rel="noopener">Donate</a>
+          <a href="home.html">Home</a>
+        </div>
+      </div>
+      <p>&copy; 2025 Plebtools. Open source Bitcoin tools.</p>
+    </div>
+  </footer>
+  <script src="scripts/plebtools-nav.js"></script>
+<script src="scripts/plebtools-theme.js"></script>
+</body>
+</html>
