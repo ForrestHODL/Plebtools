@@ -411,7 +411,7 @@ window.PLEB_RANKING_DATA=[
     "id": "nvk",
     "name": "NVK",
     "who": "Coinkite founder; hardware wallet and open-tooling builder.",
-    "does": "Coldcard, bitcoin hardware, and builder tools for self-custody.",
+    "does": "Bitcoin hardware and builder tools for self-custody.",
     "tags": [
       "builder",
       "hardware"
